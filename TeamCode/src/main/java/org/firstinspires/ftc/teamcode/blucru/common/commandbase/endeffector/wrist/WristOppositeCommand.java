@@ -13,4 +13,3 @@ public class WristOppositeCommand extends InstantCommand {
         addRequirements(Robot.getInstance().wrist);
     }
 }
-
