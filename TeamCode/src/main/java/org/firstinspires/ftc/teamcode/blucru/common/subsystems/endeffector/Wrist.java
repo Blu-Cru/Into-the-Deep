@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 @Config
 public class Wrist extends BluServo implements BluSubsystem, Subsystem {
     public static double HORIZONTAL_POS = 0.43;
-
     public Wrist() {
         super("wrist");
     }
@@ -18,10 +17,13 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
     @Override
     public void init() {
         super.init();
-        uprightForward();
+        palmDown();
     }
 
-    public void uprightForward() {
+    // these methods are named based on position of human wrist
+    // hold hand in C shape, thumb is bottom, 4 fingers are top where the spinning wheel is
+
+    public void palmDown() {
         setPosition(HORIZONTAL_POS - 0.28);
     }
 
@@ -29,8 +31,12 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
         setPosition(HORIZONTAL_POS);
     }
 
-    public void uprightBackward() {
+    public void palmUp() {
         setPosition(HORIZONTAL_POS + 0.28);
+    }
+
+    public void opposite() {
+        setPosition(HORIZONTAL_POS - 0.56);
     }
 
     @Override

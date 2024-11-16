@@ -121,7 +121,7 @@ public class Duo extends BluLinearOpMode {
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ArmGlobalAngleCommand(1.5),
-                            new WaitCommand(300),
+                            new WaitCommand(250),
                             new BoxtubeRetractCommand(),
                             new ClampGrabCommand(),
                             new WristUprightForwardCommand(),

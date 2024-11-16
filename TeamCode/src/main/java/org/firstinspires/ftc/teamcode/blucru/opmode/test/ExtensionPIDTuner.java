@@ -15,6 +15,7 @@ public class ExtensionPIDTuner extends BluLinearOpMode {
         enableFTCDashboard();
         addExtension();
         addPivot();
+        addArm();
         extension.usePivot(pivot.getMotor());
     }
 
