@@ -14,7 +14,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 public class Extension implements BluSubsystem, Subsystem {
     public static double
             kP = 0.4, kI = 0.0, kD = 0.02, kFAngle = 0.2, tolerance = 0.0,
-            MIN_INCHES = 0.0, MAX_INCHES = 23,
+            MIN_INCHES = 0.0, MAX_INCHES = 23, MAX_HORIZ_EXTENSION = 15.0,
+            k_INPUT_EXTENSION = 2.0, // pid distance to change based on input
             MAX_EXTEND_POWER = 1.0, MAX_RETRACT_POWER = -1.0;
 
     enum State {
@@ -75,7 +76,7 @@ public class Extension implements BluSubsystem, Subsystem {
                 break;
             case RESETTING:
                 if(resetTimer.seconds() > 0.3 && getDistance() < 0.3) {
-                    extensionMotor.resetEncoder();
+                    extensionMotor.setCurrentPosition(0);
                     pidTo(0);
                 }
                 break;
@@ -119,9 +120,9 @@ public class Extension implements BluSubsystem, Subsystem {
         return Math.sin(pivotAngle) * kFAngle;
     }
 
-    public void setManualIntakingPower(double power) {
-        state = State.MANUAL;
-        manualPower = power;
+    public void extendOverIntake(double input) {
+        double unlimitedPos = input * k_INPUT_EXTENSION + extensionMotor.getDistance();
+        pidTo(Range.clip(unlimitedPos, 0, MAX_HORIZ_EXTENSION));
     }
 
     private void setPowerFeedForward(double power) {

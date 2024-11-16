@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightBackwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -57,7 +56,7 @@ public class Duo extends BluLinearOpMode {
                 .state(State.RETRACTED)
                 .onEnter(() -> dt.drivePower = 0.9)
                 .transition(() -> -gamepad2.right_stick_y > 0.2, State.EXTENDING_OVER_INTAKE, () -> {
-                    extension.setManualIntakingPower(-gamepad2.right_stick_y);
+                    extension.extendOverIntake(-gamepad2.right_stick_y);
                     new ArmPreIntakeCommand().schedule();
                 })
                 .transition(() -> stickyG2.b && !gamepad2.dpad_left, State.SCORING_BASKET, () -> {
@@ -82,7 +81,7 @@ public class Duo extends BluLinearOpMode {
                     new EndEffectorRetractCommand().schedule();
                 })
                 .loop(() -> {
-                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.setManualIntakingPower(-gamepad2.right_stick_y);
+                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.extendOverIntake(-gamepad2.right_stick_y);
                     if(gamepad2.right_bumper) {
                         wheel.reverse();
                         clamp.release();
@@ -111,7 +110,7 @@ public class Duo extends BluLinearOpMode {
                 })
                 .loop(() -> {
                     if(Math.abs(-gamepad2.right_stick_y) > 0.2) {
-                        extension.setManualIntakingPower(-gamepad2.right_stick_y);
+                        extension.extendOverIntake(-gamepad2.right_stick_y);
                     }
                     clamp.release();
                     wheel.intake();
