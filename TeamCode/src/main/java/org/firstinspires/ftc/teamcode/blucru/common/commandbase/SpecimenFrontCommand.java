@@ -11,7 +11,7 @@ public class SpecimenFrontCommand extends SequentialCommandGroup {
         super(
                 new WristHorizontalCommand(),
                 new ArmGlobalAngleCommand(0.45),
-                new BoxtubeExtendCommand(1.4, 6)
+                new BoxtubeExtendCommand(1.4, 8.5)
         );
     }
 }

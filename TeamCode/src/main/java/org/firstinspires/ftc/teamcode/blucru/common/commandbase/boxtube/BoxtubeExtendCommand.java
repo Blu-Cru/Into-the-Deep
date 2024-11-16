@@ -23,7 +23,7 @@ public class BoxtubeExtendCommand extends SequentialCommandGroup {
 
                                 // Wait time depends on distance extension needs to extend, longer extension requires longer wait time
                                 // wait time is proportional to the distance needed to extend
-                                new WaitCommand((long) (Math.abs(Robot.getInstance().extension.getDistance()) - extensionDistance * 14.0)),
+                                new WaitCommand((long) (Math.abs(Robot.getInstance().extension.getDistance()) - extensionDistance * 20.0)),
                                 new PivotCommand(targetAngle)
                         ),
 

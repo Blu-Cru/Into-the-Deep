@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 
 public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public static double
-            PARALLEL_POS = 0.6,
+            PARALLEL_POS = 0.45,
     // 90 degrees is from 0.17 to 0.45
-            MAX_POS = 0.95, MIN_POS = 0.25,
+            MAX_POS = PARALLEL_POS + 0.32, MIN_POS = PARALLEL_POS - 0.32,
             TICKS_PER_RAD = 0.1782;
 
     enum State{
@@ -67,7 +67,7 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void dropToGround() {
-        setPosition(PARALLEL_POS -0.09);
+        setPosition(PARALLEL_POS -0.105);
     }
 
     public void turnToBucket() {

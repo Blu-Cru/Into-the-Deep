@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BasketBackHighCo
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BasketBackLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FrontHighBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FrontLowBasketCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.SpecimenBackDunkCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.SpecimenFrontCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.SpecimenFrontDunkCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
@@ -70,7 +71,7 @@ public class Duo extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
                 .onEnter(() -> dt.drivePower = 0.9)
-                .transition(() -> gamepad2.options, State.FULL_MANUAL, () -> {
+                .transition(() -> stickyG2.left_stick_button, State.FULL_MANUAL, () -> {
                     gamepad1.rumble(150);
                     gamepad2.rumble(150);
                 })
@@ -160,7 +161,7 @@ public class Duo extends BluLinearOpMode {
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ArmGlobalAngleCommand(1.2),
-                            new PivotCommand(0.5),
+                            new PivotCommand(1),
                             new WaitCommand(300),
                             new BoxtubeRetractCommand(),
                             new EndEffectorRetractCommand()
@@ -169,7 +170,7 @@ public class Duo extends BluLinearOpMode {
                 .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () -> {
                     new SequentialCommandGroup(
                             new ArmGlobalAngleCommand(1.2),
-                            new PivotCommand(0.5),
+                            new PivotCommand(1),
                             new WaitCommand(300),
                             new SpecimenBackCommand()
                     ).schedule();
@@ -177,7 +178,7 @@ public class Duo extends BluLinearOpMode {
                 .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
                     new SequentialCommandGroup(
                             new ArmGlobalAngleCommand(1.2),
-                            new PivotCommand(0.5),
+                            new PivotCommand(1),
                             new WaitCommand(300),
                             new BoxtubeExtendCommand(1.4, 5),
                             new WristHorizontalCommand(),
@@ -197,7 +198,7 @@ public class Duo extends BluLinearOpMode {
                             new WheelStopCommand(),
                             new WaitCommand(150),
                             new ArmGlobalAngleCommand(1.2),
-                            new PivotCommand(0.5),
+                            new PivotCommand(1),
                             new WaitCommand(250),
                             new BoxtubeRetractCommand(),
                             new EndEffectorRetractCommand()
@@ -209,7 +210,7 @@ public class Duo extends BluLinearOpMode {
                             new WheelStopCommand(),
                             new WaitCommand(150),
                             new ArmGlobalAngleCommand(1.2),
-                            new PivotCommand(0.5),
+                            new PivotCommand(1),
                             new WaitCommand(300),
                             new SpecimenBackCommand()
                     ).schedule();
@@ -220,11 +221,9 @@ public class Duo extends BluLinearOpMode {
                             new WheelStopCommand(),
                             new WaitCommand(150),
                             new ArmGlobalAngleCommand(1.2),
-                            new PivotCommand(0.5),
+                            new PivotCommand(1),
                             new WaitCommand(300),
-                            new BoxtubeExtendCommand(1.4, 5),
-                            new WristHorizontalCommand(),
-                            new ArmGlobalAngleCommand(0.64)
+                            new SpecimenFrontCommand()
                     ).schedule();
                 })
 
@@ -247,7 +246,7 @@ public class Duo extends BluLinearOpMode {
                 .state(State.DUNKING_SPECIMEN_FRONT)
                 .onEnter(() -> dt.drivePower = 0.4)
                 .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN_FRONT, () -> {
-                    new BoxtubeExtendCommand(1.4, 5).schedule();
+                    new SpecimenFrontCommand().schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
@@ -255,7 +254,7 @@ public class Duo extends BluLinearOpMode {
                             new WheelReverseCommand(),
                             new WaitCommand(300),
                             new BoxtubeRetractCommand(),
-                            new WaitCommand(100),
+                            new WaitCommand(250),
                             new EndEffectorRetractCommand()
                     ).schedule();
                 })
@@ -263,7 +262,7 @@ public class Duo extends BluLinearOpMode {
                 .state(State.ABOVE_SPECIMEN_BACK)
                 .onEnter(() -> dt.drivePower = 0.55)
                 .transition(() -> gamepad2.left_bumper, State.DUNKING_SPECIMEN_BACK,
-                        () -> new BoxtubeExtendCommand(1.4, 0).schedule())
+                        () -> new SpecimenBackDunkCommand().schedule())
 
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
@@ -287,7 +286,7 @@ public class Duo extends BluLinearOpMode {
                             new WheelReverseCommand(),
                             new WaitCommand(300),
                             new BoxtubeRetractCommand(),
-                            new WaitCommand(100),
+                            new WaitCommand(250),
                             new EndEffectorRetractCommand()
                     ).schedule();
                 })
@@ -331,7 +330,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.FULL_MANUAL)
-                .transition(() -> gamepad2.options, State.RETRACTED, () -> {
+                .transition(() -> stickyG2.left_stick_button, State.RETRACTED, () -> {
                     gamepad1.rumble(150);
                     gamepad2.rumble(150);
                 })
@@ -367,7 +366,12 @@ public class Duo extends BluLinearOpMode {
 
     @Override
     public void periodic() {
-        dt.teleOpDrive(gamepad1);
+        if(stickyG1.a) {
+            dt.driveToHeadingScaled(gamepad1.left_stick_x, -gamepad1.left_stick_y, Math.PI/4);
+        } else {
+            dt.teleOpDrive(gamepad1);
+        }
+
         if(gamepad1.right_stick_button) {
             dt.resetHeading(Math.PI/2);
             gamepad1.rumble(150);

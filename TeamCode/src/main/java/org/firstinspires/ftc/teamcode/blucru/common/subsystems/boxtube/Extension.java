@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 @Config
 public class Extension implements BluSubsystem, Subsystem {
     public static double
-            kP = 0.65, kI = 0.0, kD = 0.02, kFAngle = 0.1, tolerance = 0.0,
-            MIN_INCHES = 0.0, MAX_INCHES = 24, MAX_HORIZ_EXTENSION = 15.0,
+            kP = 0.4, kI = 0.0, kD = 0.01, kFAngle = 0.1, tolerance = 0.0,
+            MIN_INCHES = 0.0, MAX_INCHES = 24, MAX_HORIZ_EXTENSION = 18.0,
             k_INPUT_EXTENSION = 2.0, // pid distance to change based on input
             MAX_EXTEND_POWER = 1.0, MAX_RETRACT_POWER = -1.0;
 
