@@ -76,8 +76,7 @@ public class Extension implements BluSubsystem, Subsystem {
                 break;
             case RESETTING:
                 if(resetTimer.seconds() > 0.3 && getDistance() < 0.3) {
-                    extensionMotor.setCurrentPosition(0);
-                    pidController.reset();
+                    resetEncoder();
                     pidTo(0);
                 }
                 break;
@@ -88,7 +87,7 @@ public class Extension implements BluSubsystem, Subsystem {
         switch(state) {
             case IDLE:
             case MANUAL:
-                setPowerFeedForward(manualPower);
+                setRawPower(manualPower);
                 manualPower = 0;
                 break;
             case PID:
@@ -126,13 +125,22 @@ public class Extension implements BluSubsystem, Subsystem {
         pidTo(Range.clip(unlimitedPos, 0, MAX_HORIZ_EXTENSION));
     }
 
-    private void setPowerFeedForward(double power) {
+    public void setPowerFeedForward(double power) {
         double ff;
 
         if(pivot == null) ff = 0;
         else ff = getFeedForward(pivot.getAngle());
 
-        extensionMotor.setPower(Range.clip(power + ff, MAX_RETRACT_POWER, MAX_EXTEND_POWER));
+        setRawPower(power + ff);
+    }
+
+    public void setRawPower(double power) {
+        extensionMotor.setPower(Range.clip(power, MAX_RETRACT_POWER, MAX_EXTEND_POWER));
+    }
+
+    public void setManualPower(double power) {
+        state = State.MANUAL;
+        manualPower = power;
     }
 
     public void updatePID() {
@@ -154,6 +162,7 @@ public class Extension implements BluSubsystem, Subsystem {
 
     public void resetEncoder() {
         extensionMotor.resetEncoder();
+        pidController.reset();
     }
 
     public void telemetry(Telemetry telemetry) {
