@@ -12,15 +12,14 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.FocusCo
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Subsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.concurrent.TimeUnit;
 
 @Config
-public class CVMaster implements Subsystem {
+public class CVMaster implements BluSubsystem {
     public static double fx = 914.686;
     public static double fy = 914.686;
     public static double cx = 633.716;

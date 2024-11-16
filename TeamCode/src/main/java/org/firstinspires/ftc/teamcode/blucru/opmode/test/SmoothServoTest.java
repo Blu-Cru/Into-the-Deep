@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.SmoothServo;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.StickyGamepad;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
+@Disabled
 @Config
 @TeleOp(name = "Smooth servo test", group = "test")
 public class SmoothServoTest extends LinearOpMode {

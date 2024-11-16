@@ -40,7 +40,7 @@ public class Globals {
     }
 
     public static Pose2d mapPose(double x, double y, double headingDegrees) {
-        return new Pose2d(x, y * reflect, Math.toRadians(headingDegrees * reflect));
+        return new Pose2d(x * reflect, y * reflect, Math.toRadians(headingDegrees * reflect));
     }
 
     public static void setVoltage(double voltage) {
@@ -54,5 +54,13 @@ public class Globals {
 
     public static void autoRunningTelemetry(Telemetry telemetry) {
         telemetry.addData("Runtime", Globals.runtime.seconds());
+    }
+
+    public static double time() {
+        return runtime.milliseconds();
+    }
+
+    public static double timeSince(double time) {
+        return runtime.milliseconds() - time;
     }
 }

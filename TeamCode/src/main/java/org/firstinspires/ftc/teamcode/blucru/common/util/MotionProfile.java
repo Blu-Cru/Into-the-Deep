@@ -1,26 +1,25 @@
 package org.firstinspires.ftc.teamcode.blucru.common.util;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
 public class MotionProfile {
-    public double vMax;
-    public double aMax;
-    public double xTarget;
-    public double xI;
-    public double vI;
-    public double flip;
-    public boolean decel;
-    public double xDecel, xAccel;
-    public double tAccel;
+    double vMax, aMax, xTarget, xI;
+    double vI, flip;
+    boolean decel;
+    double xDecel, xAccel;
+    double tAccel;
     double t0, t1, t2, t3;
     double d0, d1, d2, d3;
     double v0, v1, v2, v3;
     double a0, a1, a2, a3;
     double distance;
     double startTime;
+
+    Vector2d instantState;
 
     public MotionProfile(double xTarget, double xI, double vMax, double aMax) {
         this.xTarget = xTarget;
@@ -35,6 +34,7 @@ public class MotionProfile {
         }
         decel = false;
         calculate();
+        instantState = new Vector2d(0,0);
     }
 
     public MotionProfile(double xTarget, double xI, double vI, double vMax, double aMax) {
@@ -56,11 +56,7 @@ public class MotionProfile {
 
         if(vI < 0 && xTarget > xI + xDecel) {
             decel = true;
-        } else if(vI > 0 && xTarget < xI + xDecel) {
-            decel = true;
-        } else {
-            decel = false;
-        }
+        } else decel = vI > 0 && xTarget < xI + xDecel;
 
         // absolute delta x to stop
 
@@ -119,6 +115,14 @@ public class MotionProfile {
             t3 = vMax / aMax;
             d3 = Math.abs(vMax * t3 - (0.5 * aMax * t3 * t3));
         }
+    }
+
+    public Vector2d getInstantState() {
+        double instantPos = getInstantTargetPosition();
+        double instantVel = getInstantTargetVelocity();
+
+        instantState = new Vector2d(instantPos, instantVel);
+        return instantState;
     }
 
     public double getInstantTargetPosition() {
@@ -180,20 +184,29 @@ public class MotionProfile {
     }
 
     public void telemetry(Telemetry telemetry) {
-        telemetry.addData("t0", t0);
-        telemetry.addData("t1", t1);
-        telemetry.addData("t2", t2);
-        telemetry.addData("t3", t3);
-        telemetry.addData("d0", d0);
-        telemetry.addData("d1", d1);
-        telemetry.addData("d2", d2);
-        telemetry.addData("d3", d3);
-        telemetry.addData("vI", vI);
-        telemetry.addData("decel", decel);
-        telemetry.addData("xDecel", xDecel);
-        telemetry.addData("xAccel", xAccel);
+        telemetry(telemetry, false);
+    }
+
+    public void telemetry(Telemetry telemetry, boolean debug) {
+        if(debug) {
+            telemetry.addData("t0", t0);
+            telemetry.addData("t1", t1);
+            telemetry.addData("t2", t2);
+            telemetry.addData("t3", t3);
+            telemetry.addData("d0", d0);
+            telemetry.addData("d1", d1);
+            telemetry.addData("d2", d2);
+            telemetry.addData("d3", d3);
+            telemetry.addData("xDecel", xDecel);
+            telemetry.addData("xAccel", xAccel);
+            telemetry.addData("decel", decel);
+        }
+
+        telemetry.addData("Instant Pos", instantState.getX());
+        telemetry.addData("Instant Vel", instantState.getY());
         telemetry.addData("distance", distance);
-        telemetry.addData("target position", xTarget);
+        telemetry.addData("vI", vI);
+        telemetry.addData("final position", xTarget);
         telemetry.addData("initial position", xI);
         telemetry.addData("max velocity", vMax);
         telemetry.addData("max acceleration", aMax);

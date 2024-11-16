@@ -6,7 +6,7 @@ public interface Path {
 
     void run();
 
-    void breakPath();
+    void cancel();
 
     boolean isDone();
 }

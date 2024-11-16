@@ -68,7 +68,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, false);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Mode mode = Mode.TUNING_MODE;
 
@@ -77,7 +77,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
         double lastKd = DriveConstants.MOTOR_VELO_PID.d;
         double lastKf = DriveConstants.MOTOR_VELO_PID.f;
 
-        drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, DriveConstants.MOTOR_VELO_PID);
+//        drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, DriveConstants.MOTOR_VELO_PID);
 
         NanoClock clock = NanoClock.system();
 
@@ -152,7 +152,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
             if (lastKp != DriveConstants.MOTOR_VELO_PID.p || lastKd != DriveConstants.MOTOR_VELO_PID.d
                     || lastKi != DriveConstants.MOTOR_VELO_PID.i || lastKf != DriveConstants.MOTOR_VELO_PID.f) {
-                drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, DriveConstants.MOTOR_VELO_PID);
+//                drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, DriveConstants.MOTOR_VELO_PID);
 
                 lastKp = DriveConstants.MOTOR_VELO_PID.p;
                 lastKi = DriveConstants.MOTOR_VELO_PID.i;

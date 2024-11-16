@@ -18,16 +18,24 @@ public class ServoTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        updateName();
-        updateDirection();
-        updateController();
-        disable();
         waitForStart();
         while(opModeIsActive()) {
-            updateName();
-            updateDirection();
-//            test.setPwmRange(new PwmControl.PwmRange(500, 2500));
-            updateController();
+            try {
+                test = hardwareMap.get(ServoImplEx.class, name);
+            } catch (Exception e) {
+                telemetry.addLine("ERROR: servo " + name + " not found");
+                telemetry.update();
+                continue;
+            }
+
+            try {
+                updateDirection();
+                updateController();
+            } catch (Exception e) {
+                telemetry.addLine("ERROR updating direction and controller for" + name);
+                telemetry.update();
+                continue;
+            }
 
             if(gamepad1.a) {
                 controller.pwmEnable();
@@ -58,10 +66,14 @@ public class ServoTest extends LinearOpMode {
     }
 
     public void updateController() {
-        controller = (ServoControllerEx) test.getController();
+        try{
+            controller = (ServoControllerEx) test.getController();
+        } catch (Exception e) {}
     }
 
     public void disable() {
-        controller.setServoPwmDisable(test.getPortNumber());
+        try {
+            controller.setServoPwmDisable(test.getPortNumber());
+        } catch (Exception e) {}
     }
 }

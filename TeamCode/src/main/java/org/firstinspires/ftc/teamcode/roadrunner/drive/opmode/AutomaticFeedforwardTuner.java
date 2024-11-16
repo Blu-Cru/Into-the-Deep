@@ -44,7 +44,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, false);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         NanoClock clock = NanoClock.system();
 

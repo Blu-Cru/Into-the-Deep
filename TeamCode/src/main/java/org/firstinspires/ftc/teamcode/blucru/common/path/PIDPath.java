@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.path;
 import com.arcrobotics.ftclib.command.Command;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class PIDPath implements Path {
     }
 
     public void run() {
-//        Robot.getInstance().dt.pidTo(segmentList.get(segmentIndex).getPose());
+        Robot.getInstance().dt.pidTo(segmentList.get(segmentIndex).getPose());
 
         if(segmentList.get(segmentIndex).isDone() && !pathDone) {
             if(segmentIndex + 1 == segmentList.size()) {
@@ -57,7 +58,7 @@ public class PIDPath implements Path {
         }
     }
 
-    public void breakPath() {
+    public void cancel() {
 //        Robot.getInstance().dt.idle();
         pathDone = true;
     }

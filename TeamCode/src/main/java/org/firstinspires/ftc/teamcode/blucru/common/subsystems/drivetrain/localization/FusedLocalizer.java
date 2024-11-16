@@ -22,25 +22,14 @@ import java.util.ArrayList;
 public class FusedLocalizer {
     public static double TAG_UPDATE_DELAY = 100; // ms between tag updates
     Localizer deadWheels;
-    IMU imu;
     PoseHistory poseHistory;
     long lastFrameTime;
     double lastTagUpdateMillis;
 
-    IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-            RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
-
-    double headingOffset = 0;
-    double lastImuUpdateMillis = 0;
-    public boolean usingIMU = true;
-
-    YawPitchRollAngles ypr;
-
-    public FusedLocalizer(Localizer localizer, HardwareMap hardwareMap) {
+    public FusedLocalizer(Localizer localizer) {
         deadWheels = localizer;
         poseHistory = new PoseHistory();
 
-        imu = hardwareMap.get(IMU.class, "e hub imu");
         lastFrameTime = System.nanoTime();
         lastTagUpdateMillis = System.currentTimeMillis();
     }
@@ -52,21 +41,10 @@ public class FusedLocalizer {
         //Log.v("Marker Entry", "Pos" + currentPose);
         poseHistory.add(currentPose, deadWheels.getPoseVelocity());
 
-        // update IMU every 300ms
-        if(System.currentTimeMillis() - lastImuUpdateMillis > 300 && usingIMU) {
-            lastImuUpdateMillis = System.currentTimeMillis();
-
-            ypr = imu.getRobotYawPitchRollAngles();
-            Log.v("FusedLocalizer", "Updating IMU, correction = " + (ypr.getYaw(AngleUnit.RADIANS) + headingOffset - deadWheels.getPoseEstimate().getHeading()));
-            Pose2d currentPoseWithHeading = new Pose2d(currentPose.getX(), currentPose.getY(), Angle.norm(ypr.getYaw(AngleUnit.RADIANS) + headingOffset));
-            deadWheels.setPoseEstimate(currentPoseWithHeading);
-            deadWheels.update();
-        }
     }
 
     public boolean updateAprilTags(AprilTagProcessor tagProcessor) {
         if(System.currentTimeMillis() - lastTagUpdateMillis < TAG_UPDATE_DELAY) return false; // only update every TAG_UPDATE_DELAY ms
-
 
         ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
         if(detections.size() < 1) {
@@ -116,7 +94,6 @@ public class FusedLocalizer {
         Log.d("FusedLocalizer", "Raw correction: " + odoPoseError);
         Log.d("FusedLocalizer", "Weighted correction: " + weightedCorrection);
 
-
         Pose2d newPose = new Pose2d(currentPose.vec().plus(weightedCorrection.vec()), currentPose.getHeading());
         Log.i("FusedLocalizer", "Updated pose to: " + newPose);
 
@@ -128,20 +105,6 @@ public class FusedLocalizer {
         poseHistory.offset(weightedCorrection);
         lastFrameTime = timeOfFrame;
         return true;
-    }
-
-    public void init() {
-        imu.resetDeviceConfigurationForOpMode();
-        imu.initialize(parameters);
-
-        lastImuUpdateMillis = System.currentTimeMillis();
-    }
-
-    public void resetHeading(double newHeading) {
-        newHeading = Angle.norm(newHeading);
-        headingOffset = newHeading - imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        deadWheels.setPoseEstimate(new Pose2d(deadWheels.getPoseEstimate().vec(), newHeading));
-        deadWheels.update();
     }
 
     public double getWeight(Pose2d velocity) {

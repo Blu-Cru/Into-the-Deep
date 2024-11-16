@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public interface Subsystem {
+public interface BluSubsystem {
 
         void init();
         void read();

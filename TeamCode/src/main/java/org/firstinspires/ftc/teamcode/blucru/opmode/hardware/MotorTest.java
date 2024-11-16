@@ -40,8 +40,11 @@ public class MotorTest extends LinearOpMode {
     }
 
     public void updateDirection() {
-        if(reversed) test.setDirection(DcMotorSimple.Direction.REVERSE);
-        else test.setDirection(DcMotorSimple.Direction.FORWARD);
+        try {
+
+            if (reversed) test.setDirection(DcMotorSimple.Direction.REVERSE);
+            else test.setDirection(DcMotorSimple.Direction.FORWARD);
+        } catch(Exception ignored) {}
     }
 
     public void updateName() {
@@ -53,7 +56,9 @@ public class MotorTest extends LinearOpMode {
     }
 
     public void reset() {
-        test.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        test.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        try {
+            test.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            test.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        } catch (Exception ignored) {}
     }
 }
