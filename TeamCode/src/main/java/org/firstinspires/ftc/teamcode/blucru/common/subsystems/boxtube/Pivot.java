@@ -71,6 +71,7 @@ public class Pivot implements BluSubsystem, Subsystem {
             case RESETTING:
                 if(Globals.timeSince(resetTime) > 300 && getAngle() < 0.12) {
                     pivotMotor.setCurrentPosition(0);
+                    pidController.reset();
                     pidTo(0.0);
                 }
                 break;
