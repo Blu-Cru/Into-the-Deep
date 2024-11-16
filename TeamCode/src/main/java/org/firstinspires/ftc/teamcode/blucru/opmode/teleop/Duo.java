@@ -7,12 +7,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BackHighBasketCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BackLowBasketCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BasketBackHighCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BasketBackLowCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FrontHighBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FrontLowBasketCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.SpecimenFrontCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.SpecimenFrontDunkCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.SpecimenBackCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
@@ -21,7 +26,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -32,9 +40,12 @@ public class Duo extends BluLinearOpMode {
         EXTENDING_OVER_INTAKE,
         INTAKING_GROUND,
         SCORING_BASKET,
+        EXTENDING_TO_SPECIMEN,
         INTAKING_SPECIMEN,
-        ABOVE_SPECIMEN,
-        DUNKING_SPECIMEN,
+        ABOVE_SPECIMEN_FRONT,
+        ABOVE_SPECIMEN_BACK,
+        DUNKING_SPECIMEN_FRONT,
+        DUNKING_SPECIMEN_BACK,
         RETRACTING_FROM_SCORING,
         RETRACTING_FROM_INTAKE,
         FULL_MANUAL
@@ -67,14 +78,34 @@ public class Duo extends BluLinearOpMode {
                     extension.extendOverIntake(-gamepad2.right_stick_y);
                     new ArmPreIntakeCommand().schedule();
                 })
-                .transition(() -> stickyG2.b && !gamepad2.dpad_left, State.SCORING_BASKET, () -> {
-                    new BackLowBasketCommand().schedule();
+
+                // LOW
+                .transition(() -> stickyG2.b && !gamepad2.dpad_left, State.SCORING_BASKET, () ->
+                        new BasketBackLowCommand().schedule())
+                .transition(() -> stickyG2.b && gamepad2.dpad_left, State.SCORING_BASKET, () ->
+                        new FrontLowBasketCommand().schedule())
+
+                // HIGH
+                .transition(() -> stickyG2.y && !gamepad2.dpad_left, State.SCORING_BASKET, () ->
+                        new BasketBackHighCommand().schedule())
+                .transition(() -> stickyG2.y && gamepad2.dpad_left, State.SCORING_BASKET, () ->
+                        new FrontHighBasketCommand().schedule())
+
+                // SPECIMEN
+                .transition(() -> -gamepad2.right_stick_y < -0.2, State.EXTENDING_TO_SPECIMEN, () -> {
+                    new BoxtubeExtendCommand(0.43, 0).schedule();
+                    new WristHorizontalCommand().schedule();
+                    new ArmGlobalAngleCommand(0).schedule();
                 })
-                .transition(() -> stickyG2.y && !gamepad2.dpad_left, State.SCORING_BASKET, () -> {
-                    new BackHighBasketCommand().schedule();
+                .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
+                    new BoxtubeExtendCommand(1.4, 5).schedule();
+                    new WristOppositeCommand().schedule();
+                    new ArmGlobalAngleCommand(2.5).schedule();
                 })
-                .transition(() -> stickyG2.b && gamepad2.dpad_left, State.SCORING_BASKET, () -> {
-                    new FrontLowBasketCommand().schedule();
+                .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
+                    new BoxtubeExtendCommand(1.4, 5).schedule();
+                    new WristHorizontalCommand().schedule();
+                    new ArmGlobalAngleCommand(2.5).schedule();
                 })
 
                 .state(State.EXTENDING_OVER_INTAKE)
@@ -124,6 +155,147 @@ public class Duo extends BluLinearOpMode {
                     wheel.intake();
                 })
 
+                .state(State.EXTENDING_TO_SPECIMEN)
+                .onEnter(() -> dt.drivePower = 0.45)
+                .transition(() -> gamepad2.left_bumper, State.INTAKING_SPECIMEN, () -> {
+                    new WheelIntakeCommand().schedule();
+                    new ClampReleaseCommand().schedule();
+                })
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new SequentialCommandGroup(
+                            new ArmGlobalAngleCommand(1.2),
+                            new PivotCommand(0.5),
+                            new WaitCommand(300),
+                            new BoxtubeRetractCommand(),
+                            new EndEffectorRetractCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () -> {
+                    new SequentialCommandGroup(
+                            new ArmGlobalAngleCommand(1.2),
+                            new PivotCommand(0.5),
+                            new WaitCommand(300),
+                            new SpecimenBackCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
+                    new SequentialCommandGroup(
+                            new ArmGlobalAngleCommand(1.2),
+                            new PivotCommand(0.5),
+                            new WaitCommand(300),
+                            new BoxtubeExtendCommand(1.4, 5),
+                            new WristHorizontalCommand(),
+                            new ArmGlobalAngleCommand(0.64)
+                    ).schedule();
+                })
+
+                .state(State.INTAKING_SPECIMEN)
+                .onEnter(() -> dt.drivePower = 0.44)
+                .transition(() -> !gamepad2.left_bumper, State.EXTENDING_TO_SPECIMEN, () -> {
+                    new ClampGrabCommand().schedule();
+                    new WheelStopCommand().schedule();
+                })
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new SequentialCommandGroup(
+                            new ClampGrabCommand(),
+                            new WheelStopCommand(),
+                            new WaitCommand(150),
+                            new ArmGlobalAngleCommand(1.2),
+                            new PivotCommand(0.5),
+                            new WaitCommand(250),
+                            new BoxtubeRetractCommand(),
+                            new EndEffectorRetractCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () -> {
+                    new SequentialCommandGroup(
+                            new ClampGrabCommand(),
+                            new WheelStopCommand(),
+                            new WaitCommand(150),
+                            new ArmGlobalAngleCommand(1.2),
+                            new PivotCommand(0.5),
+                            new WaitCommand(300),
+                            new SpecimenBackCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
+                    new SequentialCommandGroup(
+                            new ClampGrabCommand(),
+                            new WheelStopCommand(),
+                            new WaitCommand(150),
+                            new ArmGlobalAngleCommand(1.2),
+                            new PivotCommand(0.5),
+                            new WaitCommand(300),
+                            new BoxtubeExtendCommand(1.4, 5),
+                            new WristHorizontalCommand(),
+                            new ArmGlobalAngleCommand(0.64)
+                    ).schedule();
+                })
+
+                .state(State.ABOVE_SPECIMEN_FRONT)
+                .onEnter(() -> dt.drivePower = 0.55)
+                .transition(() -> gamepad2.left_bumper, State.DUNKING_SPECIMEN_FRONT, () ->
+                        new SpecimenFrontDunkCommand().schedule())
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new SequentialCommandGroup(
+                            new ArmGlobalAngleCommand(1.2),
+                            new WaitCommand(200),
+                            new EndEffectorRetractCommand(),
+                            new BoxtubeRetractCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () -> {
+                    new SpecimenBackCommand().schedule();
+                })
+
+                .state(State.DUNKING_SPECIMEN_FRONT)
+                .onEnter(() -> dt.drivePower = 0.4)
+                .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN_FRONT, () -> {
+                    new BoxtubeExtendCommand(1.4, 5).schedule();
+                })
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new SequentialCommandGroup(
+                            new ClampReleaseCommand(),
+                            new WheelReverseCommand(),
+                            new WaitCommand(300),
+                            new BoxtubeRetractCommand(),
+                            new WaitCommand(100),
+                            new EndEffectorRetractCommand()
+                    ).schedule();
+                })
+
+                .state(State.ABOVE_SPECIMEN_BACK)
+                .onEnter(() -> dt.drivePower = 0.55)
+                .transition(() -> gamepad2.left_bumper, State.DUNKING_SPECIMEN_BACK,
+                        () -> new BoxtubeExtendCommand(1.4, 0).schedule())
+
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new SequentialCommandGroup(
+                            new ArmGlobalAngleCommand(1.2),
+                            new WaitCommand(200),
+                            new EndEffectorRetractCommand(),
+                            new BoxtubeRetractCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT,
+                        () -> new SpecimenFrontCommand().schedule())
+
+                .state(State.DUNKING_SPECIMEN_BACK)
+                .onEnter(() -> dt.drivePower = 0.4)
+                .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN_BACK, () -> {
+                    new BoxtubeExtendCommand(1.4, 5).schedule();
+                })
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new SequentialCommandGroup(
+                            new ClampReleaseCommand(),
+                            new WheelReverseCommand(),
+                            new WaitCommand(300),
+                            new BoxtubeRetractCommand(),
+                            new WaitCommand(100),
+                            new EndEffectorRetractCommand()
+                    ).schedule();
+                })
+
                 .state(State.SCORING_BASKET)
                 .onEnter(() -> dt.drivePower = 0.45)
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
@@ -147,11 +319,19 @@ public class Duo extends BluLinearOpMode {
                         wheel.stop();
                     }
 
-                    if(stickyG2.y) {
-                        new BoxtubeExtendCommand(1.6, 22).schedule();
-                        new WristUprightForwardCommand().schedule();
-                        new ArmGlobalAngleCommand(2.2).schedule();
+                    if(stickyG2.y && !gamepad2.dpad_left) {
+                        new BasketBackHighCommand().schedule();
+                    } else if(stickyG2.y && gamepad2.dpad_left) {
+                        new FrontHighBasketCommand().schedule();
+                    } else if(stickyG2.b && !gamepad2.dpad_left) {
+                        new BasketBackLowCommand().schedule();
+                    } else if(stickyG2.b && gamepad2.dpad_left) {
+                        new FrontLowBasketCommand().schedule();
                     }
+                })
+                .onExit(() -> {
+                    clamp.grab();
+                    wheel.stop();
                 })
 
                 .state(State.FULL_MANUAL)

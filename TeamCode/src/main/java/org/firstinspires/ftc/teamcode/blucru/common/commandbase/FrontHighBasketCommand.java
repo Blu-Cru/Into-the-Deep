@@ -5,15 +5,16 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightBackwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 
-public class BackHighBasketCommand extends SequentialCommandGroup {
-    public BackHighBasketCommand() {
+public class FrontHighBasketCommand extends SequentialCommandGroup {
+    public FrontHighBasketCommand() {
         super(
+                new ArmGlobalAngleCommand(1.4),
                 new BoxtubeExtendCommand(Math.PI/2, 24),
-                new WristUprightBackwardCommand(),
-                new ArmGlobalAngleCommand(2.6)
+                new WristUprightForwardCommand(),
+                new WaitCommand(200),
+                new ArmGlobalAngleCommand(0)
         );
     }
 }

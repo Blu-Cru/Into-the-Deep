@@ -59,7 +59,7 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void preIntake() {
-        setPosition(PARALLEL_POS);
+        setPosition(PARALLEL_POS + 0.05);
     }
 
     public void retract() {

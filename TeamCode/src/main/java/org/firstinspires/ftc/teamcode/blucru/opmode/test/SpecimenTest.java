@@ -9,6 +9,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
@@ -70,6 +71,11 @@ public class SpecimenTest extends BluLinearOpMode {
                     new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
+                .transition(() -> stickyG2.y, State.EXTENDING_TO_WALL, () -> {
+                    new BoxtubeExtendCommand(0.43, 0).schedule();
+                    new WristHorizontalCommand().schedule();
+                    new ArmGlobalAngleCommand(0).schedule();
+                })
 
                 .state(State.EXTENDING_TO_WALL)
                 .transition(() -> gamepad2.left_bumper, State.INTAKING_WALL, () -> {
@@ -79,7 +85,7 @@ public class SpecimenTest extends BluLinearOpMode {
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ArmGlobalAngleCommand(1),
-                            new BoxtubeExtendCommand(0.45, 5.6),
+                            new PivotCommand(0.5),
                             new WaitCommand(300),
                             new EndEffectorRetractCommand(),
                             new BoxtubeRetractCommand()

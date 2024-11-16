@@ -6,12 +6,12 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeE
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 
-public class BackHighSpecimenCommand extends SequentialCommandGroup {
-    public BackHighSpecimenCommand() {
+public class SpecimenFrontCommand extends SequentialCommandGroup {
+    public SpecimenFrontCommand() {
         super(
-                new BoxtubeExtendCommand(1.4, 6),
                 new WristHorizontalCommand(),
-                new ArmGlobalAngleCommand(2.5)
+                new ArmGlobalAngleCommand(0.64),
+                new BoxtubeExtendCommand(1.4, 5)
         );
     }
 }
