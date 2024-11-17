@@ -71,7 +71,7 @@ public class Duo extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
                 .onEnter(() -> dt.drivePower = 0.9)
-                .transition(() -> stickyG2.left_stick_button, State.FULL_MANUAL, () -> {
+                .transition(() -> stickyG2.share, State.FULL_MANUAL, () -> {
                     gamepad1.rumble(150);
                     gamepad2.rumble(150);
                 })
@@ -330,7 +330,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.FULL_MANUAL)
-                .transition(() -> stickyG2.left_stick_button, State.RETRACTED, () -> {
+                .transition(() -> stickyG2.share, State.RETRACTED, () -> {
                     gamepad1.rumble(150);
                     gamepad2.rumble(150);
                 })
