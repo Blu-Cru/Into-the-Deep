@@ -39,6 +39,7 @@ public class PinpointLocalizer implements Localizer {
     @Override
     public void setPoseEstimate(@NonNull Pose2d pose) {
         pinpoint.setPosition(pose);
+        setHeading(pose.getHeading());
     }
 
     @Override

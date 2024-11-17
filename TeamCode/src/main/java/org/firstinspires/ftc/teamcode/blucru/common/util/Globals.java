@@ -22,7 +22,7 @@ public class Globals {
 
     // default alliance is red, but will be changed before auto starts
     public static Alliance alliance = Alliance.RED;
-    public static Side side = Side.RIGHT_SPECIMEN;
+    public static AutoType autoType = AutoType.FOUR_SAMPLE;
 
     public static ElapsedTime runtime;
 

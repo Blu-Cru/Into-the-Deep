@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
@@ -28,6 +29,7 @@ public class PIDPathTest extends BluLinearOpMode {
     @Override
     public void initialize() {
         addDrivetrain();
+        enableFTCDashboard();
 
         Globals.setAlliance(Alliance.RED);
         pidPath = new TestPath().build();
@@ -35,8 +37,7 @@ public class PIDPathTest extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RESETTING)
                 .transition(() -> stickyG1.b, State.FOLLOWING_PID, () -> {
-                    dt.setPoseEstimate(Globals.startPose);
-                    dt.resetHeading(Globals.startPose.getHeading());
+                    dt.setPoseEstimate(new Pose2d(0,0,Math.PI/2));
                     pidPath.start();
                     pidStartTime = System.currentTimeMillis();
 
@@ -49,7 +50,7 @@ public class PIDPathTest extends BluLinearOpMode {
                 .transition(() -> stickyG1.a, State.RESETTING, ()-> {
                     dt.idle();
                     pidPath.cancel();
-                    dt.driveScaled(0,0,0);
+                    dt.teleOpDrive(gamepad1);
                 })
                 .loop(() -> {
                     try {
@@ -69,7 +70,7 @@ public class PIDPathTest extends BluLinearOpMode {
     @Override
     public void periodic() {
         sm.update();
-        dt.ftcDashDrawPose();
+        dt.drawPose();
     }
 
     @Override

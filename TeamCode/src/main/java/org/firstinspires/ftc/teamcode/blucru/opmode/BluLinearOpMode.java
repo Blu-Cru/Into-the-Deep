@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.StickyGamepad;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Extension;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.NewDrivetrain;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
@@ -19,7 +19,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 
 public abstract class BluLinearOpMode extends LinearOpMode {
     public Alliance alliance;
@@ -31,7 +30,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public Pivot pivot;
     public Wheel wheel;
     public Extension extension;
-    public NewDrivetrain newDt;
+    public Drivetrain newDt;
 
     public StickyGamepad stickyG1;
     public StickyGamepad stickyG2;

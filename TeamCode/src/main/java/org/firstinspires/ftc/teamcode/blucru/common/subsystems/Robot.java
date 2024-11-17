@@ -6,9 +6,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Extension;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.NewDrivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
@@ -28,7 +26,7 @@ public class Robot {
     public Wheel wheel;
     public Pivot pivot;
     public Extension extension;
-    public NewDrivetrain newDt;
+    public Drivetrain newDt;
 
     // list of all subsystems
     ArrayList<BluSubsystem> subsystems;
@@ -94,7 +92,7 @@ public class Robot {
     }
 
     public Drivetrain addDrivetrain() {
-        dt = new Drivetrain(hardwareMap);
+        dt = new Drivetrain();
         subsystems.add(dt);
         return dt;
     }
@@ -135,8 +133,8 @@ public class Robot {
         return extension;
     }
 
-    public NewDrivetrain addNewDrivetrain() {
-        newDt = new NewDrivetrain();
+    public Drivetrain addNewDrivetrain() {
+        newDt = new Drivetrain();
         subsystems.add(newDt);
         return newDt;
     }
