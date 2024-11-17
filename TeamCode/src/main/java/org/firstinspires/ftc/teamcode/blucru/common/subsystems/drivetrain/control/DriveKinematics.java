@@ -99,6 +99,11 @@ public class DriveKinematics {
         } else return drivePose;
     }
 
+    public static double getHeadingDecel(double heading, double headingVel) {
+        double headingDelta = headingVel * Math.abs(headingVel) / (2 * HEADING_DECEL);
+        return Angle.norm(heading + headingDelta);
+    }
+
     public static double[] getDrivePowers(Pose2d drivePose) {
         // clip to power 1
         drivePose = new Pose2d(Range.clip(drivePose.getX(), -1, 1),

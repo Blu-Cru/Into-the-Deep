@@ -54,4 +54,8 @@ public class PinpointLocalizer implements Localizer {
     public double getHeading() {
         return getPoseEstimate().getHeading();
     }
+
+    public double getHeadingVelocity() {
+        return getPoseVelocity().getHeading();
+    }
 }
