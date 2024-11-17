@@ -129,4 +129,12 @@ public class DriveKinematics {
 
         return powers;
     }
+
+    public static Pose2d clip(Pose2d pose, double max) {
+        return new Pose2d(
+                Range.clip(pose.getX(), -max, max),
+                Range.clip(pose.getY(), -max, max),
+                Range.clip(pose.getHeading(), -max, max)
+        );
+    }
 }

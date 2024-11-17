@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -63,6 +64,10 @@ public class DriveBase implements BluSubsystem {
     public void driveFieldCentric(Pose2d fieldDrivePose) {
         Pose2d robotDrivePose = new Pose2d(fieldDrivePose.vec().rotated(-localizer.getHeading()), fieldDrivePose.getHeading());
         drive(robotDrivePose);
+    }
+
+    public void driveFieldCentric(Vector2d translation, double rotation) {
+        driveFieldCentric(new Pose2d(translation, rotation));
     }
 
     public Pose2d getPoseEstimate() {

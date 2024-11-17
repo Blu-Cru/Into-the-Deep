@@ -30,7 +30,7 @@ public class DrivePID {
     public Pose2d calculate(Pose2d currentPose) {
         double xPower = Range.clip(xController.calculate(currentPose.getX()), -1, 1);
         double yPower = Range.clip(yController.calculate(currentPose.getY()), -1, 1);
-        double headingPower = getHeadingPID(currentPose.getHeading());
+        double headingPower = getRotate(currentPose.getHeading());
         return new Pose2d(xPower, yPower, headingPower);
     }
 
@@ -51,7 +51,11 @@ public class DrivePID {
         headingController.setPID(kPHeading, kIHeading, kDHeading);
     }
 
-    private double getHeadingPID(double heading) {
+    public void setTargetHeading(double targetHeading) {
+        headingController.setSetPoint(targetHeading);
+    }
+
+    public double getRotate(double heading) {
         if(heading - headingController.getSetPoint() < -Math.PI) heading += 2*Math.PI;
         else if(heading - headingController.getSetPoint() > Math.PI) heading -= 2 * Math.PI;
 
