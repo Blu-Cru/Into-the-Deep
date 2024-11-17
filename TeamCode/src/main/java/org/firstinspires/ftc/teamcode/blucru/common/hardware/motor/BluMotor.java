@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.hardware.motor;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImpl;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.BluHardwareDevice;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class BluMotor extends DcMotorImpl implements BluHardwareDevice {
     String name;
-    double power = 0, lastPower = 0;
+    double power, lastPower;
 
     public BluMotor(String name, Direction direction) {
         this(name, direction, ZeroPowerBehavior.FLOAT);
@@ -32,6 +33,8 @@ public class BluMotor extends DcMotorImpl implements BluHardwareDevice {
         super(motor.getController(), motor.getPortNumber(), direction);
         this.name = name;
         super.setZeroPowerBehavior(zpb);
+        power = 0;
+        lastPower = 0;
     }
 
     @Override
@@ -51,6 +54,10 @@ public class BluMotor extends DcMotorImpl implements BluHardwareDevice {
             lastPower = power;
             super.setPower(Globals.correctPower(power));
         }
+    }
+
+    public void setPower(double power) {
+        this.power = Range.clip(power, -1, 1);
     }
 
     public void telemetry() {

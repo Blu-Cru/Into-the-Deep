@@ -9,6 +9,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
@@ -29,6 +31,8 @@ public class SpecimenTest extends BluLinearOpMode {
         RETRACTED,
         EXTENDING_OVER_INTAKE,
         INTAKING,
+        EXTENDING_TO_WALL,
+        INTAKING_WALL,
         ABOVE_SPECIMEN,
         DUNKING_SPECIMEN
     }
@@ -54,13 +58,55 @@ public class SpecimenTest extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
                 .transition(() -> -gamepad2.right_stick_y > 0.2, State.EXTENDING_OVER_INTAKE, () -> {
-                    extension.setManualIntakingPower(-gamepad2.right_stick_y);
+                    extension.extendOverIntake(-gamepad2.right_stick_y);
                     new ArmPreIntakeCommand().schedule();
                 })
                 .transition(() -> stickyG2.b, State.ABOVE_SPECIMEN, () -> {
                     new BoxtubeExtendCommand(1.4, 5).schedule();
-                    new WristHorizontalCommand().schedule();
+                    new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(2.5).schedule();
+                })
+                .transition(() -> stickyG2.x, State.EXTENDING_TO_WALL, () -> {
+                    new BoxtubeExtendCommand(0.3, 5.3).schedule();
+                    new WristHorizontalCommand().schedule();
+                    new ArmGlobalAngleCommand(0).schedule();
+                })
+                .transition(() -> stickyG2.y, State.EXTENDING_TO_WALL, () -> {
+                    new BoxtubeExtendCommand(0.43, 0).schedule();
+                    new WristOppositeCommand().schedule();
+                    new ArmGlobalAngleCommand(0).schedule();
+                })
+
+                .state(State.EXTENDING_TO_WALL)
+                .transition(() -> gamepad2.left_bumper, State.INTAKING_WALL, () -> {
+                    new WheelIntakeCommand().schedule();
+                    new ClampReleaseCommand().schedule();
+                })
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new SequentialCommandGroup(
+                            new ArmGlobalAngleCommand(1),
+                            new PivotCommand(0.5),
+                            new WaitCommand(300),
+                            new EndEffectorRetractCommand(),
+                            new BoxtubeRetractCommand()
+                    ).schedule();
+                })
+
+                .state(State.INTAKING_WALL)
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new SequentialCommandGroup(
+                            new ClampGrabCommand(),
+                            new WheelStopCommand(),
+                            new ArmGlobalAngleCommand(1),
+                            new BoxtubeExtendCommand(0.45, 5.6),
+                            new WaitCommand(300),
+                            new EndEffectorRetractCommand(),
+                            new BoxtubeRetractCommand()
+                    ).schedule();
+                })
+                .transition(() -> !gamepad2.left_bumper, State.EXTENDING_TO_WALL, () -> {
+                    new ClampGrabCommand().schedule();
+                    new WheelStopCommand().schedule();
                 })
 
                 .state(State.EXTENDING_OVER_INTAKE)
@@ -74,7 +120,7 @@ public class SpecimenTest extends BluLinearOpMode {
                     new EndEffectorRetractCommand().schedule();
                 })
                 .loop(() -> {
-                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.setManualIntakingPower(-gamepad2.right_stick_y);
+                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.extendOverIntake(-gamepad2.right_stick_y);
                     if(gamepad2.right_bumper) {
                         wheel.reverse();
                         clamp.release();
@@ -102,7 +148,7 @@ public class SpecimenTest extends BluLinearOpMode {
                 })
                 .loop(() -> {
                     if(Math.abs(-gamepad2.right_stick_y) > 0.2) {
-                        extension.setManualIntakingPower(-gamepad2.right_stick_y);
+                        extension.extendOverIntake(-gamepad2.right_stick_y);
                     }
                     clamp.release();
                     wheel.intake();

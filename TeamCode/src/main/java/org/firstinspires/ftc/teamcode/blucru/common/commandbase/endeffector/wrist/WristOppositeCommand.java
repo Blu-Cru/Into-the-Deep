@@ -4,10 +4,10 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
-public class WristUprightForwardCommand extends InstantCommand {
-    public WristUprightForwardCommand() {
+public class WristOppositeCommand extends InstantCommand {
+    public WristOppositeCommand() {
         super(
-                () -> Robot.getInstance().wrist.palmDown()
+                () -> Robot.getInstance().wrist.opposite()
         );
 
         addRequirements(Robot.getInstance().wrist);

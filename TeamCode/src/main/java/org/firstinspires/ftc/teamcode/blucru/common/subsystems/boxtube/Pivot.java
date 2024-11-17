@@ -2,12 +2,11 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Subsystem;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.blucru.common.hardware.LimitSwitch;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 
@@ -22,6 +21,7 @@ public class Pivot implements BluSubsystem, Subsystem {
 
     enum State {
         IDLE,
+        MANUAL,
         PID,
         RETRACTING,
         RESETTING
@@ -31,8 +31,9 @@ public class Pivot implements BluSubsystem, Subsystem {
     PDController pidController;
     MotionProfile profile;
     PivotMotor pivotMotor;
-    LimitSwitch resetLimitSwitch;
-    ElapsedTime resetTimer;
+//    LimitSwitch resetLimitSwitch; not used
+    double retractTime, resetTime;
+    double manualPower;
 
     ExtensionMotor extension; // reference to extension motor for feedforward
 
@@ -40,11 +41,11 @@ public class Pivot implements BluSubsystem, Subsystem {
         pivotMotor = new PivotMotor();
         extension = null;
 
-        resetTimer = new ElapsedTime();
         profile = new MotionProfile(0,0,MAX_VELO, MAX_ACCEL);
         pidController = new PDController(kP, kI, kD);
         pidController.setTolerance(tolerance);
         state = State.IDLE;
+        manualPower = 0;
     }
 
     @Override
@@ -60,18 +61,18 @@ public class Pivot implements BluSubsystem, Subsystem {
 
         switch(state) {
             case IDLE:
+            case MANUAL:
             case PID:
                 break;
             case RETRACTING:
-                if(Math.abs(pivotMotor.getAngle()) < 0.10 && Math.abs(pivotMotor.getAngleVel()) < 0.1) {
+                if(pivotMotor.getAngle() < 0.10 && Math.abs(pivotMotor.getAngleVel()) < 0.1 && Globals.timeSince(retractTime) > 800) {
                     state = State.RESETTING;
-                    resetTimer.reset();
+                    resetTime = Globals.time();
                 }
                 break;
             case RESETTING:
-                if(resetTimer.seconds() > 0.3 && getAngle() < 0.12) {
-                    pivotMotor.setCurrentPosition(0);
-                    pidController.reset();
+                if(Globals.timeSince(resetTime) > 300 && getAngle() < 0.12) {
+                    resetEncoder();
                     pidTo(0.0);
                 }
                 break;
@@ -82,9 +83,12 @@ public class Pivot implements BluSubsystem, Subsystem {
     public void write() {
         switch (state) {
             case IDLE:
+            case MANUAL:
+                setRawPower(manualPower);
+                manualPower = 0;
                 break;
             case RESETTING:
-                setPivotPower(0);
+                setRawPower(0);
                 break;
             case PID:
                 double pidPower = pidController.calculate(pivotMotor.getAngle());
@@ -105,7 +109,8 @@ public class Pivot implements BluSubsystem, Subsystem {
     }
 
     public void retract() {
-        pidTo(0.05);
+        pidTo(0.0);
+        retractTime = Globals.time();
         state = State.RETRACTING;
     }
 
@@ -125,8 +130,13 @@ public class Pivot implements BluSubsystem, Subsystem {
         pidController.setPID(kP, kI, kD);
     }
 
-    private void setPivotPower(double power){
+    public void setRawPower(double power){
         pivotMotor.setPower(Range.clip(power, MAX_DOWN_POWER, MAX_UP_POWER));
+    }
+
+    public void setManualPower(double power) {
+        state = State.MANUAL;
+        manualPower = power;
     }
 
     public void setPowerFF(double power) {
@@ -137,7 +147,7 @@ public class Pivot implements BluSubsystem, Subsystem {
         } else {
             ff = getFF(extension.getDistance());
         }
-        setPivotPower(power + ff);
+        setRawPower(power + ff);
     }
 
     public void idle() {
@@ -155,6 +165,7 @@ public class Pivot implements BluSubsystem, Subsystem {
 
     public void resetEncoder() {
         pivotMotor.resetEncoder();
+        pidController.reset();
     }
 
     @Override

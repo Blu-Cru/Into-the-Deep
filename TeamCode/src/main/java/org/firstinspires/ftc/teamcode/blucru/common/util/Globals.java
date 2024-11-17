@@ -68,4 +68,12 @@ public class Globals {
 
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
+
+    public static double time() {
+        return runtime.milliseconds();
+    }
+
+    public static double timeSince(double time) {
+        return runtime.milliseconds() - time;
+    }
 }
