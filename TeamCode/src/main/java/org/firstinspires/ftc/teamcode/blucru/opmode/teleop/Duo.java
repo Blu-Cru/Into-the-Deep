@@ -29,7 +29,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
@@ -95,7 +94,7 @@ public class Duo extends BluLinearOpMode {
                 // SPECIMEN
                 .transition(() -> -gamepad2.right_stick_y < -0.2, State.EXTENDING_TO_SPECIMEN, () -> {
                     new BoxtubeExtendCommand(0.43, 0).schedule();
-                    new WristHorizontalCommand().schedule();
+                    new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
                 .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () -> {
@@ -181,7 +180,7 @@ public class Duo extends BluLinearOpMode {
                             new PivotCommand(1),
                             new WaitCommand(300),
                             new BoxtubeExtendCommand(1.4, 5),
-                            new WristHorizontalCommand(),
+                            new WristOppositeCommand(),
                             new ArmGlobalAngleCommand(0.64)
                     ).schedule();
                 })

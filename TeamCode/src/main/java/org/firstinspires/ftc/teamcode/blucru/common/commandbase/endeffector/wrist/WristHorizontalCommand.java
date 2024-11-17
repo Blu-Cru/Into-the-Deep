@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 public class WristHorizontalCommand extends InstantCommand {
     public WristHorizontalCommand() {
         super(
-                () -> Robot.getInstance().wrist.opposite()
+                () -> Robot.getInstance().wrist.horizontal()
         );
 
         addRequirements(Robot.getInstance().wrist);

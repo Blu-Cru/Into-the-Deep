@@ -4,12 +4,12 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 
 public class SpecimenBackCommand extends SequentialCommandGroup {
     public SpecimenBackCommand() {
         super(
-                new WristOppositeCommand(),
+                new WristHorizontalCommand(),
                 new ArmGlobalAngleCommand(2.7),
                 new BoxtubeExtendCommand(1.45, 8.5)
         );

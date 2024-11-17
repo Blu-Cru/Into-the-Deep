@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -63,17 +63,17 @@ public class SpecimenTest extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG2.b, State.ABOVE_SPECIMEN, () -> {
                     new BoxtubeExtendCommand(1.4, 5).schedule();
-                    new WristHorizontalCommand().schedule();
+                    new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(2.5).schedule();
                 })
                 .transition(() -> stickyG2.x, State.EXTENDING_TO_WALL, () -> {
                     new BoxtubeExtendCommand(0.3, 5.3).schedule();
-                    new WristOppositeCommand().schedule();
+                    new WristHorizontalCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
                 .transition(() -> stickyG2.y, State.EXTENDING_TO_WALL, () -> {
                     new BoxtubeExtendCommand(0.43, 0).schedule();
-                    new WristHorizontalCommand().schedule();
+                    new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
 
