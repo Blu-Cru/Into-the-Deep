@@ -307,11 +307,7 @@ public class Duo extends BluLinearOpMode {
                             new ArmGlobalAngleCommand(1.5),
                             new WaitCommand(250),
                             new BoxtubeRetractCommand(),
-                            new ClampGrabCommand(),
-                            new WristUprightForwardCommand(),
-                            new WheelStopCommand(),
-                            new WaitCommand(100),
-                            new ArmRetractCommand()
+                            new EndEffectorRetractCommand()
                     ).schedule();
                 })
                 .loop(() -> {
