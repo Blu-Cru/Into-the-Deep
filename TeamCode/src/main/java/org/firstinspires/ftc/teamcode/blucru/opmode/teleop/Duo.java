@@ -364,14 +364,10 @@ public class Duo extends BluLinearOpMode {
 
     @Override
     public void periodic() {
-        if(gamepad1.a) {
-            dt.driveToHeadingScaled(gamepad1.left_stick_x, -gamepad1.left_stick_y, Math.PI/4);
-        } else {
-            dt.teleOpDrive(gamepad1);
-        }
+        dt.teleOpDrive(gamepad1);
 
         if(gamepad1.right_stick_button) {
-            dt.resetHeading(Math.PI/2);
+            dt.setHeading(Math.PI/2);
             gamepad1.rumble(150);
         }
         sm.update();

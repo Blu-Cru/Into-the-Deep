@@ -14,21 +14,21 @@ public class NewDrivetrainPIDTest extends BluLinearOpMode {
 
     @Override
     public void initialize() {
-        addNewDrivetrain();
+        addDrivetrain();
         enableFTCDashboard();
     }
 
     @Override
     public void periodic() {
-        newDt.updatePID();
+        dt.updatePID();
 
         if(gamepad1.a) {
-            newDt.pidTo(new Pose2d(targetX, targetY, targetHeading));
+            dt.pidTo(new Pose2d(targetX, targetY, targetHeading));
         } else {
-            newDt.idle();
+            dt.idle();
 
             if(gamepad1.right_stick_button) {
-                newDt.setHeading(Math.PI/2);
+                dt.setHeading(Math.PI/2);
             }
 
             double x = gamepad1.left_stick_x;
@@ -37,9 +37,9 @@ public class NewDrivetrainPIDTest extends BluLinearOpMode {
 
             Pose2d drivePose = new Pose2d(x, y, rot);
 
-            newDt.driveFieldCentric(drivePose);
+            dt.driveFieldCentric(drivePose);
         }
 
-        newDt.drawPose();
+        dt.drawPose();
     }
 }

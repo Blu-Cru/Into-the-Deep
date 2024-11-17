@@ -196,7 +196,7 @@ public class SpecimenTest extends BluLinearOpMode {
     @Override
     public void periodic() {
         dt.teleOpDrive(gamepad1);
-        if(gamepad1.right_stick_button) dt.resetHeading(Math.PI/2);
+        if(gamepad1.right_stick_button) dt.setHeading(Math.PI/2);
         sm.update();
     }
 

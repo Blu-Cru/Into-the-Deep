@@ -9,7 +9,12 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 public class DriveBaseTest extends BluLinearOpMode {
     @Override
     public void initialize() {
-        addNewDrivetrain();
+        addDrivetrain();
+    }
+
+    @Override
+    public void initLoop() {
+        telemetry.addLine("Initialized");
     }
 
     @Override
@@ -22,10 +27,10 @@ public class DriveBaseTest extends BluLinearOpMode {
         Pose2d drivePose = new Pose2d(x, y, rot);
 
         if(gamepad1.right_stick_button) {
-            newDt.setHeading(Math.PI/2);
+            dt.setHeading(Math.PI/2);
         }
 
 //        Pose2d drivePose = new Pose2d(new Vector2d(x,y).rotated(-Math.PI/2), rot);
-        newDt.driveFieldCentric(drivePose);
+        dt.driveFieldCentric(drivePose);
     }
 }

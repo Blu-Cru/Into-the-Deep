@@ -30,7 +30,6 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public Pivot pivot;
     public Wheel wheel;
     public Extension extension;
-    public Drivetrain newDt;
 
     public StickyGamepad stickyG1;
     public StickyGamepad stickyG2;
@@ -61,9 +60,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
             stickyG2.update();
             CommandScheduler.getInstance().run();
             initLoop();
-            try {
-                telemetry();
-            } catch (Exception e) {}
+            telemetry();
             telemetry.update();
         }
         waitForStart();
@@ -121,7 +118,6 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public void addPivot() {pivot = robot.addPivot();}
     public void addWheel() {wheel = robot.addWheel();}
     public void addExtension() {extension = robot.addExtension();}
-    public void addNewDrivetrain() {newDt = robot.addNewDrivetrain();}
 
     // enable the FTC Dashboard telemetry and field overlay
     public void enableFTCDashboard() {

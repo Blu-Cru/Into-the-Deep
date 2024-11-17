@@ -24,7 +24,7 @@ public class DriveToPositionTest extends BluLinearOpMode {
     }
 
     public void periodic() {
-        dt.updateTranslationPID();
+        dt.updatePID();
         dt.drivePower = power;
 
         if(gamepad1.a) {
@@ -37,11 +37,11 @@ public class DriveToPositionTest extends BluLinearOpMode {
 
         if(mode.equals("driver control")) {
             if(gamepad1.right_stick_button) {
-                dt.resetHeading(Math.toRadians(90));
+                dt.setHeading(Math.toRadians(90));
                 gamepad1.rumble(100);
             }
 
-            dt.teleOpDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x);
+            dt.teleOpDrive(gamepad1);
         } else if(mode.equals("drive to position")) {
             dt.pidTo(new Pose2d(targetX, targetY, targetHeading));
         }
@@ -52,7 +52,7 @@ public class DriveToPositionTest extends BluLinearOpMode {
         telemetry.addData("target x", targetX);
         telemetry.addData("target y", targetY);
         telemetry.addData("target heading", targetHeading);
-        dt.ftcDashDrawPose();
+        dt.drawPose();
         telemetry.addData("current x", dt.getPoseEstimate().getX());
         telemetry.addData("current y", dt.getPoseEstimate().getY());
         telemetry.addData("current heading", dt.getPoseEstimate().getHeading());

@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 public class PIDPathTest extends BluLinearOpMode {
     private enum State {
         RESETTING,
-        FOLLOWING_TRAJECTORY,
         FOLLOWING_PID
     }
 
