@@ -103,6 +103,18 @@ public class Duo extends BluLinearOpMode {
                 .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
                     new SpecimenFrontCommand().schedule();
                 })
+                .loop(() -> {
+                    if(stickyG2.right_bumper) {
+                        new SequentialCommandGroup(
+                                new ArmPreIntakeCommand(),
+                                new WaitCommand(150),
+                                new ClampReleaseCommand(),
+                                new WheelReverseCommand(),
+                                new WaitCommand(300),
+                                new EndEffectorRetractCommand()
+                        ).schedule();
+                    }
+                })
 
                 .state(State.EXTENDING_OVER_INTAKE)
                 .onEnter(() -> dt.drivePower = 0.7)
@@ -252,9 +264,9 @@ public class Duo extends BluLinearOpMode {
                             new ClampReleaseCommand(),
                             new WheelReverseCommand(),
                             new WaitCommand(300),
-                            new BoxtubeRetractCommand(),
+                            new EndEffectorRetractCommand(),
                             new WaitCommand(250),
-                            new EndEffectorRetractCommand()
+                            new BoxtubeRetractCommand()
                     ).schedule();
                 })
 
@@ -276,9 +288,9 @@ public class Duo extends BluLinearOpMode {
 
                 .state(State.DUNKING_SPECIMEN_BACK)
                 .onEnter(() -> dt.drivePower = 0.4)
-                .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN_BACK, () -> {
-                    new BoxtubeExtendCommand(1.4, 5).schedule();
-                })
+                .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN_BACK, () ->
+                        new SpecimenBackCommand().schedule())
+
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ClampReleaseCommand(),
