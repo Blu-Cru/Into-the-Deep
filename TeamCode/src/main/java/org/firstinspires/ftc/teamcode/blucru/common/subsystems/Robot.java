@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.IntakeSwitch;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist;
 
@@ -26,7 +27,7 @@ public class Robot {
     public Wheel wheel;
     public Pivot pivot;
     public Extension extension;
-    public Drivetrain newDt;
+    public IntakeSwitch intakeSwitch;
 
     // list of all subsystems
     ArrayList<BluSubsystem> subsystems;
@@ -133,10 +134,10 @@ public class Robot {
         return extension;
     }
 
-    public Drivetrain addNewDrivetrain() {
-        newDt = new Drivetrain();
-        subsystems.add(newDt);
-        return newDt;
+    public IntakeSwitch addIntakeSwitch() {
+        intakeSwitch = new IntakeSwitch();
+        subsystems.add(intakeSwitch);
+        return intakeSwitch;
     }
 
     // call this after every op mode

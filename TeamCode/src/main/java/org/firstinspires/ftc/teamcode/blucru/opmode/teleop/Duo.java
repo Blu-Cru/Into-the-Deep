@@ -62,6 +62,7 @@ public class Duo extends BluLinearOpMode {
         addWheel();
         addClamp();
         addWrist();
+        addIntakeSwitch();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
@@ -138,14 +139,20 @@ public class Duo extends BluLinearOpMode {
 
                 .state(State.INTAKING_GROUND)
                 .onEnter(() -> dt.drivePower = 0.65)
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG2.a || intakeSwitch.pressed(), State.RETRACTED, () -> {
                     new SequentialCommandGroup(
-                            new ClampGrabCommand(),
-                            new WheelStopCommand(),
-                            new ArmPreIntakeCommand(),
-//                            new WaitCommand(300),
-                            new ExtensionRetractCommand(),
-                            new EndEffectorRetractCommand()
+                            new EndEffectorRetractCommand(),
+                            new WaitCommand(100),
+                            new BoxtubeRetractCommand()
+                    ).schedule();
+                })
+                .transition(() -> intakeSwitch.pressed(), State.RETRACTED, () -> {
+                    gamepad1.rumble(200);
+                    gamepad2.rumble(200);
+                    new SequentialCommandGroup(
+                            new EndEffectorRetractCommand(),
+                            new WaitCommand(100),
+                            new BoxtubeRetractCommand()
                     ).schedule();
                 })
                 .transition(() -> !gamepad2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {

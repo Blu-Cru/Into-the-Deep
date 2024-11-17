@@ -3,14 +3,15 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.contr
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.util.Range;
 
 @Config
 public class DrivePID {
     public static double
-            kPX = 0.18, kIX = 0, kDX = 0.025,
-            kPY = 0.18, kIY = 0, kDY = 0.025,
+            kPX = 0.18, kIX = 0, kDX = 0.021,
+            kPY = 0.18, kIY = 0, kDY = 0.021,
             kPHeading = 1.7, kIHeading = 0, kDHeading = 0.1;
 
     PIDController xController, yController, headingController;
@@ -60,5 +61,15 @@ public class DrivePID {
         else if(heading - headingController.getSetPoint() > Math.PI) heading -= 2 * Math.PI;
 
         return Range.clip(headingController.calculate(heading), -1, 1);
+    }
+
+    public boolean inRange(Pose2d pose, double translationTolerance, double headingTolerance) {
+        Vector2d targetVec = new Vector2d(xController.getSetPoint(), yController.getSetPoint());
+        boolean translationInRange = pose.vec().minus(targetVec).norm() < translationTolerance;
+
+        double angleDelta = Angle.normDelta(pose.getHeading() - headingController.getSetPoint());
+        boolean headingInRange = angleDelta < headingTolerance;
+
+        return translationInRange && headingInRange;
     }
 }

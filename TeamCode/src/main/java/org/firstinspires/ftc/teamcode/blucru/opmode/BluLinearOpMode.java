@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.IntakeSwitch;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
@@ -30,6 +31,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public Pivot pivot;
     public Wheel wheel;
     public Extension extension;
+    public IntakeSwitch intakeSwitch;
 
     public StickyGamepad stickyG1;
     public StickyGamepad stickyG2;
@@ -118,6 +120,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public void addPivot() {pivot = robot.addPivot();}
     public void addWheel() {wheel = robot.addWheel();}
     public void addExtension() {extension = robot.addExtension();}
+    public void addIntakeSwitch() {intakeSwitch = robot.addIntakeSwitch();}
 
     // enable the FTC Dashboard telemetry and field overlay
     public void enableFTCDashboard() {

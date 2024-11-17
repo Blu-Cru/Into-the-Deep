@@ -17,7 +17,7 @@ public class Clamp extends BluServo implements BluSubsystem, Subsystem {
 
     public void init() {
         super.init();
-        release();
+        grab();
     }
 
     public void grab() {

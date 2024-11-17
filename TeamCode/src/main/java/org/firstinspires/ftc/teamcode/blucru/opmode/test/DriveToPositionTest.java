@@ -37,7 +37,7 @@ public class DriveToPositionTest extends BluLinearOpMode {
 
         if(mode.equals("driver control")) {
             if(gamepad1.right_stick_button) {
-                dt.setHeading(Math.toRadians(90));
+                dt.setPoseEstimate(new Pose2d(0,0, Math.toRadians(90)));
                 gamepad1.rumble(100);
             }
 

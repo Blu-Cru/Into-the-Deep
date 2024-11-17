@@ -4,7 +4,11 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
 
 public class FourSampleConfig extends AutoConfig {
-    Path preloadPath;
+    Path depositPath;
+    Path rightIntakePath, centerIntakePath, leftIntakePath,
+        rightFailsafePath, centerFailsafePath, leftFailsafePath;
+
+    Path currentPath;
 
     @Override
     public void build() {

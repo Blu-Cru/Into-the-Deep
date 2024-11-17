@@ -11,7 +11,7 @@ public class DriveKinematics {
     public static double
         AXIAL_DECEL = 0.5, LATERAL_DECEL = 0.5, HEADING_DECEL = 8,
         LATERAL_MULTIPLIER = 1.8,
-        STRAFE_kStatic = 0.05, FORWARD_kStatic = 0.02, // feedforward constants for static friction
+        STRAFE_kStatic = 0.02, FORWARD_kStatic = 0.01, // feedforward constants for static friction
         MAX_ACCEL_DRIVE_DELTA = 0.5, MAX_DECEL_DRIVE_DELTA = 0.5;
 
     public static double getHeadingTowardsPoint(Pose2d currentPose, Pose2d targetPose) {

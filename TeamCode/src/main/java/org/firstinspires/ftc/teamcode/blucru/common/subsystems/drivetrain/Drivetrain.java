@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.contro
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DrivePID;
 
 public class Drivetrain extends DriveBase implements Subsystem {
+    public static double PATH_HEADING_TOLERANCE = 0.18;
+
     enum State {
         IDLE,
         PID
@@ -27,10 +29,20 @@ public class Drivetrain extends DriveBase implements Subsystem {
         state = State.IDLE;
         pid = new DrivePID();
 
-        pid.setTargetPose(pose);
-
         lastTurning = false;
         lastTranslating = false;
+    }
+
+    @Override
+    public void init() {
+        super.init();
+
+        pid.setTargetPose(pose);
+    }
+
+    @Override
+    public void read() {
+        super.read();
     }
 
     @Override
@@ -52,7 +64,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
 
         double vert = -g1.left_stick_y;
         double horiz = g1.left_stick_x;
-        double rotate = g1.right_stick_x;
+        double rotate = -g1.right_stick_x;
 
         if(g1.a) {
             driveToHeading(horiz, vert, Math.PI/4);
@@ -72,6 +84,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
             // if just started translating, drive to current heading
             driveToHeading(horiz, vert, heading);
         } else if(!translating) {
+            pid.setTargetHeading(heading);
             // if not translating, drive 0,0,0
             drive(new Pose2d(0,0,0));
         } else {
@@ -109,6 +122,10 @@ public class Drivetrain extends DriveBase implements Subsystem {
     public void idle() {
         state = State.IDLE;
         drive(new Pose2d(0,0,0));
+    }
+
+    public boolean inRange(double translationTolerance) {
+        return pid.inRange(pose, translationTolerance, PATH_HEADING_TOLERANCE);
     }
 
     @Override

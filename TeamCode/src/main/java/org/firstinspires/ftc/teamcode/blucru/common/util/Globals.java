@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.util.DashboardUtil;
 
 public class Globals {
     // default pose for the robot, will be changed at the end of auto
-    public static Pose2d startPose = new Pose2d(0, 0, Math.toRadians(90));
+    public static Pose2d startPose = new Pose2d(-40.5, -64, Math.toRadians(90));
     public static HardwareMap hwMap; // global reference to current hwmap
     public static Telemetry tele; // global reference to current telemetry
 
@@ -44,7 +45,13 @@ public class Globals {
     }
 
     public static Pose2d mapPose(double x, double y, double headingDegrees) {
-        return new Pose2d(x * reflect, y * reflect, Math.toRadians(headingDegrees * reflect));
+        x = x*reflect;
+        y = y*reflect;
+        if(reflect < 0) {
+            headingDegrees += 180;
+        }
+
+        return new Pose2d(x, y, Angle.norm(Math.toRadians(headingDegrees)));
     }
 
     public static void setVoltage(double voltage) {

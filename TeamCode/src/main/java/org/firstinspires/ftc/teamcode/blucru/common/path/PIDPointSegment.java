@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.blucru.common.path;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
+
 public class PIDPointSegment implements PathSegment{
     static double FAIL_TIME = 1000;
 
@@ -25,10 +27,8 @@ public class PIDPointSegment implements PathSegment{
     }
 
     public boolean atTarget() {
-//        boolean velSatisfied = !stopRequiredToEnd || Robot.getInstance().drivetrain.velocity.vec().norm() < 4.0;
-//        boolean velSatisfied = true;
-//        return Robot.getInstance().drivetrain.inRange(pose, translationTolerance) && velSatisfied;
-        return false;
+        boolean velSatisfied = !stopRequiredToEnd || Robot.getInstance().dt.vel.vec().norm() < 4.0;
+        return Robot.getInstance().dt.inRange(translationTolerance) && velSatisfied;
     }
 
     public boolean isDone() {

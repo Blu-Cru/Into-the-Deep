@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
 
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class PIDPathBuilder {
 
     public PIDPathBuilder setPower(double power) {
         return schedule(new InstantCommand(() -> {
-//            Robot.getInstance().drivetrain.setDrivePower(Globals.correctPower(power));
+            Robot.getInstance().dt.drivePower = Globals.correctPower(power);
         }));
     }
 

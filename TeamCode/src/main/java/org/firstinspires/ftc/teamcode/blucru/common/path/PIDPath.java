@@ -59,7 +59,7 @@ public class PIDPath implements Path {
     }
 
     public void cancel() {
-//        Robot.getInstance().dt.idle();
+        Robot.getInstance().dt.idle();
         pathDone = true;
     }
 

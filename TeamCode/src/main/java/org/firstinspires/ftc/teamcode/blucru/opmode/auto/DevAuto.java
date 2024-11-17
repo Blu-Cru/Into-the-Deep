@@ -1,18 +1,21 @@
-package org.firstinspires.ftc.teamcode.blucru.opmode.test;
+package org.firstinspires.ftc.teamcode.blucru.opmode.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.TestPath;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
-@TeleOp(name = "PID Path test", group = "test")
-public class PIDPathTest extends BluLinearOpMode {
+@Autonomous(name = "Dev Auto", group = "3")
+public class DevAuto extends BluLinearOpMode {
     private enum State {
         RESETTING,
         FOLLOWING_PID
@@ -28,6 +31,16 @@ public class PIDPathTest extends BluLinearOpMode {
     @Override
     public void initialize() {
         addDrivetrain();
+        addExtension();
+        addPivot();
+        addArm();
+        addWheel();
+        addWrist();
+        addClamp();
+
+        extension.usePivot(pivot.getMotor());
+        pivot.useExtension(extension.getMotor());
+
         enableFTCDashboard();
 
         Globals.setAlliance(Alliance.RED);
@@ -50,6 +63,8 @@ public class PIDPathTest extends BluLinearOpMode {
                     dt.idle();
                     pidPath.cancel();
                     dt.teleOpDrive(gamepad1);
+                    new BoxtubeRetractCommand().schedule();
+                    new EndEffectorRetractCommand().schedule();
                 })
                 .loop(() -> {
                     pidPath.run();
@@ -62,6 +77,11 @@ public class PIDPathTest extends BluLinearOpMode {
         sm.start();
 
 //        cvMaster.detectTag();
+    }
+
+    @Override
+    public void initLoop() {
+        robot.write();
     }
 
     @Override
