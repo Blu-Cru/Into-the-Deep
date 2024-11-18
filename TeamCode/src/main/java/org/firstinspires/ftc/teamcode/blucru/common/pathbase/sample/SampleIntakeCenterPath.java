@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
-public class SampleIntakeRightPath extends PIDPathBuilder {
-    public SampleIntakeRightPath() {
+public class SampleIntakeCenterPath extends PIDPathBuilder {
+    public SampleIntakeCenterPath() {
         super();
         this.setPower(0.2)
-                .addMappedPoint(40, 50, 270, 4)
+                .addMappedPoint(43, 45, 270, 4)
                 .setPower(0.5)
-                .addMappedPoint(32, 31, -18, 3)
+                .addMappedPoint(39, 31, -18, 3)
                 .schedule(new SequentialCommandGroup(
                         new ArmDropToGroundCommand(),
                         new ExtensionCommand(1),

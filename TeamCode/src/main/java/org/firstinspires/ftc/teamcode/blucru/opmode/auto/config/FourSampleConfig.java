@@ -5,9 +5,14 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeCenterPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeLeftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeRightPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleLiftingPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleParkPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleScoreHighPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
@@ -16,7 +21,8 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
 public class FourSampleConfig extends AutoConfig {
     Path liftingPath, scorePath,
         rightIntakePath, centerIntakePath, leftIntakePath,
-        rightFailsafePath, centerFailsafePath, leftFailsafePath;
+        rightFailsafePath, centerFailsafePath, leftFailsafePath,
+        parkPath;
 
     Path currentPath;
     StateMachine sm;
@@ -34,11 +40,26 @@ public class FourSampleConfig extends AutoConfig {
         DONE
     }
 
+    public State[] statesAfterDeposit;
+    public Path[] pathsAfterDeposit;
+
     ElapsedTime runtime;
     int scoreCount;
 
     public FourSampleConfig() {
         runtime = Globals.runtime;
+
+        statesAfterDeposit = new State[3];
+        statesAfterDeposit[0] = State.RIGHT_INTAKE;
+        statesAfterDeposit[1] = State.CENTER_INTAKE;
+        statesAfterDeposit[2] = State.LEFT_INTAKE;
+        statesAfterDeposit[3] = State.PARKING;
+
+        pathsAfterDeposit = new Path[3];
+        pathsAfterDeposit[0] = rightIntakePath;
+        pathsAfterDeposit[1] = centerIntakePath;
+        pathsAfterDeposit[2] = leftIntakePath;
+        pathsAfterDeposit[3] = parkPath;
 
         scoreCount = 0;
 
@@ -46,9 +67,37 @@ public class FourSampleConfig extends AutoConfig {
                 .state(State.LIFTING)
                 .transition(() -> Robot.getInstance().extension.getPIDError() < 2 && currentPath.isDone(),
                         State.DEPOSITING,
-                        () -> currentPath = scorePath.start())
+                        () -> {
+                            currentPath = scorePath.start();
+                            scoreCount++;
+                        })
                 .state(State.DEPOSITING)
-                .transition(() -> currentPath.isDone())
+                .transition(() -> currentPath.isDone(), statesAfterDeposit[scoreCount-1],
+                        () -> currentPath = pathsAfterDeposit[scoreCount-1].start())
+                .state(State.RIGHT_INTAKE)
+                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                        State.LIFTING, () -> {
+                            new BoxtubeRetractCommand().schedule();
+                            new EndEffectorRetractCommand().schedule();
+                            currentPath = liftingPath.start();
+                        })
+                .state(State.CENTER_INTAKE)
+                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                        State.LIFTING, () -> {
+                            new BoxtubeRetractCommand().schedule();
+                            new EndEffectorRetractCommand().schedule();
+                            currentPath = liftingPath.start();
+                        })
+                .state(State.LEFT_INTAKE)
+                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                        State.LIFTING, () -> {
+                            new BoxtubeRetractCommand().schedule();
+                            new EndEffectorRetractCommand().schedule();
+                            currentPath = liftingPath.start();
+                        })
+                .state(State.PARKING)
+                .transition(() -> currentPath.isDone(), State.DONE)
+                .state(State.DONE)
                 .build();
     }
 
@@ -58,6 +107,9 @@ public class FourSampleConfig extends AutoConfig {
         scorePath = new SampleScoreHighPath().build();
 
         rightIntakePath = new SampleIntakeRightPath().build();
+        centerIntakePath = new SampleIntakeCenterPath().build();
+        leftIntakePath = new SampleIntakeLeftPath().build();
+        parkPath = new SampleParkPath().build();
     }
 
     @Override

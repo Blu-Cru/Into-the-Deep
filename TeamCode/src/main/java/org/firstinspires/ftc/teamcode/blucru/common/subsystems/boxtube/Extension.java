@@ -139,7 +139,7 @@ public class Extension implements BluSubsystem, Subsystem {
     }
 
     public void setRawPower(double power) {
-        extensionMotor.setPower(Range.clip(power, MAX_RETRACT_POWER, MAX_EXTEND_POWER));
+        extensionMotor.setPower(power);
     }
 
     public void setManualPower(double power) {
