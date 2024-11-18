@@ -29,8 +29,10 @@ public class DrivePID {
     }
 
     public Pose2d calculate(Pose2d currentPose) {
-        double xPower = Range.clip(xController.calculate(currentPose.getX()), -1, 1);
-        double yPower = Range.clip(yController.calculate(currentPose.getY()), -1, 1);
+//        double xPower = Range.clip(xController.calculate(currentPose.getX()), -1, 1);
+//        double yPower = Range.clip(yController.calculate(currentPose.getY()), -1, 1);
+        double xPower = xController.calculate(currentPose.getX());
+        double yPower = yController.calculate(currentPose.getY());
         double headingPower = getRotate(currentPose.getHeading());
         return new Pose2d(xPower, yPower, headingPower);
     }

@@ -66,11 +66,9 @@ public class Duo extends BluLinearOpMode {
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
-        dt.drivePower = 0.8;
-
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
-                .onEnter(() -> dt.drivePower = 0.8)
+                .onEnter(() -> dt.drivePower = 0.75)
                 .transition(() -> stickyG2.share, State.MANUAL_RESET, () -> {
                     gamepad1.rumble(150);
                     gamepad2.rumble(150);
@@ -138,7 +136,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.INTAKING_GROUND)
-                .onEnter(() -> dt.drivePower = 0.65)
+                .onEnter(() -> dt.drivePower = 0.55)
                 .transition(() -> stickyG2.a || intakeSwitch.pressed(), State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new EndEffectorRetractCommand(),

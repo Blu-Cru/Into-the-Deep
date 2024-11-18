@@ -14,7 +14,7 @@ public class BoxtubeRetractCommand extends SequentialCommandGroup {
 
                         // Wait time depends on distance extension needs to extend. Longer extension requires longer wait time.
                         // here i do distance in inches times 15, so at 15 inches it will wait 225 ms
-                        new WaitCommand((long) (Robot.getInstance().extension.getDistance() * 20.0)),
+                        new WaitCommand((long) (Robot.getInstance().extension.getDistance() * 25.0)),
                         new PivotRetractCommand()
                 )
         );
