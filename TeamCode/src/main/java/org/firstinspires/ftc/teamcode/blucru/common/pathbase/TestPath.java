@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
 
 public class TestPath extends PIDPathBuilder {
     public TestPath() {
@@ -52,8 +53,13 @@ public class TestPath extends PIDPathBuilder {
                 ))
                 .addMappedPoint(32, 31, -18, 3)
                 .schedule(new SequentialCommandGroup(
-                        new WaitCommand(400),
-                        new ExtensionCommand(6)
+                        new ArmDropToGroundCommand(),
+                        new ExtensionCommand(1),
+                        new WaitCommand(300),
+                        new WheelIntakeCommand(),
+                        new ClampReleaseCommand(),
+                        new WaitCommand(100),
+                        new ExtensionCommand(4)
                 ))
                 .waitMillis(1000);
     }

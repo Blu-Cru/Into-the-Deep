@@ -125,6 +125,10 @@ public class Extension implements BluSubsystem, Subsystem {
         pidTo(Range.clip(unlimitedPos, 0, MAX_HORIZ_EXTENSION));
     }
 
+    public double getPIDError() {
+        return Math.abs(getDistance() - pidController.getSetPoint());
+    }
+
     public void setPowerFeedForward(double power) {
         double ff;
 
