@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto.config;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
@@ -142,7 +143,7 @@ public class FiveSampleConfig extends AutoConfig {
     }
 
     @Override
-    public void setStartPose() {
-        Globals.startPose = Globals.mapPose(40.5, 64, 270);
+    public Pose2d getStartPose() {
+        return Globals.mapPose(40.5, 64, 270);
     }
 }

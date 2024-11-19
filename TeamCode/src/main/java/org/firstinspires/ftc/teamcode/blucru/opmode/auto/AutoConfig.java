@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachine;
 
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
-import org.firstinspires.ftc.teamcode.blucru.common.util.AutoType;
-import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.FiveSampleConfig;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.FourSampleConfig;
 
@@ -40,7 +39,7 @@ public abstract class AutoConfig {
     public abstract void build();
     public abstract void start();
     public abstract void telemetry();
-    public abstract void setStartPose();
+    public abstract Pose2d getStartPose();
 
     public void run() {
         sm.update();

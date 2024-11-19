@@ -50,7 +50,6 @@ public class Auto extends BluLinearOpMode {
                 config = AutoConfig.config();
                 config.build();
 
-                config.setStartPose();
                 telemetry.addLine("Config Built!!!! good job you deserve a pat on the back");
                 telemetry.update();
 
@@ -73,7 +72,7 @@ public class Auto extends BluLinearOpMode {
                 gamepad2.rumble(200);
             })
             .transition(this::opModeIsActive, State.RUNNING, () -> {
-                dt.setPoseEstimate(Globals.startPose);
+                dt.setPoseEstimate(config.getStartPose());
                 config.start();
             })
             .state(State.RUNNING)
