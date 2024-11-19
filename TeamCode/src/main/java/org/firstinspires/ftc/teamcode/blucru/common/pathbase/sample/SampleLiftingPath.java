@@ -7,7 +7,7 @@ public class SampleLiftingPath extends PIDPathBuilder {
     public SampleLiftingPath() {
         super();
         this.setPower(0.3)
-                .addMappedPoint(50, 50, 225, 20)
+                .addMappedPoint(-50, -50, 45, 20)
                 .schedule(new BasketBackHighCommand())
                 .waitMillis(1000);
     }

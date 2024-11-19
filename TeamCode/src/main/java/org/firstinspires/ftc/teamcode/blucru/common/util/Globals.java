@@ -15,11 +15,11 @@ import org.firstinspires.ftc.teamcode.roadrunner.util.DashboardUtil;
 
 public class Globals {
     // default pose for the robot, will be changed at the end of auto
-    public static Pose2d startPose = new Pose2d(-40.5, -64, Math.toRadians(90));
+    public static Pose2d startPose = new Pose2d(0, 0, Math.toRadians(90));
     public static HardwareMap hwMap; // global reference to current hwmap
     public static Telemetry tele; // global reference to current telemetry
 
-    public static double reflect = -1;
+    public static double reflect = 1;
 
     // default alliance is red, but will be changed before auto starts
     public static Alliance alliance = Alliance.RED;
@@ -29,12 +29,12 @@ public class Globals {
 
     public static void setAlliance(Alliance alliance) {
         Globals.alliance = alliance;
-        Globals.reflect = alliance == Alliance.RED ? -1 : 1;
+        Globals.reflect = alliance == Alliance.RED ? 1 : -1;
     }
 
     public static void flipAlliance() {
         Globals.alliance = Globals.alliance.flip();
-        Globals.reflect = Globals.alliance == Alliance.RED ? -1 : 1;
+        Globals.reflect = Globals.alliance == Alliance.RED ? 1 : -1;
     }
 
     public static Pose2d mapPose(double x, double y, double headingDegrees) {

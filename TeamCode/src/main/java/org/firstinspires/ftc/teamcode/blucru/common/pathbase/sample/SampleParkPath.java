@@ -6,9 +6,9 @@ public class SampleParkPath extends PIDPathBuilder {
     public SampleParkPath() {
         super();
         this.setPower(0.2)
-                .addMappedPoint(50, 40, 270, 4)
+                .addMappedPoint(-50, -40, 90, 4)
                 .setPower(0.6)
-                .addMappedPoint(48, 20, 315, 8)
-                .addMappedPoint(26, 12, 0);
+                .addMappedPoint(-48, -20, 135, 8)
+                .addMappedPoint(-26, -12, 180);
     }
 }

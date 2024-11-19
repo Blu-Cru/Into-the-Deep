@@ -126,6 +126,6 @@ public class FourSampleConfig extends AutoConfig {
 
     @Override
     public Pose2d getStartPose() {
-        return Globals.mapPose(40.5, 64, 270);
+        return Globals.mapPose(-40.5, -64, 90);
     }
 }

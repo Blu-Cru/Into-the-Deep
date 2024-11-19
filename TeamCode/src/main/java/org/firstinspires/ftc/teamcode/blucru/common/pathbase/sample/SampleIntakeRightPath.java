@@ -13,9 +13,9 @@ public class SampleIntakeRightPath extends PIDPathBuilder {
     public SampleIntakeRightPath() {
         super();
         this.setPower(0.2)
-                .addMappedPoint(40, 50, 270, 4)
+                .addMappedPoint(-40, -50, 90, 4)
                 .setPower(0.5)
-                .addMappedPoint(32, 31, -18, 3)
+                .addMappedPoint(-32, -31, 198, 3)
                 .schedule(new SequentialCommandGroup(
                         new ArmDropToGroundCommand(),
                         new ExtensionCommand(1),

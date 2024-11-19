@@ -25,9 +25,9 @@ public class TestPath extends PIDPathBuilder {
                         new WaitCommand(200),
                         new BasketBackHighCommand()
                 ))
-                .addMappedPoint(50, 50, 225)
+                .addMappedPoint(-50, -50, 45)
                 .setPower(0.2)
-                .addMappedPoint(54, 54, 225)
+                .addMappedPoint(-54, -54, 45)
                 .schedule(new SequentialCommandGroup(
                         new WaitCommand(150),
                         new ClampReleaseCommand(),
@@ -41,7 +41,7 @@ public class TestPath extends PIDPathBuilder {
                         new EndEffectorRetractCommand()
                 ))
                 .setPower(0.2)
-                .addMappedPoint(40, 50, 270, 6)
+                .addMappedPoint(-40, -50, 90, 6)
                 .setPower(0.5)
                 .schedule(new SequentialCommandGroup(
                         new WaitCommand(400),
@@ -51,7 +51,7 @@ public class TestPath extends PIDPathBuilder {
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand()
                 ))
-                .addMappedPoint(32, 31, -18, 3)
+                .addMappedPoint(-32, -31, 198, 3)
                 .schedule(new SequentialCommandGroup(
                         new ArmDropToGroundCommand(),
                         new ExtensionCommand(1),

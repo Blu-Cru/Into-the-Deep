@@ -13,9 +13,9 @@ public class SamplePartnerIntakePath extends PIDPathBuilder {
     public SamplePartnerIntakePath() {
         super();
         this.setPower(0.2)
-                .addMappedPoint(40, 60, 225, 4)
+                .addMappedPoint(-40, -60, 45, 4)
                 .setPower(0.5)
-                .addMappedPoint(10, 60, 180, 3)
+                .addMappedPoint(-10, -60, 0, 3)
                 .schedule(new SequentialCommandGroup(
                         new ArmDropToGroundCommand(),
                         new ExtensionCommand(1),
