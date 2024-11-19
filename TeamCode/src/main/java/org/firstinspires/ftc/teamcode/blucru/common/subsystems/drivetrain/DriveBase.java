@@ -34,8 +34,6 @@ public class DriveBase implements BluSubsystem {
         motors = new BluMotor[] {fl, fr, bl, br};
 
         localizer.setPoseEstimate(Globals.startPose);
-
-        read();
     }
 
     @Override
@@ -43,6 +41,8 @@ public class DriveBase implements BluSubsystem {
         for (BluMotor motor : motors) {
             motor.init();
         }
+
+        read();
     }
 
     @Override

@@ -140,8 +140,17 @@ public class FiveSampleConfig extends AutoConfig {
     @Override
     public void telemetry() {
         Telemetry tele = Globals.tele;
-        tele.addLine("Four Sample Config");
-        tele.addData("State", sm.getState());
+        tele.addLine("Five Sample Config");
+        tele.addData("Config state", sm.getState());
         tele.addData("runtime", runtime.seconds());
+    }
+
+    @Override
+    public void setStartPose() {
+        Globals.startPose = Globals.mapPose(40.5, 64, 270);
+    }
+
+    public void stop() {
+        currentPath.cancel();
     }
 }

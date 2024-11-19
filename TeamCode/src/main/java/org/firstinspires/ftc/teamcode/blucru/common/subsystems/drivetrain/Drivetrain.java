@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DriveKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DrivePID;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class Drivetrain extends DriveBase implements Subsystem {
     public static double PATH_HEADING_TOLERANCE = 0.18;
@@ -35,6 +36,8 @@ public class Drivetrain extends DriveBase implements Subsystem {
 
     @Override
     public void init() {
+        setPoseEstimate(Globals.startPose);
+
         super.init();
 
         pid.setTargetPose(pose);

@@ -23,25 +23,18 @@ public class Globals {
 
     // default alliance is red, but will be changed before auto starts
     public static Alliance alliance = Alliance.RED;
-    public static AutoType autoType = AutoType.FOUR_SAMPLE;
-
     public static ElapsedTime runtime;
 
     public static double voltage = 13.0;
 
-    public static void startAuto() {
-        Globals.runtime = new ElapsedTime();
-        Globals.runtime.reset();
-    }
-
-//    public static void setAutoStartPose() {
-//        if(side == Side.AUDIENCE) Globals.startPose = Globals.mapPose(-36, 62, 90);
-//        else Globals.startPose = Globals.mapPose(12, 62, 90);
-//    }
-
     public static void setAlliance(Alliance alliance) {
         Globals.alliance = alliance;
         Globals.reflect = alliance == Alliance.RED ? -1 : 1;
+    }
+
+    public static void flipAlliance() {
+        Globals.alliance = Globals.alliance.flip();
+        Globals.reflect = Globals.alliance == Alliance.RED ? -1 : 1;
     }
 
     public static Pose2d mapPose(double x, double y, double headingDegrees) {

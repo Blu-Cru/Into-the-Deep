@@ -60,26 +60,32 @@ public abstract class BluLinearOpMode extends LinearOpMode {
         while(opModeInInit()) {
             stickyG1.update();
             stickyG2.update();
-            CommandScheduler.getInstance().run();
-            initLoop();
-            telemetry();
-            telemetry.update();
-        }
-        waitForStart();
-        robot.read();
-        onStart();
-        Globals.runtime.reset();
-
-        while (!isStopRequested() && opModeIsActive()) {
-            stickyG1.update();
-            stickyG2.update();
 
             // safety for switching controllers
             if(gamepad1.start || gamepad2.start) {
                 continue;
             }
 
+            initLoop();
+            CommandScheduler.getInstance().run();
+            telemetry();
+            telemetry.update();
+        }
+        waitForStart();
+        Globals.runtime = new ElapsedTime();
+        robot.read();
+        onStart();
+
+        while (!isStopRequested() && opModeIsActive()) {
+            stickyG1.update();
+            stickyG2.update();
+
             robot.read();
+
+            // safety for switching controllers
+            if(gamepad1.start || gamepad2.start) {
+                continue;
+            }
 
             periodic();
             CommandScheduler.getInstance().run();
