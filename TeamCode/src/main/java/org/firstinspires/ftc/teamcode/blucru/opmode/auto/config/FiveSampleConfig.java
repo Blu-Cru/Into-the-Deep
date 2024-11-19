@@ -25,9 +25,6 @@ public class FiveSampleConfig extends AutoConfig {
             rightFailsafePath, centerFailsafePath, leftFailsafePath, partnerFailsafePath,
             parkPath;
 
-    Path currentPath;
-    StateMachine sm;
-
     enum State{
         LIFTING,
         DEPOSITING,
@@ -45,7 +42,6 @@ public class FiveSampleConfig extends AutoConfig {
     public State[] statesAfterDeposit;
     public Path[] pathsAfterDeposit;
 
-    ElapsedTime runtime;
     int scoreCount;
 
     public FiveSampleConfig() {
@@ -148,9 +144,5 @@ public class FiveSampleConfig extends AutoConfig {
     @Override
     public void setStartPose() {
         Globals.startPose = Globals.mapPose(40.5, 64, 270);
-    }
-
-    public void stop() {
-        currentPath.cancel();
     }
 }

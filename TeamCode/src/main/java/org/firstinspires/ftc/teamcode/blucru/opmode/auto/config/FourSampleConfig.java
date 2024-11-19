@@ -24,9 +24,6 @@ public class FourSampleConfig extends AutoConfig {
         rightFailsafePath, centerFailsafePath, leftFailsafePath,
         parkPath;
 
-    Path currentPath;
-    StateMachine sm;
-
     enum State{
         LIFTING,
         DEPOSITING,
@@ -43,7 +40,6 @@ public class FourSampleConfig extends AutoConfig {
     public State[] statesAfterDeposit;
     public Path[] pathsAfterDeposit;
 
-    ElapsedTime runtime;
     int scoreCount;
 
     public FourSampleConfig() {
@@ -120,12 +116,6 @@ public class FourSampleConfig extends AutoConfig {
     }
 
     @Override
-    public void run() {
-        sm.update();
-        currentPath.run();
-    }
-
-    @Override
     public void telemetry() {
         Telemetry tele = Globals.tele;
         tele.addLine("Four Sample Config");
@@ -136,9 +126,5 @@ public class FourSampleConfig extends AutoConfig {
     @Override
     public void setStartPose() {
         Globals.startPose = Globals.mapPose(40.5, 64, 270);
-    }
-
-    public void stop() {
-        currentPath.cancel();
     }
 }

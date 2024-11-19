@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.sfdev.assembly.state.StateMachine;
+
+import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.util.AutoType;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.FiveSampleConfig;
@@ -28,13 +32,25 @@ public abstract class AutoConfig {
         }
     }
 
+    public StateMachine sm;
+    public Path currentPath;
+    public ElapsedTime runtime;
+
     // abstract methods to be implemented by the auto config
     public abstract void build();
     public abstract void start();
-    public abstract void run();
     public abstract void telemetry();
     public abstract void setStartPose();
-    public abstract void stop();
+
+    public void run() {
+        sm.update();
+        currentPath.run();
+    }
+
+    public void stop() {
+        currentPath.cancel();
+    }
+
 
     // this method returns the correct auto config based on the current side and auto type
     public static AutoConfig config() {
