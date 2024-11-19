@@ -21,9 +21,7 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
 
 public class FourSampleConfig extends AutoConfig {
     Path liftingPath, scorePath,
-        rightIntakePath, centerIntakePath, leftIntakePath,
-        rightFailsafePath, centerFailsafePath, leftFailsafePath,
-        parkPath;
+        rightFailsafePath, centerFailsafePath, leftFailsafePath;
 
     enum State{
         LIFTING,
@@ -46,17 +44,13 @@ public class FourSampleConfig extends AutoConfig {
     public FourSampleConfig() {
         runtime = Globals.runtime;
 
-        statesAfterDeposit = new State[3];
+        statesAfterDeposit = new State[4];
         statesAfterDeposit[0] = State.RIGHT_INTAKE;
         statesAfterDeposit[1] = State.CENTER_INTAKE;
         statesAfterDeposit[2] = State.LEFT_INTAKE;
         statesAfterDeposit[3] = State.PARKING;
 
-        pathsAfterDeposit = new Path[3];
-        pathsAfterDeposit[0] = rightIntakePath;
-        pathsAfterDeposit[1] = centerIntakePath;
-        pathsAfterDeposit[2] = leftIntakePath;
-        pathsAfterDeposit[3] = parkPath;
+        pathsAfterDeposit = new Path[4];
 
         scoreCount = 0;
 
@@ -103,14 +97,16 @@ public class FourSampleConfig extends AutoConfig {
         liftingPath = new SampleLiftingPath().build();
         scorePath = new SampleScoreHighPath().build();
 
-        rightIntakePath = new SampleIntakeRightPath().build();
-        centerIntakePath = new SampleIntakeCenterPath().build();
-        leftIntakePath = new SampleIntakeLeftPath().build();
-        parkPath = new SampleParkPath().build();
+        pathsAfterDeposit[0] = new SampleIntakeRightPath().build();
+        pathsAfterDeposit[1] = new SampleIntakeCenterPath().build();
+        pathsAfterDeposit[2] = new SampleIntakeLeftPath().build();
+        pathsAfterDeposit[3] = new SampleParkPath().build();
     }
 
     @Override
     public void start() {
+        scoreCount = 0;
+
         sm.start();
         sm.setState(State.LIFTING);
         runtime = Globals.runtime;

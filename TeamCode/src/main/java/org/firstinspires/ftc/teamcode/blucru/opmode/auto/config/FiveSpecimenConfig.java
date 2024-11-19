@@ -6,6 +6,12 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
 
 public class FiveSpecimenConfig extends AutoConfig {
+    int scoreCount;
+
+    public FiveSpecimenConfig() {
+        scoreCount = 0;
+    }
+
     @Override
     public void build() {
 
