@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto;
 
+import android.util.Log;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.sfdev.assembly.state.StateMachine;
@@ -8,6 +12,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -117,6 +122,13 @@ public class Auto extends BluLinearOpMode {
     public void telemetry() {
         telemetry.addData("Auto state", sm.getState());
         config.telemetry();
+    }
+
+    @Override
+    public void end() {
+        if(Globals.alliance == Alliance.RED) Globals.startPose = dt.getPoseEstimate();
+        else Globals.startPose = new Pose2d(dt.pose.vec(), Angle.norm(dt.pose.getHeading() + Math.PI));
+        Log.i("Auto", "start pose set to" + Globals.startPose);
     }
 
     public void configTelemetry() {
