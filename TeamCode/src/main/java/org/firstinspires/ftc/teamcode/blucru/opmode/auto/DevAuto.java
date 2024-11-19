@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
-@Autonomous(name = "Dev Auto", group = "3")
+@Autonomous(name = "Dev Auto", group = "2")
 public class DevAuto extends BluLinearOpMode {
     private enum State {
         RESETTING,
