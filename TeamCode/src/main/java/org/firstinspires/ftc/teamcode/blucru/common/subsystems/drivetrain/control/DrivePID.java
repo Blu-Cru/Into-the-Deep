@@ -14,7 +14,7 @@ public class DrivePID {
             kPY = 0.18, kIY = 0, kDY = 0.021,
             kPHeading = 1.7, kIHeading = 0, kDHeading = 0.1;
 
-    PIDController xController, yController, headingController;
+    public PIDController xController, yController, headingController;
 
     public DrivePID() {
         xController = new PIDController(kPX, kIX, kDX);

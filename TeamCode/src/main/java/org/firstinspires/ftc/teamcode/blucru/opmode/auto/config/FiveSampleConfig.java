@@ -13,16 +13,17 @@ import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntake
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeRightPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleLiftingPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleParkPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SamplePartnerIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleScoreHighPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
 
-public class FourSampleConfig extends AutoConfig {
+public class FiveSampleConfig extends AutoConfig {
     Path liftingPath, scorePath,
-        rightIntakePath, centerIntakePath, leftIntakePath,
-        rightFailsafePath, centerFailsafePath, leftFailsafePath,
-        parkPath;
+            rightIntakePath, centerIntakePath, leftIntakePath, partnerIntakePath,
+            rightFailsafePath, centerFailsafePath, leftFailsafePath, partnerFailsafePath,
+            parkPath;
 
     Path currentPath;
     StateMachine sm;
@@ -33,6 +34,7 @@ public class FourSampleConfig extends AutoConfig {
         RIGHT_INTAKE,
         CENTER_INTAKE,
         LEFT_INTAKE,
+        PARTNER_INTAKE,
         RIGHT_FAILSAFE,
         CENTER_FAILSAFE,
         LEFT_FAILSAFE,
@@ -46,20 +48,22 @@ public class FourSampleConfig extends AutoConfig {
     ElapsedTime runtime;
     int scoreCount;
 
-    public FourSampleConfig() {
+    public FiveSampleConfig() {
         runtime = Globals.runtime;
 
-        statesAfterDeposit = new State[3];
+        statesAfterDeposit = new State[4];
         statesAfterDeposit[0] = State.RIGHT_INTAKE;
         statesAfterDeposit[1] = State.CENTER_INTAKE;
         statesAfterDeposit[2] = State.LEFT_INTAKE;
-        statesAfterDeposit[3] = State.PARKING;
+        statesAfterDeposit[3] = State.PARTNER_INTAKE;
+        statesAfterDeposit[4] = State.PARKING;
 
-        pathsAfterDeposit = new Path[3];
+        pathsAfterDeposit = new Path[4];
         pathsAfterDeposit[0] = rightIntakePath;
         pathsAfterDeposit[1] = centerIntakePath;
         pathsAfterDeposit[2] = leftIntakePath;
-        pathsAfterDeposit[3] = parkPath;
+        pathsAfterDeposit[3] = partnerIntakePath;
+        pathsAfterDeposit[4] = parkPath;
 
         scoreCount = 0;
 
@@ -95,6 +99,13 @@ public class FourSampleConfig extends AutoConfig {
                             new EndEffectorRetractCommand().schedule();
                             currentPath = liftingPath.start();
                         })
+                .state(State.PARTNER_INTAKE)
+                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                        State.LIFTING, () -> {
+                            new BoxtubeRetractCommand().schedule();
+                            new EndEffectorRetractCommand().schedule();
+                            currentPath = liftingPath.start();
+                        })
                 .state(State.PARKING)
                 .transition(() -> currentPath.isDone(), State.DONE)
                 .state(State.DONE)
@@ -109,6 +120,7 @@ public class FourSampleConfig extends AutoConfig {
         rightIntakePath = new SampleIntakeRightPath().build();
         centerIntakePath = new SampleIntakeCenterPath().build();
         leftIntakePath = new SampleIntakeLeftPath().build();
+        partnerIntakePath = new SamplePartnerIntakePath().build();
         parkPath = new SampleParkPath().build();
     }
 

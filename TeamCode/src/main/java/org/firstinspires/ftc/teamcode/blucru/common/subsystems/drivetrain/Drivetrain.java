@@ -79,6 +79,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
             driveFieldCentric(new Vector2d(horiz, vert), rotate);
         } else if(lastTurning) {
             // if just turning, turn to new heading
+            pid.headingController.reset();
             driveToHeading(horiz, vert, DriveKinematics.getHeadingDecel(heading, headingVel));
         } else if(translating && !lastTranslating) {
             // if just started translating, drive to current heading
