@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public static double
             PARALLEL_POS = 0.45,
-            vMAX = 6.0, aMAX = 4.0,
+            vMAX = 6.0, aMAX = 7.0,
     // 90 degrees is from 0.17 to 0.45
             MAX_POS = PARALLEL_POS + 0.32, MIN_POS = PARALLEL_POS - 0.32,
             RETRACT_POS = PARALLEL_POS + 0.3,
