@@ -10,17 +10,13 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
-public class CollectingLeftBlockPath extends PIDPathBuilder {
-    public CollectingLeftBlockPath() {
+public class CollectRightBlockPath extends PIDPathBuilder {
+    public CollectRightBlockPath() {
         super();
-        this.setPower(0.4)
-                .addMappedPoint(20, -38, 45, 3)
+        this.setPower(0.5)
+                .addMappedPoint(38, -36, 15, 4)
                 .schedule(new SequentialCommandGroup(
-                        new WaitCommand(500),
-                        new ExtensionCommand(12)
-                ))
-                .addMappedPoint(24, -36, 10)
-                .schedule(new SequentialCommandGroup(
+                        new ExtensionCommand(12),
                         new ArmDropToGroundCommand(),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
