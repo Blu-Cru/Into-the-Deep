@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.blucru.common.commandbase;
+package org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 

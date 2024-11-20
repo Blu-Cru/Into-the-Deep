@@ -7,30 +7,30 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BasketBackHighCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BasketBackLowCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FrontHighBasketCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FrontLowBasketCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.SpecimenBackDunkCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.SpecimenFrontCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.SpecimenFrontDunkCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleFrontHighCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleFrontLowCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontDunkCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.SpecimenBackCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontDunkRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(name = "Main TeleOp", group = "1")
@@ -80,15 +80,15 @@ public class Duo extends BluLinearOpMode {
 
                 // LOW
                 .transition(() -> stickyG2.b && !gamepad2.dpad_left, State.SCORING_BASKET, () ->
-                        new BasketBackLowCommand().schedule())
+                        new SampleBackLowCommand().schedule())
                 .transition(() -> stickyG2.b && gamepad2.dpad_left, State.SCORING_BASKET, () ->
-                        new FrontLowBasketCommand().schedule())
+                        new SampleFrontLowCommand().schedule())
 
                 // HIGH
                 .transition(() -> stickyG2.y && !gamepad2.dpad_left, State.SCORING_BASKET, () ->
-                        new BasketBackHighCommand().schedule())
+                        new SampleBackHighCommand().schedule())
                 .transition(() -> stickyG2.y && gamepad2.dpad_left, State.SCORING_BASKET, () ->
-                        new FrontHighBasketCommand().schedule())
+                        new SampleFrontHighCommand().schedule())
 
                 // SPECIMEN
                 .transition(() -> -gamepad2.right_stick_y < -0.2, State.EXTENDING_TO_SPECIMEN, () -> {
@@ -270,13 +270,7 @@ public class Duo extends BluLinearOpMode {
                     new SpecimenFrontCommand().schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
-                    new SequentialCommandGroup(
-                            new ClampReleaseCommand(),
-                            new WheelReverseCommand(),
-                            new WaitCommand(300),
-                            new EndEffectorRetractCommand(),
-                            new BoxtubeRetractCommand()
-                    ).schedule();
+                    new SpecimenFrontDunkRetractCommand().schedule();
                 })
 
                 .state(State.ABOVE_SPECIMEN_BACK)
@@ -301,14 +295,7 @@ public class Duo extends BluLinearOpMode {
                         new SpecimenBackCommand().schedule())
 
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
-                    new SequentialCommandGroup(
-                            new ClampReleaseCommand(),
-                            new WheelReverseCommand(),
-                            new WaitCommand(300),
-                            new BoxtubeRetractCommand(),
-                            new WaitCommand(250),
-                            new EndEffectorRetractCommand()
-                    ).schedule();
+                    new SpecimenBackDunkRetractCommand().schedule();
                 })
 
                 .state(State.SCORING_BASKET)
@@ -331,13 +318,13 @@ public class Duo extends BluLinearOpMode {
                     }
 
                     if(stickyG2.y && !gamepad2.dpad_left) {
-                        new BasketBackHighCommand().schedule();
+                        new SampleBackHighCommand().schedule();
                     } else if(stickyG2.y && gamepad2.dpad_left) {
-                        new FrontHighBasketCommand().schedule();
+                        new SampleFrontHighCommand().schedule();
                     } else if(stickyG2.b && !gamepad2.dpad_left) {
-                        new BasketBackLowCommand().schedule();
+                        new SampleBackLowCommand().schedule();
                     } else if(stickyG2.b && gamepad2.dpad_left) {
-                        new FrontLowBasketCommand().schedule();
+                        new SampleFrontLowCommand().schedule();
                     }
                 })
                 .onExit(() -> {

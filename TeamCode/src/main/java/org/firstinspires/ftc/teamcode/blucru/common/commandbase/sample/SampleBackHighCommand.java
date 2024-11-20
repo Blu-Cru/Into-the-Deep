@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.blucru.common.commandbase;
+package org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
@@ -6,8 +6,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeE
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightBackwardCommand;
 
-public class BasketBackHighCommand extends SequentialCommandGroup {
-    public BasketBackHighCommand() {
+public class SampleBackHighCommand extends SequentialCommandGroup {
+    public SampleBackHighCommand() {
         super(
                 new BoxtubeExtendCommand(Math.PI/2, 24),
                 new WristUprightBackwardCommand(),

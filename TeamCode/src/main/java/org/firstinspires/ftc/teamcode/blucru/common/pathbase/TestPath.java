@@ -3,19 +3,16 @@ package org.firstinspires.ftc.teamcode.blucru.common.pathbase;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BasketBackHighCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BasketBackLowCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
 
 public class TestPath extends PIDPathBuilder {
     public TestPath() {
@@ -23,7 +20,7 @@ public class TestPath extends PIDPathBuilder {
         this.setPower(0.35)
                 .schedule(new SequentialCommandGroup(
                         new WaitCommand(200),
-                        new BasketBackHighCommand()
+                        new SampleBackHighCommand()
                 ))
                 .addMappedPoint(-50, -50, 45)
                 .setPower(0.2)

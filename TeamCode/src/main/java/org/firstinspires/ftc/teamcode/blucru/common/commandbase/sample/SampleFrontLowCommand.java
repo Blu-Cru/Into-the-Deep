@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.blucru.common.commandbase;
+package org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -7,14 +7,13 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeE
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 
-public class FrontHighBasketCommand extends SequentialCommandGroup {
-    public FrontHighBasketCommand() {
+public class SampleFrontLowCommand extends SequentialCommandGroup {
+    public SampleFrontLowCommand() {
         super(
-                new ArmGlobalAngleCommand(1.4),
-                new BoxtubeExtendCommand(Math.PI/2, 24),
+                new BoxtubeExtendCommand(1.0, 16.6),
                 new WristUprightForwardCommand(),
-                new WaitCommand(200),
-                new ArmGlobalAngleCommand(0)
+                new WaitCommand(100),
+                new ArmGlobalAngleCommand(-0.2)
         );
     }
 }
