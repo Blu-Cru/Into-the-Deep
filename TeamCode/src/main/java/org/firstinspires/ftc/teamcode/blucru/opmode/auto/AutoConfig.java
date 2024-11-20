@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto;
 
+import android.util.Log;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachine;
@@ -68,5 +70,9 @@ public abstract class AutoConfig {
 
     public static void flipAutoType() {
         autoType = autoType.flip();
+    }
+
+    public void logTransition(Enum state) {
+        Log.i("Auto Config", " transitioning to " + state);
     }
 }

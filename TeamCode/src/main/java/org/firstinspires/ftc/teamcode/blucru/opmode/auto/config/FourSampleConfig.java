@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto.config;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.sfdev.assembly.state.StateMachine;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeCenterPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeLeftPath;
@@ -20,7 +22,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
 
 public class FourSampleConfig extends AutoConfig {
-    Path liftingPath, scorePath,
+    Path preloadLiftingPath, cycleLiftingPath, scorePath,
         rightFailsafePath, centerFailsafePath, leftFailsafePath;
 
     enum State{
@@ -44,11 +46,11 @@ public class FourSampleConfig extends AutoConfig {
     public FourSampleConfig() {
         runtime = Globals.runtime;
 
-        statesAfterDeposit = new State[4];
-        statesAfterDeposit[0] = State.RIGHT_INTAKE;
-        statesAfterDeposit[1] = State.CENTER_INTAKE;
-        statesAfterDeposit[2] = State.LEFT_INTAKE;
-        statesAfterDeposit[3] = State.PARKING;
+//        statesAfterDeposit = new State[4];
+//        statesAfterDeposit[0] = State.RIGHT_INTAKE;
+//        statesAfterDeposit[1] = State.CENTER_INTAKE;
+//        statesAfterDeposit[2] = State.LEFT_INTAKE;
+//        statesAfterDeposit[3] = State.PARKING;
 
         pathsAfterDeposit = new Path[4];
 
@@ -56,37 +58,63 @@ public class FourSampleConfig extends AutoConfig {
 
         sm = new StateMachineBuilder()
                 .state(State.LIFTING)
+                .onEnter(() -> logTransition(State.LIFTING))
                 .transition(() -> Robot.getInstance().extension.getPIDError() < 2 && currentPath.isDone(),
                         State.DEPOSITING,
                         () -> {
                             currentPath = scorePath.start();
-                            scoreCount++;
                         })
                 .state(State.DEPOSITING)
-                .transition(() -> currentPath.isDone(), statesAfterDeposit[scoreCount-1],
-                        () -> currentPath = pathsAfterDeposit[scoreCount-1].start())
+                .onEnter(() -> logTransition(State.DEPOSITING))
+                .transition(() -> currentPath.isDone() && scoreCount == 0, State.RIGHT_INTAKE,
+                        () -> {
+                            currentPath = pathsAfterDeposit[scoreCount].start();
+                            scoreCount++;
+                        })
+                .transition(() ->currentPath.isDone() && scoreCount == 1, State.CENTER_INTAKE, () -> {
+                    currentPath = pathsAfterDeposit[scoreCount].start();
+                    scoreCount++;
+                })
+                .transition(() -> currentPath.isDone() && scoreCount == 2, State.LEFT_INTAKE, () -> {
+                    currentPath = pathsAfterDeposit[scoreCount].start();
+                    scoreCount++;
+                })
+                .transition(() -> currentPath.isDone() && scoreCount == 3, State.PARKING, () -> {
+                    currentPath = pathsAfterDeposit[scoreCount].start();
+                    scoreCount++;
+                })
                 .state(State.RIGHT_INTAKE)
+                .onEnter(() -> logTransition(State.RIGHT_INTAKE))
                 .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
                         State.LIFTING, () -> {
+                            new ClampGrabCommand().schedule();
+                            new WheelStopCommand().schedule();
+                            new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
-                            new EndEffectorRetractCommand().schedule();
-                            currentPath = liftingPath.start();
+                            currentPath = cycleLiftingPath.start();
                         })
                 .state(State.CENTER_INTAKE)
+                .onEnter(() -> logTransition(State.CENTER_INTAKE))
                 .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
                         State.LIFTING, () -> {
+                            new ClampGrabCommand().schedule();
+                            new WheelStopCommand().schedule();
+                            new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
-                            new EndEffectorRetractCommand().schedule();
-                            currentPath = liftingPath.start();
+                            currentPath = cycleLiftingPath.start();
                         })
                 .state(State.LEFT_INTAKE)
+                .onEnter(() -> logTransition(State.LEFT_INTAKE))
                 .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
                         State.LIFTING, () -> {
+                            new ClampGrabCommand().schedule();
+                            new WheelStopCommand().schedule();
+                            new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
-                            new EndEffectorRetractCommand().schedule();
-                            currentPath = liftingPath.start();
+                            currentPath = cycleLiftingPath.start();
                         })
                 .state(State.PARKING)
+                .onEnter(() -> logTransition(State.PARKING))
                 .transition(() -> currentPath.isDone(), State.DONE)
                 .state(State.DONE)
                 .build();
@@ -94,7 +122,9 @@ public class FourSampleConfig extends AutoConfig {
 
     @Override
     public void build() {
-        liftingPath = new SampleLiftingPath().build();
+        preloadLiftingPath = new SampleLiftingPath(0).build();
+        cycleLiftingPath = new SampleLiftingPath(600).build();
+
         scorePath = new SampleScoreHighPath().build();
 
         pathsAfterDeposit[0] = new SampleIntakeRightPath().build();
@@ -106,6 +136,8 @@ public class FourSampleConfig extends AutoConfig {
     @Override
     public void start() {
         scoreCount = 0;
+
+        currentPath = preloadLiftingPath.start();
 
         sm.start();
         sm.setState(State.LIFTING);

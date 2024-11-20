@@ -55,9 +55,9 @@ public class Auto extends BluLinearOpMode {
 
                 // initialize pivot position
                 new SequentialCommandGroup(
-                        new PivotCommand(0.7),
-                        new WaitCommand(800),
-                        new ArmGlobalAngleCommand(-0.5)
+                        new PivotCommand(1.0),
+                        new WaitCommand(400),
+                        new ArmGlobalAngleCommand(-0.3)
                 ).schedule();
             })
             .state(State.INITIALIZED)
@@ -122,7 +122,9 @@ public class Auto extends BluLinearOpMode {
     @Override
     public void telemetry() {
         telemetry.addData("Auto state", sm.getState());
-        config.telemetry();
+        try {
+            config.telemetry();
+        } catch(Exception ignored){}
     }
 
     @Override

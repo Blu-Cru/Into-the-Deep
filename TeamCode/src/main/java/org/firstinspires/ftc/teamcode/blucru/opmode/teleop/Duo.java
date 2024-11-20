@@ -136,7 +136,11 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.INTAKING_GROUND)
-                .onEnter(() -> dt.drivePower = 0.55)
+                .onEnter(() -> {
+                    dt.drivePower = 0.55;
+                    wheel.intake();
+                    clamp.release();
+                })
                 .transition(() -> stickyG2.a || intakeSwitch.pressed(), State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new EndEffectorRetractCommand(),
@@ -162,8 +166,11 @@ public class Duo extends BluLinearOpMode {
                     if(Math.abs(-gamepad2.right_stick_y) > 0.2) {
                         extension.extendOverIntake(-gamepad2.right_stick_y);
                     }
-                    clamp.release();
-                    wheel.intake();
+                })
+
+                .onExit(() -> {
+                    wheel.stop();
+                    clamp.close();
                 })
 
                 .state(State.EXTENDING_TO_SPECIMEN)
@@ -268,7 +275,6 @@ public class Duo extends BluLinearOpMode {
                             new WheelReverseCommand(),
                             new WaitCommand(300),
                             new EndEffectorRetractCommand(),
-                            new WaitCommand(250),
                             new BoxtubeRetractCommand()
                     ).schedule();
                 })
@@ -280,7 +286,7 @@ public class Duo extends BluLinearOpMode {
 
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
-                            new ArmGlobalAngleCommand(1.2),
+                            new PivotCommand(0.9),
                             new WaitCommand(200),
                             new EndEffectorRetractCommand(),
                             new BoxtubeRetractCommand()

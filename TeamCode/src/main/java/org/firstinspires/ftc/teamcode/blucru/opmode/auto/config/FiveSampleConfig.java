@@ -111,7 +111,7 @@ public class FiveSampleConfig extends AutoConfig {
 
     @Override
     public void build() {
-        liftingPath = new SampleLiftingPath().build();
+        liftingPath = new SampleLiftingPath(0).build();
         scorePath = new SampleScoreHighPath().build();
 
         rightIntakePath = new SampleIntakeRightPath().build();

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
+import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 
 @Config
 public class Extension implements BluSubsystem, Subsystem {
@@ -29,7 +31,7 @@ public class Extension implements BluSubsystem, Subsystem {
     
     State state;
     ExtensionMotor extensionMotor;
-    PIDController pidController;
+    PDController pidController;
     MotionProfile profile;
     int retractionCount;
 
@@ -41,7 +43,7 @@ public class Extension implements BluSubsystem, Subsystem {
         extensionMotor = new ExtensionMotor();
         profile = new MotionProfile(0, 0, 0, 0);
 
-        pidController = new PIDController(kP, kI, kD);
+        pidController = new PDController(kP, kI, kD);
         pidController.setTolerance(tolerance);
         state = State.IDLE;
         resetTimer = new ElapsedTime();
@@ -94,6 +96,10 @@ public class Extension implements BluSubsystem, Subsystem {
             case RETRACTING:
                 setPowerFeedForward(pidController.calculate(extensionMotor.getDistance()));
                 break;
+            case MOTION_PROFILE:
+                Vector2d state = extensionMotor.getState();
+                setPowerFeedForward(pidController.calculate(state, profile));
+                break;
             case RESETTING:
                 setPowerFeedForward(-0.15);
                 break;
@@ -105,6 +111,11 @@ public class Extension implements BluSubsystem, Subsystem {
     public void pidTo(double inches) {
         state = State.PID;
         pidController.setSetPoint(Range.clip(inches, MIN_INCHES, MAX_INCHES));
+    }
+
+    public void motionProfileTo(double inches, double vMax, double aMax) {
+        state = State.MOTION_PROFILE;
+        profile = new MotionProfile(inches, getDistance(), vMax, aMax).start();
     }
 
     public void retract() {

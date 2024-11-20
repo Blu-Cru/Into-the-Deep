@@ -63,9 +63,9 @@ public class BluMotorWithEncoder extends DcMotorImplEx implements BluHardwareDev
     }
 
     public void resetEncoder() {
-        setCurrentPosition(0);
         setMode(RunMode.STOP_AND_RESET_ENCODER);
         setMode(RunMode.RUN_WITHOUT_ENCODER);
+        offsetTicks = 0;
     }
 
     public void setCurrentPosition(double pos) {

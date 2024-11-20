@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.path;
 
+import android.util.Log;
+
 import com.arcrobotics.ftclib.command.Command;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -32,7 +34,9 @@ public class PIDPath implements Path {
             for(Command c : commands.get(segmentIndex)) {
                 c.schedule();
             }
-        } catch (NullPointerException ignored) {}
+        } catch (NullPointerException ignored) {
+            Log.e("PID Path", "error scheduling command");
+        }
 
         return this;
     }
@@ -46,12 +50,14 @@ public class PIDPath implements Path {
             } else {
                 segmentIndex++;
 
-                // run the commands associated with the next point
                 try {
                     for(Command c : commands.get(segmentIndex)) {
                         c.schedule();
                     }
-                } catch (NullPointerException ignored) {}
+                } catch (NullPointerException ignored) {
+                    Log.e("PID Path", "error scheduling command");
+                }
+
 
                 segmentList.get(segmentIndex).start();
             }

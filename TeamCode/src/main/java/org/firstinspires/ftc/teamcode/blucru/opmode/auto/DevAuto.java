@@ -49,7 +49,7 @@ public class DevAuto extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RESETTING)
                 .transition(() -> stickyG1.b, State.FOLLOWING_PID, () -> {
-                    dt.setPoseEstimate(Globals.startPose);
+                    dt.setPoseEstimate(new Pose2d(-40.5, -64, Math.PI/2));
                     pidPath.start();
                     pidStartTime = System.currentTimeMillis();
 
