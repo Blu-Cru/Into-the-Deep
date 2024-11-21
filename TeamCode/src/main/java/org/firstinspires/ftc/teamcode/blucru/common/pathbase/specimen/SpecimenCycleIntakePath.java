@@ -24,6 +24,7 @@ public class SpecimenCycleIntakePath extends PIDPathBuilder {
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand()
                 ))
+                .addMappedPoint(27, -48, -60)
                 .waitMillis(200)
                 .setPower(0.2)
                 .addMappedPoint(29, -52.5, -60)
