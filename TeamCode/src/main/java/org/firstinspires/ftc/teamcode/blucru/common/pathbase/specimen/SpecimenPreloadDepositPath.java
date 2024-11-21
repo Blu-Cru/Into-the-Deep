@@ -3,12 +3,17 @@ package org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontDunkCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontDunkRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenPreloadDepositPath extends PIDPathBuilder {
@@ -23,12 +28,8 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
                         new WaitCommand(400),
                         new SpecimenFrontDunkCommand(),
                         new WaitCommand(100),
-                        new ClampReleaseCommand(),
-                        new WheelReverseCommand(),
-                        new WaitCommand(150),
-                        new EndEffectorRetractCommand(),
-                        new BoxtubeRetractCommand()
+                        new SpecimenFrontDunkRetractCommand()
                 ))
-                .waitMillis(1400);
+                .waitMillis(600);
     }
 }
