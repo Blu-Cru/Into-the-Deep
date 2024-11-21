@@ -15,20 +15,20 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
     public SpecimenPreloadDepositPath() {
         super();
         this.setPower(0.7)
-                .addMappedPoint(10, -40, 90, 6)
                 .schedule(new SpecimenFrontCommand())
+                .addMappedPoint(7, -40, 90, 6)
                 .setPower(0.3)
-                .addMappedPoint(11, -36, 90)
+                .addMappedPoint(7, -33, 90)
                 .schedule(new SequentialCommandGroup(
-                        new WaitCommand(1000),
+                        new WaitCommand(400),
                         new SpecimenFrontDunkCommand(),
-                        new WaitCommand(300),
+                        new WaitCommand(100),
                         new ClampReleaseCommand(),
                         new WheelReverseCommand(),
-                        new WaitCommand(300),
+                        new WaitCommand(150),
                         new EndEffectorRetractCommand(),
                         new BoxtubeRetractCommand()
                 ))
-                .waitMillis(1300);
+                .waitMillis(1400);
     }
 }

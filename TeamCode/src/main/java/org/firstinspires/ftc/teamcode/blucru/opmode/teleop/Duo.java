@@ -31,6 +31,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontDunkRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(name = "Main TeleOp", group = "1")
@@ -65,6 +66,8 @@ public class Duo extends BluLinearOpMode {
         addIntakeSwitch();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
+
+        dt.setPoseEstimate(Globals.startPose);
 
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)

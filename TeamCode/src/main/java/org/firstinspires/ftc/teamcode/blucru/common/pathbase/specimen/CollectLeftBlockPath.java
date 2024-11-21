@@ -14,18 +14,18 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
     public CollectLeftBlockPath() {
         super();
         this.setPower(0.4)
-                .addMappedPoint(20, -38, 45, 3)
+                .addMappedPoint(20, -44, 45, 3)
                 .schedule(new SequentialCommandGroup(
                         new WaitCommand(500),
-                        new ExtensionCommand(12)
+                        new ExtensionCommand(4)
                 ))
-                .addMappedPoint(24, -36, 10)
+                .addMappedPoint(28, -36, 23)
                 .schedule(new SequentialCommandGroup(
                         new ArmDropToGroundCommand(),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
                         new WaitCommand(200),
-                        new ExtensionMotionProfileCommand(17)
+                        new ExtensionMotionProfileCommand(8)
                 ))
                 .waitMillis(1500);
     }

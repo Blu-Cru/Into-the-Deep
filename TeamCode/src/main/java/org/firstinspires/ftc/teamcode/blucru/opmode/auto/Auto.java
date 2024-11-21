@@ -13,6 +13,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
@@ -57,7 +58,8 @@ public class Auto extends BluLinearOpMode {
                 new SequentialCommandGroup(
                         new PivotCommand(1.0),
                         new WaitCommand(400),
-                        new ArmGlobalAngleCommand(-0.3)
+                        new WristHorizontalCommand(),
+                        new ArmGlobalAngleCommand(-1.0)
                 ).schedule();
             })
             .state(State.INITIALIZED)

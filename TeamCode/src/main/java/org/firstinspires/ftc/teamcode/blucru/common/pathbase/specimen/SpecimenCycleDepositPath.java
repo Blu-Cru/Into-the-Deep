@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
@@ -15,24 +18,28 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
     public SpecimenCycleDepositPath(int scoreCount) {
         super();
         this.setPower(0.7)
-                .addMappedPoint(20 - scoreCount, -43, 270, 5)
+                .schedule(new SequentialCommandGroup(
+                        new WheelStopCommand(),
+                        new ClampGrabCommand(),
+                        new BoxtubeRetractCommand()
+                ))
+                .addMappedPoint(10 - scoreCount, -43, 270, 5)
                 .schedule(
                         new SpecimenBackCommand()
                 )
-                .waitMillis(200)
                 .setPower(0.25)
-                .addMappedPoint(11 - scoreCount * 1.5, -36, 270)
+                .addMappedPoint(7 - scoreCount * 1.5, -34.5, 270)
                 .schedule(new SequentialCommandGroup(
-                        new WaitCommand(1000),
+                        new WaitCommand(500),
                         new SpecimenBackDunkCommand(),
-                        new WaitCommand(250),
+                        new WaitCommand(100),
                         new ClampReleaseCommand(),
                         new WheelReverseCommand(),
-                        new WaitCommand(300),
+                        new WaitCommand(100),
                         new BoxtubeRetractCommand(),
                         new WaitCommand(250),
                         new EndEffectorRetractCommand()
                 ))
-                .waitMillis(1300);
+                .waitMillis(1800);
     }
 }
