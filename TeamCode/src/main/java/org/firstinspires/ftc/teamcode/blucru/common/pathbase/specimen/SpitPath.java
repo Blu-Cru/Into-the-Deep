@@ -17,18 +17,21 @@ public class SpitPath extends PIDPathBuilder {
     public SpitPath() {
         super();
         this.setPower(0.5)
+                .schedule(new SequentialCommandGroup(
+                        new ExtensionCommand(4),
+                        new ArmPreIntakeCommand(),
+                        new WaitCommand(500),
+                        new ExtensionCommand(10)
+                ))
                 .addMappedPoint(36, -42, -60, 5)
                 .schedule(new SequentialCommandGroup(
-                        new ExtensionCommand(10),
-                        new WaitCommand(300),
                         new WheelReverseCommand(),
                         new ClampReleaseCommand(),
                         new WaitCommand(300),
-                        new ArmPreIntakeCommand(),
                         new WheelStopCommand(),
                         new ClampGrabCommand(),
                         new ExtensionCommand(4)
                 ))
-                .waitMillis(1000);
+                .waitMillis(100);
     }
 }
