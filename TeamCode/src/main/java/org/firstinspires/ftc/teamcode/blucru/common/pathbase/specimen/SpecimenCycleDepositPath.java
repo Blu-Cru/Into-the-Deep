@@ -4,7 +4,9 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackCommand;
@@ -23,7 +25,10 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                 .schedule(new SequentialCommandGroup(
                         new WheelStopCommand(),
                         new ClampGrabCommand(),
-                        new PivotCommand(1.2)
+                        new PivotCommand(1.2),
+                        new WaitCommand(200),
+                        new ExtensionCommand(2),
+                        new ArmGlobalAngleCommand(2)
                 ))
                 .addMappedPoint(10 - scoreCount, -43, 270, 5)
                 .schedule(
@@ -37,6 +42,6 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                         new WaitCommand(100),
                         new SpecimenBackDunkRetractCommand()
                 ))
-                .waitMillis(1800);
+                .waitMillis(450);
     }
 }

@@ -128,7 +128,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
         drive(new Pose2d(0,0,0));
     }
 
-    public boolean inRange(double translationTolerance) {
+    public boolean inRange(double translationTolerance, double headingTolerance) {
         return pid.inRange(pose, translationTolerance, PATH_HEADING_TOLERANCE);
     }
 

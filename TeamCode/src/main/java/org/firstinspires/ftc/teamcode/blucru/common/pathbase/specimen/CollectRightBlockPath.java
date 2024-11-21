@@ -13,16 +13,16 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 public class CollectRightBlockPath extends PIDPathBuilder {
     public CollectRightBlockPath() {
         super();
-        this.setPower(0.5)
+        this.setPower(0.7)
                 .addMappedPoint(48, -36, 23, 4)
                 .schedule(new SequentialCommandGroup(
                         new ExtensionCommand(4),
                         new ArmDropToGroundCommand(),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
-                        new WaitCommand(200),
+                        new WaitCommand(100),
                         new ExtensionMotionProfileCommand(8)
                 ))
-                .waitMillis(1500);
+                .waitMillis(1000);
     }
 }
