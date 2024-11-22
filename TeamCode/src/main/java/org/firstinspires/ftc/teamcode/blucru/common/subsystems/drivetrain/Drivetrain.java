@@ -67,7 +67,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
 
         double vert = -g1.left_stick_y;
         double horiz = g1.left_stick_x;
-        double rotate = -g1.right_stick_x;
+        double rotate = -g1.right_stick_x * 0.8;
 
         if(g1.a) {
             driveToHeading(horiz, vert, Math.PI/4);

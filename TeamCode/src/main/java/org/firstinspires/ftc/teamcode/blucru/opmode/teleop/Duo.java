@@ -302,7 +302,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.SCORING_BASKET)
-                .onEnter(() -> dt.drivePower = 0.4)
+                .onEnter(() -> dt.drivePower = 0.35)
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ArmGlobalAngleCommand(1.5),
