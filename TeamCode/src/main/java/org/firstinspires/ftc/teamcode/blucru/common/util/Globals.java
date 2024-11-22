@@ -53,7 +53,7 @@ public class Globals {
     }
 
     public static double correctPower(double power) {
-        return power * 13.0 / Globals.voltage;
+        return power * 12.0 / Globals.voltage;
     }
 
     public static void autoRunningTelemetry(Telemetry telemetry) {
