@@ -59,7 +59,7 @@ public class Auto extends BluLinearOpMode {
                         new PivotCommand(1.0),
                         new WaitCommand(400),
                         new WristHorizontalCommand(),
-                        new ArmGlobalAngleCommand(-1.0)
+                        new ArmGlobalAngleCommand(-1.3)
                 ).schedule();
             })
             .state(State.INITIALIZED)

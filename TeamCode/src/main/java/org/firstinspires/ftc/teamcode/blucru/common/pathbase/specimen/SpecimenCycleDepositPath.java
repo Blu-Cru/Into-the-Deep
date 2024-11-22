@@ -5,10 +5,14 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
@@ -35,12 +39,18 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                         new SpecimenBackCommand()
                 )
                 .setPower(0.25)
-                .addMappedPoint(7 - scoreCount * 1.5, -34.5, 270)
+                .addMappedPoint(7 - scoreCount * 1.5, -34, 270)
                 .schedule(new SequentialCommandGroup(
                         new WaitCommand(350),
                         new SpecimenBackDunkCommand(),
                         new WaitCommand(100),
-                        new SpecimenBackDunkRetractCommand()
+                        new WheelReverseCommand(),
+                        new ClampReleaseCommand(),
+                        new WaitCommand(150),
+                        new PivotRetractCommand(),
+                        new ExtensionRetractCommand(),
+                        new ArmRetractCommand(),
+                        new WristUprightForwardCommand()
                 ))
                 .waitMillis(450);
     }

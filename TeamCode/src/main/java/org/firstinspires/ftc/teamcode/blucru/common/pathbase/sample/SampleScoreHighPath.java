@@ -14,7 +14,7 @@ public class SampleScoreHighPath extends PIDPathBuilder {
     public SampleScoreHighPath() {
         super();
         this.setPower(0.2)
-                .addMappedPoint(-55, -55, 45)
+                .addMappedPoint(-55.5, -55.5, 45)
                 .schedule(new SequentialCommandGroup(
                         new WaitCommand(250),
                         new ClampReleaseCommand(),

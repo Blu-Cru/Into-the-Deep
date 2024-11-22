@@ -95,7 +95,7 @@ public class Duo extends BluLinearOpMode {
 
                 // SPECIMEN
                 .transition(() -> -gamepad2.right_stick_y < -0.2, State.EXTENDING_TO_SPECIMEN, () -> {
-                    new BoxtubeExtendCommand(0.43, 0).schedule();
+                    new BoxtubeExtendCommand(0.38, 0).schedule();
                     new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
@@ -193,8 +193,8 @@ public class Duo extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () -> {
                     new SequentialCommandGroup(
-                            new ArmGlobalAngleCommand(1.2),
-                            new PivotCommand(1),
+                            new ArmGlobalAngleCommand(Math.PI),
+                            new PivotCommand(0.9),
                             new WaitCommand(300),
                             new SpecimenBackCommand()
                     ).schedule();

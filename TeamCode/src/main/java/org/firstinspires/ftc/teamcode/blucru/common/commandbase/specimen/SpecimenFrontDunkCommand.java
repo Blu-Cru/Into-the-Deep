@@ -4,6 +4,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeE
 
 public class SpecimenFrontDunkCommand extends BoxtubeExtendCommand {
     public SpecimenFrontDunkCommand() {
-        super(1.25, 3);
+        super(1.2, 3);
     }
 }

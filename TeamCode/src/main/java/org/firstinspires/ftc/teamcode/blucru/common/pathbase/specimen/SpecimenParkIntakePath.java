@@ -14,7 +14,7 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
     public SpecimenParkIntakePath() {
         super();
         this.setPower(0.4)
-                .addMappedPoint(24, -48, -45, 8)
+                .addMappedPoint(24, -48, -45, 6)
                 .schedule(new SequentialCommandGroup(
                         new ExtensionCommand(8),
                         new ArmDropToGroundCommand(),

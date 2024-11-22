@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto.config;
 
+import android.util.Log;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
@@ -75,7 +78,8 @@ public class FiveSpecimenConfig extends AutoConfig {
                 })
 
                 .state(State.INTAKING_CYCLE)
-                .transition(() -> currentPath.isDone(), State.DEPOSIT_CYCLE, () -> {
+                .transition(() -> currentPath.isDone() || (Robot.getInstance().intakeSwitch.pressed() && Robot.getInstance().pivot.getAngle() < 0.35),
+                        State.DEPOSIT_CYCLE, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(1.2),
                             new WaitCommand(300),
@@ -89,17 +93,20 @@ public class FiveSpecimenConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone() && scoreCount < 4 && runtime.seconds() < 25,
                         State.INTAKING_CYCLE,
                         () -> {
+                            scoreCount++;
                             currentPath = new SpecimenCycleIntakePath().build().start();
                         })
                 .transition(() -> currentPath.isDone() && !(scoreCount < 4 && runtime.seconds() < 25), State.PARK_INTAKING, () -> {
+                    Log.i("Five Specimen Config", "parking, time = " + runtime.seconds());
                     currentPath = new SpecimenParkIntakePath().build().start();
                 })
                 .state(State.PARK_INTAKING)
-                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                .transition(() -> currentPath.isDone() || (Robot.getInstance().intakeSwitch.pressed() && Robot.getInstance().pivot.getAngle() < 0.35),
                         State.PARKED, () -> {
                             new ClampGrabCommand().schedule();
                             new WheelStopCommand().schedule();
                         })
+                .state(State.PARKED)
                 .build();
     }
 
@@ -114,6 +121,7 @@ public class FiveSpecimenConfig extends AutoConfig {
         currentPath = new SpecimenPreloadDepositPath().build().start();
         sm.setState(State.LIFTING_PRELOAD);
         sm.start();
+        Globals.runtime = new ElapsedTime();
         runtime = Globals.runtime;
     }
 
