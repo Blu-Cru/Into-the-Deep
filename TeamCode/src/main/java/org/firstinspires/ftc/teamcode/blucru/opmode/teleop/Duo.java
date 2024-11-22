@@ -73,8 +73,8 @@ public class Duo extends BluLinearOpMode {
                 .state(State.RETRACTED)
                 .onEnter(() -> dt.drivePower = 0.75)
                 .transition(() -> stickyG2.share, State.MANUAL_RESET, () -> {
-                    gamepad1.rumble(150);
-                    gamepad2.rumble(150);
+                    gamepad1.rumble(350);
+                    gamepad2.rumble(350);
                 })
                 .transition(() -> -gamepad2.right_stick_y > 0.2, State.EXTENDING_OVER_INTAKE, () -> {
                     extension.extendOverIntake(-gamepad2.right_stick_y);
@@ -152,8 +152,8 @@ public class Duo extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> intakeSwitch.pressed(), State.RETRACTED, () -> {
-                    gamepad1.rumble(200);
-                    gamepad2.rumble(200);
+                    gamepad1.rumble(400);
+                    gamepad2.rumble(400);
                     new SequentialCommandGroup(
                             new EndEffectorRetractCommand(),
                             new WaitCommand(100),
