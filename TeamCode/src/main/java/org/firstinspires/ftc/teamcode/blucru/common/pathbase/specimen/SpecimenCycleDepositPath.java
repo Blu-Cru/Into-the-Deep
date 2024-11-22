@@ -49,6 +49,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                         new WaitCommand(150),
                         new PivotRetractCommand(),
                         new ExtensionRetractCommand(),
+                        new WheelStopCommand(),
                         new ArmRetractCommand(),
                         new WristUprightForwardCommand()
                 ))
