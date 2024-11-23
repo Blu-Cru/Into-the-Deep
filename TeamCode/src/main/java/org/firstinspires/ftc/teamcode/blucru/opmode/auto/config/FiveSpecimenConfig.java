@@ -60,7 +60,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                     currentPath = new CollectLeftBlockPath().build().start();
                 })
                 .state(State.COLLECTING_BLOCKS)
-                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed() && Robot.getInstance().pivot.getAngle() < 0.4,
                         State.SPITTING, () -> {
                             new ArmPreIntakeCommand().schedule();
                             new ClampGrabCommand().schedule();

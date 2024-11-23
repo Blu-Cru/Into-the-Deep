@@ -16,7 +16,7 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
     public CollectLeftBlockPath() {
         super();
         this.setPower(0.5)
-                .addMappedPoint(20, -44, 45, 4)
+                .addMappedPoint(20, -44, 45, 2)
                 .schedule(new SequentialCommandGroup(
                         new PivotRetractCommand(),
                         new WaitCommand(200),
