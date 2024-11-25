@@ -21,7 +21,7 @@ public class SpitPath extends PIDPathBuilder {
                         new ExtensionCommand(4),
                         new ArmPreIntakeCommand(),
                         new WaitCommand(500),
-                        new ExtensionCommand(10)
+                        new ExtensionCommand(11)
                 ))
                 .addMappedPoint(36, -42, -60, 5)
                 .schedule(new SequentialCommandGroup(

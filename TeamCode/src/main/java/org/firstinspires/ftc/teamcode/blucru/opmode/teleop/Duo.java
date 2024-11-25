@@ -95,7 +95,7 @@ public class Duo extends BluLinearOpMode {
 
                 // SPECIMEN
                 .transition(() -> stickyG2.dpad_down, State.EXTENDING_TO_SPECIMEN, () -> {
-                    new BoxtubeExtendCommand(0.38, 0).schedule();
+                    new BoxtubeExtendCommand(0.42, 0).schedule();
                     new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })

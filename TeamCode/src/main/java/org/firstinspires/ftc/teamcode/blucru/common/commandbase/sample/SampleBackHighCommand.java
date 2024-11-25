@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wris
 public class SampleBackHighCommand extends SequentialCommandGroup {
     public SampleBackHighCommand() {
         super(
-                new BoxtubeExtendCommand(Math.PI/2, 24),
+                new BoxtubeExtendCommand(Math.PI/2, 24.5),
                 new WristUprightBackwardCommand(),
                 new ArmGlobalAngleCommand(2.6)
         );

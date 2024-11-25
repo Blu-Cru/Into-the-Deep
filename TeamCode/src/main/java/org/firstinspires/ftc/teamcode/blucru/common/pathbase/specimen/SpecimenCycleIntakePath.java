@@ -19,15 +19,15 @@ public class SpecimenCycleIntakePath extends PIDPathBuilder {
                 .schedule(new SequentialCommandGroup(
                         new WristOppositeCommand(),
                         new ArmGlobalAngleCommand(0),
-                        new BoxtubeExtendCommand(0.28, 8),
+                        new BoxtubeExtendCommand(0.27, 8),
                         new WaitCommand(300),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand()
                 ))
-                .addMappedPoint(27, -48, -60)
+                .addMappedPoint(27, -48.5, -60)
                 .waitMillis(200)
                 .setPower(0.2)
-                .addMappedPoint(29, -52.5, -60)
+                .addMappedPoint(29, -53, -60)
                 .waitMillis(800);
     }
 }

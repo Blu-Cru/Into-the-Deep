@@ -14,7 +14,7 @@ public class SampleLiftingPath extends PIDPathBuilder {
                         new WaitCommand(waitBeforeLiftMillis),
                         new SampleBackHighCommand()
                 ))
-                .addMappedPoint(-52, -52, 45, 5)
+                .addMappedPoint(-53, -53, 45, 5)
                 .waitMillis(400);
     }
 }

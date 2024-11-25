@@ -88,6 +88,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
             // if just started translating, drive to current heading
             driveToHeading(horiz, vert, heading);
         } else if(!translating) {
+            pid.headingController.reset();
             pid.setTargetHeading(heading);
             // if not translating, drive 0,0,0
             drive(new Pose2d(0,0,0));
