@@ -37,14 +37,14 @@ public class Globals {
         Globals.reflect = Globals.alliance == Alliance.RED ? 1 : -1;
     }
 
-    public static Pose2d mapPose(double x, double y, double headingDegrees) {
+    public static Pose2d mapPose(double x, double y, double headingDeg) {
         x = x*reflect;
         y = y*reflect;
         if(reflect < 0) {
-            headingDegrees += 180;
+            headingDeg += 180;
         }
 
-        return new Pose2d(x, y, Angle.norm(Math.toRadians(headingDegrees)));
+        return new Pose2d(x, y, Angle.norm(Math.toRadians(headingDeg)));
     }
 
     public static void setVoltage(double voltage) {
