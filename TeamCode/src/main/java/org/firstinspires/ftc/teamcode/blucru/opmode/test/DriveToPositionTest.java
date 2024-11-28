@@ -25,7 +25,7 @@ public class DriveToPositionTest extends BluLinearOpMode {
 
     public void periodic() {
         dt.updatePID();
-        dt.drivePower = power;
+        dt.setDrivePower(power);
 
         if(gamepad1.a) {
             mode = "driver control";

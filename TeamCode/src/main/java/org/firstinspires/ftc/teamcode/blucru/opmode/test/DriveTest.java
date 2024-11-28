@@ -12,7 +12,7 @@ public class DriveTest extends BluLinearOpMode {
     @Override
     public void initialize() {
         addDrivetrain();
-        dt.drivePower = 0.8;
+        dt.setDrivePower(0.8);
         enableFTCDashboard();
         dt.setPoseEstimate(Globals.startPose);
     }

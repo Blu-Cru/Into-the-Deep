@@ -19,7 +19,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
     }
 
     public boolean fieldCentric = true;
-    public double drivePower = 0.5;
+    double drivePower = 0.5;
     State state;
     DrivePID pid;
 
@@ -131,6 +131,10 @@ public class Drivetrain extends DriveBase implements Subsystem {
 
     public boolean inRange(double translationTolerance, double headingTolerance) {
         return pid.inRange(pose, translationTolerance, PATH_HEADING_TOLERANCE);
+    }
+
+    public void setDrivePower(double power) {
+        drivePower = Globals.correctPower(power);
     }
 
     @Override

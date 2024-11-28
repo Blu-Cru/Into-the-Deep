@@ -35,10 +35,7 @@ public class Solo extends BluLinearOpMode {
 
     @Override
     public void periodic() {
-        updateDrivePower();
         dt.teleOpDrive(gamepad1); // driving
-
-
     }
 
     public void setDrivePowers() {
@@ -55,14 +52,6 @@ public class Solo extends BluLinearOpMode {
             put(State.DUNKING_SPECIMEN, 0.4);
             put(State.RETRACTING_FROM_SCORING, 0.7);
         }};
-    }
-
-    public void updateDrivePower() {
-        try {
-            dt.drivePower = drivePowers.get(state);
-        } catch(NullPointerException e) {
-            dt.drivePower = 0.5;
-        }
     }
 
     @Override

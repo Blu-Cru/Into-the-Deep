@@ -52,8 +52,7 @@ public class SpecimenTest extends BluLinearOpMode {
         pivot.useExtension(extension.getMotor());
         extension.usePivot(pivot.getMotor());
         
-        dt.drivePower = 0.7;
-
+        dt.setDrivePower(0.7);
 
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)

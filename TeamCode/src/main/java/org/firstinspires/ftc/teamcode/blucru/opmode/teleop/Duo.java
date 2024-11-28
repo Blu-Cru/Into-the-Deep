@@ -71,7 +71,7 @@ public class Duo extends BluLinearOpMode {
 
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
-                .onEnter(() -> dt.drivePower = 0.75)
+                .onEnter(() -> dt.setDrivePower(0.75))
                 .transition(() -> stickyG2.share, State.MANUAL_RESET, () -> {
                     gamepad1.rumble(350);
                     gamepad2.rumble(350);
@@ -117,7 +117,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.EXTENDING_OVER_INTAKE)
-                .onEnter(() -> dt.drivePower = 0.7)
+                .onEnter(() -> dt.setDrivePower(0.7))
                 .transition(() -> gamepad2.left_bumper, State.INTAKING_GROUND, () -> {
                     new ArmDropToGroundCommand().schedule();
                     new WheelIntakeCommand().schedule();
@@ -140,7 +140,7 @@ public class Duo extends BluLinearOpMode {
 
                 .state(State.INTAKING_GROUND)
                 .onEnter(() -> {
-                    dt.drivePower = 0.55;
+                    dt.setDrivePower(0.55);
                     wheel.intake();
                     clamp.release();
                 })
@@ -177,7 +177,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.EXTENDING_TO_SPECIMEN)
-                .onEnter(() -> dt.drivePower = 0.4)
+                .onEnter(() -> dt.setDrivePower(0.4))
                 .transition(() -> gamepad2.left_bumper, State.INTAKING_SPECIMEN, () -> {
                     new WheelIntakeCommand().schedule();
                     new ClampReleaseCommand().schedule();
@@ -211,7 +211,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.INTAKING_SPECIMEN)
-                .onEnter(() -> dt.drivePower = 0.35)
+                .onEnter(() -> dt.setDrivePower(0.35))
                 .transition(() -> !gamepad2.left_bumper, State.EXTENDING_TO_SPECIMEN, () -> {
                     new ClampGrabCommand().schedule();
                     new WheelStopCommand().schedule();
@@ -252,7 +252,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.ABOVE_SPECIMEN_FRONT)
-                .onEnter(() -> dt.drivePower = 0.5)
+                .onEnter(() -> dt.setDrivePower(0.5))
                 .transition(() -> gamepad2.left_bumper, State.DUNKING_SPECIMEN_FRONT, () ->
                         new SpecimenFrontDunkCommand().schedule())
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
@@ -268,7 +268,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.DUNKING_SPECIMEN_FRONT)
-                .onEnter(() -> dt.drivePower = 0.4)
+                .onEnter(() -> dt.setDrivePower(0.4))
                 .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN_FRONT, () -> {
                     new SpecimenFrontCommand().schedule();
                 })
@@ -277,7 +277,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.ABOVE_SPECIMEN_BACK)
-                .onEnter(() -> dt.drivePower = 0.5)
+                .onEnter(() -> dt.setDrivePower(0.5))
                 .transition(() -> gamepad2.left_bumper, State.DUNKING_SPECIMEN_BACK,
                         () -> new SpecimenBackDunkCommand().schedule())
 
@@ -293,7 +293,7 @@ public class Duo extends BluLinearOpMode {
                         () -> new SpecimenFrontCommand().schedule())
 
                 .state(State.DUNKING_SPECIMEN_BACK)
-                .onEnter(() -> dt.drivePower = 0.4)
+                .onEnter(() -> dt.setDrivePower(0.4))
                 .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN_BACK, () ->
                         new SpecimenBackCommand().schedule())
 
@@ -302,7 +302,7 @@ public class Duo extends BluLinearOpMode {
                 })
 
                 .state(State.SCORING_BASKET)
-                .onEnter(() -> dt.drivePower = 0.35)
+                .onEnter(() -> dt.setDrivePower(0.35))
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ArmGlobalAngleCommand(1.5),

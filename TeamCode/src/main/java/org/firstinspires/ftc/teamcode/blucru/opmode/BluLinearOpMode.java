@@ -72,7 +72,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
         robot.read();
         onStart();
 
-        while (!isStopRequested() && opModeIsActive()) {
+        while (opModeIsActive()) {
             stickyG1.update();
             stickyG2.update();
 
@@ -92,7 +92,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
 
             telemetry();
             robot.telemetry(telemetry);
-            telemetry.addData("alliance:", Globals.alliance);
+            telemetry.addData("Alliance:", Globals.alliance);
             telemetry.addData("Loop Time", loopTimeSum / loopTimeCount);
             resetLoopTime();
             telemetry.update();
@@ -111,9 +111,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public void telemetry() {}
     public void end() {}
 
-    public void addDrivetrain() {
-        dt = robot.addDrivetrain();
-    }
+    public void addDrivetrain() {dt = robot.addDrivetrain();}
     public void addArm() {arm = robot.addArm();}
     public void addWrist() {wrist = robot.addWrist();}
     public void addClamp() {clamp = robot.addClamp();}
