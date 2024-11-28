@@ -22,8 +22,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
 public abstract class BluLinearOpMode extends LinearOpMode {
-    public Alliance alliance;
-    public Robot robot;
+    Robot robot;
     public Drivetrain dt;
     public Arm arm;
     public Wrist wrist;
@@ -33,11 +32,9 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public Extension extension;
     public IntakeSwitch intakeSwitch;
 
-    public StickyGamepad stickyG1;
-    public StickyGamepad stickyG2;
+    public StickyGamepad stickyG1, stickyG2;
 
-    double lastTime;
-    double loopTimeSum;
+    double lastTime, loopTimeSum;
     int loopTimeCount;
 
     public final void runOpMode() throws InterruptedException {
@@ -45,7 +42,6 @@ public abstract class BluLinearOpMode extends LinearOpMode {
         Globals.hwMap = hardwareMap;
         Globals.tele = telemetry;
         CommandScheduler.getInstance().cancelAll();
-        alliance = Globals.alliance;
 
         stickyG1 = new StickyGamepad(gamepad1);
         stickyG2 = new StickyGamepad(gamepad2);
@@ -80,15 +76,13 @@ public abstract class BluLinearOpMode extends LinearOpMode {
             stickyG1.update();
             stickyG2.update();
 
-            robot.read();
-
             // safety for switching controllers
-            if(gamepad1.start || gamepad2.start) {
-                continue;
+            if(!(gamepad1.start || gamepad2.start)) {
+                periodic();
             }
 
-            periodic();
             CommandScheduler.getInstance().run();
+            robot.read();
             robot.write();
 
             // calculate average loop time
@@ -98,7 +92,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
 
             telemetry();
             robot.telemetry(telemetry);
-            telemetry.addData("alliance:", alliance);
+            telemetry.addData("alliance:", Globals.alliance);
             telemetry.addData("Loop Time", loopTimeSum / loopTimeCount);
             resetLoopTime();
             telemetry.update();
