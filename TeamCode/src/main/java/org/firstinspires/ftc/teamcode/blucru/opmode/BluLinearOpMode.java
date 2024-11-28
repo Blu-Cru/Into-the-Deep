@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
 public abstract class BluLinearOpMode extends LinearOpMode {
-    Robot robot;
+    public Robot robot;
     public Drivetrain dt;
     public Arm arm;
     public Wrist wrist;

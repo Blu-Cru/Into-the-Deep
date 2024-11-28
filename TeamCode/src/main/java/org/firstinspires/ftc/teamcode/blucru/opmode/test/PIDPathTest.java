@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.TestPath;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
@@ -31,7 +29,7 @@ public class PIDPathTest extends BluLinearOpMode {
         enableFTCDashboard();
 
         Globals.setAlliance(Alliance.RED);
-        pidPath = new TestPath().build();
+//        pidPath = new TestPath().build();
 
         sm = new StateMachineBuilder()
                 .state(State.RESETTING)

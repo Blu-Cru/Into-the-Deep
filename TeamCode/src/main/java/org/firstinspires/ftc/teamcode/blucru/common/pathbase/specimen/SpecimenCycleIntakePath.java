@@ -28,6 +28,6 @@ public class SpecimenCycleIntakePath extends PIDPathBuilder {
                 .waitMillis(200)
                 .setPower(0.2)
                 .addMappedPoint(29, -53, -60)
-                .waitMillis(800);
+                .waitMillis(500);
     }
 }

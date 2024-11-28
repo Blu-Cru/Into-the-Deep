@@ -41,7 +41,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                 .setPower(0.25)
                 .addMappedPoint(7 - scoreCount * 1.5, -34, 270)
                 .schedule(new SequentialCommandGroup(
-                        new WaitCommand(350),
+                        new WaitCommand(300),
                         new SpecimenBackDunkCommand(),
                         new WaitCommand(100),
                         new WheelReverseCommand(),
@@ -49,10 +49,8 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                         new WaitCommand(150),
                         new PivotRetractCommand(),
                         new ExtensionRetractCommand(),
-                        new WheelStopCommand(),
-                        new ArmRetractCommand(),
-                        new WristUprightForwardCommand()
+                        new EndEffectorRetractCommand()
                 ))
-                .waitMillis(450);
+                .waitMillis(400);
     }
 }
