@@ -14,6 +14,14 @@ public class DriveKinematics {
         STRAFE_kStatic = 0.02, FORWARD_kStatic = 0.01, // feedforward constants for static friction
         MAX_ACCEL_DRIVE_DELTA = 0.5, MAX_DECEL_DRIVE_DELTA = 0.5;
 
+    public static double getDistanceToPoint(Pose2d pose, Pose2d targetPose) {
+        return Math.hypot(targetPose.getX() - pose.getX(), targetPose.getY() - pose.getY());
+    }
+
+//    public static double getDistanceVelToPoint(Pose2d pose, Pose2d targetPose, Pose2d velocity) {
+//
+//    }
+
     public static double getHeadingTowardsPoint(Pose2d currentPose, Pose2d targetPose) {
         return Math.atan2(targetPose.getY() - currentPose.getY(),
                             targetPose.getX() - currentPose.getX());
@@ -34,19 +42,18 @@ public class DriveKinematics {
         return new Vector2d(heading, headingVel);
     }
 
-    public static Pose2d getStopPose(Pose2d currentPose, Pose2d currentVelocity) {
-        Pose2d robotVel = new Pose2d(currentVelocity.vec().rotated(-currentPose.getHeading()), currentVelocity.getHeading());
+    public static Pose2d getStopPose(Pose2d pose, Pose2d fieldVel) {
+        Pose2d robotVel = new Pose2d(fieldVel.vec().rotated(-pose.getHeading()), fieldVel.getHeading());
 
-        // absolute value does the same as Math.signum because its squared, so the sign is preserved
+        // absolute value does the same as Math.signum because it preserves the sign
         double robotDeltaX = robotVel.getX() * Math.abs(robotVel.getX()) / (2 * AXIAL_DECEL);
         double robotDeltaY = robotVel.getY() * Math.abs(robotVel.getY()) / (2 * LATERAL_DECEL);
-        double robotDeltaHeading = robotVel.getHeading() * Math.abs(robotVel.getHeading()) / (2 * HEADING_DECEL);
 
-        Pose2d robotDeltaPose = new Pose2d(robotDeltaX, robotDeltaY, robotDeltaHeading);
+        Pose2d robotDeltaPose = new Pose2d(robotDeltaX, robotDeltaY, getHeadingDecel(pose.getHeading(), fieldVel.getHeading()));
 
-        Pose2d globalDeltaPose = new Pose2d(robotDeltaPose.vec().rotated(currentPose.getHeading()), robotDeltaPose.getHeading());
+        Pose2d globalDeltaPose = new Pose2d(robotDeltaPose.vec().rotated(pose.getHeading()), robotDeltaPose.getHeading());
 
-        return new Pose2d(currentPose.vec().plus(globalDeltaPose.vec()), Angle.norm(currentPose.getHeading() + globalDeltaPose.getHeading()));
+        return new Pose2d(pose.vec().plus(globalDeltaPose.vec()), Angle.norm(pose.getHeading() + globalDeltaPose.getHeading()));
     }
 
 

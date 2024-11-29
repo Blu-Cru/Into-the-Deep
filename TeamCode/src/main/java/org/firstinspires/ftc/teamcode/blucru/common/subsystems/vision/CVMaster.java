@@ -20,10 +20,10 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 public class CVMaster implements BluSubsystem {
-    public static double fx = 914.686;
-    public static double fy = 914.686;
-    public static double cx = 633.716;
-    public static double cy = 368.105;
+    public static double fx = 913.886;
+    public static double fy = 913.886;
+    public static double cx = 637.951;
+    public static double cy = 363.17;
     public static int GAIN = 0;
     public static long EXPOSURE = 5; // ms
 
