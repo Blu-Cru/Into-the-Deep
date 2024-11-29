@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.FocusControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -29,7 +28,6 @@ public class CVMaster implements BluSubsystem {
 
     ExposureControl exposureControl;
     GainControl gainControl;
-    FocusControl focusControl;
 
     public VisionPortal visionPortal;
     public AprilTagProcessor tagDetector;
@@ -65,7 +63,6 @@ public class CVMaster implements BluSubsystem {
 
         exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         gainControl = visionPortal.getCameraControl(GainControl.class);
-        focusControl = visionPortal.getCameraControl(FocusControl.class);
 
         numDetections = 0;
     }
@@ -107,11 +104,11 @@ public class CVMaster implements BluSubsystem {
         visionPortal.stopStreaming();
     }
 
-    public boolean setCameraExposure(double exposure) {
+    public boolean setExposure(double exposure) {
         return exposureControl.setExposure((long) exposure, TimeUnit.MILLISECONDS);
     }
 
-    public boolean setCameraGain(double gain) {
+    public boolean setGain(double gain) {
         return gainControl.setGain((int) gain);
     }
 }
