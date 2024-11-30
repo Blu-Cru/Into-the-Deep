@@ -22,7 +22,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
     // stuff i added
-    implementation 'com.acmerobotics.dashboard:dashboard:0.4.14' // ftc dashboard
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.16' // ftc dashboard
     implementation 'com.github.StateFactory-Dev:StateFactory:0.3.6' // state machine'
 }
 

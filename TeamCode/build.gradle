@@ -28,7 +28,6 @@ dependencies {
     implementation project(':FtcRobotController')
 
     // stuff i added
-    implementation 'com.acmerobotics.dashboard:dashboard:0.4.14' // ftc dashboard
     testImplementation 'junit:junit:4.12' // junit for testing
     implementation 'org.ftclib.ftclib:core:2.0.1' // ftc lib
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
