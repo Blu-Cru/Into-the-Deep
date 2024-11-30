@@ -14,12 +14,12 @@ import java.util.List;
 public class AprilTagPoseGetter {
     public static Pose2d CAMERA_POS = new Pose2d(0, -7.074, Math.toRadians(-90)); // position of the camera relative to the center of the robot in inches
     public static HashMap<Integer, Pose2d> TAGS = new HashMap<Integer, Pose2d>() {{
-        put(11, new Pose2d(-72, 48, 0)); // tag 11
-        put(12, new Pose2d(0, 72, -Math.PI/2)); // tag 12
-        put(13, new Pose2d(72, 48, Math.PI)); // tag 13
-        put(14, new Pose2d(72, -48, Math.PI)); // tag 14
-        put(15, new Pose2d(0, -72, Math.PI/2)); // tag 15
-        put(16, new Pose2d(-72, -48, 0)); // tag 16
+        put(11, new Pose2d(-72.5, 48, 0)); // tag 11
+        put(12, new Pose2d(0, 72.5, -Math.PI/2)); // tag 12
+        put(13, new Pose2d(72.5, 48, Math.PI)); // tag 13
+        put(14, new Pose2d(72.5, -48, Math.PI)); // tag 14
+        put(15, new Pose2d(0, -72.5, Math.PI/2)); // tag 15
+        put(16, new Pose2d(-72.5, -48, 0)); // tag 16
     }};
     public static double MAX_UPDATE_DISTANCE = 72; // maximum update distance
 
