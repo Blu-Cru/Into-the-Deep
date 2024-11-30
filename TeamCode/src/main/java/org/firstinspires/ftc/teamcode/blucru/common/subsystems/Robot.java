@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.IntakeSwitch;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class Robot {
     public Pivot pivot;
     public Extension extension;
     public IntakeSwitch intakeSwitch;
+    public CVMaster cvMaster;
 
     // list of all subsystems
     ArrayList<BluSubsystem> subsystems;
@@ -138,6 +140,12 @@ public class Robot {
         intakeSwitch = new IntakeSwitch();
         subsystems.add(intakeSwitch);
         return intakeSwitch;
+    }
+
+    public CVMaster addCVMaster() {
+        cvMaster = new CVMaster();
+        subsystems.add(cvMaster);
+        return cvMaster;
     }
 
     // call this after every op mode
