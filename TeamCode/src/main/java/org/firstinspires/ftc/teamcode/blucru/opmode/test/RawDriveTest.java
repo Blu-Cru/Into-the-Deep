@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
+@Disabled
 @TeleOp(name = "Raw Drive test", group = "test")
 public class RawDriveTest extends BluLinearOpMode {
     double vert, horz, rotate;

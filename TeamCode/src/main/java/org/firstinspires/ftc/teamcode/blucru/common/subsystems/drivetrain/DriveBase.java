@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DriveKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.localization.FusedLocalizer;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 public class DriveBase implements BluSubsystem {
     FusedLocalizer localizer;
@@ -110,6 +111,10 @@ public class DriveBase implements BluSubsystem {
 
     public void drawPose() {
         Globals.drawPose(getPoseEstimate());
+    }
+
+    public boolean updateAprilTags(AprilTagProcessor processor) {
+        return localizer.updateAprilTags(processor);
     }
 
     @Override

@@ -41,7 +41,6 @@ public class FusedLocalizer extends PinpointLocalizer{
         Pose2d currentPose = getPoseEstimate();
         //Log.v("Marker Entry", "Pos" + currentPose);
         poseHistory.add(currentPose, getPoseVelocity());
-
     }
 
     public boolean updateAprilTags(AprilTagProcessor tagProcessor) {

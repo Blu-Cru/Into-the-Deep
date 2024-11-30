@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
@@ -25,6 +26,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wris
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
+@Disabled
 @TeleOp(name = "Specimen Test", group = "test")
 public class SpecimenTest extends BluLinearOpMode {
     enum State {

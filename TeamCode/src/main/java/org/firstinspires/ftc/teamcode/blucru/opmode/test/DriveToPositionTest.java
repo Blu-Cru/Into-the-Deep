@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @Config
+@Disabled
 @TeleOp(name="Drive To Position Test", group="test")
 public class DriveToPositionTest extends BluLinearOpMode {
     public static double targetX = 0, targetY = 0, targetHeading = Math.toRadians(90);

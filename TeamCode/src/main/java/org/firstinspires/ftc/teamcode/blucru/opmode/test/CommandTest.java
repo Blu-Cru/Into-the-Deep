@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
+@Disabled
 @TeleOp(name = "Command Test", group = "test")
 public class CommandTest extends BluLinearOpMode {
     @Override

@@ -28,8 +28,8 @@ public class AprilTagTest extends BluLinearOpMode {
     }
 
     public void initLoop() {
-        cvMaster.setCameraExposure(CAMERA_EXPOSURE);
-        cvMaster.setCameraGain(CAMERA_GAIN);
+        cvMaster.setExposure(CAMERA_EXPOSURE);
+        cvMaster.setGain(CAMERA_GAIN);
 
         if (stickyG1.a) {
             cvMaster.detectTag();

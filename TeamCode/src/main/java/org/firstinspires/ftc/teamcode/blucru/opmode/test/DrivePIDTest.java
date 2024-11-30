@@ -4,12 +4,11 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @Config
-@TeleOp(name = "New Drivetrain PID Test", group = "test")
-public class NewDrivetrainPIDTest extends BluLinearOpMode {
+@TeleOp(name = "Drive PID Test", group = "test")
+public class DrivePIDTest extends BluLinearOpMode {
     public static double targetX = 0, targetY = 0, targetHeading = 0;
 
     @Override
