@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.FocusControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -21,16 +20,15 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 public class CVMaster implements BluSubsystem {
-    public static double fx = 914.686;
-    public static double fy = 914.686;
-    public static double cx = 633.716;
-    public static double cy = 368.105;
+    public static double fx = 913.886;
+    public static double fy = 913.886;
+    public static double cx = 637.951;
+    public static double cy = 363.17;
     public static int GAIN = 0;
     public static long EXPOSURE = 5; // ms
 
     ExposureControl exposureControl;
     GainControl gainControl;
-    FocusControl focusControl;
 
     public VisionPortal visionPortal;
     public AprilTagProcessor tagDetector;
@@ -66,7 +64,6 @@ public class CVMaster implements BluSubsystem {
 
         exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         gainControl = visionPortal.getCameraControl(GainControl.class);
-        focusControl = visionPortal.getCameraControl(FocusControl.class);
 
         numDetections = 0;
     }
@@ -108,11 +105,11 @@ public class CVMaster implements BluSubsystem {
         visionPortal.stopStreaming();
     }
 
-    public boolean setCameraExposure(double exposure) {
+    public boolean setExposure(double exposure) {
         return exposureControl.setExposure((long) exposure, TimeUnit.MILLISECONDS);
     }
 
-    public boolean setCameraGain(double gain) {
+    public boolean setGain(double gain) {
         return gainControl.setGain((int) gain);
     }
 }
