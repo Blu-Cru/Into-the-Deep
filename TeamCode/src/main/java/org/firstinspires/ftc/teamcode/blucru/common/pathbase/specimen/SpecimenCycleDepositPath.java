@@ -34,7 +34,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                         new ExtensionCommand(2),
                         new ArmGlobalAngleCommand(2)
                 ))
-                .addMappedPoint(10 - scoreCount, -43, 270, 5)
+                .addMappedPoint(10   - scoreCount, -43, 270, 5)
                 .schedule(
                         new SpecimenBackCommand()
                 )

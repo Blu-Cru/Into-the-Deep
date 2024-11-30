@@ -28,9 +28,6 @@ public class AprilTagTest extends BluLinearOpMode {
     }
 
     public void initLoop() {
-        cvMaster.setExposure(CAMERA_EXPOSURE);
-        cvMaster.setGain(CAMERA_GAIN);
-
         if (stickyG1.a) {
             cvMaster.detectTag();
             state = State.DETECTING;
@@ -48,6 +45,7 @@ public class AprilTagTest extends BluLinearOpMode {
         } catch (Exception e) {
 
         }
+        robot.telemetry(telemetry);
         dt.drawPose();
     }
 

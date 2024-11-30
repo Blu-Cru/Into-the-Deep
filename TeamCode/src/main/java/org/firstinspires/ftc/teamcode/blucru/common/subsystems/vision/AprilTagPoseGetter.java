@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AprilTagPoseGetter {
-    public static Pose2d CAMERA_POS = new Pose2d(-6.61, 3.78, Math.toRadians(-90)); // position of the camera relative to the center of the robot in inches
+    public static Pose2d CAMERA_POS = new Pose2d(0, -7.074, Math.toRadians(-90)); // position of the camera relative to the center of the robot in inches
     public static HashMap<Integer, Pose2d> TAGS = new HashMap<Integer, Pose2d>() {{
         put(11, new Pose2d(-72, 48, 0)); // tag 11
         put(12, new Pose2d(0, 72, -Math.PI/2)); // tag 12
