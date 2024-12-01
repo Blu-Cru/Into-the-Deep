@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Intak
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
-import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
@@ -36,7 +35,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
 
     public StickyGamepad stickyG1, stickyG2;
 
-    double lastTime, loopTimeSum;
+    double lastTime, loopTimeSum, loopTimeAvg = 0;
     int loopTimeCount;
 
     public final void runOpMode() throws InterruptedException {
@@ -87,16 +86,10 @@ public abstract class BluLinearOpMode extends LinearOpMode {
             robot.read();
             robot.write();
 
-            // calculate average loop time
-            loopTimeSum += Globals.runtime.milliseconds() - lastTime;
-            lastTime = Globals.runtime.milliseconds();
-            loopTimeCount++;
-
             telemetry();
             robot.telemetry(telemetry);
             telemetry.addData("Alliance:", Globals.alliance);
-            telemetry.addData("Loop Time", loopTimeSum / loopTimeCount);
-            resetLoopTime();
+            telemetry.addData("Loop Time", calculateAvgLoopTime());
             telemetry.update();
         }
 
@@ -128,8 +121,17 @@ public abstract class BluLinearOpMode extends LinearOpMode {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
     }
 
-    private void resetLoopTime() {
-        loopTimeSum = 0;
-        loopTimeCount = 0;
+    private double calculateAvgLoopTime() {
+        loopTimeSum += Globals.runtime.milliseconds() - lastTime;
+        lastTime = Globals.runtime.milliseconds();
+        loopTimeCount++;
+
+        if(loopTimeCount > 5) {
+            loopTimeAvg = loopTimeSum / loopTimeCount;
+            loopTimeSum = 0;
+            loopTimeCount = 0;
+        }
+
+        return loopTimeAvg;
     }
 }

@@ -34,8 +34,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.Specime
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
-@TeleOp(name = "Main TeleOp", group = "1")
-public class Duo extends BluLinearOpMode {
+@TeleOp(name = "Main", group = "1")
+public class Main extends BluLinearOpMode {
     enum State {
         RETRACTED,
         EXTENDING_OVER_INTAKE,

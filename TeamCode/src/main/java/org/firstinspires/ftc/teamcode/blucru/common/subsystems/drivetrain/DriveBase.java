@@ -33,12 +33,13 @@ public class DriveBase implements BluSubsystem {
         br = new BluMotor("br", DcMotorSimple.Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
 
         motors = new BluMotor[] {fl, fr, bl, br};
-
         localizer.setPoseEstimate(Globals.startPose);
     }
 
     @Override
     public void init() {
+        localizer.setPoseEstimate(Globals.startPose);
+
         for (BluMotor motor : motors) {
             motor.init();
         }
