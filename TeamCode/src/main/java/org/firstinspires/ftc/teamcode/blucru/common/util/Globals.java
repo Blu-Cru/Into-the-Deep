@@ -33,8 +33,7 @@ public class Globals {
     }
 
     public static void flipAlliance() {
-        Globals.alliance = Globals.alliance.flip();
-        Globals.reflect = Globals.alliance == Alliance.RED ? 1 : -1;
+        setAlliance(Globals.alliance.flip());
     }
 
     public static Pose2d mapPose(double x, double y, double headingDeg) {
@@ -56,8 +55,8 @@ public class Globals {
         return power * 12.0 / Globals.voltage;
     }
 
-    public static void autoRunningTelemetry(Telemetry telemetry) {
-        telemetry.addData("Runtime", Globals.runtime.seconds());
+    public static void runtimeTelemetry() {
+        tele.addData("Runtime", Globals.runtime.seconds());
     }
 
     public static void drawPose(Pose2d pose) {
