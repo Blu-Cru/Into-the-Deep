@@ -47,6 +47,12 @@ public class DriveTurnToBlockTest extends BluLinearOpMode {
     }
 
     @Override
+    public void onStart() {
+        sm.start();
+        sm.setState(State.TELEOP);
+    }
+
+    @Override
     public void periodic() {
         sm.update();
         dt.drawPose();

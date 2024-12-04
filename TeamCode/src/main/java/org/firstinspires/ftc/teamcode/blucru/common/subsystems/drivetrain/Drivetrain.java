@@ -117,7 +117,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
             Vector2d pv = new Vector2d(heading, headingVel);
             Vector2d sp = blockKinematics.getHeadingStateTowardsPoint(pose, vel);
 
-            rotate = pid.headingController.calculate(pv, sp);
+            rotate = pid.getRotate(pv, sp);
         } else {
             pid.setTargetHeading(blockKinematics.getHeadingTowardsPoint(pose));
             rotate = pid.getRotate(heading);

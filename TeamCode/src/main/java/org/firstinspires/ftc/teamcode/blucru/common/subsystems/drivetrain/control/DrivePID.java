@@ -67,6 +67,16 @@ public class DrivePID {
         return Range.clip(headingController.calculate(heading), -1, 1);
     }
 
+    public double getRotate(Vector2d pv, Vector2d sp) {
+        if(pv.getX() - sp.getX() < -Math.PI) {
+            pv = new Vector2d(pv.getX() + 2*Math.PI, pv.getY());
+        } else if(pv.getX() - sp.getX() > Math.PI) {
+            pv = new Vector2d(pv.getX() - 2*Math.PI, pv.getY());
+        }
+
+        return headingController.calculate(pv, sp);
+    }
+
     public boolean inRange(Pose2d pose, double translationTolerance, double headingTolerance) {
         Vector2d targetVec = new Vector2d(xController.getSetPoint(), yController.getSetPoint());
         boolean translationInRange = pose.vec().minus(targetVec).norm() < translationTolerance;

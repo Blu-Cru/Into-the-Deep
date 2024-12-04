@@ -145,15 +145,11 @@ public class Main extends BluLinearOpMode {
                     clamp.release();
                 })
                 .transition(() -> stickyG2.a || intakeSwitch.pressed(), State.RETRACTED, () -> {
-                    new SequentialCommandGroup(
-                            new EndEffectorRetractCommand(),
-                            new WaitCommand(100),
-                            new BoxtubeRetractCommand()
-                    ).schedule();
-                })
-                .transition(() -> intakeSwitch.pressed(), State.RETRACTED, () -> {
-                    gamepad1.rumble(400);
-                    gamepad2.rumble(400);
+                    if(intakeSwitch.pressed()) {
+                        gamepad1.rumble(200);
+                        gamepad2.rumble(200);
+                    }
+
                     new SequentialCommandGroup(
                             new EndEffectorRetractCommand(),
                             new WaitCommand(100),

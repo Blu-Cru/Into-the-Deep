@@ -25,7 +25,7 @@ public class TurnToBlockKinematics {
         double yVel = currentVelocity.getY();
 
         // derive atan(yDelta / xDelta) with respect to time
-        double headingVel = (xDelta * yVel - yDelta * xVel) / (xDelta * xDelta + yDelta * yDelta);
+        double headingVel = -(xDelta * yVel - yDelta * xVel) / (xDelta * xDelta + yDelta * yDelta);
 
         return new Vector2d(heading, headingVel);
     }
