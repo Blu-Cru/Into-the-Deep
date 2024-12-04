@@ -108,14 +108,20 @@ public class Drivetrain extends DriveBase implements Subsystem {
         pid.setTargetPose(targetPose);
     }
 
-    public void teleDriveTurnToPos(double x, double y, Vector2d pos) {
+    public void teleDriveTurnToPos(double x, double y, Vector2d pos, boolean useVel) {
         state = State.IDLE;
         blockKinematics = new TurnToBlockKinematics(pos);
 
-        Vector2d pv = new Vector2d(heading, headingVel);
-        Vector2d sp = blockKinematics.getHeadingStateTowardsPoint(pose, vel);
+        double rotate;
+        if(useVel) {
+            Vector2d pv = new Vector2d(heading, headingVel);
+            Vector2d sp = blockKinematics.getHeadingStateTowardsPoint(pose, vel);
 
-        double rotate = pid.headingController.calculate(pv, sp);
+            rotate = pid.headingController.calculate(pv, sp);
+        } else {
+            pid.setTargetHeading(blockKinematics.getHeadingTowardsPoint(pose));
+            rotate = pid.getRotate(heading);
+        }
 
         driveFieldCentric(new Vector2d(x, y).times(drivePower), rotate);
     }

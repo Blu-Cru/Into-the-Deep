@@ -41,7 +41,7 @@ public class DriveTurnToBlockTest extends BluLinearOpMode {
                     gamepad1.rumble(300);
                 })
                 .loop(() -> {
-                    dt.teleDriveTurnToPos(gamepad1.left_stick_x, -gamepad1.left_stick_y, new Vector2d(blockX, blockY));
+                    dt.teleDriveTurnToPos(gamepad1.left_stick_x, -gamepad1.left_stick_y, new Vector2d(blockX, blockY), !gamepad1.right_bumper);
                 })
                 .build();
     }
