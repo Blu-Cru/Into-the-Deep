@@ -15,7 +15,6 @@ public class SpecimenBackDunkRetractCommand extends SequentialCommandGroup {
                 new WheelReverseCommand(),
                 new WaitCommand(300),
                 new BoxtubeRetractCommand(),
-                new WaitCommand(250),
                 new EndEffectorRetractCommand()
         );
     }
