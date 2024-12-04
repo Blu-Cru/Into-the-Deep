@@ -16,8 +16,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
 
     enum State {
         IDLE,
-        PID,
-        TURN_TO_BLOCK
+        PID
     }
 
     public boolean fieldCentric = true;
@@ -109,10 +108,16 @@ public class Drivetrain extends DriveBase implements Subsystem {
         pid.setTargetPose(targetPose);
     }
 
-    // TODO: implement this
-    public void turnToBlock(Vector2d blockPos) {
-        state = State.TURN_TO_BLOCK;
-        blockKinematics = new TurnToBlockKinematics(blockPos);
+    public void teleDriveTurnToPos(double x, double y, Vector2d pos) {
+        state = State.IDLE;
+        blockKinematics = new TurnToBlockKinematics(pos);
+
+        Vector2d pv = new Vector2d(heading, headingVel);
+        Vector2d sp = blockKinematics.getHeadingStateTowardsPoint(pose, vel);
+
+        double rotate = pid.headingController.calculate(pv, sp);
+
+        driveFieldCentric(new Vector2d(x, y).times(drivePower), rotate);
     }
 
     public void driveToHeading(double x, double y) {

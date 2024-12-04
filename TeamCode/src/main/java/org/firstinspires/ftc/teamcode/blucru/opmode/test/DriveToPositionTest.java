@@ -19,10 +19,13 @@ public class DriveToPositionTest extends BluLinearOpMode {
     public void initialize() {
         addDrivetrain();
         enableFTCDashboard();
+    }
 
-        targetX = dt.getPoseEstimate().getX();
-        targetY = dt.getPoseEstimate().getY();
-        targetHeading = dt.getPoseEstimate().getHeading();
+    @Override
+    public void onStart() {
+        targetX = dt.pose.getX();
+        targetY = dt.pose.getY();
+        targetHeading = dt.heading;
     }
 
     public void periodic() {
@@ -55,8 +58,8 @@ public class DriveToPositionTest extends BluLinearOpMode {
         telemetry.addData("target y", targetY);
         telemetry.addData("target heading", targetHeading);
         dt.drawPose();
-        telemetry.addData("current x", dt.getPoseEstimate().getX());
-        telemetry.addData("current y", dt.getPoseEstimate().getY());
-        telemetry.addData("current heading", dt.getPoseEstimate().getHeading());
+        telemetry.addData("current x", dt.pose.getX());
+        telemetry.addData("current y", dt.pose.getY());
+        telemetry.addData("current heading", dt.pose.getHeading());
     }
 }

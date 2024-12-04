@@ -7,6 +7,8 @@ import com.acmerobotics.roadrunner.util.Angle;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
+
 @Config
 public class DrivePID {
     public static double
@@ -14,12 +16,12 @@ public class DrivePID {
             kPY = 0.18, kIY = 0, kDY = 0.021,
             kPHeading = 1.7, kIHeading = 0, kDHeading = 0.1;
 
-    public PIDController xController, yController, headingController;
+    public PDController xController, yController, headingController;
 
     public DrivePID() {
-        xController = new PIDController(kPX, kIX, kDX);
-        yController = new PIDController(kPY, kIY, kDY);
-        headingController = new PIDController(kPHeading, kIHeading, kDHeading);
+        xController = new PDController(kPX, kIX, kDX);
+        yController = new PDController(kPY, kIY, kDY);
+        headingController = new PDController(kPHeading, kIHeading, kDHeading);
     }
 
     public Vector2d calculate(Vector2d currentPosition) {

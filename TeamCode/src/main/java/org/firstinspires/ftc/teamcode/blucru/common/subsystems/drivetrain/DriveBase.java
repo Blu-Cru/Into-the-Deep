@@ -90,7 +90,7 @@ public class DriveBase implements BluSubsystem {
         driveFieldCentric(new Pose2d(translation, rotation));
     }
 
-    public Pose2d getPoseEstimate() {
+    private Pose2d getPoseEstimate() {
         return localizer.getPoseEstimate();
     }
 
@@ -102,11 +102,11 @@ public class DriveBase implements BluSubsystem {
         localizer.setHeading(heading);
     }
 
-    public double getHeading() {
+    private double getHeading() {
         return localizer.getHeading();
     }
 
-    public Pose2d getPoseVelocity() {
+    private Pose2d getPoseVelocity() {
         return localizer.getPoseVelocity();
     }
 
