@@ -46,6 +46,7 @@ public class AprilTagDriveTest extends BluLinearOpMode {
     @Override
     public void onStart() {
         cvMaster.detectTag();
+        sm.setState(State.DRIVER_CONTROL);
     }
 
     @Override

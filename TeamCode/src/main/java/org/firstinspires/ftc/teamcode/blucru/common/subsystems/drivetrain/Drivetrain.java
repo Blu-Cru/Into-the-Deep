@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DriveKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DrivePID;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.TurnToBlockKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class Drivetrain extends DriveBase implements Subsystem {
@@ -22,6 +23,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
     double drivePower = 0.5;
     State state;
     DrivePID pid;
+    TurnToBlockKinematics blockKinematics;
 
     boolean lastTurning, lastTranslating;
 
@@ -106,12 +108,35 @@ public class Drivetrain extends DriveBase implements Subsystem {
         pid.setTargetPose(targetPose);
     }
 
+    public void teleDriveTurnToPos(double x, double y, Vector2d pos, boolean useVel) {
+        state = State.IDLE;
+        blockKinematics = new TurnToBlockKinematics(pos);
+
+        double rotate;
+        if(useVel) {
+            Vector2d pv = new Vector2d(heading, headingVel);
+            Vector2d sp = blockKinematics.getHeadingStateTowardsPoint(pose, vel);
+
+            rotate = pid.getRotate(pv, sp);
+        } else {
+            pid.setTargetHeading(blockKinematics.getHeadingTowardsPoint(pose));
+            rotate = pid.getRotate(heading);
+        }
+
+        driveFieldCentric(new Vector2d(x, y).times(drivePower), rotate);
+    }
+
     public void driveToHeading(double x, double y) {
         if(fieldCentric) {
             driveFieldCentric(new Vector2d(x, y).times(drivePower), pid.getRotate(heading));
         } else {
             drive(new Vector2d(x, y).times(drivePower), pid.getRotate(heading));
         }
+    }
+
+    // TODO: implement this
+    public void driveTurnToBlock(Vector2d blockPos) {
+        blockKinematics = new TurnToBlockKinematics(blockPos);
     }
 
     public void driveToHeading(double x, double y, double targetHeading) {

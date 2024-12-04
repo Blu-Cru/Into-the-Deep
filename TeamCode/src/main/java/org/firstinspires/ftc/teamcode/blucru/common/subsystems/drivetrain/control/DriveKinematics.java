@@ -22,26 +22,6 @@ public class DriveKinematics {
 //
 //    }
 
-    public static double getHeadingTowardsPoint(Pose2d currentPose, Pose2d targetPose) {
-        return Math.atan2(targetPose.getY() - currentPose.getY(),
-                            targetPose.getX() - currentPose.getX());
-    }
-
-    public static Vector2d getHeadingStateTowardsPoint(Pose2d currentPose, Pose2d targetPose, Pose2d currentVelocity) {
-        double heading = getHeadingTowardsPoint(currentPose, targetPose);
-
-        double xDelta = targetPose.getX() - currentPose.getX();
-        double yDelta = targetPose.getY() - currentPose.getY();
-
-        double xVel = currentVelocity.getX();
-        double yVel = currentVelocity.getY();
-
-        // derive atan(yDelta / xDelta) with respect to time
-        double headingVel = (xDelta * yVel - yDelta * xVel) / (xDelta * xDelta + yDelta * yDelta);
-
-        return new Vector2d(heading, headingVel);
-    }
-
     public static Pose2d getStopPose(Pose2d pose, Pose2d fieldVel) {
         Pose2d robotVel = new Pose2d(fieldVel.vec().rotated(-pose.getHeading()), fieldVel.getHeading());
 

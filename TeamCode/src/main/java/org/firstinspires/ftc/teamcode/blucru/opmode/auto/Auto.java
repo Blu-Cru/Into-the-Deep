@@ -131,7 +131,7 @@ public class Auto extends BluLinearOpMode {
 
     @Override
     public void end() {
-        if(Globals.alliance == Alliance.RED) Globals.startPose = dt.getPoseEstimate();
+        if(Globals.alliance == Alliance.RED) Globals.startPose = dt.pose;
         else Globals.startPose = new Pose2d(dt.pose.vec(), Angle.norm(dt.pose.getHeading() + Math.PI));
         Log.i("Auto", "start pose set to" + Globals.startPose);
     }

@@ -18,6 +18,13 @@ public class DrivePIDTest extends BluLinearOpMode {
     }
 
     @Override
+    public void onStart() {
+        targetX = dt.pose.getX();
+        targetY = dt.pose.getY();
+        targetHeading = dt.heading;
+    }
+
+    @Override
     public void periodic() {
         dt.updatePID();
 
