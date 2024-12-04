@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DriveKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DrivePID;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.TurnToBlockKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class Drivetrain extends DriveBase implements Subsystem {
@@ -15,13 +16,15 @@ public class Drivetrain extends DriveBase implements Subsystem {
 
     enum State {
         IDLE,
-        PID
+        PID,
+        TURN_TO_BLOCK
     }
 
     public boolean fieldCentric = true;
     double drivePower = 0.5;
     State state;
     DrivePID pid;
+    TurnToBlockKinematics blockKinematics;
 
     boolean lastTurning, lastTranslating;
 
@@ -106,12 +109,23 @@ public class Drivetrain extends DriveBase implements Subsystem {
         pid.setTargetPose(targetPose);
     }
 
+    // TODO: implement this
+    public void turnToBlock(Vector2d blockPos) {
+        state = State.TURN_TO_BLOCK;
+        blockKinematics = new TurnToBlockKinematics(blockPos);
+    }
+
     public void driveToHeading(double x, double y) {
         if(fieldCentric) {
             driveFieldCentric(new Vector2d(x, y).times(drivePower), pid.getRotate(heading));
         } else {
             drive(new Vector2d(x, y).times(drivePower), pid.getRotate(heading));
         }
+    }
+
+    // TODO: implement this
+    public void driveTurnToBlock(Vector2d blockPos) {
+        blockKinematics = new TurnToBlockKinematics(blockPos);
     }
 
     public void driveToHeading(double x, double y, double targetHeading) {
