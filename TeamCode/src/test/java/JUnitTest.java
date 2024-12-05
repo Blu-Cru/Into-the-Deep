@@ -5,4 +5,9 @@ public class JUnitTest {
     public void testCar() {
         Assert.assertEquals(1, 1);
     }
+
+    @Test
+    public void testEJML() {
+
+    }
 }
