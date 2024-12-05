@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenPreloadDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
+@TeleOp(name = "April Tag Path Test", group = "test")
 public class AprilTagPathTest extends BluLinearOpMode {
     enum State {
         DRIVER_CONTROL,
@@ -69,6 +71,7 @@ public class AprilTagPathTest extends BluLinearOpMode {
     @Override
     public void onStart() {
         sm.start();
+        sm.setState(State.DRIVER_CONTROL);
         cvMaster.detectTag();
     }
 

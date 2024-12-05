@@ -25,9 +25,8 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
                 .setPower(0.3)
                 .addMappedPoint(7, -33, 90)
                 .schedule(new SequentialCommandGroup(
-                        new WaitCommand(400),
+                        new WaitCommand(350),
                         new SpecimenFrontDunkCommand(),
-                        new WaitCommand(100),
                         new SpecimenFrontDunkRetractCommand()
                 ))
                 .waitMillis(600);
