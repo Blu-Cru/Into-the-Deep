@@ -23,7 +23,7 @@ public class BoxtubeKinematics {
     public static DMatrix3x3 getBlockMatrix(double pivotAngle, double extension, double armAngle, double wristAngle) {
         DMatrix3x3 result = new DMatrix3x3();
 
-        DMatrix3x3 transform = new DMatrix3x3(
+        DMatrix3x3 P2toBlock = new DMatrix3x3(
                 1, 0, ARM_x,
                 0, 1, ARM_y + Math.sin(wristAngle) * WRIST_y,
                 0, 0, 1
@@ -31,7 +31,7 @@ public class BoxtubeKinematics {
 
         DMatrix3x3 pivot2 = getPivot2(pivotAngle, extension, armAngle);
 
-        CommonOps_DDF3.mult(pivot2, transform, result);
+        CommonOps_DDF3.mult(pivot2, P2toBlock, result);
         return result;
     }
 
