@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.ejml.data.DMatrix3x3;
@@ -64,6 +65,10 @@ public class BoxtubeKinematics {
 
         CommonOps_DDF3.mult(PIVOT1, rotation, result);
         return result;
+    }
+
+    public static Pose2d getPoseFrom3x3 (DMatrix3x3 matrix) {
+        return new Pose2d(matrix.get(0, 2), matrix.get(1, 2), getAngleFrom3x3(matrix));
     }
 
     public static double getAngleFrom3x3 (DMatrix3x3 matrix) {
