@@ -1,7 +1,7 @@
 import org.ejml.data.DMatrix3;
 import org.ejml.data.DMatrix3x3;
 import org.ejml.dense.fixed.CommonOps_DDF3;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.BoxtubeKinematics;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeKinematics;
 import org.junit.*;
 
 import java.util.Arrays;
@@ -29,7 +29,7 @@ public class JUnitTest {
 
         System.out.println(Arrays.asList(pivotAngle, extension, armAngle, wristAngle));
         startTime = System.nanoTime();
-        DMatrix3x3 res = BoxtubeKinematics.getBlockMatrix(pivotAngle, extension, armAngle, wristAngle);
+        DMatrix3x3 res = BoxtubeKinematics.getForwardKinematics(pivotAngle, extension, armAngle, wristAngle);
         endTime = System.nanoTime();
         res.print();
         System.out.println("Angle: " + BoxtubeKinematics.getAngleFrom3x3(res));

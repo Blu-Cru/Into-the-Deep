@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube;
+package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -20,7 +20,18 @@ public class BoxtubeKinematics {
             0, 0, 1
     );
 
-    public static DMatrix3x3 getBlockMatrix(double pivotAngle, double extension, double armAngle, double wristAngle) {
+    public static DMatrix3x3 getEndEffectorMatrix(Pose2d endEffectorPose) {
+        double cos = Math.cos(endEffectorPose.getHeading());
+        double sin = Math.sin(endEffectorPose.getHeading());
+
+        return new DMatrix3x3(
+                cos, -sin, endEffectorPose.getX(),
+                sin, cos, endEffectorPose.getY(),
+                0, 0, 1
+        );
+    }
+
+    public static DMatrix3x3 getForwardKinematics(double pivotAngle, double extension, double armAngle, double wristAngle) {
         DMatrix3x3 result = new DMatrix3x3();
 
         DMatrix3x3 P2toBlock = new DMatrix3x3(
