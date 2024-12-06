@@ -64,18 +64,14 @@ public class BoxtubeKinematics {
     }
 
     public static DMatrix3x3 getPivot1(double pivotAngle){
-        DMatrix3x3 result = new DMatrix3x3();
         double cos = Math.cos(pivotAngle);
         double sin = Math.sin(pivotAngle);
 
-        DMatrix3x3 rotation = new DMatrix3x3(
-                cos, -sin, 0,
-                sin, cos, 0,
+        return new DMatrix3x3(
+                cos, -sin, Px,
+                sin, cos, Py,
                 0, 0, 1
         );
-
-        CommonOps_DDF3.mult(PIVOT1, rotation, result);
-        return result;
     }
 
     public static Pose2d getPoseFrom3x3 (DMatrix3x3 matrix) {

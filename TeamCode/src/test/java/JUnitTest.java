@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class JUnitTest {
     @Test
-    public void testBlockMatrix() {
+    public void testForwardKinematics() {
         doForwardKinematics(0, 0, 0, 0);
         doForwardKinematics(0, 0, 0, -Math.PI/2);
         doForwardKinematics(0, 0, Math.PI/2, 0);
