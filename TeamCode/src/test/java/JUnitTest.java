@@ -10,7 +10,16 @@ public class JUnitTest {
     @Test
     public void testBlockMatrix() {
         doForwardKinematics(0, 0, 0, 0);
-        
+        doForwardKinematics(0, 0, 0, -Math.PI/2);
+        doForwardKinematics(0, 0, Math.PI/2, 0);
+        doForwardKinematics(0, 0, Math.PI/2, -Math.PI/2);
+        doForwardKinematics(0, 5, 0, 0);
+        doForwardKinematics(0, 5, 0, -Math.PI/2);
+        doForwardKinematics(Math.PI/2, 0, 0, 0);
+        doForwardKinematics(Math.PI/2, 0, 0, -Math.PI/2);
+        doForwardKinematics(Math.PI/2, 0, Math.PI/2, 0);
+        doForwardKinematics(Math.PI/2, 0, Math.PI/2, -Math.PI/2);
+        doForwardKinematics(Math.PI/2, 5, 0, 0);
 
         Assert.assertEquals(4, 4);
     }
