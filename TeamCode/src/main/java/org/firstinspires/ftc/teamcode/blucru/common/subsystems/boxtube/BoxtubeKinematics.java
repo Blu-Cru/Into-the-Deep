@@ -9,7 +9,7 @@ public class BoxtubeKinematics {
     public static final double
             BOXTUBE_x = 11.79, BOXTUBE_y = -1.058,
             ARM_x = 3.0, ARM_y = 0.5,
-            WRIST_x = 2.5, WRIST_y = -0.5,
+            WRIST_x = 2.5, WRIST_y = 0.5,
 
             Px = -5.5, Py = 4.0; // everything in inches/radians
 
