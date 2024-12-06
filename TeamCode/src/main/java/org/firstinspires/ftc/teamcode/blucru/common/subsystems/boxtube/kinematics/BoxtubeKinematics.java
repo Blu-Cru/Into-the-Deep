@@ -14,12 +14,6 @@ public class BoxtubeKinematics {
 
             Px = -5.5, Py = 4.0; // everything in inches/radians
 
-    public static DMatrix3x3 PIVOT1 = new DMatrix3x3(
-            1, 0, Px,
-            0, 1, Py,
-            0, 0, 1
-    );
-
     public static DMatrix3x3 getEndEffectorMatrix(Pose2d endEffectorPose) {
         double cos = Math.cos(endEffectorPose.getHeading());
         double sin = Math.sin(endEffectorPose.getHeading());
@@ -35,7 +29,7 @@ public class BoxtubeKinematics {
         DMatrix3x3 result = new DMatrix3x3();
 
         DMatrix3x3 P2toBlock = new DMatrix3x3(
-                1, 0, ARM_x,
+                1, 0, ARM_x + WRIST_x,
                 0, 1, ARM_y + Math.sin(wristAngle) * WRIST_y,
                 0, 0, 1
         );
