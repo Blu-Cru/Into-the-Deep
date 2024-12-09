@@ -9,7 +9,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 
 @Config
 public class Wrist extends BluServo implements BluSubsystem, Subsystem {
-    public static double HORIZONTAL_POS = 0.595;
+    public static double HORIZONTAL_POS = 0.595,
+
+            TICKS_PER_RAD = 0.28/(Math.PI/2);
     public Wrist() {
         super("wrist");
     }
