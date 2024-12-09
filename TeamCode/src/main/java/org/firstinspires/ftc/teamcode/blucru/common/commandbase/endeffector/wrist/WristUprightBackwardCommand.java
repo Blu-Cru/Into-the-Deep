@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 public class WristUprightBackwardCommand extends InstantCommand {
     public WristUprightBackwardCommand() {
         super(
-                () -> Robot.getInstance().wrist.palmUp()
+                () -> Robot.getInstance().wrist.back()
         );
 
         addRequirements(Robot.getInstance().wrist);

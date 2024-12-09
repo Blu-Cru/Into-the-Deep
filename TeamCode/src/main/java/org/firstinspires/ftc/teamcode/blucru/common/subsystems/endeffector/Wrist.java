@@ -17,13 +17,10 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
     @Override
     public void init() {
         super.init();
-        palmDown();
+        front();
     }
 
-    // these methods are named based on position of human wrist
-    // hold hand in C shape, thumb is bottom, 4 fingers are top where the spinning wheel is
-
-    public void palmDown() {
+    public void front() {
         setPosition(HORIZONTAL_POS - 0.28);
     }
 
@@ -31,7 +28,7 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
         setPosition(HORIZONTAL_POS);
     }
 
-    public void palmUp() {
+    public void back() {
         setPosition(HORIZONTAL_POS + 0.28);
     }
 
