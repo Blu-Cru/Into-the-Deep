@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
@@ -51,9 +52,9 @@ public class Robot {
 
     // initializes subsystems
     public void init() {
-//        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
-//            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-//        }
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
 
         for(BluSubsystem subsystem : subsystems) {
             subsystem.init();
@@ -61,11 +62,6 @@ public class Robot {
     }
 
     public void read() {
-        // clear bulk cache for bulk reading
-//        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
-//            module.clearBulkCache();
-//        }
-
         for(BluSubsystem subsystem : subsystems) {
             subsystem.read();
         }
