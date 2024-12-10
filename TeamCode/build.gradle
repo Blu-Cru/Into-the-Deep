@@ -31,6 +31,8 @@ dependencies {
     testImplementation 'junit:junit:4.12' // junit for testing
     implementation 'org.ftclib.ftclib:core:2.0.1' // ftc lib
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    // https://mvnrepository.com/artifact/org.ejml/ejml-all
+    implementation group: 'org.ejml', name: 'ejml-all', version: '0.43'
 
     //roadrunner 0.5.5
     implementation 'com.acmerobotics.roadrunner:core:0.5.5'
