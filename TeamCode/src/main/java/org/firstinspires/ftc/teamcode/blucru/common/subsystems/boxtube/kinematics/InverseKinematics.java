@@ -53,7 +53,7 @@ public class InverseKinematics extends BoxtubeKinematics{
 
         System.out.println("angleB: " + angleB + " angleA: " + angleA);
 
-//        double pivotAngle = angleB + Math.PI - angleA - boxtubeOffsetInteriorAngle;
+        double pivotAngle = angleB + Math.PI - angleA - boxtubeOffsetInteriorAngle;
         double armAngle = thetab - pivotAngle;
 
         return new double[] {pivotAngle, L, armAngle};
