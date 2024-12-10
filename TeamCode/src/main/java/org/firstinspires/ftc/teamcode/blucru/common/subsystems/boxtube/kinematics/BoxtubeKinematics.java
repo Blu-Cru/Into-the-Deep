@@ -4,7 +4,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.ejml.data.DMatrix3x3;
-import org.ejml.dense.fixed.CommonOps_DDF3;
 
 public class BoxtubeKinematics {
     public static final double
@@ -12,7 +11,7 @@ public class BoxtubeKinematics {
             ARM_x = 3.0, ARM_y = 0.5,
             WRIST_x = 2.5, WRIST_y = 0.5,
 
-            Px = -5.5, Py = 4.0; // everything in inches/radians
+            PIVOT_x = -5.5, PIVOT_y = 4.0; // everything in inches/radians
 
 
     public static Pose2d getPoseFrom3x3 (DMatrix3x3 matrix) {

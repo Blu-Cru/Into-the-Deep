@@ -1,5 +1,7 @@
 package kinematics;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
 import org.ejml.data.DMatrix3x3;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.ForwardKinematics;
@@ -31,10 +33,9 @@ public class ForwardKinematicsTest {
 
         System.out.println(Arrays.asList(pivotAngle, extension, armAngle, wristAngle));
         startTime = System.nanoTime();
-        DMatrix3x3 res = ForwardKinematics.getForwardKinematics(pivotAngle, extension, armAngle, wristAngle);
+        Pose2d res = ForwardKinematics.getPoseFrom3x3(ForwardKinematics.getForwardKinematics(pivotAngle, extension, armAngle, wristAngle));
         endTime = System.nanoTime();
-        res.print();
-        System.out.println("Angle: " + BoxtubeKinematics.getAngleFrom3x3(res));
+        System.out.println(res);
         System.out.println("Time: " + (endTime - startTime) + " ns");
         System.out.println();
     }

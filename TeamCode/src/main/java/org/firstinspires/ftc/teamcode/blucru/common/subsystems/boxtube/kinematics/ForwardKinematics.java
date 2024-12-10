@@ -41,8 +41,8 @@ public class ForwardKinematics extends BoxtubeKinematics {
         double sin = Math.sin(pivotAngle);
 
         return new DMatrix3x3(
-                cos, -sin, Px,
-                sin, cos, Py,
+                cos, -sin, PIVOT_x,
+                sin, cos, PIVOT_y,
                 0, 0, 1
         );
     }
