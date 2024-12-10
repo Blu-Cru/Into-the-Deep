@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.ejml.data.DMatrix3x3;
 import org.ejml.dense.fixed.CommonOps_DDF3;
@@ -26,29 +27,33 @@ public class InverseKinematics extends BoxtubeKinematics{
         double triangleC = Math.sqrt(BOXTUBE_x * BOXTUBE_x + BOXTUBE_y * BOXTUBE_y);
 
         double discriminant = -triangleC * triangleC * Math.sin(boxtubeOffsetInteriorAngle) * Math.sin(boxtubeOffsetInteriorAngle) + triangleB * triangleB;
-        double L1 = triangleC * Math.cos(boxtubeOffsetInteriorAngle) + Math.sqrt(discriminant);
+        double L = triangleC * Math.cos(boxtubeOffsetInteriorAngle) + Math.sqrt(discriminant);
 //        System.out.println("L1: " + L1);
-        double L2 = triangleC * Math.cos(boxtubeOffsetInteriorAngle) - Math.sqrt(discriminant);
+//        double L2 = triangleC * Math.cos(boxtubeOffsetInteriorAngle) - Math.sqrt(discriminant);
 //        System.out.println("L2: " + L2);
-
-        double L;
-
-        if(L1 < 0 && L2 < 0) {
-            throw new IllegalArgumentException("No solution");
-        } else if (L1 < 0) {
-            L = L2;
-        } else if (L2 < 0) {
-            L = L1;
-        } else {
-            L = Math.min(L1, L2);
-        }
+//
+//        double L;
+//
+//        if(L1 < 0 && L2 < 0) {
+//            throw new IllegalArgumentException("No solution");
+//        } else if (L1 < 0) {
+//            L = L2;
+//        } else if (L2 < 0) {
+//            L = L1;
+//        } else {
+//            L = Math.min(L1, L2);
+//        }
 
         // TODO: debug angle
 //        double angleB = Math.abs(Math.atan(by / bx));
         double angleB = Math.abs(Math.atan2(by, bx));
         double angleA = Math.asin(L * Math.sin(boxtubeOffsetInteriorAngle) / triangleB);
+        // calculate pivot angle
+        
 
-        double pivotAngle = angleB + Math.PI - angleA - boxtubeOffsetInteriorAngle;
+        System.out.println("angleB: " + angleB + " angleA: " + angleA);
+
+//        double pivotAngle = angleB + Math.PI - angleA - boxtubeOffsetInteriorAngle;
         double armAngle = thetab - pivotAngle;
 
         return new double[] {pivotAngle, L, armAngle};
