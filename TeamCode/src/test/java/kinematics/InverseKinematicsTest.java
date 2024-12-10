@@ -37,7 +37,8 @@ public class InverseKinematicsTest {
         startTime = System.nanoTime();
         res = InverseKinematics.getJoints(endEffectorPose, wristAngle);
         endTime = System.nanoTime();
-        System.out.println(Arrays.toString(res));
+        System.out.println("Input Pivot: " + pivotAngle + " Extension: " + extension + " Arm: " + armAngle + " Wrist: " + wristAngle);
+        System.out.println("Output Pivot: " + res[0] + " Extension: " + res[1] + " Arm: " + res[2]);
         System.out.println("Time: " + (endTime - startTime) + " ns");
         System.out.println();
     }

@@ -26,8 +26,10 @@ public class InverseKinematics extends BoxtubeKinematics{
         double triangleC = Math.sqrt(BOXTUBE_x * BOXTUBE_x + BOXTUBE_y * BOXTUBE_y);
 
         double discriminant = -triangleC * triangleC * Math.sin(boxtubeOffsetInteriorAngle) * Math.sin(boxtubeOffsetInteriorAngle) + triangleB * triangleB;
-        double L1 = -triangleC * Math.cos(boxtubeOffsetInteriorAngle) + Math.sqrt(discriminant);
-        double L2 = -triangleC * Math.cos(boxtubeOffsetInteriorAngle) - Math.sqrt(discriminant);
+        double L1 = triangleC * Math.cos(boxtubeOffsetInteriorAngle) + Math.sqrt(discriminant);
+//        System.out.println("L1: " + L1);
+        double L2 = triangleC * Math.cos(boxtubeOffsetInteriorAngle) - Math.sqrt(discriminant);
+//        System.out.println("L2: " + L2);
 
         double L;
 
@@ -41,7 +43,9 @@ public class InverseKinematics extends BoxtubeKinematics{
             L = Math.min(L1, L2);
         }
 
-        double angleB = Math.abs(Math.atan(by / bx));
+        // TODO: debug angle
+//        double angleB = Math.abs(Math.atan(by / bx));
+        double angleB = Math.abs(Math.atan2(by, bx));
         double angleA = Math.asin(L * Math.sin(boxtubeOffsetInteriorAngle) / triangleB);
 
         double pivotAngle = angleB + Math.PI - angleA - boxtubeOffsetInteriorAngle;

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
 import org.ejml.data.DMatrix3x3;
 import org.ejml.dense.fixed.CommonOps_DDF3;
 
@@ -14,6 +16,8 @@ public class ForwardKinematics extends BoxtubeKinematics {
         );
 
         DMatrix3x3 pivot2 = getPivot2(pivotAngle, extension, armAngle);
+
+        System.out.println("Pivot2" + getPoseFrom3x3(pivot2).minus(new Pose2d(PIVOT_x, PIVOT_y, 0)));
 
         CommonOps_DDF3.mult(pivot2, P2toBlock, result);
         return result;
