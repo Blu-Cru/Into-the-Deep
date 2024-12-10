@@ -58,25 +58,6 @@ public class Pivot implements BluSubsystem, Subsystem {
     @Override
     public void read() {
         pivotMotor.read();
-
-        switch(state) {
-            case IDLE:
-            case MANUAL:
-            case PID:
-                break;
-            case RETRACTING:
-                if(pivotMotor.getAngle() < 0.10 && Math.abs(pivotMotor.getAngleVel()) < 0.1 && Globals.timeSince(retractTime) > 800) {
-                    state = State.RESETTING;
-                    resetTime = Globals.time();
-                }
-                break;
-            case RESETTING:
-                if(Globals.timeSince(resetTime) > 300 && getAngle() < 0.12) {
-                    resetEncoder();
-                    pidTo(0.0);
-                }
-                break;
-        }
     }
 
     @Override
@@ -89,6 +70,11 @@ public class Pivot implements BluSubsystem, Subsystem {
                 break;
             case RESETTING:
                 setRawPower(0);
+
+                if(Globals.timeSince(resetTime) > 300 && getAngle() < 0.12) {
+                    resetEncoder();
+                    pidTo(0.0);
+                }
                 break;
             case PID:
                 double pidPower = pidController.calculate(pivotMotor.getAngle());
@@ -97,6 +83,11 @@ public class Pivot implements BluSubsystem, Subsystem {
             case RETRACTING:
                 double profilePower = pidController.calculate(pivotMotor.getState(), profile);
                 setPowerFF(profilePower);
+
+                if(pivotMotor.getAngle() < 0.10 && Math.abs(pivotMotor.getAngleVel()) < 0.1 && Globals.timeSince(retractTime) > 800) {
+                    state = State.RESETTING;
+                    resetTime = Globals.time();
+                }
                 break;
         }
 
