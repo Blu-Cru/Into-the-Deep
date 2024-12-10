@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinemati
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.util.Angle;
 
 import org.ejml.data.DMatrix3x3;
 import org.ejml.dense.fixed.CommonOps_DDF3;
@@ -14,6 +15,7 @@ public class InverseKinematics extends BoxtubeKinematics{
         double yb = endEffectorPose.getY();
         double thetab = endEffectorPose.getHeading();
 
+        // b is the offset the boxtube needs to reach
         double bx = xb - PIVOT_x
                 - (ARM_x + WRIST_x) * Math.cos(thetab)
                 + (ARM_y + WRIST_y * Math.sin(wristAngle)) * Math.sin(thetab);
@@ -23,40 +25,21 @@ public class InverseKinematics extends BoxtubeKinematics{
 
         System.out.println("bx: " + bx + " by: " + by);
 
+        // use law of cosines to find L
+
         double triangleB = Math.sqrt(bx * bx + by * by);
         double triangleC = Math.sqrt(BOXTUBE_x * BOXTUBE_x + BOXTUBE_y * BOXTUBE_y);
 
-        double discriminant = -triangleC * triangleC * Math.sin(boxtubeOffsetInteriorAngle) * Math.sin(boxtubeOffsetInteriorAngle) + triangleB * triangleB;
+        double sinInterior = Math.sin(boxtubeOffsetInteriorAngle);
+        double discriminant = -triangleC * triangleC * sinInterior * sinInterior + triangleB * triangleB;
         double L = triangleC * Math.cos(boxtubeOffsetInteriorAngle) + Math.sqrt(discriminant);
-//        System.out.println("L1: " + L1);
-//        double L2 = triangleC * Math.cos(boxtubeOffsetInteriorAngle) - Math.sqrt(discriminant);
-//        System.out.println("L2: " + L2);
-//
-//        double L;
-//
-//        if(L1 < 0 && L2 < 0) {
-//            throw new IllegalArgumentException("No solution");
-//        } else if (L1 < 0) {
-//            L = L2;
-//        } else if (L2 < 0) {
-//            L = L1;
-//        } else {
-//            L = Math.min(L1, L2);
-//        }
 
-        Vector2d totalBoxtubeVector = new Vector2d(PIVOT_x + L, PIVOT_y);
-        
+        // angle of boxtube (offset and extension) from x-axis
+        double boxtubeAngle = Angle.normDelta(Math.atan2(BOXTUBE_y, BOXTUBE_x + L));
+        // angle of b, target point for boxtube to reach from x axis
+        double bAngle = Angle.normDelta(Math.atan2(by, bx));
 
-        // TODO: debug angle
-//        double angleB = Math.abs(Math.atan(by / bx));
-        double angleB = Math.abs(Math.atan2(by, bx));
-        double angleA = Math.asin(L * Math.sin(boxtubeOffsetInteriorAngle) / triangleB);
-        // calculate pivot angle
-        
-
-        System.out.println("angleB: " + angleB + " angleA: " + angleA);
-
-        double pivotAngle = angleB + Math.PI - angleA - boxtubeOffsetInteriorAngle;
+        double pivotAngle = bAngle - boxtubeAngle;
         double armAngle = thetab - pivotAngle;
 
         return new double[] {pivotAngle, L, armAngle};

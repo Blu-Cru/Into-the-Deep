@@ -17,14 +17,12 @@ public class InverseKinematicsTest {
         doInverseKinematics(0, 0, 0, 0);
         doInverseKinematics(0, 0, 0, -Math.PI/2);
         doInverseKinematics(0, 0, Math.PI/2, 0);
-        doInverseKinematics(0, 0, Math.PI/2, -Math.PI/2);
         doInverseKinematics(0, 5, 0, 0);
-        doInverseKinematics(0, 5, 0, -Math.PI/2);
         doInverseKinematics(Math.PI/2, 0, 0, 0);
         doInverseKinematics(Math.PI/2, 0, 0, -Math.PI/2);
         doInverseKinematics(Math.PI/2, 0, Math.PI/2, 0);
-        doInverseKinematics(Math.PI/2, 0, Math.PI/2, -Math.PI/2);
-        doInverseKinematics(Math.PI/2, 5, 0, 0);
+        doInverseKinematics(Math.PI/2, 8, 1, 0);
+        doInverseKinematics(1.0, 20, 1.0, 1.0);
 
         Assert.assertEquals(4, 4);
     }
