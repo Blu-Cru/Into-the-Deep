@@ -105,6 +105,6 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
 
     @Override
     public void telemetry(Telemetry telemetry) {
-        super.telemetry();
+        telemetry.addData("Arm Angle", getAngle());
     }
 }
