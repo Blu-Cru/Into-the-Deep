@@ -44,6 +44,9 @@ public class InverseKinematics extends BoxtubeKinematics{
 //            L = Math.min(L1, L2);
 //        }
 
+        Vector2d totalBoxtubeVector = new Vector2d(PIVOT_x + L, PIVOT_y);
+        
+
         // TODO: debug angle
 //        double angleB = Math.abs(Math.atan(by / bx));
         double angleB = Math.abs(Math.atan2(by, bx));
