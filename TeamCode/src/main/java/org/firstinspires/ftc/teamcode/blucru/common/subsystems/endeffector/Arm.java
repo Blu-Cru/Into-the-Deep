@@ -14,12 +14,11 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public static double
             PARALLEL_POS = 0.45,
-            vMAX = 6.0, aMAX = 7.0,
-    // 90 degrees is from 0.17 to 0.45
-            MAX_POS = PARALLEL_POS + 0.32, MIN_POS = PARALLEL_POS - 0.32,
-            RETRACT_POS = PARALLEL_POS + 0.3,
-            PRE_INTAKE_POS = PARALLEL_POS + 0.05,
-            GROUND_POS = PARALLEL_POS -0.105,
+            vMAX = 20.0, aMAX = 25.0,
+            MAX_ANGLE = 1.8, MIN_POS = - 1.7,
+            RETRACT_ANGLE = 1.7,
+            PRE_INTAKE_ANGLE = 0.25,
+            GROUND_ANGLE = -0.58,
 
             TICKS_PER_RAD = 0.1782;
 
@@ -41,7 +40,6 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     @Override
     public void init() {
         super.init();
-        globalAngle = Math.PI/2;
         preIntake();
         profile = new MotionProfile(getPosition(), getPosition(), vMAX, aMAX);
     }
@@ -50,10 +48,10 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public void write() {
         switch(state) {
             case IVK:
-                super.setPosition(Range.clip(getTicksFromGlobalAngle(globalAngle), MIN_POS, MAX_POS));
+                setAngle(globalAngle - Robot.getInstance().pivot.getAngle());
                 break;
             case MOTION_PROFILE:
-                super.setPosition(profile.getInstantTargetPosition());
+                setAngle(profile.getInstantTargetPosition());
                 break;
             case SERVO:
                 break;
@@ -67,34 +65,37 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
         this.globalAngle = globalAngle;
     }
 
-    public double getTicksFromGlobalAngle(double globalAngle) {
-        return toTicks(globalAngle - Robot.getInstance().pivot.getAngle()) + PARALLEL_POS;
+    public void setAngle(double angle) {
+        super.setPosition(Range.clip(toTicks(angle), MIN_POS, MAX_ANGLE));
     }
 
-    public void setPosition(double position) {
-        state = State.SERVO;
-        super.setPosition(Range.clip(position, MIN_POS, MAX_POS));
+    public double getAngle() {
+        return toRad(super.getPosition() - PARALLEL_POS);
     }
 
-    public void setMotionProfilePosition(double targetPos) {
+    public void setMotionProfileAngle(double targetRad) {
         state = State.MOTION_PROFILE;
-        profile = new MotionProfile(targetPos, getPosition(), vMAX, aMAX).start();
+        profile = new MotionProfile(targetRad, getAngle(), vMAX, aMAX).start();
     }
 
     public void preIntake() {
-        setMotionProfilePosition(PRE_INTAKE_POS);
+        setMotionProfileAngle(PRE_INTAKE_ANGLE);
     }
 
     public void retract() {
-        setMotionProfilePosition(RETRACT_POS);
+        setMotionProfileAngle(RETRACT_ANGLE);
     }
 
     public void dropToGround() {
-        setMotionProfilePosition(GROUND_POS);
+        setMotionProfileAngle(GROUND_ANGLE);
     }
 
     private double toTicks(double rad) {
         return rad * TICKS_PER_RAD;
+    }
+
+    private double toRad(double ticks) {
+        return ticks / TICKS_PER_RAD;
     }
 
     public void disable() {
@@ -104,6 +105,6 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
 
     @Override
     public void telemetry(Telemetry telemetry) {
-        super.telemetry();
+        telemetry.addData("Arm Angle", getAngle());
     }
 }
