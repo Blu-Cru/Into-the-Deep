@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import org.ejml.data.DMatrix3x3;
 import org.ejml.dense.fixed.CommonOps_DDF3;
 
-public class ForwardKinematics extends BoxtubeKinematics {
+public class BoxtubeForwardKinematics extends BoxtubeKinematics {
     public static DMatrix3x3 getForwardKinematics(double pivotAngle, double extension, double armAngle, double wristAngle) {
         DMatrix3x3 result = new DMatrix3x3();
 
