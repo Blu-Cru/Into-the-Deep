@@ -13,7 +13,7 @@ public class BoxtubeKinematicsTest extends BluLinearOpMode {
         RETRACT,
         IVK
     }
-    public static double x = 10, y = 10, angle = 0;
+    public static double x = 20, y = 15, angle = 0;
     Pose2d targetPose = new Pose2d(x, y, angle);
     StateMachine sm;
     double controlledX, controlledY, controlledAngle;
@@ -49,8 +49,8 @@ public class BoxtubeKinematicsTest extends BluLinearOpMode {
 
     @Override
     public void periodic() {
-        controlledX = x + 10.0 * gamepad1.left_stick_x;
-        controlledY = y + 10.0 * -gamepad1.left_stick_y;
+        controlledX = x + 5.0 * gamepad1.left_stick_x;
+        controlledY = y + 5.0 * -gamepad1.left_stick_y;
         controlledAngle = angle - 1.0 * -gamepad1.right_stick_y;
 
         targetPose = new Pose2d(controlledX, controlledY, controlledAngle);

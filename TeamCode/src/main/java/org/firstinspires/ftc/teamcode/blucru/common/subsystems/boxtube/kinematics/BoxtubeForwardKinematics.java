@@ -17,7 +17,7 @@ public class BoxtubeForwardKinematics extends BoxtubeKinematics {
 
         DMatrix3x3 pivot2 = getPivot2(pivotAngle, extension, armAngle);
 
-        System.out.println("Pivot2" + getPoseFrom3x3(pivot2).minus(new Pose2d(PIVOT_x, PIVOT_y, 0)));
+        System.out.println("Pivot 2: " + getPoseFrom3x3(pivot2).minus(new Pose2d(PIVOT_x, PIVOT_y, 0)));
 
         CommonOps_DDF3.mult(pivot2, P2toBlock, result);
         return result;
