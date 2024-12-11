@@ -7,11 +7,11 @@ import org.ejml.data.DMatrix3x3;
 
 public class BoxtubeKinematics {
     public static final double
-            BOXTUBE_x = 11.79, BOXTUBE_y = -1.058,
-            ARM_x = 3.0, ARM_y = 0.5,
-            WRIST_x = 2.5, WRIST_y = 0.5,
+            BOXTUBE_x = 12.598, BOXTUBE_y = -1.05866,
+            ARM_x = 2.948819, ARM_y = -1.035,
+            WRIST_x = 3.8448819, WRIST_y = 1.3759843,
 
-            PIVOT_x = -5.5, PIVOT_y = 4.0; // everything in inches/radians
+            PIVOT_x = -5.354, PIVOT_y = 5.734; // everything in inches/radians
 
 
     public static Pose2d getPoseFrom3x3 (DMatrix3x3 matrix) {
