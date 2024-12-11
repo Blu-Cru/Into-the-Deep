@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.BluServo;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeIKPose;
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 
 @Config
@@ -24,7 +25,7 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
 
     enum State{
         SERVO,
-        IVK,
+        PIVOT_IK,
         MOTION_PROFILE
     }
 
@@ -47,7 +48,7 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     @Override
     public void write() {
         switch(state) {
-            case IVK:
+            case PIVOT_IK:
                 setAngle(globalAngle - Robot.getInstance().pivot.getAngle());
                 break;
             case MOTION_PROFILE:
@@ -61,8 +62,13 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void setGlobalAngle(double globalAngle) {
-        state = State.IVK;
+        state = State.PIVOT_IK;
         this.globalAngle = globalAngle;
+    }
+
+    public void setIKPose(BoxtubeIKPose pose) {
+        state = State.SERVO;
+        setAngle(pose.armAngle);
     }
 
     public void setAngle(double angle) {

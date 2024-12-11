@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.Subsystem;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeIKPose;
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 
@@ -24,6 +24,7 @@ public class Extension implements BluSubsystem, Subsystem {
         IDLE,
         PID,
         MANUAL,
+        IK,
         MOTION_PROFILE,
         RETRACTING,
         RESETTING
@@ -33,6 +34,7 @@ public class Extension implements BluSubsystem, Subsystem {
     ExtensionMotor extensionMotor;
     PDController pidController;
     MotionProfile profile;
+    BoxtubeIKPose pose;
     int retractionCount;
 
     PivotMotor pivot; // reference to pivot motor for feedforward
@@ -92,6 +94,9 @@ public class Extension implements BluSubsystem, Subsystem {
                 setRawPower(manualPower);
                 manualPower = 0;
                 break;
+            case IK:
+                setPowerFeedForward(pidController.calculate(extensionMotor.getDistance()));
+                break;
             case PID:
             case RETRACTING:
                 setPowerFeedForward(pidController.calculate(extensionMotor.getDistance()));
@@ -116,6 +121,12 @@ public class Extension implements BluSubsystem, Subsystem {
     public void motionProfileTo(double inches, double vMax, double aMax) {
         state = State.MOTION_PROFILE;
         profile = new MotionProfile(inches, getDistance(), vMax, aMax).start();
+    }
+
+    public void setIKPose(BoxtubeIKPose pose) {
+        state = State.IK;
+        pidController.setSetPoint(Range.clip(pose.extensionLength, MIN_INCHES, MAX_INCHES));
+        this.pose = pose;
     }
 
     public void retract() {
