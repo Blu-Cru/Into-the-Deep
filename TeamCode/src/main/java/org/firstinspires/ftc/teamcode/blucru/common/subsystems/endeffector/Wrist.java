@@ -31,11 +31,11 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
 
     public void setAngle(double angle) {
         angle = Range.clip(angle, MIN_ANGLE, MAX_ANGLE);
-        setPosition(HORIZONTAL_POS - angle * TICKS_PER_RAD);
+        setPosition(HORIZONTAL_POS + angle * TICKS_PER_RAD);
     }
 
     public double getAngle() {
-        return (HORIZONTAL_POS - getPosition()) / TICKS_PER_RAD;
+        return (getPosition() - HORIZONTAL_POS) / TICKS_PER_RAD;
     }
 
     public void front() {
