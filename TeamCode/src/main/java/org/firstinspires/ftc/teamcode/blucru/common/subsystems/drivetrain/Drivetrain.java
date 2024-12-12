@@ -115,7 +115,8 @@ public class Drivetrain extends DriveBase implements Subsystem {
         double rotate;
         if(useVel) {
             Vector2d pv = new Vector2d(heading, headingVel);
-            Vector2d sp = blockKinematics.getHeadingStateTowardsPoint(pose, vel);
+            Vector2d dtHeadingState = blockKinematics.getHeadingStateTowardsPoint(pose, vel);
+            Vector2d sp = new Vector2d(dtHeadingState.getX(), - dtHeadingState.getY());
 
             rotate = pid.getRotate(pv, sp);
         } else {

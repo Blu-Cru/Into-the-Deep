@@ -45,6 +45,28 @@ public class InverseKinematics extends BoxtubeKinematics{
         return new double[] {pivotAngle, L, armAngle};
     }
 
+    // get velocity of pivot and extension, arm and wrist are constant
+    public static double[] getPivotExtensionVelocities(Vector2d endEffectorVelocity, Pose2d endEffectorPosition, double wristAngle) {
+        double xb = endEffectorPosition.getX();
+        double yb = endEffectorPosition.getY();
+        double thetab = endEffectorPosition.getHeading();
+
+        double xbDot = endEffectorVelocity.getX();
+        double ybDot = endEffectorVelocity.getY();
+
+        double bx = xb - PIVOT_x
+                - (ARM_x + WRIST_x) * Math.cos(thetab)
+                + (ARM_y + WRIST_y * Math.sin(wristAngle)) * Math.sin(thetab);
+        double by = yb - PIVOT_y
+                - (ARM_x + WRIST_x) * Math.sin(thetab)
+                - (ARM_y + WRIST_y * Math.sin(wristAngle)) * Math.cos(thetab);
+
+        double Ldot = (bx * xbDot + by * ybDot) / Math.sqrt(BOXTUBE_x * BOXTUBE_x + BOXTUBE_y * BOXTUBE_y);
+        double pivotDot = (ybDot * bx - xbDot * by) / (bx * bx + by * by);
+
+        return new double[] {pivotDot, Ldot};
+    }
+
     public static DMatrix3x3 getEndEffectorMatrix(Pose2d endEffectorPose) {
         double cos = Math.cos(endEffectorPose.getHeading());
         double sin = Math.sin(endEffectorPose.getHeading());
