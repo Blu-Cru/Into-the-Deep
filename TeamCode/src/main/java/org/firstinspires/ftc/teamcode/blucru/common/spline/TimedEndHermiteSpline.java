@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.spline;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.util.Range;
 
 public class TimedEndHermiteSpline extends EndHermiteSpline {
     double duration, startTime;
@@ -18,5 +19,15 @@ public class TimedEndHermiteSpline extends EndHermiteSpline {
     public TimedEndHermiteSpline start() {
         startTime = System.currentTimeMillis();
         return this;
+    }
+
+    public Vector2d getPosition() {
+        double t = Range.clip(System.currentTimeMillis() - startTime / duration, 0, 1);
+        return getPoint(t);
+    }
+
+    public Vector2d getVelocity() {
+        double t = Range.clip(System.currentTimeMillis() - startTime / duration, 0, 1);
+        return getVelocity(t);
     }
 }
