@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleFrontHighCommand;
@@ -77,8 +80,10 @@ public class Main extends BluLinearOpMode {
                     gamepad2.rumble(350);
                 })
                 .transition(() -> -gamepad2.right_stick_y > 0.2, State.EXTENDING_OVER_INTAKE, () -> {
-                    extension.extendOverIntake(-gamepad2.right_stick_y);
+                    new PivotRetractCommand().schedule();
                     new ArmPreIntakeCommand().schedule();
+                    new WristUprightForwardCommand().schedule();
+                    extension.extendOverIntake(-gamepad2.right_stick_y);
                 })
 
                 // LOW
@@ -180,7 +185,7 @@ public class Main extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
-                            new ArmGlobalAngleCommand(1.2),
+                            new ArmRetractCommand(),
                             new PivotCommand(1),
                             new WaitCommand(300),
                             new BoxtubeRetractCommand(),

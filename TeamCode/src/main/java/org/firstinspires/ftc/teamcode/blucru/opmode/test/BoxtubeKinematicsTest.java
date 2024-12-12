@@ -19,7 +19,7 @@ public class BoxtubeKinematicsTest extends BluLinearOpMode {
         RETRACT,
         IVK
     }
-    public static double x = 20, y = 15, angle = 0;
+    public static double x = 10, y = 27, angle = 1.4;
     Pose2d targetPose = new Pose2d(x, y, angle);
     StateMachine sm;
     double controlledX, controlledY, controlledAngle;

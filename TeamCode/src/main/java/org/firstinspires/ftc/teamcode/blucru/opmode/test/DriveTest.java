@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 
+import android.util.Log;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -26,5 +28,16 @@ public class DriveTest extends BluLinearOpMode {
 
         dt.teleOpDrive(gamepad1);
         dt.drawPose();
+    }
+
+    @Override
+    public void end() {
+        Log.i("DriveTest", "set start pose to: " + dt.pose);
+        Globals.startPose = dt.pose;
+    }
+
+    @Override
+    public void telemetry() {
+        telemetry.addData("dt.pose: ", dt.pose);
     }
 }
