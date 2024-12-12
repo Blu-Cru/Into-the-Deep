@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Extension;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeIKPose;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
@@ -71,6 +73,14 @@ public class Robot {
         for(BluSubsystem subsystem : subsystems) {
             subsystem.write();
         }
+    }
+
+    public void setIKPose(Pose2d pose) {
+        double wristAngle = wrist.getAngle();
+        BoxtubeIKPose ikPose = new BoxtubeIKPose(pose, wristAngle);
+        arm.setIKPose(ikPose);
+        pivot.setIKPose(ikPose);
+        extension.setIKPose(ikPose);
     }
 
     public double getVoltage() {

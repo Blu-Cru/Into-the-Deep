@@ -37,21 +37,21 @@ public class EndEffectorTest extends BluLinearOpMode {
 
     public void startIntaking() {
         arm.dropToGround();
-        wrist.palmDown();
+        wrist.front();
         clamp.release();
         wheel.intake();
     }
 
     public void stopIntaking() {
         arm.dropToGround();
-        wrist.palmDown();
+        wrist.front();
         clamp.grab();
         wheel.stop();
     }
 
     public void spitOut() {
         arm.dropToGround();
-        wrist.palmDown();
+        wrist.front();
         clamp.release();
         wheel.reverse();
     }

@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.util.Angle;
 
 import org.ejml.data.DMatrix3x3;
 import org.ejml.dense.fixed.CommonOps_DDF3;
 
-public class InverseKinematics extends BoxtubeKinematics{
+public class BoxtubeInverseKinematics extends BoxtubeKinematics{
     public static double boxtubeOffsetInteriorAngle = Math.PI - Math.atan(BOXTUBE_y/BOXTUBE_x);
 
     public static double[][] getJointPositionsVelocities(Pose2d endEffectorPose, Vector2d endEffectorVelocity, double wristAngle) {

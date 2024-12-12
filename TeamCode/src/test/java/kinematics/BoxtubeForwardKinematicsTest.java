@@ -4,13 +4,13 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import org.ejml.data.DMatrix3x3;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeKinematics;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.ForwardKinematics;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeForwardKinematics;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 
-public class ForwardKinematicsTest {
+public class BoxtubeForwardKinematicsTest {
     @Test
     public void testForwardKinematics() {
         doForwardKinematics(0, 0, 0, 0);
@@ -33,7 +33,7 @@ public class ForwardKinematicsTest {
 
         System.out.println(Arrays.asList(pivotAngle, extension, armAngle, wristAngle));
         startTime = System.nanoTime();
-        Pose2d res = ForwardKinematics.getPoseFrom3x3(ForwardKinematics.getForwardKinematics(pivotAngle, extension, armAngle, wristAngle));
+        Pose2d res = BoxtubeForwardKinematics.getPoseFrom3x3(BoxtubeForwardKinematics.getForwardKinematics(pivotAngle, extension, armAngle, wristAngle));
         endTime = System.nanoTime();
         System.out.println(res);
         System.out.println("Time: " + (endTime - startTime) + " ns");
@@ -46,7 +46,7 @@ public class ForwardKinematicsTest {
         long startTime;
 
         startTime = System.nanoTime();
-        DMatrix3x3 res = ForwardKinematics.getPivot2(Math.PI/2,0, 0);
+        DMatrix3x3 res = BoxtubeForwardKinematics.getPivot2(Math.PI/2,0, 0);
         System.out.println("Time: " + (System.nanoTime() - startTime) + " ns");
         res.print();
         System.out.println(BoxtubeKinematics.getAngleFrom3x3(res));
@@ -55,7 +55,7 @@ public class ForwardKinematicsTest {
 
         System.out.println("0, 0, PI/2");
         startTime = System.nanoTime();
-        DMatrix3x3 res2 = ForwardKinematics.getPivot2(0,0, Math.PI/2);
+        DMatrix3x3 res2 = BoxtubeForwardKinematics.getPivot2(0,0, Math.PI/2);
         System.out.println("Time: " + (System.nanoTime() - startTime) + " ns");
         res2.print();
         System.out.println(BoxtubeKinematics.getAngleFrom3x3(res2));
@@ -64,7 +64,7 @@ public class ForwardKinematicsTest {
 
         System.out.println("1, 5, 1");
         startTime = System.nanoTime();
-        DMatrix3x3 res3 = ForwardKinematics.getPivot2(1,5, 1);
+        DMatrix3x3 res3 = BoxtubeForwardKinematics.getPivot2(1,5, 1);
         System.out.println("Time: " + (System.nanoTime() - startTime) + " ns");
         res3.print();
         System.out.println(BoxtubeKinematics.getAngleFrom3x3(res3));
@@ -73,7 +73,7 @@ public class ForwardKinematicsTest {
 
         System.out.println("0, 5, 2");
         startTime = System.nanoTime();
-        DMatrix3x3 res4 = ForwardKinematics.getPivot2(0,5, 2);
+        DMatrix3x3 res4 = BoxtubeForwardKinematics.getPivot2(0,5, 2);
         System.out.println("Time: " + (System.nanoTime() - startTime) + " ns");
         res4.print();
         System.out.println(BoxtubeKinematics.getAngleFrom3x3(res4));
@@ -85,7 +85,7 @@ public class ForwardKinematicsTest {
 
     @Test
     public void testOriginToRotatedPivot1() {
-        DMatrix3x3 res = ForwardKinematics.getPivot1(1);
+        DMatrix3x3 res = BoxtubeForwardKinematics.getPivot1(1);
         res.print();
         System.out.println(BoxtubeKinematics.getAngleFrom3x3(res));
         Assert.assertEquals(4, 4);
