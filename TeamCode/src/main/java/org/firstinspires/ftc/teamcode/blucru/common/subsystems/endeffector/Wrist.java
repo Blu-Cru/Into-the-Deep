@@ -7,25 +7,46 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.BluServo;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 
 @Config
 public class Wrist extends BluServo implements BluSubsystem, Subsystem {
+    enum State{
+        SERVO,
+        MOTION_PROFILE
+    }
+
     public static double HORIZONTAL_POS = 0.595,
             MIN_ANGLE = -Math.PI, MAX_ANGLE = Math.PI/2,
+
+            // Amax = kV * Vmax
+            kV = 3.0,
 
             TICKS_PER_RAD = 0.28/(Math.PI/2);
     public Wrist() {
         super("wrist");
     }
 
+    MotionProfile profile;
+    State state;
+
     @Override
     public void init() {
+        state = State.SERVO;
         super.init();
         front();
     }
 
     @Override
     public void write() {
+        switch (state) {
+            case MOTION_PROFILE:
+                setAngle(profile.getInstantTargetPosition());
+                break;
+            case SERVO:
+                break;
+        }
+
         super.write();
     }
 
@@ -38,19 +59,31 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
         return (HORIZONTAL_POS - getPosition()) / TICKS_PER_RAD;
     }
 
+    public void motionProfileTo(double angle, double time) {
+        state = State.MOTION_PROFILE;
+        double vMax = Math.abs(angle - getAngle()) / (time - 1/kV);
+        double aMax = kV * vMax;
+
+        profile = new MotionProfile(angle, getAngle(), vMax, aMax).start();
+    }
+
     public void front() {
+        state = State.SERVO;
         setAngle(-Math.PI/2);
     }
 
     public void horizontal() {
+        state = State.SERVO;
         setAngle(0);
     }
 
     public void back() {
+        state = State.SERVO;
         setAngle(Math.PI/2);
     }
 
     public void opposite() {
+        state = State.SERVO;
         setAngle(-Math.PI);
     }
 
