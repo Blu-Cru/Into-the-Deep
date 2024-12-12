@@ -28,6 +28,10 @@ public class TimedEndHermiteSpline extends EndHermiteSpline {
 
     public Vector2d getVelocity() {
         double t = Range.clip(System.currentTimeMillis() - startTime / duration, 0, 1);
-        return getVelocity(t);
+        return getVelocity(t).times(1 / duration);
+    }
+
+    public boolean isFinished() {
+        return System.currentTimeMillis() - startTime >= duration;
     }
 }
