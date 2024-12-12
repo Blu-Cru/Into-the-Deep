@@ -41,7 +41,7 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     @Override
     public void init() {
         super.init();
-        preIntake();
+        setAngle(RETRACT_ANGLE);
         profile = new MotionProfile(getPosition(), getPosition(), vMAX, aMAX);
     }
 

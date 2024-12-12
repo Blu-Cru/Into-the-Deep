@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 
 @Config
 public class Clamp extends BluServo implements BluSubsystem, Subsystem {
-    public static double HORIZ_POS = 0.77;
+    public static double HORIZ_POS = 0.68;
 
     public Clamp() {
         super("clamp");
@@ -21,11 +21,11 @@ public class Clamp extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void grab() {
-        setPosition(HORIZ_POS - 0.17);
+        setPosition(HORIZ_POS - 0.08);
     }
 
     public void release() {
-        setPosition(HORIZ_POS - 0.47);
+        setPosition(HORIZ_POS - 0.37);
     }
 
     @Override
