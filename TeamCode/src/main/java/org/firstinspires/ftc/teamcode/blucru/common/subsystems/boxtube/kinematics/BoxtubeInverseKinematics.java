@@ -26,7 +26,7 @@ public class BoxtubeInverseKinematics extends BoxtubeKinematics{
                 - (ARM_x + WRIST_x) * Math.sin(thetab)
                 - (ARM_y + WRIST_y * Math.sin(wristAngle)) * Math.cos(thetab);
 
-        System.out.println("bx: " + bx + " by: " + by);
+//        System.out.println("bx: " + bx + " by: " + by);
 
         // use law of cosines to find L
 
@@ -50,7 +50,7 @@ public class BoxtubeInverseKinematics extends BoxtubeKinematics{
         double Ldot = (bx * xbDot + by * ybDot) / Math.sqrt(BOXTUBE_x * BOXTUBE_x + BOXTUBE_y * BOXTUBE_y);
         double pivotDot = (ybDot * bx - xbDot * by) / (bx * bx + by * by);
 
-        double[] velocities = new double[] {pivotDot, Ldot};
+        double[] velocities = new double[] {pivotDot, Ldot, 0};
 
         return new double[][] {positions, velocities};
     }
@@ -68,7 +68,7 @@ public class BoxtubeInverseKinematics extends BoxtubeKinematics{
                 - (ARM_x + WRIST_x) * Math.sin(thetab)
                 - (ARM_y + WRIST_y * Math.sin(wristAngle)) * Math.cos(thetab);
 
-        System.out.println("bx: " + bx + " by: " + by);
+//        System.out.println("bx: " + bx + " by: " + by);
 
         // use law of cosines to find L
 

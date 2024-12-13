@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractComma
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @Config
-@TeleOp(name = "Boxtube Spline Test",group = "test")
+@TeleOp(group = "test")
 public class BoxtubeSplineFollowTest extends BluLinearOpMode {
     public static double xVel = 0, yVel = 0,
             x = 0, y = 0, blockAngle = 0,

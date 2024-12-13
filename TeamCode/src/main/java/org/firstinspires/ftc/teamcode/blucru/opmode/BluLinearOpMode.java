@@ -119,6 +119,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     // enable the FTC Dashboard telemetry and field overlay
     public void enableFTCDashboard() {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
+        Globals.tele = telemetry;
     }
 
     private double calculateAvgLoopTime() {

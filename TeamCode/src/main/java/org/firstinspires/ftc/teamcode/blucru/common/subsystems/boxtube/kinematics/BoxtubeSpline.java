@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics;
 
+import android.util.Log;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
@@ -13,9 +15,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 
 public class BoxtubeSpline extends TimedEndHermiteSpline {
     public MotionProfile blockAngleProfile, wristAngleProfile;
-    Pose2d startPose, endPose;
-    Vector2d startTangent;
-    double duration, endWristAngle;
+    public Pose2d startPose, endPose;
+    public Vector2d startTangent;
+    double endWristAngle;
     public BoxtubeIKPoseVelocity states;
 
     public BoxtubeSpline(Pose2d startPose, Vector2d startTangent, Pose2d endPose, double endWristAngle, double durationSecs) {
@@ -24,10 +26,12 @@ public class BoxtubeSpline extends TimedEndHermiteSpline {
         this.endPose = endPose;
         this.startTangent = startTangent;
         this.endWristAngle = endWristAngle;
-        this.duration = durationSecs;
+
+        states = new BoxtubeIKPoseVelocity(this);
     }
 
     public BoxtubeSpline start() {
+        Log.i("BoxtubeSpline", "spline started");
         super.start();
         blockAngleProfile = getTimeConstrainedMotionProfile(startPose.getHeading(), endPose.getHeading(), duration).start();
         wristAngleProfile = getTimeConstrainedMotionProfile(Robot.getInstance().wrist.getAngle(), endWristAngle, duration).start();
@@ -55,6 +59,7 @@ public class BoxtubeSpline extends TimedEndHermiteSpline {
         tele.addData("Extension State", states.extensionState);
         tele.addData("Arm Angle", states.armAngle);
         tele.addData("Wrist Angle", states.wristAngle);
+        tele.addData("started", started);
     }
 
     public void testTelemetry() {
@@ -65,7 +70,8 @@ public class BoxtubeSpline extends TimedEndHermiteSpline {
         tele.addData("Pivot Vel", states.pivotState.getY());
         tele.addData("Extension Pose", states.extensionState.getX());
         tele.addData("Extension Vel", states.extensionState.getY());
-        tele.addData("Arm Angle", states.armAngle);
-        tele.addData("Wrist Angle", states.wristAngle);
+        tele.addData("Spline arm Angle", states.armAngle);
+        tele.addData("Spline wrist Angle", states.wristAngle);
+        tele.addData("started: ", started);
     }
 }

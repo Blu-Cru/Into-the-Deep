@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.test.kinematics;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -24,11 +26,14 @@ public class SplineGraphTest extends BluLinearOpMode {
         addWrist();
         addArm();
         createNewSpline();
+
+        enableFTCDashboard();
     }
 
     @Override
     public void periodic() {
         if(stickyG1.a) {
+            Log.i("SplineGraphTest", "new spline started");
             createNewSpline();
         }
 
@@ -50,6 +55,6 @@ public class SplineGraphTest extends BluLinearOpMode {
                 new Pose2d(xF, yF, angleF),
                 wristF,
                 duration
-        );
+        ).start();
     }
 }
