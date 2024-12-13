@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Extension;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeForwardKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeSpline;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.pose.BoxtubeIKPose;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
@@ -103,6 +104,10 @@ public class Robot {
         arm.setIKPose(ikPose);
         pivot.setIKPose(ikPose);
         extension.setIKPose(ikPose);
+    }
+
+    public Pose2d getBoxtubePose() {
+        return BoxtubeForwardKinematics.getEndEffectorPose(pivot.getAngle(), extension.getDistance(), arm.getAngle(), wrist.getAngle());
     }
 
     public double getVoltage() {

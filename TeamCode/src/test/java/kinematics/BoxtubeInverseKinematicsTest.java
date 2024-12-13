@@ -8,8 +8,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematic
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
-
 public class BoxtubeInverseKinematicsTest {
     @Test
     public void testInverseKinematics() {
@@ -60,7 +58,7 @@ public class BoxtubeInverseKinematicsTest {
 
 //        System.out.println(Arrays.asList(pivotAngle, extension, armAngle, wristAngle));
         startTime = System.nanoTime();
-        Pose2d res = BoxtubeKinematics.getPoseFrom3x3(BoxtubeForwardKinematics.getForwardKinematics(pivotAngle, extension, armAngle, wristAngle));
+        Pose2d res = BoxtubeKinematics.getPoseFrom3x3(BoxtubeForwardKinematics.getEndEffectorMatrix(pivotAngle, extension, armAngle, wristAngle));
         endTime = System.nanoTime();
         System.out.println("\nBLOCK POSE: " + res);
         System.out.println("Time: " + (endTime - startTime) + " ns");

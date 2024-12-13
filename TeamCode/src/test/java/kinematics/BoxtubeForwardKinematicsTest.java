@@ -33,7 +33,7 @@ public class BoxtubeForwardKinematicsTest {
 
         System.out.println(Arrays.asList(pivotAngle, extension, armAngle, wristAngle));
         startTime = System.nanoTime();
-        Pose2d res = BoxtubeForwardKinematics.getPoseFrom3x3(BoxtubeForwardKinematics.getForwardKinematics(pivotAngle, extension, armAngle, wristAngle));
+        Pose2d res = BoxtubeForwardKinematics.getPoseFrom3x3(BoxtubeForwardKinematics.getEndEffectorMatrix(pivotAngle, extension, armAngle, wristAngle));
         endTime = System.nanoTime();
         System.out.println(res);
         System.out.println("Time: " + (endTime - startTime) + " ns");

@@ -6,7 +6,7 @@ import org.ejml.data.DMatrix3x3;
 import org.ejml.dense.fixed.CommonOps_DDF3;
 
 public class BoxtubeForwardKinematics extends BoxtubeKinematics {
-    public static DMatrix3x3 getForwardKinematics(double pivotAngle, double extension, double armAngle, double wristAngle) {
+    public static DMatrix3x3 getEndEffectorMatrix(double pivotAngle, double extension, double armAngle, double wristAngle) {
         DMatrix3x3 result = new DMatrix3x3();
 
         DMatrix3x3 P2toBlock = new DMatrix3x3(
@@ -21,6 +21,10 @@ public class BoxtubeForwardKinematics extends BoxtubeKinematics {
 
         CommonOps_DDF3.mult(pivot2, P2toBlock, result);
         return result;
+    }
+
+    public static Pose2d getEndEffectorPose(double pivotAngle, double extension, double armAngle, double wristAngle) {
+        return getPoseFrom3x3(getEndEffectorMatrix(pivotAngle, extension, armAngle, wristAngle));
     }
 
     public static DMatrix3x3 getPivot2(double pivotAngle, double extension, double armAngle) {
