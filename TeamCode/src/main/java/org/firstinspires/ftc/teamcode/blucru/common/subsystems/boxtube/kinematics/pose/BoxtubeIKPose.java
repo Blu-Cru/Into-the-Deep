@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics;
+package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.pose;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeInverseKinematics;
 
 public class BoxtubeIKPose {
     public Pose2d pose;
