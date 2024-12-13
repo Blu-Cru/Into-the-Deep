@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinemati
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.spline.TimedEndHermiteSpline;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.pose.BoxtubeIKPoseVelocity;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 
 public class BoxtubeSpline extends TimedEndHermiteSpline {
@@ -43,5 +45,27 @@ public class BoxtubeSpline extends TimedEndHermiteSpline {
         double vMax = aMax * time * 0.25;
 
         return new MotionProfile(start, end, vMax, aMax).start();
+    }
+
+    public void telemetry() {
+        Telemetry tele = Globals.tele;
+        tele.addData("Block Pose", states.blockPose);
+        tele.addData("Block Vel", states.blockVel);
+        tele.addData("Pivot State", states.pivotState);
+        tele.addData("Extension State", states.extensionState);
+        tele.addData("Arm Angle", states.armAngle);
+        tele.addData("Wrist Angle", states.wristAngle);
+    }
+
+    public void testTelemetry() {
+        Telemetry tele = Globals.tele;
+        tele.addData("Block Pose", states.blockPose);
+        tele.addData("Block Vel", states.blockVel);
+        tele.addData("Pivot Pos", states.pivotState.getX());
+        tele.addData("Pivot Vel", states.pivotState.getY());
+        tele.addData("Extension Pose", states.extensionState.getX());
+        tele.addData("Extension Vel", states.extensionState.getY());
+        tele.addData("Arm Angle", states.armAngle);
+        tele.addData("Wrist Angle", states.wristAngle);
     }
 }
