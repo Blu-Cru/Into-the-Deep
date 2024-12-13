@@ -12,9 +12,9 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 @TeleOp(group = "test")
 public class SplineGraphTest extends BluLinearOpMode {
     public static double
-        xI = 0, yI = 0, xF = 0, yF = 0, angleI = 0, angleF = 0,
+        xI = 20, yI = 5, xF = 20, yF = 20, angleI = 0, angleF = 1.4,
         vX = 0, vY = 0,
-        wristI = 0, wristF = 0,
+        wristI = -1.57, wristF = 1.57,
         duration = 3;
 
     BoxtubeSpline spline;
@@ -32,7 +32,7 @@ public class SplineGraphTest extends BluLinearOpMode {
             createNewSpline();
         }
 
-        wrist.setAngle(spline.states.wristAngle);
+        wrist.setAngle(wristI);
 
         spline.update();
     }
