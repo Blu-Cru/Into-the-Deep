@@ -80,7 +80,7 @@ public class Pivot implements BluSubsystem, Subsystem {
                 break;
             case BOXTUBE_SPLINE:
                 Vector2d motorState = pivotMotor.getState();
-                setPowerFF(pidController.calculate(motorState, spline.states.pivotState));
+                setPowerFF(pidController.calculate(motorState, limitState(spline.states.pivotState)));
                 break;
             case RESETTING:
                 setRawPower(0);
@@ -178,6 +178,10 @@ public class Pivot implements BluSubsystem, Subsystem {
     public void resetEncoder() {
         pivotMotor.resetEncoder();
         pidController.reset();
+    }
+
+    public Vector2d limitState(Vector2d state) {
+        return new Vector2d(Range.clip(state.getX(), MIN_RAD, MAX_RAD), state.getY());
     }
 
     @Override

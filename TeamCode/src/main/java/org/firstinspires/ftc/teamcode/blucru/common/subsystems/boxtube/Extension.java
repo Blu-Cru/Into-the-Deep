@@ -105,7 +105,8 @@ public class Extension implements BluSubsystem, Subsystem {
                 setPowerFeedForward(pidController.calculate(extensionMotor.getDistance()));
                 break;
             case BOXTUBE_SPLINE:
-                setPowerFeedForward(pidController.calculate(motorState, spline.states.extensionState));
+                Vector2d targetState = limitState(spline.states.extensionState);
+                setPowerFeedForward(pidController.calculate(motorState, targetState));
                 break;
             case MOTION_PROFILE:
                 setPowerFeedForward(pidController.calculate(motorState, profile));
@@ -181,6 +182,10 @@ public class Extension implements BluSubsystem, Subsystem {
 
     public void updatePID() {
         pidController.setPID(kP, kI, kD);
+    }
+
+    public Vector2d limitState(Vector2d state) {
+        return new Vector2d(Range.clip(state.getX(), MIN_INCHES, MAX_INCHES), state.getY());
     }
 
     public void idle() {
