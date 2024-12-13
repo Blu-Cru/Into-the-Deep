@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Intak
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 import java.util.ArrayList;
 
@@ -179,6 +180,10 @@ public class Robot {
         cvMaster = new CVMaster();
         subsystems.add(cvMaster);
         return cvMaster;
+    }
+
+    public void splineTelemetry() {
+        Globals.tele.addData(spline.toString(), "");
     }
 
     // call this after every op mode

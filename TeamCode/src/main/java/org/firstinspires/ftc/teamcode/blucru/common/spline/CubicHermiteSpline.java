@@ -20,15 +20,15 @@ public class CubicHermiteSpline {
 
     public Vector2d getPoint(double t) {
         return new Vector2d(
-                ax * t * t * t + bx * t * t + cx * t + dx,
-                ay * t * t * t + by * t * t + cy * t + dy
+                ax*t*t*t + bx*t*t + cx*t + dx,
+                ay*t*t*t + by*t*t + cy*t + dy
         );
     }
 
     public Vector2d getVelocity(double t) {
         return new Vector2d(
-                3 * ax * t * t + 2 * bx * t + cx,
-                3 * ay * t * t + 2 * by * t + cy
+                3*ax*t*t + 2*bx*t + cx,
+                3*ay*t*t + 2*by*t + cy
         );
     }
 }
