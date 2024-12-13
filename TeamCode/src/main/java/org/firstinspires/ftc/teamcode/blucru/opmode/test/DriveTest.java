@@ -28,6 +28,7 @@ public class DriveTest extends BluLinearOpMode {
 
         dt.teleOpDrive(gamepad1);
         dt.drawPose();
+        Globals.startPose = dt.pose;
     }
 
     @Override
