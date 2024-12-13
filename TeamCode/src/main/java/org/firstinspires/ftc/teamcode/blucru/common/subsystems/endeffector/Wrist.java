@@ -56,13 +56,6 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
         return (getPosition() - HORIZONTAL_POS) / TICKS_PER_RAD;
     }
 
-    public void motionProfileTo(double angle, double time) {
-        state = State.MOTION_PROFILE;
-        // this probably doesnt work
-        double aMax = Math.abs(angle - getAngle()) * 4 / (time * time);
-
-        profile = new MotionProfile(angle, getAngle(), Double.POSITIVE_INFINITY, aMax).start();
-    }
 
     public void front() {
         state = State.SERVO;
