@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeSpline;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.pose.BoxtubeIKPose;
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
@@ -24,6 +25,7 @@ public class Extension implements BluSubsystem, Subsystem {
         IDLE,
         PID,
         MANUAL,
+        BOXTUBE_SPLINE,
         IK,
         MOTION_PROFILE,
         RETRACTING,
@@ -35,6 +37,7 @@ public class Extension implements BluSubsystem, Subsystem {
     PDController pidController;
     MotionProfile profile;
     BoxtubeIKPose pose;
+    BoxtubeSpline spline;
     int retractionCount;
 
     PivotMotor pivot; // reference to pivot motor for feedforward
@@ -88,6 +91,8 @@ public class Extension implements BluSubsystem, Subsystem {
     }
 
     public void write() {
+        Vector2d motorState = extensionMotor.getState();
+
         switch(state) {
             case IDLE:
             case MANUAL:
@@ -95,15 +100,15 @@ public class Extension implements BluSubsystem, Subsystem {
                 manualPower = 0;
                 break;
             case IK:
-                setPowerFeedForward(pidController.calculate(extensionMotor.getDistance()));
-                break;
             case PID:
             case RETRACTING:
                 setPowerFeedForward(pidController.calculate(extensionMotor.getDistance()));
                 break;
+            case BOXTUBE_SPLINE:
+                setPowerFeedForward(pidController.calculate(motorState, spline.states.extensionState));
+                break;
             case MOTION_PROFILE:
-                Vector2d state = extensionMotor.getState();
-                setPowerFeedForward(pidController.calculate(state, profile));
+                setPowerFeedForward(pidController.calculate(motorState, profile));
                 break;
             case RESETTING:
                 setPowerFeedForward(-0.15);
@@ -121,6 +126,11 @@ public class Extension implements BluSubsystem, Subsystem {
     public void motionProfileTo(double inches, double vMax, double aMax) {
         state = State.MOTION_PROFILE;
         profile = new MotionProfile(inches, getDistance(), vMax, aMax).start();
+    }
+
+    public void followBoxtubeSpline(BoxtubeSpline spline) {
+        state = State.BOXTUBE_SPLINE;
+        this.spline = spline;
     }
 
     public void setIKPose(BoxtubeIKPose pose) {

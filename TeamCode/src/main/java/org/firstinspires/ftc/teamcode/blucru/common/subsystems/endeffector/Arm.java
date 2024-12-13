@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.BluServo;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeSpline;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.pose.BoxtubeIKPose;
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 
@@ -26,12 +27,14 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     enum State{
         SERVO,
         PIVOT_IK,
+        BOXTUBE_SPLINE,
         MOTION_PROFILE
     }
 
     State state;
     double globalAngle;
     MotionProfile profile;
+    BoxtubeSpline spline;
 
     public Arm() {
         super("arm");
@@ -54,6 +57,9 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
             case MOTION_PROFILE:
                 setAngle(profile.getInstantTargetPosition());
                 break;
+            case BOXTUBE_SPLINE:
+                setAngle(spline.states.armAngle);
+                break;
             case SERVO:
                 break;
         }
@@ -64,6 +70,11 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public void setGlobalAngle(double globalAngle) {
         state = State.PIVOT_IK;
         this.globalAngle = globalAngle;
+    }
+
+    public void followBoxtubeSpline(BoxtubeSpline spline) {
+        state = State.BOXTUBE_SPLINE;
+        this.spline = spline;
     }
 
     public void setIKPose(BoxtubeIKPose pose) {

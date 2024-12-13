@@ -7,12 +7,14 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.BluServo;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeSpline;
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 
 @Config
 public class Wrist extends BluServo implements BluSubsystem, Subsystem {
     enum State{
         SERVO,
+        BOXTUBE_SPLINE,
         MOTION_PROFILE
     }
 
@@ -26,6 +28,7 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
 
     MotionProfile profile;
     State state;
+    BoxtubeSpline spline;
 
     @Override
     public void init() {
@@ -40,11 +43,19 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
             case MOTION_PROFILE:
                 setAngle(profile.getInstantTargetPosition());
                 break;
+            case BOXTUBE_SPLINE:
+                setAngle(spline.states.wristAngle);
+                break;
             case SERVO:
                 break;
         }
 
         super.write();
+    }
+
+    public void followBoxtubeSpline(BoxtubeSpline spline) {
+        state = State.BOXTUBE_SPLINE;
+        this.spline = spline;
     }
 
     public void setAngle(double angle) {
@@ -55,7 +66,6 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
     public double getAngle() {
         return (getPosition() - HORIZONTAL_POS) / TICKS_PER_RAD;
     }
-
 
     public void front() {
         state = State.SERVO;

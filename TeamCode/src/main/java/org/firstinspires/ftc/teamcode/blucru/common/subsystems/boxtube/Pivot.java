@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeSpline;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.pose.BoxtubeIKPose;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
@@ -24,6 +26,7 @@ public class Pivot implements BluSubsystem, Subsystem {
         IDLE,
         MANUAL,
         IK,
+        BOXTUBE_SPLINE,
         PID,
         RETRACTING,
         RESETTING
@@ -33,10 +36,10 @@ public class Pivot implements BluSubsystem, Subsystem {
     PDController pidController;
     MotionProfile profile;
     PivotMotor pivotMotor;
-//    LimitSwitch resetLimitSwitch; not used
     double retractTime, resetTime;
     double manualPower;
     BoxtubeIKPose pose;
+    BoxtubeSpline spline;
 
     ExtensionMotor extension; // reference to extension motor for feedforward
 
@@ -72,7 +75,12 @@ public class Pivot implements BluSubsystem, Subsystem {
                 manualPower = 0;
                 break;
             case IK:
+            case PID:
                 setPowerFF(pidController.calculate(pivotMotor.getAngle()));
+                break;
+            case BOXTUBE_SPLINE:
+                Vector2d motorState = pivotMotor.getState();
+                setPowerFF(pidController.calculate(motorState, spline.states.pivotState));
                 break;
             case RESETTING:
                 setRawPower(0);
@@ -81,10 +89,6 @@ public class Pivot implements BluSubsystem, Subsystem {
                     resetEncoder();
                     pidTo(0.0);
                 }
-                break;
-            case PID:
-                double pidPower = pidController.calculate(pivotMotor.getAngle());
-                setPowerFF(pidPower);
                 break;
             case RETRACTING:
                 double profilePower = pidController.calculate(pivotMotor.getState(), profile);
@@ -104,6 +108,11 @@ public class Pivot implements BluSubsystem, Subsystem {
         state = State.IK;
         pidController.setSetPoint(Range.clip(pose.pivotAngle, MIN_RAD, MAX_RAD));
         this.pose = pose;
+    }
+
+    public void followBoxtubeSpline(BoxtubeSpline spline) {
+        state = State.BOXTUBE_SPLINE;
+        this.spline = spline;
     }
 
     public void pidTo(double angle) {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Extension;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeSpline;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.pose.BoxtubeIKPose;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Arm;
@@ -37,6 +39,9 @@ public class Robot {
     // list of all subsystems
     ArrayList<BluSubsystem> subsystems;
 
+    BoxtubeSpline spline;
+    boolean followingSpline;
+
     public static Robot getInstance() {
         if(instance == null) {
             instance = new Robot();
@@ -64,6 +69,14 @@ public class Robot {
     }
 
     public void read() {
+        // follow spline
+        if(followingSpline) {
+            spline.update();
+            if(spline.isFinished()) {
+                followingSpline = false;
+            }
+        }
+
         for(BluSubsystem subsystem : subsystems) {
             subsystem.read();
         }
@@ -73,6 +86,15 @@ public class Robot {
         for(BluSubsystem subsystem : subsystems) {
             subsystem.write();
         }
+    }
+
+    public void followBoxtubeSpline(BoxtubeSpline spline) {
+        this.spline = spline;
+        followingSpline = true;
+        arm.followBoxtubeSpline(spline);
+        wrist.followBoxtubeSpline(spline);
+        pivot.followBoxtubeSpline(spline);
+        extension.followBoxtubeSpline(spline);
     }
 
     public void setIKPose(Pose2d pose) {
