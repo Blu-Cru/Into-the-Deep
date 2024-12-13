@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.blucru.opmode.test;
+package org.firstinspires.ftc.teamcode.blucru.opmode.test.drive;
 
 import android.util.Log;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
