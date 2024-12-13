@@ -19,9 +19,6 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
     public static double HORIZONTAL_POS = 0.595,
             MIN_ANGLE = -Math.PI, MAX_ANGLE = Math.PI/2,
 
-            // Amax = kV * Vmax
-            kV = 3.0,
-
             TICKS_PER_RAD = 0.28/(Math.PI/2);
     public Wrist() {
         super("wrist");
@@ -61,10 +58,10 @@ public class Wrist extends BluServo implements BluSubsystem, Subsystem {
 
     public void motionProfileTo(double angle, double time) {
         state = State.MOTION_PROFILE;
-        double vMax = Math.abs(angle - getAngle()) / (time - 1/kV);
-        double aMax = kV * vMax;
+        // this probably doesnt work
+        double aMax = Math.abs(angle - getAngle()) * 4 / (time * time);
 
-        profile = new MotionProfile(angle, getAngle(), vMax, aMax).start();
+        profile = new MotionProfile(angle, getAngle(), Double.POSITIVE_INFINITY, aMax).start();
     }
 
     public void front() {
