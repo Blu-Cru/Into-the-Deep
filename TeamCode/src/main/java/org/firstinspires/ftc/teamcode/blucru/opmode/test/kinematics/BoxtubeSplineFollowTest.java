@@ -89,7 +89,7 @@ public class BoxtubeSplineFollowTest extends BluLinearOpMode {
 
                     if(stickyG1.dpad_up) {
                         new BoxtubeSplineCommand(
-                                new Vector2d(x, y),
+                                new Vector2d(xVel, yVel),
                                 new Pose2d(x, y, blockAngle),
                                 wristAngle,
                                 duration
