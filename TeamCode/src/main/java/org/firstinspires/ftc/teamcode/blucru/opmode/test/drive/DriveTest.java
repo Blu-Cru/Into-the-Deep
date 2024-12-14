@@ -21,8 +21,13 @@ public class DriveTest extends BluLinearOpMode {
 
     @Override
     public void periodic() {
-        if(gamepad1.right_stick_button) {
+        if(stickyG1.left_bumper) {
             dt.setPoseEstimate(DriveBase.startPose);
+            gamepad1.rumble(150);
+        }
+
+        if(stickyG1.right_stick_button) {
+            dt.setHeading(Math.PI/2);
             gamepad1.rumble(150);
         }
 

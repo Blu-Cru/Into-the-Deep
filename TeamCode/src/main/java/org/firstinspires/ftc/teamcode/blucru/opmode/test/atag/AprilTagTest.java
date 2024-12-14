@@ -15,8 +15,8 @@ public class AprilTagTest extends BluLinearOpMode {
         IDLE,
         DETECTING
     }
-    public static double CAMERA_EXPOSURE = 50;
-    public static double CAMERA_GAIN = 10;
+    public static double EXPOSURE_MS = 50;
+    public static double GAIN = 10;
 
     State state = State.IDLE;
 
@@ -39,6 +39,9 @@ public class AprilTagTest extends BluLinearOpMode {
             state = State.IDLE;
             FtcDashboard.getInstance().stopCameraStream();
         }
+
+        cvMaster.setExposure(EXPOSURE_MS);
+        cvMaster.setGain(GAIN);
 
         try {
             dt.setPoseEstimate(AprilTagPoseGetter.getRobotPoseAtTimeOfFrame(cvMaster.tagDetector.getDetections()));
