@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -15,25 +16,25 @@ public class DriveTest extends BluLinearOpMode {
         addDrivetrain();
         dt.setDrivePower(0.8);
         enableFTCDashboard();
-        dt.setPoseEstimate(Globals.startPose);
+//        dt.setPoseEstimate(DriveBase.startPose);
     }
 
     @Override
     public void periodic() {
         if(gamepad1.right_stick_button) {
-            dt.setPoseEstimate(Globals.startPose);
+            dt.setPoseEstimate(DriveBase.startPose);
             gamepad1.rumble(150);
         }
 
         dt.teleOpDrive(gamepad1);
         dt.drawPose();
-        Globals.startPose = dt.pose;
+        DriveBase.startPose = dt.pose;
     }
 
     @Override
     public void end() {
         Log.i("DriveTest", "set start pose to: " + dt.pose);
-        Globals.startPose = dt.pose;
+        DriveBase.startPose = dt.pose;
     }
 
     @Override

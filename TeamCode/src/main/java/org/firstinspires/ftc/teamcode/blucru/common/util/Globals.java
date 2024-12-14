@@ -14,8 +14,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.roadrunner.util.DashboardUtil;
 
 public class Globals {
-    // default pose for the robot, will be changed at the end of auto
-    public static Pose2d startPose = new Pose2d(0, 0, Math.toRadians(90));
     public static HardwareMap hwMap; // global reference to current hwmap
     public static Telemetry tele; // global reference to current telemetry
 

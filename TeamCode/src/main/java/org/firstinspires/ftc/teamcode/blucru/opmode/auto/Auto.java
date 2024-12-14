@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractComma
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
@@ -131,9 +132,9 @@ public class Auto extends BluLinearOpMode {
 
     @Override
     public void end() {
-        if(Globals.alliance == Alliance.RED) Globals.startPose = dt.pose;
-        else Globals.startPose = new Pose2d(dt.pose.vec(), Angle.norm(dt.pose.getHeading() + Math.PI));
-        Log.i("Auto", "start pose set to" + Globals.startPose);
+        if(Globals.alliance == Alliance.RED) DriveBase.startPose = dt.pose;
+        else DriveBase.startPose = new Pose2d(dt.pose.vec(), Angle.norm(dt.pose.getHeading() + Math.PI));
+        Log.i("Auto", "start pose set to" + DriveBase.startPose);
     }
 
     public void configTelemetry() {

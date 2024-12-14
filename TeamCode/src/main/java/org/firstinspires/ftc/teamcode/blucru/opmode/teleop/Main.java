@@ -70,7 +70,7 @@ public class Main extends BluLinearOpMode {
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
-        dt.setPoseEstimate(Globals.startPose);
+//        dt.setPoseEstimate(Globals.startPose);
 
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)

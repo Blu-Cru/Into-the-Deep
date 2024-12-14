@@ -40,7 +40,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
     public void init() {
         super.init();
 
-        setPoseEstimate(Globals.startPose);
+//        setPoseEstimate(Globals.startPose);
 
         pid.setTargetPose(pose);
     }

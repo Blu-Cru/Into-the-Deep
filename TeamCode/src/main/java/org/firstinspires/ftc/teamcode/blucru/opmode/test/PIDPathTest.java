@@ -5,6 +5,7 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPath;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
@@ -34,7 +35,7 @@ public class PIDPathTest extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RESETTING)
                 .transition(() -> stickyG1.b, State.FOLLOWING_PID, () -> {
-                    dt.setPoseEstimate(Globals.startPose);
+                    dt.setPoseEstimate(DriveBase.startPose);
                     pidPath.start();
                     pidStartTime = System.currentTimeMillis();
 

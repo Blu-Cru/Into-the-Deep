@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 public class DriveBase implements BluSubsystem {
+    public static Pose2d startPose = new Pose2d(0,0,Math.PI/2);
     FusedLocalizer localizer;
 
     BluMotor fl, fr, bl, br;
@@ -33,12 +34,12 @@ public class DriveBase implements BluSubsystem {
         br = new BluMotor("br", DcMotorSimple.Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
 
         motors = new BluMotor[] {fl, fr, bl, br};
-        localizer.setPoseEstimate(Globals.startPose);
+        localizer.setPoseEstimate(startPose);
     }
 
     @Override
     public void init() {
-        localizer.setPoseEstimate(Globals.startPose);
+        localizer.setPoseEstimate(startPose);
 
         for (BluMotor motor : motors) {
             motor.init();
