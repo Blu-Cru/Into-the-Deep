@@ -25,7 +25,6 @@ public class AprilTagDriveTest extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.DRIVER_CONTROL)
                 .transition(() -> stickyG1.a, State.DRIVE_TO_DEPOSIT, () -> {
-                    dt.pidTo(new Pose2d(-53, -53, Math.PI/4));
                 })
                 .loop(() -> {
                     dt.teleOpDrive(gamepad1);
@@ -35,6 +34,9 @@ public class AprilTagDriveTest extends BluLinearOpMode {
                     }
                 })
                 .state(State.DRIVE_TO_DEPOSIT)
+                .onEnter(() -> {
+                    dt.pidTo(new Pose2d(0, -43, 0));
+                })
                 .transition(() -> stickyG1.a, State.DRIVER_CONTROL, () -> {
                     dt.idle();
                 })

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.test.kinematics;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 import java.util.ArrayList;
 
+@TeleOp(group = "test")
 public class BoxtubeSplineDemo extends BluLinearOpMode {
     int count = 0, totalCount = 5;
     Pose2d[] poses = new Pose2d[totalCount];

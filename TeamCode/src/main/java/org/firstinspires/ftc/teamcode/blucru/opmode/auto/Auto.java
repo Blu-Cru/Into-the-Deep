@@ -120,6 +120,7 @@ public class Auto extends BluLinearOpMode {
 
     public void periodic() {
         sm.update();
+        DriveBase.startPose = dt.pose;
     }
 
     @Override
@@ -130,12 +131,12 @@ public class Auto extends BluLinearOpMode {
         } catch(Exception ignored){}
     }
 
-    @Override
-    public void end() {
-        if(Globals.alliance == Alliance.RED) DriveBase.startPose = dt.pose;
-        else DriveBase.startPose = new Pose2d(dt.pose.vec(), Angle.norm(dt.pose.getHeading() + Math.PI));
-        Log.i("Auto", "start pose set to" + DriveBase.startPose);
-    }
+//    @Override
+//    public void end() {
+//        if(Globals.alliance == Alliance.RED) DriveBase.startPose = dt.pose;
+//        else DriveBase.startPose = new Pose2d(dt.pose.vec(), Angle.norm(dt.pose.getHeading() + Math.PI));
+//        Log.i("Auto", "start pose set to" + DriveBase.startPose);
+//    }
 
     public void configTelemetry() {
         telemetry.addData("b to switch Alliance", Globals.alliance);

@@ -20,6 +20,11 @@ public class DriveTest extends BluLinearOpMode {
     }
 
     @Override
+    public void onStart() {
+        dt.setPoseEstimate(DriveBase.startPose);
+    }
+
+    @Override
     public void periodic() {
         if(stickyG1.left_bumper) {
             dt.setPoseEstimate(DriveBase.startPose);
@@ -39,7 +44,7 @@ public class DriveTest extends BluLinearOpMode {
     @Override
     public void end() {
         Log.i("DriveTest", "set start pose to: " + dt.pose);
-        DriveBase.startPose = dt.pose;
+//        DriveBase.startPose = dt.pose;
     }
 
     @Override

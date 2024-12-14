@@ -34,6 +34,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontDunkRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -362,6 +363,8 @@ public class Main extends BluLinearOpMode {
     public void onStart() {
         pivot.pidTo(0);
         extension.pidTo(0);
+
+        dt.setPoseEstimate(DriveBase.startPose);
     }
 
     @Override
