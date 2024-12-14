@@ -181,7 +181,13 @@ public class Pivot implements BluSubsystem, Subsystem {
     }
 
     public Vector2d limitState(Vector2d state) {
-        return new Vector2d(Range.clip(state.getX(), MIN_RAD, MAX_RAD), state.getY());
+        double vel = state.getY();
+
+        if(state.getX() < MIN_RAD || state.getX() > MAX_RAD) {
+            vel = 0;
+        }
+
+        return new Vector2d(Range.clip(state.getX(), MIN_RAD, MAX_RAD), vel);
     }
 
     @Override

@@ -185,7 +185,13 @@ public class Extension implements BluSubsystem, Subsystem {
     }
 
     public Vector2d limitedState(Vector2d state) {
-        return new Vector2d(Range.clip(state.getX(), MIN_INCHES, MAX_INCHES), state.getY());
+        double vel = state.getY();
+
+        if(state.getX() < MIN_INCHES || state.getX() > MAX_INCHES) {
+            vel = 0;
+        }
+
+        return new Vector2d(Range.clip(state.getX(), MIN_INCHES, MAX_INCHES), vel);
     }
 
     public void idle() {

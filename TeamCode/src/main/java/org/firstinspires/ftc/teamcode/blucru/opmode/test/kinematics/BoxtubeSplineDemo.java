@@ -34,8 +34,8 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
             new Pose2d(15, 15, Math.PI/4),
             new Pose2d(15, 15, 0),
             new Pose2d(-8, 25, 3*Math.PI/4),
-            new Pose2d(8, 25, -Math.PI/4),
-            new Pose2d(8, 25, 3*Math.PI/4)
+            new Pose2d(8, 25, 0),
+            new Pose2d(8, 25, Math.PI/2)
         };
 
         vels = new Vector2d[] {
@@ -52,32 +52,46 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
             -Math.PI/2,
             Math.PI/2,
             -Math.PI/2,
-            Math.PI/2
+            -Math.PI/2
         };
 
         durations = new double[] {
-            1,
-            1,
-            1,
-            1,
-            1
+            0.8,
+            0.8,
+            0.8,
+            0.8,
+            0.8
         };
     }
 
     @Override
     public void periodic() {
-        if(stickyG1.b) {
+        if(stickyG1.dpad_up) {
+            count++;
+
+            if(count >= totalCount) {
+                count = 0;
+            }
+
             new BoxtubeSplineCommand(
                     vels[count],
                     poses[count],
                     wristAngles[count],
                     durations[count]
             ).schedule();
-            count++;
+        }
 
-            if(count >= totalCount) {
-                count = 0;
+        if(stickyG1.dpad_down) {
+            count--;
+            if(count < 0) {
+                count = totalCount - 1;
             }
+            new BoxtubeSplineCommand(
+                    vels[count],
+                    poses[count],
+                    wristAngles[count],
+                    durations[count]
+            ).schedule();
         }
 
         if(stickyG1.a) {

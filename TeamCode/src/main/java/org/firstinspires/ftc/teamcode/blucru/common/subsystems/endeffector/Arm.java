@@ -17,7 +17,7 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public static double
             PARALLEL_POS = 0.45,
             vMAX = 20.0, aMAX = 25.0,
-            MAX_ANGLE = 1.8, MIN_ANGLE = - 1.7,
+            MAX_ANGLE = 1.8, MIN_ANGLE = -1.7,
             RETRACT_ANGLE = 1.7,
             PRE_INTAKE_ANGLE = 0.25,
             GROUND_ANGLE = -0.58,

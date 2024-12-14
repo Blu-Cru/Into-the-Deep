@@ -35,7 +35,7 @@ public class AprilTagDriveTest extends BluLinearOpMode {
                 })
                 .state(State.DRIVE_TO_DEPOSIT)
                 .onEnter(() -> {
-                    dt.pidTo(new Pose2d(0, -43, 0));
+                    dt.pidTo(new Pose2d(29, -53, Math.toRadians(-60)));
                 })
                 .transition(() -> stickyG1.a, State.DRIVER_CONTROL, () -> {
                     dt.idle();
@@ -54,7 +54,11 @@ public class AprilTagDriveTest extends BluLinearOpMode {
     @Override
     public void periodic() {
         sm.update();
-        dt.updateAprilTags(cvMaster.tagDetector);
+        try {
+            dt.updateAprilTags(cvMaster.tagDetector);
+        } catch(Exception e) {
+
+        }
         dt.drawPose();
     }
 

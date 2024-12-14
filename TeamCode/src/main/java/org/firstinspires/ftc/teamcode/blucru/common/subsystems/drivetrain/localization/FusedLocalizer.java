@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 // this class combines odometry, IMU, and AprilTags with weighted updates
 public class FusedLocalizer extends PinpointLocalizer{
-    public static double TAG_UPDATE_DELAY = 500; // ms between tag updates
+    public static double TAG_UPDATE_DELAY = 100; // ms between tag updates
     PoseHistory poseHistory;
     long lastFrameTime;
     double lastTagUpdateMillis;

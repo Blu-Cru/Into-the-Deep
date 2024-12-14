@@ -13,17 +13,18 @@ import java.util.Arrays;
 public class BoxtubeForwardKinematicsTest {
     @Test
     public void testForwardKinematics() {
-        doForwardKinematics(0, 0, 0, 0);
-        doForwardKinematics(0, 0, 0, -Math.PI/2);
-        doForwardKinematics(0, 0, Math.PI/2, 0);
-        doForwardKinematics(0, 0, Math.PI/2, -Math.PI/2);
-        doForwardKinematics(0, 5, 0, 0);
-        doForwardKinematics(0, 5, 0, -Math.PI/2);
-        doForwardKinematics(Math.PI/2, 0, 0, 0);
-        doForwardKinematics(Math.PI/2, 0, 0, -Math.PI/2);
-        doForwardKinematics(Math.PI/2, 0, Math.PI/2, 0);
-        doForwardKinematics(Math.PI/2, 0, Math.PI/2, -Math.PI/2);
-        doForwardKinematics(Math.PI/2, 5, 0, 0);
+        doForwardKinematics(0.27, 8, -0.27, 0);
+//        doForwardKinematics(0, 0, 0, 0);
+//        doForwardKinematics(0, 0, 0, -Math.PI/2);
+//        doForwardKinematics(0, 0, Math.PI/2, 0);
+//        doForwardKinematics(0, 0, Math.PI/2, -Math.PI/2);
+//        doForwardKinematics(0, 5, 0, 0);
+//        doForwardKinematics(0, 5, 0, -Math.PI/2);
+//        doForwardKinematics(Math.PI/2, 0, 0, 0);
+//        doForwardKinematics(Math.PI/2, 0, 0, -Math.PI/2);
+//        doForwardKinematics(Math.PI/2, 0, Math.PI/2, 0);
+//        doForwardKinematics(Math.PI/2, 0, Math.PI/2, -Math.PI/2);
+//        doForwardKinematics(Math.PI/2, 5, 0, 0);
 
         Assert.assertEquals(4, 4);
     }
