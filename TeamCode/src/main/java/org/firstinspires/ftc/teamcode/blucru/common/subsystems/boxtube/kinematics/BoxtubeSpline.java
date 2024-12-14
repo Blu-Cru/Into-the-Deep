@@ -48,7 +48,7 @@ public class BoxtubeSpline extends TimedEndHermiteSpline {
         double aMax = (Math.abs(start - end)) / (time * 0.25 * time * 0.75);
         double vMax = aMax * time * 0.25;
 
-        return new MotionProfile(start, end, vMax, aMax).start();
+        return new MotionProfile(end, start, vMax, aMax).start();
     }
 
     public void telemetry() {

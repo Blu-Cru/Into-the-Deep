@@ -11,7 +11,7 @@ public class BoxtubeSplineCommand extends InstantCommand {
     public BoxtubeSplineCommand(Vector2d startVelocity, Pose2d endPose, double wristAngle, double duration) {
         super(() -> {
             BoxtubeSpline spline = new BoxtubeSpline(Robot.getInstance().getBoxtubePose(), startVelocity, endPose, wristAngle, duration);
-            Robot.getInstance().followBoxtubeSpline(spline.start());
+            Robot.getInstance().followBoxtubeSpline(spline);
         });
 
         addRequirements(
@@ -19,5 +19,12 @@ public class BoxtubeSplineCommand extends InstantCommand {
                 Robot.getInstance().pivot,
                 Robot.getInstance().extension,
                 Robot.getInstance().arm);
+    }
+
+    public BoxtubeSplineCommand(Pose2d endPose, double wristAngle, double duration) {
+        this(new Vector2d(0,0),
+                endPose,
+                wristAngle,
+                duration);
     }
 }

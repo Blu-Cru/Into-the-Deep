@@ -91,7 +91,7 @@ public class Robot {
     }
 
     public void followBoxtubeSpline(BoxtubeSpline spline) {
-        this.spline = spline;
+        this.spline = spline.start();
         followingSpline = true;
         arm.followBoxtubeSpline(spline);
         wrist.followBoxtubeSpline(spline);
