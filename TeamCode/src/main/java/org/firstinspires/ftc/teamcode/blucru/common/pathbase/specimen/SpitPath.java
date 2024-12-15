@@ -27,7 +27,7 @@ public class SpitPath extends PIDPathBuilder {
                 .schedule(new SequentialCommandGroup(
                         new WheelReverseCommand(),
                         new ClampReleaseCommand(),
-                        new WaitCommand(300),
+                        new WaitCommand(200),
                         new WheelStopCommand(),
                         new ClampGrabCommand(),
                         new ExtensionCommand(4)

@@ -14,14 +14,15 @@ public class CollectRightBlockPath extends PIDPathBuilder {
     public CollectRightBlockPath() {
         super();
         this.setPower(0.7)
-                .addMappedPoint(49, -36, 23, 4)
+                .schedule(new ArmDropToGroundCommand())
+                .addMappedPoint(50, -35, 23, 4)
                 .schedule(new SequentialCommandGroup(
                         new ExtensionCommand(4),
-                        new ArmDropToGroundCommand(),
+//                        new ArmDropToGroundCommand(),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
                         new WaitCommand(200),
-                        new ExtensionMotionProfileCommand(8)
+                        new ExtensionMotionProfileCommand(10)
                 ))
                 .waitMillis(1000);
     }
