@@ -14,6 +14,6 @@ public class ExtensionMotionProfileCommand extends InstantCommand {
     }
 
     public ExtensionMotionProfileCommand(double targetIn) {
-        this(targetIn, 25, 80);
+        this(targetIn, 20, 80);
     }
 }
