@@ -5,25 +5,32 @@ import android.util.Log;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.util.Range;
 
-public class TimedEndHermiteSpline extends EndHermiteSpline {
+public class TimedHermiteSpline extends CubicHermiteSpline {
     public double duration;
     double startTime;
     public boolean started;
 
-    public TimedEndHermiteSpline(Vector2d startPose, Vector2d startVelocity, Vector2d endPose, double durationSecs) {
-        super(startPose, startVelocity, endPose);
+    public TimedHermiteSpline(Vector2d startPose, Vector2d startVelocity, Vector2d endPose, Vector2d endVelocity, double durationSecs) {
+        super(startPose, startVelocity, endPose, endVelocity);
         this.duration = durationSecs;
         startTime = Double.POSITIVE_INFINITY;
         started = false;
     }
 
-    public TimedEndHermiteSpline(Vector2d startPose, Vector2d endPose, double durationSecs) {
-        super(startPose, new Vector2d(0, 0), endPose);
+    public TimedHermiteSpline(Vector2d startPose, Vector2d startVelocity, Vector2d endPose, double durationSecs) {
+        super(startPose, startVelocity, endPose, new Vector2d(0,0));
+        this.duration = durationSecs;
+        startTime = Double.POSITIVE_INFINITY;
+        started = false;
+    }
+
+    public TimedHermiteSpline(Vector2d startPose, Vector2d endPose, double durationSecs) {
+        super(startPose, new Vector2d(0, 0), endPose, new Vector2d(0, 0));
         this.duration = durationSecs;
         started = false;
     }
 
-    public TimedEndHermiteSpline start() {
+    public TimedHermiteSpline start() {
         Log.i("TimedEndHermiteSpline", "spline started, time = " + System.currentTimeMillis());
         startTime = System.currentTimeMillis();
         started = true;

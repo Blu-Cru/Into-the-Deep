@@ -6,19 +6,28 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.blucru.common.spline.TimedEndHermiteSpline;
+import org.firstinspires.ftc.teamcode.blucru.common.spline.TimedHermiteSpline;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.pose.BoxtubeIKPoseVelocity;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 
-public class BoxtubeSpline extends TimedEndHermiteSpline {
+public class BoxtubeSpline extends TimedHermiteSpline {
     public MotionProfile blockAngleProfile, wristAngleProfile;
     public Pose2d startPose, endPose;
     public Vector2d startTangent;
     double endWristAngle;
     public BoxtubeIKPoseVelocity states;
+
+    public BoxtubeSpline(Pose2d startPose, Vector2d startTangent, Pose2d endPose, Vector2d endTangent, double endWristAngle, double durationSecs) {
+        super(startPose.vec(), startTangent, endPose.vec(), endTangent, durationSecs);
+        this.startPose = startPose;
+        this.endPose = endPose;
+        this.startTangent = startTangent;
+        this.endWristAngle = endWristAngle;
+
+        states = new BoxtubeIKPoseVelocity(this);
+    }
 
     public BoxtubeSpline(Pose2d startPose, Vector2d startTangent, Pose2d endPose, double endWristAngle, double durationSecs) {
         super(startPose.vec(), startTangent, endPose.vec(), durationSecs);
