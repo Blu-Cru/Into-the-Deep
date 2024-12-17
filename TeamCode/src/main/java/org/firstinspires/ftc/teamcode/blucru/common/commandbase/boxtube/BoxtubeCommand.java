@@ -6,8 +6,8 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
-public class BoxtubeExtendCommand extends SequentialCommandGroup {
-    public BoxtubeExtendCommand(double targetAngle, double extensionDistance) {
+public class BoxtubeCommand extends SequentialCommandGroup {
+    public BoxtubeCommand(double targetAngle, double extensionDistance) {
         super(
                 new ConditionalCommand(
                         new SequentialCommandGroup(

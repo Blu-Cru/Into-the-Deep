@@ -18,10 +18,10 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 @Config
 @TeleOp(group = "test")
 public class BoxtubeSplineFollowTest extends BluLinearOpMode {
-    public static double xVel = 0, yVel = 0,
-            x = 15, y = 15, blockAngle = 0,
+    public static double xVel = 26, yVel = 43,
+            x = -8.5, y = 28.5, blockAngle = Math.PI,
             wristAngle = 0,
-            duration = 1;   // seconds
+            duration = 1.5;   // seconds
 
 
     enum State {
@@ -72,7 +72,7 @@ public class BoxtubeSplineFollowTest extends BluLinearOpMode {
                     if(stickyG1.b) {
                         new BoxtubeSplineCommand(
                                 new Vector2d(0,0),
-                                new Pose2d(15, 20, 0),
+                                new Pose2d(21, 9, 0),
                                 -Math.PI,
                                 1.0
                         ).schedule();

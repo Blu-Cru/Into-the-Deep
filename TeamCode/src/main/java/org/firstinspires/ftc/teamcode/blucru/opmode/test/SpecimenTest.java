@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
@@ -63,17 +63,17 @@ public class SpecimenTest extends BluLinearOpMode {
                     new ArmPreIntakeCommand().schedule();
                 })
                 .transition(() -> stickyG2.b, State.ABOVE_SPECIMEN, () -> {
-                    new BoxtubeExtendCommand(1.4, 5).schedule();
+                    new BoxtubeCommand(1.4, 5).schedule();
                     new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(2.5).schedule();
                 })
                 .transition(() -> stickyG2.x, State.EXTENDING_TO_WALL, () -> {
-                    new BoxtubeExtendCommand(0.3, 5.3).schedule();
+                    new BoxtubeCommand(0.3, 5.3).schedule();
                     new WristHorizontalCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
                 .transition(() -> stickyG2.y, State.EXTENDING_TO_WALL, () -> {
-                    new BoxtubeExtendCommand(0.43, 0).schedule();
+                    new BoxtubeCommand(0.43, 0).schedule();
                     new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
@@ -99,7 +99,7 @@ public class SpecimenTest extends BluLinearOpMode {
                             new ClampGrabCommand(),
                             new WheelStopCommand(),
                             new ArmGlobalAngleCommand(1),
-                            new BoxtubeExtendCommand(0.45, 5.6),
+                            new BoxtubeCommand(0.45, 5.6),
                             new WaitCommand(300),
                             new EndEffectorRetractCommand(),
                             new BoxtubeRetractCommand()
@@ -168,12 +168,12 @@ public class SpecimenTest extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> gamepad2.left_bumper, State.DUNKING_SPECIMEN, () -> {
-                    new BoxtubeExtendCommand(1.6, 0).schedule();
+                    new BoxtubeCommand(1.6, 0).schedule();
                 })
 
                 .state(State.DUNKING_SPECIMEN)
                 .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN, () -> {
-                    new BoxtubeExtendCommand(1.4, 5).schedule();
+                    new BoxtubeCommand(1.4, 5).schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(

@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.Specime
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontDunkCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
@@ -35,7 +35,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontDunkRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
-import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(name = "Main", group = "1")
@@ -101,7 +100,7 @@ public class Main extends BluLinearOpMode {
 
                 // SPECIMEN
                 .transition(() -> stickyG2.dpad_down, State.EXTENDING_TO_SPECIMEN, () -> {
-                    new BoxtubeExtendCommand(0.42, 0).schedule();
+                    new BoxtubeCommand(0.42, 0).schedule();
                     new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
@@ -206,7 +205,7 @@ public class Main extends BluLinearOpMode {
                             new ArmGlobalAngleCommand(1.2),
                             new PivotCommand(1),
                             new WaitCommand(300),
-                            new BoxtubeExtendCommand(1.4, 5),
+                            new BoxtubeCommand(1.4, 5),
                             new WristOppositeCommand(),
                             new ArmGlobalAngleCommand(0.64)
                     ).schedule();
