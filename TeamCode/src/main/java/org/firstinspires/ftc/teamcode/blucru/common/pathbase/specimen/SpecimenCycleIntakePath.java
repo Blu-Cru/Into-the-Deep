@@ -3,11 +3,10 @@ package org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeExtendCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
@@ -19,7 +18,7 @@ public class SpecimenCycleIntakePath extends PIDPathBuilder {
                 .schedule(new SequentialCommandGroup(
                         new WristOppositeCommand(),
                         new ArmGlobalAngleCommand(0),
-                        new BoxtubeExtendCommand(0.27, 8),
+                        new BoxtubeCommand(0.27, 8),
                         new WaitCommand(300),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand()
