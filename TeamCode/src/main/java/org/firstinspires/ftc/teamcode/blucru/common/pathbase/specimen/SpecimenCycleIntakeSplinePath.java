@@ -13,21 +13,21 @@ public class SpecimenCycleIntakeSplinePath extends PIDPathBuilder {
     public SpecimenCycleIntakeSplinePath() {
         super();
         this.setPower(0.7)
-                .addMappedPoint(27, -48, -60, 5)
+                .schedule(
+                        new BoxtubeSplineCommand(
+                        new Pose2d(21, 10.2, 0),
+                        -Math.PI,
+                        1
+                ))
+//                .addMappedPoint(27, -48, -60, 5)
+                .addMappedPoint(26, -48.5, -60)
                 .schedule(new SequentialCommandGroup(
 //                        new WristOppositeCommand(),
 //                        new ArmGlobalAngleCommand(0),
-                        new BoxtubeSplineCommand(
-                                new Pose2d(21, 10.2, 0),
-                                -Math.PI,
-                                0.5
-                        ),
-                        new WaitCommand(300),
+//                        new WaitCommand(300),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand()
                 ))
-                .addMappedPoint(27, -48.5, -60)
-                .waitMillis(200)
                 .setPower(0.2)
                 .addMappedPoint(29, -53, -60)
                 .waitMillis(500);

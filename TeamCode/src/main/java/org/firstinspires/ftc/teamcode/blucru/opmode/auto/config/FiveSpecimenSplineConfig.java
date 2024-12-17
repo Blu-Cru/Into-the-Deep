@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCy
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeSplinePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenParkIntakePath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenParkIntakeSplinePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenPreloadDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenPreloadDepositSplinePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpitPath;
@@ -95,7 +96,7 @@ public class FiveSpecimenSplineConfig extends AutoConfig {
                         })
                 .transition(() -> currentPath.isDone() && !(scoreCount < 4 && runtime.seconds() < 25), State.PARK_INTAKING, () -> {
                     Log.i("Five Specimen Config", "parking, time = " + runtime.seconds());
-                    currentPath = new SpecimenParkIntakePath().build().start();
+                    currentPath = new SpecimenParkIntakeSplinePath().build().start();
                 })
                 .state(State.PARK_INTAKING)
                 .transition(() -> currentPath.isDone() || (Robot.getInstance().intakeSwitch.pressed() && Robot.getInstance().pivot.getAngle() < 0.35),
