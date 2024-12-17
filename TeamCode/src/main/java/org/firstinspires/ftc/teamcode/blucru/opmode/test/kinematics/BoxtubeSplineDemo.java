@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.test.kinematics;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 import java.util.ArrayList;
 
+@Config
 @TeleOp(group = "test")
 public class BoxtubeSplineDemo extends BluLinearOpMode {
     enum State {
@@ -24,6 +26,7 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
         FOLLOWING_SEQUENCE,
         WAITING_FOR_NEXT,
         HEART_UP,
+        WAITING_FOR_HEART_DOWN,
         HEART_DOWN
     }
 
@@ -89,6 +92,31 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
                             durations[count]
                     ).schedule();
                 })
+                .transition(() -> stickyG1.b, State.HEART_DOWN, () -> {
+                    splineToHeartDown(0, -Math.PI/2);
+                })
+                .state(State.HEART_DOWN)
+                .transition(() -> stickyG1.b, State.HEART_UP, () -> {
+                    splineToHeartUp(Math.PI/2, -Math.PI/2);
+                })
+                .transition(() -> stickyG1.a, State.RETRACT, () -> {
+                    new FullRetractCommand().schedule();
+                })
+                .state(State.HEART_UP)
+                .transition(() -> robot.splineDone(), State.HEART_DOWN, () -> {
+                    splineToHeartDown(0, -Math.PI/2);
+                })
+                .transition(() -> stickyG1.a, State.RETRACT, () -> {
+                    new FullRetractCommand().schedule();
+                })
+
+                .state(State.WAITING_FOR_HEART_DOWN)
+                .transitionTimed(500, State.HEART_DOWN, () -> {
+                    splineToHeartDown(0, -Math.PI/2);
+                })
+                .transition(() -> stickyG1.a, State.RETRACT, () -> {
+                    new FullRetractCommand().schedule();
+                })
                 .state(State.FOLLOWING_SEQUENCE)
                 .transition(() -> robot.splineDone(), State.WAITING_FOR_NEXT)
                 .transition(() -> stickyG1.a, State.RETRACT, () -> {
@@ -118,6 +146,26 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
     @Override
     public void periodic() {
         sm.update();
+    }
+
+    public void splineToHeartDown(double armAngle, double wristAngle) {
+        new BoxtubeSplineCommand(
+                new Vector2d(-14,10),
+                new Pose2d(15,10,armAngle),
+                new Vector2d(14,-6.5),
+                wristAngle,
+                1
+        ).schedule();
+    }
+
+    public void splineToHeartUp(double armAngle, double wristAngle) {
+        new BoxtubeSplineCommand(
+                new Vector2d(14,6.5),
+                new Pose2d(15,17,armAngle),
+                new Vector2d(-14,-10),
+                wristAngle,
+                1
+        ).schedule();
     }
 
     public void incrementSpline() {
