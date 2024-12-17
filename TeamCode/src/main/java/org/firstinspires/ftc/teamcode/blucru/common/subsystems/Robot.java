@@ -182,6 +182,10 @@ public class Robot {
         return cvMaster;
     }
 
+    public boolean splineDone() {
+        return spline.isFinished();
+    }
+
     public void splineTelemetry() {
         Globals.tele.addData(spline.toString(), "");
     }

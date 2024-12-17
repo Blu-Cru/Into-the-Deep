@@ -20,7 +20,7 @@ public class SpecimenCycleIntakeSplinePath extends PIDPathBuilder {
                         1
                 ))
 //                .addMappedPoint(27, -48, -60, 5)
-                .addMappedPoint(26, -48.5, -60)
+                .addMappedPoint(25, -48.5, -60)
                 .schedule(new SequentialCommandGroup(
 //                        new WristOppositeCommand(),
 //                        new ArmGlobalAngleCommand(0),
