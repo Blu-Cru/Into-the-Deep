@@ -55,6 +55,8 @@ public class Main extends BluLinearOpMode {
         MANUAL_RESET
     }
 
+    double intakeExtendMid = 6, intakeExtendFar = 13;
+
     StateMachine sm;
 
     @Override
@@ -79,11 +81,31 @@ public class Main extends BluLinearOpMode {
                     gamepad1.rumble(350);
                     gamepad2.rumble(350);
                 })
-                .transition(() -> -gamepad2.right_stick_y > 0.2, State.EXTENDING_OVER_INTAKE, () -> {
-                    new PivotRetractCommand().schedule();
+//                .transition(() -> -gamepad2.right_stick_y > 0.2, State.EXTENDING_OVER_INTAKE, () -> {
+//                    new PivotRetractCommand().schedule();
+//                    new ArmPreIntakeCommand().schedule();
+//                    new WristUprightForwardCommand().schedule();
+//                    extension.manualExtendOverIntake(-gamepad2.right_stick_y);
+//                })
+
+                // INTAKE
+                .transition(() -> stickyG2.left_bumper, State.INTAKING_GROUND, () -> {
+                    new ArmDropToGroundCommand().schedule();
+                    new WheelIntakeCommand().schedule();
+                    new ClampReleaseCommand().schedule();
+                    extension.teleExtendIntake(0);
+                })
+                .transition(() -> stickyG2.dpad_up, State.EXTENDING_OVER_INTAKE, () -> {
                     new ArmPreIntakeCommand().schedule();
+                    new PivotRetractCommand().schedule();
                     new WristUprightForwardCommand().schedule();
-                    extension.manualExtendOverIntake(-gamepad2.right_stick_y);
+                    extension.teleExtendIntake(intakeExtendFar);
+                })
+                .transition(() -> stickyG2.dpad_right, State.EXTENDING_OVER_INTAKE, () -> {
+                    new ArmPreIntakeCommand().schedule();
+                    new PivotRetractCommand().schedule();
+                    new WristUprightForwardCommand().schedule();
+                    extension.teleExtendIntake(intakeExtendMid);
                 })
 
                 // LOW
@@ -112,10 +134,10 @@ public class Main extends BluLinearOpMode {
                     if(stickyG2.right_bumper) {
                         new SequentialCommandGroup(
                                 new ArmPreIntakeCommand(),
-                                new WaitCommand(150),
+                                new WaitCommand(300),
                                 new ClampReleaseCommand(),
                                 new WheelReverseCommand(),
-                                new WaitCommand(300),
+                                new WaitCommand(100),
                                 new EndEffectorRetractCommand()
                         ).schedule();
                     }
@@ -133,7 +155,10 @@ public class Main extends BluLinearOpMode {
                     new EndEffectorRetractCommand().schedule();
                 })
                 .loop(() -> {
-                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.manualExtendOverIntake(-gamepad2.right_stick_y);
+                    if(stickyG1.dpad_up) extension.teleExtendIntake(intakeExtendFar);
+                    if(stickyG1.dpad_right) extension.teleExtendIntake(intakeExtendMid);
+
+                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.teleExtendIntakeDelta(-gamepad2.right_stick_y);
                     if(gamepad2.right_bumper) {
                         wheel.reverse();
                         clamp.release();
@@ -167,8 +192,11 @@ public class Main extends BluLinearOpMode {
                     new ArmPreIntakeCommand().schedule();
                 })
                 .loop(() -> {
+                    if(stickyG1.dpad_up) extension.teleExtendIntake(intakeExtendFar);
+                    if(stickyG1.dpad_right) extension.teleExtendIntake(intakeExtendMid);
+
                     if(Math.abs(-gamepad2.right_stick_y) > 0.2) {
-                        extension.manualExtendOverIntake(-gamepad2.right_stick_y);
+                        extension.teleExtendIntakeDelta(-gamepad2.right_stick_y);
                     }
                 })
 
