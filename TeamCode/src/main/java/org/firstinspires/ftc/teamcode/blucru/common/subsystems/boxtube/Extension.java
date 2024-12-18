@@ -29,6 +29,7 @@ public class Extension implements BluSubsystem, Subsystem {
         IK,
         MOTION_PROFILE,
         RETRACTING,
+        EXTEND_OVER_INTAKE,
         RESETTING
     }
     
@@ -38,11 +39,11 @@ public class Extension implements BluSubsystem, Subsystem {
     MotionProfile profile;
     BoxtubeIKPose pose;
     BoxtubeSpline spline;
-    int retractionCount;
 
     PivotMotor pivot; // reference to pivot motor for feedforward
     double manualPower = 0;
     ElapsedTime resetTimer;
+    double extendIntakeLength, extendIntakeDelta;
 
     public Extension() {
         extensionMotor = new ExtensionMotor();
@@ -55,7 +56,8 @@ public class Extension implements BluSubsystem, Subsystem {
 
         pivot = null;
 
-        retractionCount = 0;
+        extendIntakeLength = 0;
+        extendIntakeDelta = 0;
     }
 
     public void init() {
@@ -67,27 +69,6 @@ public class Extension implements BluSubsystem, Subsystem {
 
     public void read() {
         extensionMotor.read();
-
-        switch(state) {
-            case IDLE:
-            case MANUAL:
-                break;
-            case PID:
-            case MOTION_PROFILE:
-                break;
-            case RETRACTING:
-                if(Math.abs(extensionMotor.getDistance()) < 1.0 && Math.abs(extensionMotor.getDistanceVel()) < 0.3) {
-                    state = State.RESETTING;
-                    resetTimer.reset();
-                }
-                break;
-            case RESETTING:
-                if(resetTimer.seconds() > 0.3 && getDistance() < 0.3) {
-                    resetEncoder();
-                    pidTo(0);
-                }
-                break;
-        }
     }
 
     public void write() {
@@ -103,6 +84,11 @@ public class Extension implements BluSubsystem, Subsystem {
             case PID:
             case RETRACTING:
                 setPowerFeedForward(pidController.calculate(extensionMotor.getDistance()));
+
+                if(Math.abs(extensionMotor.getDistance()) < 1.0 && Math.abs(extensionMotor.getDistanceVel()) < 0.3) {
+                    state = State.RESETTING;
+                    resetTimer.reset();
+                }
                 break;
             case BOXTUBE_SPLINE:
                 Vector2d targetState = limitedState(spline.states.extensionState);
@@ -111,8 +97,20 @@ public class Extension implements BluSubsystem, Subsystem {
             case MOTION_PROFILE:
                 setPowerFeedForward(pidController.calculate(motorState, profile));
                 break;
+            case EXTEND_OVER_INTAKE:
+                double sp = Range.clip(extendIntakeDelta + extendIntakeLength, 0, MAX_HORIZ_EXTENSION);
+                setPowerFeedForward(pidController.calculate(
+                        motorState,
+                        new Vector2d(sp, 0)
+                        ));
+                break;
             case RESETTING:
-                setPowerFeedForward(-0.15);
+                setPowerFeedForward(-0.18);
+
+                if(resetTimer.seconds() > 0.3 && getDistance() < 0.3) {
+                    resetEncoder();
+                    pidTo(0);
+                }
                 break;
         }
 
@@ -153,7 +151,17 @@ public class Extension implements BluSubsystem, Subsystem {
         return Math.sin(pivotAngle) * kFAngle;
     }
 
-    public void extendOverIntake(double input) {
+    public void teleExtendIntake(double length) {
+        state = State.EXTEND_OVER_INTAKE;
+        length = Range.clip(length, 0, MAX_HORIZ_EXTENSION);
+        extendIntakeLength = length;
+    }
+
+    public void teleExtendIntakeDelta(double input) {
+        extendIntakeDelta = input * k_INPUT_EXTENSION;
+    }
+
+    public void manualExtendOverIntake(double input) {
         double unlimitedPos = input * k_INPUT_EXTENSION + extensionMotor.getDistance();
         pidTo(Range.clip(unlimitedPos, 0, MAX_HORIZ_EXTENSION));
     }

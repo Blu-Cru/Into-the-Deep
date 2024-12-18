@@ -83,7 +83,7 @@ public class Main extends BluLinearOpMode {
                     new PivotRetractCommand().schedule();
                     new ArmPreIntakeCommand().schedule();
                     new WristUprightForwardCommand().schedule();
-                    extension.extendOverIntake(-gamepad2.right_stick_y);
+                    extension.manualExtendOverIntake(-gamepad2.right_stick_y);
                 })
 
                 // LOW
@@ -133,7 +133,7 @@ public class Main extends BluLinearOpMode {
                     new EndEffectorRetractCommand().schedule();
                 })
                 .loop(() -> {
-                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.extendOverIntake(-gamepad2.right_stick_y);
+                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.manualExtendOverIntake(-gamepad2.right_stick_y);
                     if(gamepad2.right_bumper) {
                         wheel.reverse();
                         clamp.release();
@@ -168,7 +168,7 @@ public class Main extends BluLinearOpMode {
                 })
                 .loop(() -> {
                     if(Math.abs(-gamepad2.right_stick_y) > 0.2) {
-                        extension.extendOverIntake(-gamepad2.right_stick_y);
+                        extension.manualExtendOverIntake(-gamepad2.right_stick_y);
                     }
                 })
 

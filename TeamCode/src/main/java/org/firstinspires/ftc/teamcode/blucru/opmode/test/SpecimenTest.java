@@ -59,7 +59,7 @@ public class SpecimenTest extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
                 .transition(() -> -gamepad2.right_stick_y > 0.2, State.EXTENDING_OVER_INTAKE, () -> {
-                    extension.extendOverIntake(-gamepad2.right_stick_y);
+                    extension.manualExtendOverIntake(-gamepad2.right_stick_y);
                     new ArmPreIntakeCommand().schedule();
                 })
                 .transition(() -> stickyG2.b, State.ABOVE_SPECIMEN, () -> {
@@ -121,7 +121,7 @@ public class SpecimenTest extends BluLinearOpMode {
                     new EndEffectorRetractCommand().schedule();
                 })
                 .loop(() -> {
-                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.extendOverIntake(-gamepad2.right_stick_y);
+                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.manualExtendOverIntake(-gamepad2.right_stick_y);
                     if(gamepad2.right_bumper) {
                         wheel.reverse();
                         clamp.release();
@@ -149,7 +149,7 @@ public class SpecimenTest extends BluLinearOpMode {
                 })
                 .loop(() -> {
                     if(Math.abs(-gamepad2.right_stick_y) > 0.2) {
-                        extension.extendOverIntake(-gamepad2.right_stick_y);
+                        extension.manualExtendOverIntake(-gamepad2.right_stick_y);
                     }
                     clamp.release();
                     wheel.intake();
