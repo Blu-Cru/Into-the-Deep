@@ -201,6 +201,7 @@ public class Extension implements BluSubsystem, Subsystem {
 
     public void usePivot(PivotMotor pivot) {
         this.pivot = pivot;
+        extensionMotor.setPivot(pivot);
     }
 
     public ExtensionMotor getMotor() {

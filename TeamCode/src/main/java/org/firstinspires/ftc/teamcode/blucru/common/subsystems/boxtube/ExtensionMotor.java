@@ -21,7 +21,7 @@ public class ExtensionMotor extends BluMotorWithEncoder {
         if(pivot == null) {
             return getCurrentPosition() / TICKS_PER_INCH;
         } else {
-            return getCurrentPosition() / TICKS_PER_INCH;
+            return (getCurrentPosition() / TICKS_PER_INCH) + pivot.getAngle() / AXIS_REV_PER_INCH;
         }
     }
 
@@ -29,7 +29,7 @@ public class ExtensionMotor extends BluMotorWithEncoder {
         if(pivot == null) {
             return getVelocity() / TICKS_PER_INCH;
         } else {
-            return getVelocity() / TICKS_PER_INCH;
+            return getVelocity() / TICKS_PER_INCH + pivot.getAngleVel() / AXIS_REV_PER_INCH ;
         }
     }
 
