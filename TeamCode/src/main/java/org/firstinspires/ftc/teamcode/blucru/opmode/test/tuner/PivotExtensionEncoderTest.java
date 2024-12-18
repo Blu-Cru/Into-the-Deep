@@ -19,6 +19,7 @@ public class PivotExtensionEncoderTest extends LinearOpMode {
 
         extension = new ExtensionMotor();
         pivot = new PivotMotor();
+        extension.setPivot(pivot);
         extension.init();
         pivot.init();
 

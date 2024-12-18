@@ -7,18 +7,30 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class ExtensionMotor extends BluMotorWithEncoder {
     // TODO: calculate value
+    static final double AXIS_RAD_PER_INCH = 1.0 / 0.82677;
     static final double TICKS_PER_INCH = 27.932*9/4; // 145.1 on the motor
+
+    PivotMotor pivot;
 
     public ExtensionMotor() {
         super("extension", Direction.FORWARD);
+        pivot = null;
     }
 
     public double getDistance() {
-        return getCurrentPosition() / TICKS_PER_INCH;
+        if(pivot == null) {
+            return getCurrentPosition() / TICKS_PER_INCH;
+        } else {
+            return (getCurrentPosition() / TICKS_PER_INCH) + (pivot.getAngle() / AXIS_RAD_PER_INCH);
+        }
     }
 
     public double getDistanceVel() {
-        return getVelocity() / TICKS_PER_INCH;
+        if(pivot == null) {
+            return getVelocity() / TICKS_PER_INCH;
+        } else {
+            return getVelocity() / TICKS_PER_INCH + pivot.getAngleVel() / AXIS_RAD_PER_INCH;
+        }
     }
 
     public Vector2d getState() {
@@ -26,6 +38,10 @@ public class ExtensionMotor extends BluMotorWithEncoder {
                 getDistance(),
                 getDistanceVel()
         );
+    }
+
+    public void setPivot(PivotMotor pivot) {
+        this.pivot = pivot;
     }
 
     @Override
