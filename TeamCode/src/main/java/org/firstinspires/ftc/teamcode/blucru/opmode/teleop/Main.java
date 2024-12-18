@@ -155,10 +155,10 @@ public class Main extends BluLinearOpMode {
                     new EndEffectorRetractCommand().schedule();
                 })
                 .loop(() -> {
-                    if(stickyG1.dpad_up) extension.teleExtendIntake(intakeExtendFar);
-                    if(stickyG1.dpad_right) extension.teleExtendIntake(intakeExtendMid);
+                    if(stickyG2.dpad_up) extension.teleExtendIntake(intakeExtendFar);
+                    if(stickyG2.dpad_right) extension.teleExtendIntake(intakeExtendMid);
+                    extension.teleExtendIntakeDelta(-gamepad2.right_stick_y);
 
-                    if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.teleExtendIntakeDelta(-gamepad2.right_stick_y);
                     if(gamepad2.right_bumper) {
                         wheel.reverse();
                         clamp.release();
@@ -192,12 +192,10 @@ public class Main extends BluLinearOpMode {
                     new ArmPreIntakeCommand().schedule();
                 })
                 .loop(() -> {
-                    if(stickyG1.dpad_up) extension.teleExtendIntake(intakeExtendFar);
-                    if(stickyG1.dpad_right) extension.teleExtendIntake(intakeExtendMid);
+                    if(stickyG2.dpad_up) extension.teleExtendIntake(intakeExtendFar);
+                    if(stickyG2.dpad_right) extension.teleExtendIntake(intakeExtendMid);
 
-                    if(Math.abs(-gamepad2.right_stick_y) > 0.2) {
-                        extension.teleExtendIntakeDelta(-gamepad2.right_stick_y);
-                    }
+                    extension.teleExtendIntakeDelta(-gamepad2.right_stick_y);
                 })
 
                 .onExit(() -> {

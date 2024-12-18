@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 public class Extension implements BluSubsystem, Subsystem {
     public static double
             kP = 0.4, kI = 0.0, kD = 0.01, kFAngle = 0.1, tolerance = 0.0,
-            MIN_INCHES = 0.0, MAX_INCHES = 23.9, MAX_HORIZ_EXTENSION = 14.0,
+            MIN_INCHES = 0.0, MAX_INCHES = 24.7, MAX_HORIZ_EXTENSION = 14.0,
             k_INPUT_EXTENSION = 3.0, // pid distance to change based on input
             MAX_EXTEND_POWER = 1.0, MAX_RETRACT_POWER = -1.0;
 
@@ -69,6 +69,23 @@ public class Extension implements BluSubsystem, Subsystem {
 
     public void read() {
         extensionMotor.read();
+
+        switch(state) {
+            case RESETTING:
+                if(resetTimer.seconds() > 0.3 && getDistance() < 0.3) {
+                    resetEncoder();
+                    pidTo(0);
+                }
+                break;
+            case RETRACTING:
+                if(Math.abs(extensionMotor.getDistance()) < 1.0 && Math.abs(extensionMotor.getDistanceVel()) < 0.3) {
+                    state = State.RESETTING;
+                    resetTimer.reset();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     public void write() {
@@ -85,10 +102,7 @@ public class Extension implements BluSubsystem, Subsystem {
             case RETRACTING:
                 setPowerFeedForward(pidController.calculate(extensionMotor.getDistance()));
 
-                if(Math.abs(extensionMotor.getDistance()) < 1.0 && Math.abs(extensionMotor.getDistanceVel()) < 0.3) {
-                    state = State.RESETTING;
-                    resetTimer.reset();
-                }
+
                 break;
             case BOXTUBE_SPLINE:
                 Vector2d targetState = limitedState(spline.states.extensionState);
@@ -106,11 +120,6 @@ public class Extension implements BluSubsystem, Subsystem {
                 break;
             case RESETTING:
                 setPowerFeedForward(-0.18);
-
-                if(resetTimer.seconds() > 0.3 && getDistance() < 0.3) {
-                    resetEncoder();
-                    pidTo(0);
-                }
                 break;
         }
 
