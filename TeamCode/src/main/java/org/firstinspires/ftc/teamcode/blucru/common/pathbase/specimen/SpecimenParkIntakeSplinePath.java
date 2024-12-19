@@ -15,7 +15,7 @@ public class SpecimenParkIntakeSplinePath extends PIDPathBuilder {
     public SpecimenParkIntakeSplinePath() {
         super();
         this.setPower(0.4)
-                .schedule(new BoxtubeRetractCommand())
+//                .schedule(new BoxtubeRetractCommand())
                 .addMappedPoint(24, -48, -45, 6)
                 .schedule(new SequentialCommandGroup(
                         new BoxtubeCommand(0, 8),

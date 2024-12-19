@@ -28,7 +28,7 @@ public class SpecimenPreloadDepositSplinePath extends PIDPathBuilder {
                 .schedule(new SequentialCommandGroup(
                         new WaitCommand(350),
                         new BoxtubeSplineCommand(
-                                new Pose2d(6.4, 15.5, -0.3),
+                                new Pose2d(6.4, 18, -0.3),
                                 -Math.PI,
                                 0.2
                         ),

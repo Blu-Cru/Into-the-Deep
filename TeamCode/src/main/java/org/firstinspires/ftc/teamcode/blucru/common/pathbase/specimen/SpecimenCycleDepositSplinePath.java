@@ -6,7 +6,11 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BoxtubeSplineCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
@@ -21,7 +25,7 @@ public class SpecimenCycleDepositSplinePath extends PIDPathBuilder {
                         new ClampGrabCommand(),
                         new BoxtubeSplineCommand(
                                 new Vector2d(20,42),
-                                new Pose2d(-8.5, 28, Math.PI),
+                                new Pose2d(-8.5, 30, Math.PI),
                                 0,
                                 1.2
                         )
@@ -40,12 +44,12 @@ public class SpecimenCycleDepositSplinePath extends PIDPathBuilder {
                         new WaitCommand(100),
                         new SpecimenBackDunkCommand(),
                         new WaitCommand(100),
-                        new WheelReverseCommand()
-//                        new ClampReleaseCommand(),
-//                        new WaitCommand(150),
-//                        new PivotRetractCommand(),
-//                        new ExtensionRetractCommand(),
-//                        new EndEffectorRetractCommand()
+                        new WheelReverseCommand(),
+                        new ClampReleaseCommand(),
+                        new WaitCommand(150),
+                        new PivotRetractCommand(),
+                        new ExtensionRetractCommand(),
+                        new EndEffectorRetractCommand()
                 ))
                 .waitMillis(200);
     }
