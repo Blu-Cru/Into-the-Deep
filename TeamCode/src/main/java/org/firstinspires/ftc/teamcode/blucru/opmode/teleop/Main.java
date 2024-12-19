@@ -76,7 +76,7 @@ public class Main extends BluLinearOpMode {
 
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
-                .onEnter(() -> dt.setDrivePower(0.75))
+                .onEnter(() -> dt.setDrivePower(0.9))
                 .transition(() -> stickyG2.share, State.MANUAL_RESET, () -> {
                     gamepad1.rumble(350);
                     gamepad2.rumble(350);
@@ -144,7 +144,7 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.EXTENDING_OVER_INTAKE)
-                .onEnter(() -> dt.setDrivePower(0.7))
+                .onEnter(() -> dt.setDrivePower(0.75))
                 .transition(() -> gamepad2.left_bumper, State.INTAKING_GROUND, () -> {
                     new ArmDropToGroundCommand().schedule();
                     new WheelIntakeCommand().schedule();
@@ -304,7 +304,7 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.ABOVE_SPECIMEN_BACK)
-                .onEnter(() -> dt.setDrivePower(0.5))
+                .onEnter(() -> dt.setDrivePower(0.55))
                 .transition(() -> gamepad2.left_bumper, State.DUNKING_SPECIMEN_BACK,
                         () -> new SpecimenBackDunkCommand().schedule())
 
@@ -320,7 +320,7 @@ public class Main extends BluLinearOpMode {
                         () -> new SpecimenFrontCommand().schedule())
 
                 .state(State.DUNKING_SPECIMEN_BACK)
-                .onEnter(() -> dt.setDrivePower(0.4))
+                .onEnter(() -> dt.setDrivePower(0.35))
                 .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN_BACK, () ->
                         new SpecimenBackCommand().schedule())
 
