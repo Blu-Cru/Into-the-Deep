@@ -19,7 +19,7 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
             vMAX = 25.0, aMAX = 30.0,
             MAX_ANGLE = 1.8, MIN_ANGLE = -1.7,
             RETRACT_ANGLE = 1.7,
-            PRE_INTAKE_ANGLE = 0.25,
+            PRE_INTAKE_ANGLE = 0.15,
             GROUND_ANGLE = -0.58,
 
             TICKS_PER_RAD = 0.1782;
