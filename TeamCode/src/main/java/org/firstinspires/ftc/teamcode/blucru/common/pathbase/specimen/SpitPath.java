@@ -24,9 +24,10 @@ public class SpitPath extends PIDPathBuilder {
                         new WaitCommand(500),
                         new ExtensionCommand(11)
                 ))
-                .addMappedPoint(36, -42, -60, 5)
+                .addMappedPoint(38, -42, -60, 7)
                 .schedule(new SequentialCommandGroup(
                         new ArmDropToGroundCommand(),
+                        new WaitCommand(150),
                         new WheelReverseCommand(),
                         new ClampReleaseCommand(),
                         new WaitCommand(200),
@@ -35,6 +36,6 @@ public class SpitPath extends PIDPathBuilder {
                         new ClampGrabCommand(),
                         new ExtensionCommand(4)
                 ))
-                .waitMillis(100);
+                .waitMillis(300);
     }
 }

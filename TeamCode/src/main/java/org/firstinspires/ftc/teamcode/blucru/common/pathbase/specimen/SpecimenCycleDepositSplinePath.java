@@ -25,7 +25,7 @@ public class SpecimenCycleDepositSplinePath extends PIDPathBuilder {
                         new ClampGrabCommand(),
                         new BoxtubeSplineCommand(
                                 new Vector2d(20,42),
-                                new Pose2d(-8.5, 30, Math.PI),
+                                new Pose2d(-9, 30, Math.PI),
                                 0,
                                 1.2
                         )
