@@ -166,6 +166,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Drivetrain State", state);
+        telemetry.addData("Drive Power", drivePower);
         super.telemetry(telemetry);
     }
 }

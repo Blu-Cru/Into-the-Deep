@@ -232,6 +232,7 @@ public class Extension implements BluSubsystem, Subsystem {
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Extension State", state);
+        pidController.telemetry("Extension");
         extensionMotor.telemetry();
     }
 }

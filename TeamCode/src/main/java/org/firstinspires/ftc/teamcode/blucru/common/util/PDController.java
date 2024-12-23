@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.blucru.common.util;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.controller.PIDController;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class PDController extends PIDController {
     Vector2d k;
     public PDController(double kP, double kI, double kD) {
@@ -23,6 +25,8 @@ public class PDController extends PIDController {
 
     public double calculate(Vector2d pv, Vector2d sp) {
         Vector2d error = sp.minus(pv);
+        super.setSetPoint(sp.getX());
+
         return error.dot(k);
     }
 
@@ -35,5 +39,10 @@ public class PDController extends PIDController {
     public void setPID(double kp, double ki, double kd) {
         super.setPID(kp, ki, kd);
         k = new Vector2d(kp, kd);
+    }
+
+    public void telemetry(String tag) {
+        Telemetry tele = Globals.tele;
+        tele.addData(tag + "Set Point", super.getSetPoint());
     }
 }

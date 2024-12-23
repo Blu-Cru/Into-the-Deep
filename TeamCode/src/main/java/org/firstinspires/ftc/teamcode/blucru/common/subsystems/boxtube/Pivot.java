@@ -193,6 +193,7 @@ public class Pivot implements BluSubsystem, Subsystem {
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Pivot State", state);
+        pidController.telemetry("Pivot");
         profile.telemetry(telemetry);
         pivotMotor.telemetry();
 //        resetLimitSwitch.telemetry();
