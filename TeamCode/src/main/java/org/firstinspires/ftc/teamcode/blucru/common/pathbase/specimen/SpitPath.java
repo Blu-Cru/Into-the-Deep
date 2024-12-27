@@ -20,12 +20,11 @@ public class SpitPath extends PIDPathBuilder {
         this.setPower(0.5)
                 .schedule(new SequentialCommandGroup(
                         new ExtensionCommand(4),
-                        new ArmPreIntakeCommand(),
-                        new WaitCommand(500),
-                        new ExtensionCommand(11)
+                        new ArmPreIntakeCommand()
                 ))
                 .addMappedPoint(38, -42, -60, 7)
                 .schedule(new SequentialCommandGroup(
+                        new ExtensionCommand(11),
                         new ArmDropToGroundCommand(),
                         new WaitCommand(150),
                         new WheelReverseCommand(),

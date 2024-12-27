@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 
-@Disabled
+//@Disabled
 @Config
 @TeleOp(name = "Motion Profile Test", group = "test")
 public class MotionProfileTest extends LinearOpMode {

@@ -52,9 +52,9 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
         poses = new Pose2d[] {
             new Pose2d(15, 15, Math.PI/4),
             new Pose2d(15, 15, 0),
-            new Pose2d(-8, 25, 3*Math.PI/4),
-            new Pose2d(8, 25, 0),
-            new Pose2d(8, 25, Math.PI/2)
+            new Pose2d(-8, 30, 3*Math.PI/4),
+            new Pose2d(8, 30, 0),
+            new Pose2d(8, 30, Math.PI/2)
         };
 
         vels = new Vector2d[] {
