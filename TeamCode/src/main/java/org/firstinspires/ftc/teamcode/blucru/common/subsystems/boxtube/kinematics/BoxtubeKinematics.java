@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.ejml.data.DMatrix3x3;
 
+@Config
 public class BoxtubeKinematics {
-    public static final double
+    public static double
             BOXTUBE_x = 12.15, BOXTUBE_y = -1.05866,
             ARM_x = 2.948819, ARM_y = -1.035,
             WRIST_x = 3.8448819, WRIST_y = 1.3759843,
