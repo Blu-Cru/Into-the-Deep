@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 @Config
 public class Pivot implements BluSubsystem, Subsystem {
     public static double
-            kP = 4.5, kI = 0.0, kD = 0.3, tolerance = 0.0,
+            kP = 5.0, kI = 0.0, kD = 0.28, tolerance = 0.0,
             kFF_COS = 0.11, kFF_EXTENSION = 0.011,
             MIN_RAD = 0.0, MAX_RAD = 1.9,
             MAX_UP_POWER = 1.0, MAX_DOWN_POWER = -0.75,
@@ -193,6 +193,7 @@ public class Pivot implements BluSubsystem, Subsystem {
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Pivot State", state);
+        pidController.telemetry("Pivot");
         profile.telemetry(telemetry);
         pivotMotor.telemetry();
 //        resetLimitSwitch.telemetry();

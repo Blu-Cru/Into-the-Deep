@@ -76,7 +76,7 @@ public class Main extends BluLinearOpMode {
 
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
-                .onEnter(() -> dt.setDrivePower(0.9))
+                .onEnter(() -> dt.setDrivePower(1.0))
                 .transition(() -> stickyG2.share, State.MANUAL_RESET, () -> {
                     gamepad1.rumble(350);
                     gamepad2.rumble(350);

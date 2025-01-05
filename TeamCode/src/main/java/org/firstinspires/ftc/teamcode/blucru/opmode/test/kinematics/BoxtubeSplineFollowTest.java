@@ -42,6 +42,8 @@ public class BoxtubeSplineFollowTest extends BluLinearOpMode {
         addArm();
         addClamp();
 
+        enableFTCDashboard();
+
         retractPose = robot.getBoxtubePose();
 
         sm = new StateMachineBuilder()

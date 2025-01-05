@@ -105,7 +105,7 @@ public class Extension implements BluSubsystem, Subsystem {
 
                 break;
             case BOXTUBE_SPLINE:
-                Vector2d targetState = limitedState(spline.states.extensionState);
+                Vector2d targetState = limitState(spline.states.extensionState);
                 setPowerFeedForward(pidController.calculate(motorState, targetState));
                 break;
             case MOTION_PROFILE:
@@ -201,7 +201,7 @@ public class Extension implements BluSubsystem, Subsystem {
         pidController.setPID(kP, kI, kD);
     }
 
-    public Vector2d limitedState(Vector2d state) {
+    public Vector2d limitState(Vector2d state) {
         double vel = state.getY();
 
         if(state.getX() < MIN_INCHES || state.getX() > MAX_INCHES) {
@@ -232,6 +232,7 @@ public class Extension implements BluSubsystem, Subsystem {
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Extension State", state);
+        pidController.telemetry("Extension");
         extensionMotor.telemetry();
     }
 }

@@ -47,13 +47,14 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
         addWrist();
         addArm();
         addClamp();
+        addWheel();
 
         poses = new Pose2d[] {
             new Pose2d(15, 15, Math.PI/4),
             new Pose2d(15, 15, 0),
-            new Pose2d(-8, 25, 3*Math.PI/4),
-            new Pose2d(8, 25, 0),
-            new Pose2d(8, 25, Math.PI/2)
+            new Pose2d(-8, 30, 3*Math.PI/4),
+            new Pose2d(8, 30, 0),
+            new Pose2d(8, 30, Math.PI/2)
         };
 
         vels = new Vector2d[] {
@@ -66,7 +67,7 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
         };
 
         wristAngles = new double[] {
-            0,
+            Math.PI/2,
             -Math.PI/2,
             Math.PI/2,
             -Math.PI/2,
@@ -118,7 +119,7 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .state(State.FOLLOWING_SEQUENCE)
-                .transition(() -> robot.splineDone(), State.WAITING_FOR_NEXT)
+//                .transition(() -> robot.splineDone(), State.WAITING_FOR_NEXT)
                 .transition(() -> stickyG1.a, State.RETRACT, () -> {
                     new FullRetractCommand().schedule();
                 })
@@ -127,10 +128,10 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
                         incrementSpline();
                     }
                 })
-                .state(State.WAITING_FOR_NEXT)
-                .transitionTimed(500, State.FOLLOWING_SEQUENCE, () -> {
-                    incrementSpline();
-                })
+//                .state(State.WAITING_FOR_NEXT)
+//                .transitionTimed(500, State.FOLLOWING_SEQUENCE, () -> {
+//                    incrementSpline();
+//                })
                 .transition(() -> stickyG1.a, State.RETRACT, () -> {
                     new FullRetractCommand().schedule();
                 })
@@ -148,11 +149,17 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
         sm.update();
     }
 
+    @Override
+    public void telemetry() {
+        telemetry.addData("State:", sm.getState());
+        telemetry.addData("index", count);
+    }
+
     public void splineToHeartDown(double armAngle, double wristAngle) {
         new BoxtubeSplineCommand(
-                new Vector2d(-14,10),
-                new Pose2d(15,10,armAngle),
-                new Vector2d(14,-6.5),
+                new Vector2d(-27,21),
+                new Pose2d(17,8,armAngle),
+                new Vector2d(45,-25),
                 wristAngle,
                 1
         ).schedule();
@@ -160,9 +167,9 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
 
     public void splineToHeartUp(double armAngle, double wristAngle) {
         new BoxtubeSplineCommand(
-                new Vector2d(14,6.5),
-                new Pose2d(15,17,armAngle),
-                new Vector2d(-14,-10),
+                new Vector2d(45,25),
+                new Pose2d(17,22,armAngle),
+                new Vector2d(-27,-21),
                 wristAngle,
                 1
         ).schedule();
