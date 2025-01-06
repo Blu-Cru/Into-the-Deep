@@ -48,16 +48,16 @@ public class BoxtubeSpline extends TimedHermiteSpline {
         return this;
     }
 
-    public void update() {
-        states = new BoxtubeIKPoseVelocity(this);
-    }
-
     public MotionProfile getTimeConstrainedMotionProfile(double start, double end, double time) {
-        // profile that accelerates in the first 25% of the time and decelerates in the last 75% of the time
-        double aMax = (Math.abs(start - end)) / (time * 0.25 * time * 0.75);
+        // profile that accelerates in the first 1/4 of the time and decelerates in the last 1/4 of the time
+        double aMax = (Math.abs(start - end)) / (time * time * 3.0 / 16.0);
         double vMax = aMax * time * 0.25;
 
         return new MotionProfile(end, start, vMax, aMax).start();
+    }
+
+    public void update() {
+        states = new BoxtubeIKPoseVelocity(this);
     }
 
     public void telemetry() {

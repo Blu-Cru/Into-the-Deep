@@ -33,7 +33,7 @@ public class BoxtubeInverseKinematicsTest {
         startTime = System.nanoTime();
         res = BoxtubeInverseKinematics.getJoints(blockPose, wristAngle);
         endTime = System.nanoTime();
-//        System.out.println("\nINPUT Pivot: " + pivotAngle + " Extension: " + extension + " Arm: " + armAngle + " Wrist: " + wristAngle);
+        System.out.println("\nBLOCK POSE: " + blockPose + " Wrist: " + wristAngle);
         System.out.println("OUTPUT Pivot: " + res[0] + " Extension: " + res[1] + " Arm: " + res[2]);
         System.out.println("Time: " + (endTime - startTime) + " ns");
         System.out.println();
