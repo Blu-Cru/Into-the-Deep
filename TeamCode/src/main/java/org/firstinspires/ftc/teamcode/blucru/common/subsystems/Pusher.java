@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 @Config
 public class Pusher extends BluServo implements BluSubsystem, Subsystem {
     public static double RETRACT_POS = 0.965,
-            vMAX = 3.0, aMAX = 6.0;
+            vMAX = 6.0, aMAX = 3.5;
 
     enum State {
         SERVO,
