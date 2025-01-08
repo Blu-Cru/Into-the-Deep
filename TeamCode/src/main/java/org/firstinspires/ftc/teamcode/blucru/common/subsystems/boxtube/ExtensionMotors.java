@@ -2,18 +2,21 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
+import org.firstinspires.ftc.teamcode.blucru.common.hardware.motor.BluMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.motor.BluMotorWithEncoder;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
-public class ExtensionMotor extends BluMotorWithEncoder {
+public class ExtensionMotors extends BluMotorWithEncoder {
     // TODO: calculate value
     static final double AXIS_RAD_PER_INCH = 1.0 / 0.82677;
-    static final double TICKS_PER_INCH = 27.932*9/4; // 145.1 on the motor
+    static final double TICKS_PER_INCH = 27.932; // 145.1 on the motor
 
+    BluMotor extension2;
     PivotMotor pivot;
 
-    public ExtensionMotor() {
-        super("extension", Direction.FORWARD);
+    public ExtensionMotors() {
+        super("extension1", Direction.FORWARD);
+        extension2 = new BluMotor("extension2", Direction.FORWARD);
         pivot = null;
     }
 
@@ -42,6 +45,11 @@ public class ExtensionMotor extends BluMotorWithEncoder {
 
     public void setPivot(PivotMotor pivot) {
         this.pivot = pivot;
+    }
+
+    public void setPower(double power) {
+        super.setPower(power);
+        extension2.setPower(power);
     }
 
     @Override

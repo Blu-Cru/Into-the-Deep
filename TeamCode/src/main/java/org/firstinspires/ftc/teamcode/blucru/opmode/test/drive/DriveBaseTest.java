@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
-@Disabled
+//@Disabled
 @TeleOp(name = "Drive Base Test", group = "test")
 public class DriveBaseTest extends BluLinearOpMode {
     @Override
@@ -33,6 +33,8 @@ public class DriveBaseTest extends BluLinearOpMode {
         }
 
 //        Pose2d drivePose = new Pose2d(new Vector2d(x,y).rotated(-Math.PI/2), rot);
-        dt.driveFieldCentric(drivePose);
+//        dt.driveFieldCentric(drivePose);
+        drivePose = new Pose2d(drivePose.vec().rotated(-Math.PI/2), drivePose.getHeading());
+        dt.drive(drivePose);
     }
 }

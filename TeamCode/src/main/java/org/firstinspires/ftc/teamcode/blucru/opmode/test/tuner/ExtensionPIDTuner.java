@@ -16,7 +16,7 @@ public class ExtensionPIDTuner extends BluLinearOpMode {
         addExtension();
         addPivot();
         addArm();
-        extension.usePivot(pivot.getMotor());
+//        extension.usePivot(pivot.getMotor());
     }
 
     @Override

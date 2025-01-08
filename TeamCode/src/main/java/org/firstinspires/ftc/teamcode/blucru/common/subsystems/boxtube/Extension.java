@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 @Config
 public class Extension implements BluSubsystem, Subsystem {
     public static double
-            kP = 0.4, kI = 0.0, kD = 0.01, kFAngle = 0.1, tolerance = 0.0,
+            kP = 0.25, kI = 0.0, kD = 0.01, kFAngle = 0.1, tolerance = 0.0,
             MIN_INCHES = 0.0, MAX_INCHES = 24.7, MAX_HORIZ_EXTENSION = 14.0,
             k_INPUT_EXTENSION = 4.0, // pid distance to change based on input
             MAX_EXTEND_POWER = 1.0, MAX_RETRACT_POWER = -1.0;
@@ -34,7 +34,7 @@ public class Extension implements BluSubsystem, Subsystem {
     }
     
     State state;
-    ExtensionMotor extensionMotor;
+    ExtensionMotors extensionMotor;
     PDController pidController;
     MotionProfile profile;
     BoxtubeIKPose pose;
@@ -46,7 +46,7 @@ public class Extension implements BluSubsystem, Subsystem {
     double extendIntakeLength, extendIntakeDelta;
 
     public Extension() {
-        extensionMotor = new ExtensionMotor();
+        extensionMotor = new ExtensionMotors();
         profile = new MotionProfile(0, 0, 0, 0);
 
         pidController = new PDController(kP, kI, kD);
@@ -101,8 +101,6 @@ public class Extension implements BluSubsystem, Subsystem {
             case PID:
             case RETRACTING:
                 setPowerFeedForward(pidController.calculate(extensionMotor.getDistance()));
-
-
                 break;
             case BOXTUBE_SPLINE:
                 Vector2d targetState = limitState(spline.states.extensionState);
@@ -221,7 +219,7 @@ public class Extension implements BluSubsystem, Subsystem {
         extensionMotor.setPivot(pivot);
     }
 
-    public ExtensionMotor getMotor() {
+    public ExtensionMotors getMotor() {
         return extensionMotor;
     }
 

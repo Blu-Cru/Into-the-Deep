@@ -37,6 +37,7 @@ public class Robot {
     public Extension extension;
     public IntakeSwitch intakeSwitch;
     public CVMaster cvMaster;
+    public Pusher pusher;
 
     // list of all subsystems
     ArrayList<BluSubsystem> subsystems;
@@ -180,6 +181,12 @@ public class Robot {
         cvMaster = new CVMaster();
         subsystems.add(cvMaster);
         return cvMaster;
+    }
+
+    public Pusher addPusher() {
+        pusher = new Pusher();
+        subsystems.add(pusher);
+        return pusher;
     }
 
     public boolean splineDone() {

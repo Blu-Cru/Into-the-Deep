@@ -3,13 +3,13 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.test.tuner;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.ExtensionMotor;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.ExtensionMotors;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.PivotMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 @TeleOp(name = "Pivot Extension Encoder Test", group = "test")
 public class PivotExtensionEncoderTest extends LinearOpMode {
-    ExtensionMotor extension;
+    ExtensionMotors extension;
     PivotMotor pivot;
 
     @Override
@@ -17,7 +17,7 @@ public class PivotExtensionEncoderTest extends LinearOpMode {
         Globals.hwMap = hardwareMap;
         Globals.tele = telemetry;
 
-        extension = new ExtensionMotor();
+        extension = new ExtensionMotors();
         pivot = new PivotMotor();
         extension.setPivot(pivot);
         extension.init();

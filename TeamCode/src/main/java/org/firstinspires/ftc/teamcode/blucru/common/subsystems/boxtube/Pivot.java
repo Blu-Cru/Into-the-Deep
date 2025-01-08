@@ -41,7 +41,7 @@ public class Pivot implements BluSubsystem, Subsystem {
     BoxtubeIKPose pose;
     BoxtubeSpline spline;
 
-    ExtensionMotor extension; // reference to extension motor for feedforward
+    ExtensionMotors extension; // reference to extension motor for feedforward
 
     public Pivot() {
         pivotMotor = new PivotMotor();
@@ -167,7 +167,7 @@ public class Pivot implements BluSubsystem, Subsystem {
         pivotMotor.setPower(0);
     }
 
-    public void useExtension(ExtensionMotor extension) {
+    public void useExtension(ExtensionMotors extension) {
         this.extension = extension;
     }
 
