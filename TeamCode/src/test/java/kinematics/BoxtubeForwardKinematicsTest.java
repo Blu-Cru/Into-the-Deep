@@ -14,8 +14,8 @@ public class BoxtubeForwardKinematicsTest {
     @Test
     public void testForwardKinematics() {
         doForwardKinematics(1.35, 8.5, -0.3-1.35, -Math.PI);
-//        doForwardKinematics(0.27, 8, -0.27, 0);
-//        doForwardKinematics(1.45, 10, Math.PI-1.45, -Math.PI);
+        doForwardKinematics(0.27, 8, -0.27, 0);
+        doForwardKinematics(1.45, 10, Math.PI-1.45, -Math.PI);
 
 //        doForwardKinematics(0, 0, 0, 0);
 //        doForwardKinematics(0, 0, 0, -Math.PI/2);
@@ -35,11 +35,12 @@ public class BoxtubeForwardKinematicsTest {
     public void doForwardKinematics(double pivotAngle, double extension, double armAngle, double wristAngle) {
         long startTime, endTime;
 
-        System.out.println(Arrays.asList(pivotAngle, extension, armAngle, wristAngle));
+        System.out.println("FORWARD KINEMATICS\nPivot: " + pivotAngle + "  Extension: " + extension + "  Arm Angle: " + armAngle + "  Wrist Angle: " + wristAngle);
+//        System.out.println(Arrays.asList(pivotAngle, extension, armAngle, wristAngle));
         startTime = System.nanoTime();
         Pose2d res = BoxtubeForwardKinematics.getPoseFrom3x3(BoxtubeForwardKinematics.getEndEffectorMatrix(pivotAngle, extension, armAngle, wristAngle));
         endTime = System.nanoTime();
-        System.out.println(res);
+        System.out.println("\nBLOCK POSE: " + res);
         System.out.println("Time: " + (endTime - startTime) + " ns");
         System.out.println();
     }
