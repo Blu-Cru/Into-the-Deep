@@ -126,25 +126,26 @@ public class MotionProfile {
     }
 
     public double getInstantTargetPosition() {
-        double instantTargetPos;
         double time = (System.currentTimeMillis() - startTime) / 1000.0;
         double dt;
 
         if(time < t0) {
             dt = time;
-            instantTargetPos = (vI * dt) + ((aMax * dt * dt / 2.0) * flip) + xI;
-        } else if(time < t0 + t1) {
+            return (vI * dt) + ((aMax * dt * dt / 2.0) * flip) + xI;
+        }
+        if(time < t0 + t1) {
             dt = time - t0;
-            instantTargetPos = (d0 + 0.5 * aMax * dt * dt) * flip + xI;
-        } else if(time < t0 + t1 + t2) {
+            return (d0 + 0.5 * aMax * dt * dt) * flip + xI;
+        }
+        if(time < t0 + t1 + t2) {
             dt = time - t0 - t1;
-            instantTargetPos = (d0 + d1 + vMax * dt) * flip + xI;
-        } else if(time < t0 + t1 + t2 + t3) {
+            return (d0 + d1 + vMax * dt) * flip + xI;
+        }
+        if(time < t0 + t1 + t2 + t3) {
             dt = time - t0 - t1 - t2;
-            instantTargetPos = (d0 + d1 + d2 + vMax * dt - 0.5 * aMax * dt * dt) * flip + xI;
-        } else instantTargetPos = xTarget;
-
-        return instantTargetPos;
+            return  (d0 + d1 + d2 + vMax * dt - 0.5 * aMax * dt * dt) * flip + xI;
+        }
+        return xTarget;
     }
 
     public double getInstantTargetVelocity() {

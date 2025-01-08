@@ -42,25 +42,26 @@ public class PIDPath implements Path {
     }
 
     public void run() {
-        Robot.getInstance().dt.pidTo(segmentList.get(segmentIndex).getPose());
+        PathSegment currentSegment = segmentList.get(segmentIndex);
+        Robot.getInstance().dt.pidTo(currentSegment.getPose());
 
-        if(segmentList.get(segmentIndex).isDone() && !pathDone) {
+        if(currentSegment.isDone() && !pathDone) {
             if(segmentIndex + 1 == segmentList.size()) {
                 pathDone = true;
-            } else {
-                segmentIndex++;
-
-                try {
-                    for(Command c : commands.get(segmentIndex)) {
-                        c.schedule();
-                    }
-                } catch (NullPointerException ignored) {
-                    Log.e("PID Path", "error scheduling command");
-                }
-
-
-                segmentList.get(segmentIndex).start();
+                return;
             }
+
+            segmentIndex++;
+
+            try {
+                for(Command c : commands.get(segmentIndex)) {
+                    c.schedule();
+                }
+            } catch (NullPointerException ignored) {
+                Log.e("PID Path", "error scheduling command");
+            }
+
+            segmentList.get(segmentIndex).start();
         }
     }
 

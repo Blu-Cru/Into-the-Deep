@@ -155,9 +155,10 @@ public class Pivot implements BluSubsystem, Subsystem {
         double ff;
 
         if(extension == null) {
-            ff = getFFNoExtension();
+            ff = kFF_COS * Math.cos(pivotMotor.getAngle());
         } else {
-            ff = getFF(extension.getDistance());
+            ff = Math.cos(pivotMotor.getAngle()) *
+                    (kFF_COS + kFF_EXTENSION * extension.getDistance());
         }
         setRawPower(power + ff);
     }

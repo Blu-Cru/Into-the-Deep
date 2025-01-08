@@ -154,10 +154,6 @@ public class Extension implements BluSubsystem, Subsystem {
         return extensionMotor.getDistance();
     }
 
-    public double getFeedForward(double pivotAngle) {
-        return Math.sin(pivotAngle) * kFAngle;
-    }
-
     public void teleExtendIntake(double length) {
         state = State.EXTEND_OVER_INTAKE;
         length = Range.clip(length, 0, MAX_HORIZ_EXTENSION);
@@ -181,10 +177,12 @@ public class Extension implements BluSubsystem, Subsystem {
         double ff;
 
         if(pivot == null) ff = 0;
-        else ff = getFeedForward(pivot.getAngle());
+        else ff = Math.sin(pivot.getAngle()) * kFAngle;
 
         setRawPower(power + ff);
     }
+
+
 
     public void setRawPower(double power) {
         extensionMotor.setPower(power);
