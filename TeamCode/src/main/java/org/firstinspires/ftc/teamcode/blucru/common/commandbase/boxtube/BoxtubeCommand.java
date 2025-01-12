@@ -14,16 +14,16 @@ public class BoxtubeCommand extends SequentialCommandGroup {
                                 new PivotCommand(targetAngle),
 
                                 // Wait time depends on distance pivot needs to rotate, longer turn requires longer wait time
-                                // i have the wait time proportional to the angle needed to rotate
-                                new WaitCommand((long) (Math.abs(Robot.getInstance().pivot.getAngle() - targetAngle) * 150.0)),
+                                // wait for extension proportional to the angle needed to rotate
+                                new WaitCommand((long) (Math.abs(Robot.getInstance().pivot.getAngle() - targetAngle) * 300.0)),
                                 new ExtensionCommand(extensionDistance)
                         ),
                         new SequentialCommandGroup(
                                 new ExtensionCommand(extensionDistance),
 
                                 // Wait time depends on distance extension needs to extend, longer extension requires longer wait time
-                                // wait time is proportional to the distance needed to extend
-                                new WaitCommand((long) (Math.abs(Robot.getInstance().extension.getDistance()) - extensionDistance * 20.0)),
+                                // wait for pivot proportional to the distance needed to extend
+                                new WaitCommand((long) (Math.abs(Robot.getInstance().extension.getDistance()) - extensionDistance * 12.0)),
                                 new PivotCommand(targetAngle)
                         ),
 

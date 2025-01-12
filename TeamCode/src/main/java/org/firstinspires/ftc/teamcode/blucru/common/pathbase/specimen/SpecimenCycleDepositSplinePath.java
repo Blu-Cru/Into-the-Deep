@@ -41,9 +41,12 @@ public class SpecimenCycleDepositSplinePath extends PIDPathBuilder {
                 .setPower(0.3)
                 .addMappedPoint(7 - scoreCount * 1.5, -34, 270)
                 .schedule(new SequentialCommandGroup(
-                        new WaitCommand(100),
-                        new SpecimenBackDunkCommand(),
-                        new WaitCommand(100),
+                        new BoxtubeSplineCommand(
+                                new Pose2d(-9.271, 21.681, Math.PI),
+                                0,
+                                0.3
+                        ),
+                        new WaitCommand(280),
                         new WheelReverseCommand(),
                         new ClampReleaseCommand(),
                         new WaitCommand(150),

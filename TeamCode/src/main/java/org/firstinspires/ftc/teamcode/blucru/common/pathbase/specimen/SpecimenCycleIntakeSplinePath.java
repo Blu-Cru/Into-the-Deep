@@ -22,7 +22,7 @@ public class SpecimenCycleIntakeSplinePath extends PIDPathBuilder {
                 .addMappedPoint(25, -48.5, -60, 5)
                 .schedule(new SequentialCommandGroup(
                         new BoxtubeSplineCommand(
-                                new Pose2d(21, 10.2, 0),
+                                new Pose2d(21, 10.8, 0),
                                 -Math.PI,
                                 0.5),
 //                        new WristOppositeCommand(),

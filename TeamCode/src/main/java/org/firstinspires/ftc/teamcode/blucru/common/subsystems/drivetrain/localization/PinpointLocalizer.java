@@ -11,14 +11,14 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 @Config
 public class PinpointLocalizer implements Localizer {
-    public static double xOffset = -149.4375, yOffset = 106.0;
+    public static double xOffset = -144.675, yOffset = -70;
     GoBildaPinpointDriver pinpoint;
 
     public PinpointLocalizer() {
         pinpoint = Globals.hwMap.get(GoBildaPinpointDriver.class, "pinpoint");
         pinpoint.setEncoderDirections(
                 GoBildaPinpointDriver.EncoderDirection.FORWARD,
-                GoBildaPinpointDriver.EncoderDirection.FORWARD);
+                GoBildaPinpointDriver.EncoderDirection.REVERSED);
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         pinpoint.setOffsets(xOffset, yOffset);
 

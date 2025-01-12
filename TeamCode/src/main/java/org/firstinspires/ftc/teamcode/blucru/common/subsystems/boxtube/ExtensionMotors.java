@@ -52,6 +52,11 @@ public class ExtensionMotors extends BluMotorWithEncoder {
         extension2.setPower(power);
     }
 
+    public void write() {
+        super.write();
+        extension2.write();
+    }
+
     @Override
     public void telemetry() {
         Globals.tele.addData("Extension (in)", getDistance());
