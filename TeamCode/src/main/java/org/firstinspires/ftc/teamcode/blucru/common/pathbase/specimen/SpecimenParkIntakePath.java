@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
@@ -14,9 +14,10 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
     public SpecimenParkIntakePath() {
         super();
         this.setPower(0.4)
+//                .schedule(new BoxtubeRetractCommand())
                 .addMappedPoint(24, -48, -45, 6)
                 .schedule(new SequentialCommandGroup(
-                        new ExtensionCommand(8),
+                        new BoxtubeCommand(0, 8),
                         new ArmDropToGroundCommand(),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),

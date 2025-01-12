@@ -9,14 +9,15 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 public class Wheel extends BluCRServo implements BluSubsystem, Subsystem {
     public Wheel() {
         super("wheel");
+        this.setDirection(Direction.REVERSE);
     }
 
     public void intake() {
-        super.setPower(-1);
+        super.setPower(1);
     }
 
     public void reverse() {
-        super.setPower(1);
+        super.setPower(-1);
     }
 
     public void stop() {

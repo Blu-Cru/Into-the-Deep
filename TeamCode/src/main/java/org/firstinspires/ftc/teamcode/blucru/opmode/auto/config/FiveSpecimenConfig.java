@@ -3,17 +3,13 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.auto.config;
 import android.util.Log;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectLeftBlockPath;
@@ -80,14 +76,8 @@ public class FiveSpecimenConfig extends AutoConfig {
                 .state(State.INTAKING_CYCLE)
                 .transition(() -> currentPath.isDone() || (Robot.getInstance().intakeSwitch.pressed() && Robot.getInstance().pivot.getAngle() < 0.35),
                         State.DEPOSIT_CYCLE, () -> {
-                    new SequentialCommandGroup(
-                            new PivotCommand(1.2),
-                            new WaitCommand(300),
-                            new SpecimenBackCommand()
-                    ).schedule();
-
-                    currentPath = new SpecimenCycleDepositPath(scoreCount).build().start();
-                })
+                            currentPath = new SpecimenCycleDepositPath(scoreCount).build().start();
+                        })
 
                 .state(State.DEPOSIT_CYCLE)
                 .transition(() -> currentPath.isDone() && scoreCount < 4 && runtime.seconds() < 25,

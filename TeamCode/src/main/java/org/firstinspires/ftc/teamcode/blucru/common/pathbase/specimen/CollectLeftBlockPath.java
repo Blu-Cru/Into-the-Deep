@@ -23,7 +23,7 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
                         new ExtensionCommand(4),
                         new ArmDropToGroundCommand()
                 ))
-                .addMappedPoint(28, -35, 23,3)
+                .addMappedPoint(29, -35, 23,3)
                 .schedule(new SequentialCommandGroup(
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
