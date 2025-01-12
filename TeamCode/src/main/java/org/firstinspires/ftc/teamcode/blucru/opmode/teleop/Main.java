@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.teleop;
 
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
@@ -259,11 +262,12 @@ public class Main extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new ClampGrabCommand(),
                             new WheelStopCommand(),
-                            new WaitCommand(150),
-                            new ArmGlobalAngleCommand(2),
-                            new PivotCommand(1),
-                            new WaitCommand(600),
-                            new SpecimenBackCommand()
+                            new BoxtubeSplineCommand(
+                                    new Vector2d(20,42),
+                                    new Pose2d(-8.6, 30, Math.PI),
+                                    0,
+                                    0.7
+                            )
                     ).schedule();
                 })
                 .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
