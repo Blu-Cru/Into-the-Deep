@@ -7,12 +7,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BoxtubeSplineCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeSpline;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @Config

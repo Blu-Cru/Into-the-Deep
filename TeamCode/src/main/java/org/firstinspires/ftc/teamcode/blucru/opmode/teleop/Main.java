@@ -363,7 +363,7 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.MANUAL_RESET)
-                .transition(() -> stickyG2.share, State.RETRACTED, () -> {
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     gamepad1.rumble(150);
                     gamepad2.rumble(150);
                 })
@@ -380,7 +380,7 @@ public class Main extends BluLinearOpMode {
                 })
                 .build();
 
-        sm.setState(State.RETRACTED);
+        sm.setState(State.MANUAL_RESET);
         sm.start();
     }
 
