@@ -57,4 +57,8 @@ public class SpecimenCycleIntakePath extends PIDPathBuilder {
                     .waitMillis(500);
         }
     }
+
+    public SpecimenCycleIntakePath() {
+        this(true);
+    }
 }
