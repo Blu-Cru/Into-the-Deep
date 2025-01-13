@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BoxtubeSplineCom
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.pusher.PushCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleFrontHighCommand;
@@ -403,6 +404,10 @@ public class Main extends BluLinearOpMode {
         if(gamepad1.right_stick_button) {
             dt.setHeading(Math.PI/2);
             gamepad1.rumble(150);
+        }
+
+        if(stickyG1.right_bumper) {
+            new PushCommand().schedule();
         }
         sm.update();
     }
