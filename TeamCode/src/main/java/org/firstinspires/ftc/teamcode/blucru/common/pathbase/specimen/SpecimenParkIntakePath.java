@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
@@ -21,6 +22,10 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
                         new ArmDropToGroundCommand(),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
+                        new WaitCommand(300),
+                        new ExtensionMotionProfileCommand(14),
+                        new WaitCommand(1000),
+                        new ExtensionCommand(6),
                         new WaitCommand(300),
                         new ExtensionMotionProfileCommand(14)
                 ))
