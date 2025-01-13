@@ -2,18 +2,20 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision;
 
 import android.util.Log;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.util.Angle;
 
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.HashMap;
 import java.util.List;
 
+@Config
 public class AprilTagPoseGetter {
-    public static Pose2d CAMERA_POS = new Pose2d(0, -8.074, Math.toRadians(-90)); // position of the camera relative to the center of the robot in inches
-    public static HashMap<Integer, Pose2d> TAGS = new HashMap<Integer, Pose2d>() {{
+    public static double CAM_X = 0.0, CAM_Y = -8.074, CAM_HEADING = Math.toRadians(-90); // position of the camera relative to the center of the robot in inches
+    static Pose2d CAM_POS = new Pose2d(CAM_X, CAM_Y, CAM_HEADING); // position of the camera relative to the center of the robot in inches
+    static HashMap<Integer, Pose2d> TAGS = new HashMap<Integer, Pose2d>() {{
         put(11, new Pose2d(-72, 48, 0)); // tag 11
         put(12, new Pose2d(0, 72, -Math.PI/2)); // tag 12
         put(13, new Pose2d(72, 48, Math.PI)); // tag 13
@@ -26,7 +28,7 @@ public class AprilTagPoseGetter {
     public static Vector2d getRobotToTagVector(double detectionX, double detectionY) {
         Vector2d camToTag = new Vector2d(detectionY, -detectionX);
 
-        return camToTag.rotated(CAMERA_POS.getHeading()).plus(CAMERA_POS.vec());
+        return camToTag.rotated(CAM_POS.getHeading()).plus(CAM_POS.vec());
 
 //        //
 //        double x = -detectionY + CAMERA_POS.getX();
@@ -105,5 +107,9 @@ public class AprilTagPoseGetter {
             Log.i("TagPoseGetter", "got pose: " + poseWithHeading + " using tag # " + closestDetection.id);
             return poseWithHeading;
         }
+    }
+
+    public static void updateCamPose() {
+        CAM_POS = new Pose2d(CAM_X, CAM_Y, CAM_HEADING);
     }
 }
