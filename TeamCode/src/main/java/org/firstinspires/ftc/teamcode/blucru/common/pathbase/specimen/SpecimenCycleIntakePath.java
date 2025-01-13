@@ -36,9 +36,9 @@ public class SpecimenCycleIntakePath extends PIDPathBuilder {
                             new ClampReleaseCommand()
                     ))
                     .waitMillis(400)
-                    .setPower(0.2)
+                    .setPower(0.25)
                     .addMappedPoint(29, -53, -60)
-                    .waitMillis(500);
+                    .waitMillis(350);
         } else {
             this.setPower(0.7)
                     .addMappedPoint(27, -48, -60, 5)
