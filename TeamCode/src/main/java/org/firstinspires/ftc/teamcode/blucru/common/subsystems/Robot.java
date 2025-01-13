@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Robot {
     private static Robot instance;
@@ -41,6 +42,7 @@ public class Robot {
 
     // list of all subsystems
     ArrayList<BluSubsystem> subsystems;
+    List<LynxModule> hubs;
 
     BoxtubeSpline spline;
     boolean followingSpline;
@@ -62,8 +64,10 @@ public class Robot {
 
     // initializes subsystems
     public void init() {
-        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        hubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : hubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
         for(BluSubsystem subsystem : subsystems) {
@@ -78,6 +82,10 @@ public class Robot {
             if(spline.isFinished()) {
                 followingSpline = false;
             }
+        }
+
+        for(LynxModule hub : hubs) {
+            hub.clearBulkCache();
         }
 
         for(BluSubsystem subsystem : subsystems) {
