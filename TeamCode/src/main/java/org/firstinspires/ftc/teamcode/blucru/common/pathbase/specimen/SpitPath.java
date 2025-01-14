@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
@@ -26,7 +24,7 @@ public class SpitPath extends PIDPathBuilder {
                 .schedule(new SequentialCommandGroup(
                         new ExtensionCommand(11),
                         new ArmDropToGroundCommand(),
-                        new WaitCommand(150),
+                        new WaitCommand(100),
                         new WheelReverseCommand(),
                         new ClampReleaseCommand(),
                         new WaitCommand(200),
