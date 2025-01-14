@@ -22,9 +22,9 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
 //                .schedule(new SpecimenFrontCommand())
                 .addMappedPoint(7, -40, 90, 6)
                 .setPower(0.45)
-                .addMappedPoint(7, -33, 90)
+                .addMappedPoint(7, -33, 90, 3)
                 .schedule(new SequentialCommandGroup(
-                        new WaitCommand(150),
+                        new WaitCommand(350),
                         new BoxtubeSplineCommand(
                                 new Pose2d(8.5, 16.5, 0),
                                 -Math.PI,

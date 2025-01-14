@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.auto.config;
 import android.util.Log;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
@@ -61,7 +62,10 @@ public class FiveSpecimenConfig extends AutoConfig {
                     currentPath = new CollectLeftBlockPath().build().start();
                 })
                 .state(State.COLLECTING_BLOCKS)
-                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed() && Robot.getInstance().pivot.getAngle() < 0.4,
+                .transition(() -> currentPath.isDone() || (
+                            Robot.getInstance().intakeSwitch.pressed()
+                            && Robot.getInstance().pivot.getAngle() < 0.4
+                        ),
                         State.SPITTING, () -> {
                             new ArmPreIntakeCommand().schedule();
                             new ClampGrabCommand().schedule();

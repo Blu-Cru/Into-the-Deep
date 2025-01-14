@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 public class Extension implements BluSubsystem, Subsystem {
     public static double
             kP = 0.32, kI = 0.0, kD = 0.012 , kFAngle = 0.13, tolerance = 0.0,
-            MIN_INCHES = 0.0, MAX_INCHES = 24.7, MAX_HORIZ_EXTENSION = 14.0,
+            MIN_INCHES = 0.0, MAX_INCHES = 24.9, MAX_HORIZ_EXTENSION = 14.0,
             k_INPUT_EXTENSION = 4.0, // pid distance to change based on input
             MAX_EXTEND_POWER = 1.0, MAX_RETRACT_POWER = -1.0;
 

@@ -73,6 +73,7 @@ public class Main extends BluLinearOpMode {
         addClamp();
         addWrist();
         addIntakeSwitch();
+        addPusher();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
@@ -223,11 +224,11 @@ public class Main extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () -> {
-                    new SequentialCommandGroup(
-                            new ArmGlobalAngleCommand(2),
-                            new PivotCommand(0.9),
-                            new WaitCommand(600),
-                            new SpecimenBackCommand()
+                    new BoxtubeSplineCommand(
+                            new Vector2d(20,42),
+                            new Pose2d(-8.6, 30, Math.PI),
+                            0,
+                            0.7
                     ).schedule();
                 })
                 .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
@@ -310,7 +311,7 @@ public class Main extends BluLinearOpMode {
 
                 .state(State.ABOVE_SPECIMEN_BACK)
                 .onEnter(() -> dt.setDrivePower(0.55))
-                .transition(() -> gamepad2.left_bumper, State.DUNKING_SPECIMEN_BACK,
+                .transition(() -> stickyG2.left_bumper, State.DUNKING_SPECIMEN_BACK,
                         () -> new SpecimenBackDunkCommand().schedule())
 
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
