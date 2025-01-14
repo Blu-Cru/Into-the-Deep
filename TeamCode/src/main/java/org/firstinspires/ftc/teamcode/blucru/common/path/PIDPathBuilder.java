@@ -13,10 +13,12 @@ import java.util.HashMap;
 public class PIDPathBuilder {
     private final ArrayList<PathSegment> segments;
     private HashMap<Integer, ArrayList<Command>> commands; // commands to run before the point of the same index is reached
+    ArrayList<Callback> callbacks;
 
     public PIDPathBuilder() {
         segments = new ArrayList<PathSegment>();
         commands = new HashMap<>();
+        callbacks = new ArrayList<>();
     }
 
     public PIDPathBuilder addPoint(PIDPointSegment point) {
@@ -69,6 +71,11 @@ public class PIDPathBuilder {
         return schedule(new InstantCommand(() -> {
             Robot.getInstance().dt.setDrivePower(power);
         }));
+    }
+
+    public PIDPathBuilder callback(Callback callback) {
+        callbacks.add(segments.size(), callback);
+        return this;
     }
 
     public PIDPathBuilder waitMillis(double milliseconds) {

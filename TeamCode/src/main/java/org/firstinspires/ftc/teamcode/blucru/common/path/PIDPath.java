@@ -13,12 +13,18 @@ import java.util.HashMap;
 public class PIDPath implements Path {
     ArrayList<PathSegment> segmentList; // Path is made of a list of segments
     HashMap<Integer, ArrayList<Command>> commands; // each segment has a list of commands to run when started
+    ArrayList<Callback> callbacks;
     int segmentIndex;
     boolean pathDone;
 
     public PIDPath(ArrayList<PathSegment> segmentList, HashMap<Integer, ArrayList<Command>> commands) {
+        this(segmentList, commands, new ArrayList<>());
+    }
+
+    public PIDPath(ArrayList<PathSegment> segmentList, HashMap<Integer, ArrayList<Command>> commands, ArrayList<Callback> callbacks) {
         this.segmentList = segmentList;
         this.commands = commands;
+        this.callbacks = callbacks;
         segmentIndex = 0;
         pathDone = false;
     }
@@ -34,6 +40,13 @@ public class PIDPath implements Path {
             for(Command c : commands.get(segmentIndex)) {
                 c.schedule();
             }
+        } catch (NullPointerException ignored) {
+            Log.e("PID Path", "error scheduling command");
+        }
+
+        // run the callbacks associated with the first point
+        try {
+            callbacks.get(segmentIndex).run();
         } catch (NullPointerException ignored) {
             Log.e("PID Path", "error scheduling command");
         }
@@ -59,6 +72,13 @@ public class PIDPath implements Path {
                 }
             } catch (NullPointerException ignored) {
                 Log.e("PID Path", "error scheduling command");
+            }
+
+            // run the callbacks associated with the segment
+            try {
+                callbacks.get(segmentIndex).run();
+            } catch (NullPointerException ignored) {
+                Log.e("PID Path", "error running callback");
             }
 
             segmentList.get(segmentIndex).start();
