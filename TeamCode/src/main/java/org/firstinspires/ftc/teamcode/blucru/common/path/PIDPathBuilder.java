@@ -61,6 +61,11 @@ public class PIDPathBuilder {
         return this;
     }
 
+    public PIDPathBuilder addSegment(PathSegment segment) {
+        segments.add(segment);
+        return this;
+    }
+
     public PIDPathBuilder schedule(Command command) {
         commands.computeIfAbsent(segments.size(), k -> new ArrayList<Command>());
         commands.get(segments.size()).add(command);
@@ -74,6 +79,9 @@ public class PIDPathBuilder {
     }
 
     public PIDPathBuilder callback(Callback callback) {
+        while(callbacks.size() <= segments.size()) {
+            callbacks.add(null);
+        }
         callbacks.add(segments.size(), callback);
         return this;
     }
@@ -84,6 +92,6 @@ public class PIDPathBuilder {
     }
 
     public PIDPath build() {
-        return new PIDPath(segments, commands);
+        return new PIDPath(segments, commands, callbacks);
     }
 }
