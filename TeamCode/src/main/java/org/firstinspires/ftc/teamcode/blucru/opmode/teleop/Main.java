@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BoxtubeSplineCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
@@ -73,6 +73,7 @@ public class Main extends BluLinearOpMode {
         addClamp();
         addWrist();
         addIntakeSwitch();
+        addPusher();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
@@ -223,11 +224,11 @@ public class Main extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () -> {
-                    new SequentialCommandGroup(
-                            new ArmGlobalAngleCommand(2),
-                            new PivotCommand(0.9),
-                            new WaitCommand(600),
-                            new SpecimenBackCommand()
+                    new BoxtubeSplineCommand(
+                            new Vector2d(20,42),
+                            new Pose2d(-8.6, 30, Math.PI),
+                            0,
+                            0.7
                     ).schedule();
                 })
                 .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
@@ -310,7 +311,7 @@ public class Main extends BluLinearOpMode {
 
                 .state(State.ABOVE_SPECIMEN_BACK)
                 .onEnter(() -> dt.setDrivePower(0.55))
-                .transition(() -> gamepad2.left_bumper, State.DUNKING_SPECIMEN_BACK,
+                .transition(() -> stickyG2.left_bumper, State.DUNKING_SPECIMEN_BACK,
                         () -> new SpecimenBackDunkCommand().schedule())
 
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
@@ -368,7 +369,7 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.MANUAL_RESET)
-                .transition(() -> stickyG2.share, State.RETRACTED, () -> {
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     gamepad1.rumble(150);
                     gamepad2.rumble(150);
                 })
@@ -385,7 +386,7 @@ public class Main extends BluLinearOpMode {
                 })
                 .build();
 
-        sm.setState(State.RETRACTED);
+        sm.setState(State.MANUAL_RESET);
         sm.start();
     }
 

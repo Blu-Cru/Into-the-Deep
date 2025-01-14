@@ -4,7 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.BoxtubeSplineCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
@@ -36,9 +36,9 @@ public class SpecimenCycleIntakePath extends PIDPathBuilder {
                             new ClampReleaseCommand()
                     ))
                     .waitMillis(400)
-                    .setPower(0.2)
+                    .setPower(0.25)
                     .addMappedPoint(29, -53, -60)
-                    .waitMillis(500);
+                    .waitMillis(350);
         } else {
             this.setPower(0.7)
                     .addMappedPoint(27, -48, -60, 5)
