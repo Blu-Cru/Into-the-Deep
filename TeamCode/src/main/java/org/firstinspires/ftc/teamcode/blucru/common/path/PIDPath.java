@@ -56,7 +56,7 @@ public class PIDPath implements Path {
 
     public void run() {
         PathSegment currentSegment = segmentList.get(segmentIndex);
-//        Robot.getInstance().dt.pidTo(currentSegment.getPose());
+        Robot.getInstance().dt.pidTo(currentSegment.getPose());
 
         if(currentSegment.isDone() && !pathDone) {
             segmentIndex++;
@@ -66,14 +66,14 @@ public class PIDPath implements Path {
                     c.schedule();
                 }
             } catch (NullPointerException ignored) {
-//                Log.e("PID Path", "error scheduling command");
+                Log.e("PID Path", "error scheduling command");
             }
 
             // run the callbacks associated with the segment
             try {
                 callbacks.get(segmentIndex).run();
             } catch (NullPointerException ignored) {
-//                Log.e("PID Path", "error running callback");
+                Log.e("PID Path", "error running callback");
             }
 
             if(segmentIndex == segmentList.size()) {
