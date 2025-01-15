@@ -44,6 +44,16 @@ public class Globals {
         return new Pose2d(x, y, Angle.norm(Math.toRadians(headingDeg)));
     }
 
+    public static Pose2d unMapPose(Pose2d pose) {
+        double x = pose.getX() * reflect;
+        double y = pose.getY() * reflect;
+        double heading = alliance == Alliance.RED ?
+                pose.getHeading() :
+                Angle.norm(pose.getHeading() + Math.PI);
+
+        return new Pose2d(x, y, heading);
+    }
+
     public static void setVoltage(double voltage) {
         Globals.voltage = voltage;
         Log.i("Globals", "set voltage to " + voltage);

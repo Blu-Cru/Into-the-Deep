@@ -59,7 +59,7 @@ public class Main extends BluLinearOpMode {
         MANUAL_RESET
     }
 
-    double intakeExtendMid = 6, intakeExtendFar = 13;
+    double intakeExtendMid = 5, intakeExtendFar = 13;
 
     StateMachine sm;
 

@@ -3,23 +3,20 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.auto.config;
 import android.util.Log;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectLeftBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectRightBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakePath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenParkIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenPreloadDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpitPath;
@@ -79,7 +76,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                     currentPath = collectPaths[spitCount].start();
                 })
                 .transition(() -> currentPath.isDone() && spitCount >= 2, State.INTAKING_CYCLE, () -> {
-                    currentPath = new SpecimenCycleIntakePath().build().start();
+                    currentPath = new SpecimenIntakePath().build().start();
                 })
 
                 .state(State.INTAKING_CYCLE)
@@ -97,7 +94,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                     currentPath = new SpecimenCycleDepositPath(scoreCount).build().start();
                 })
                 .transition(() -> currentPath.isDone(), State.INTAKING_CYCLE, () -> {
-                    currentPath = new SpecimenCycleIntakePath().build().start();
+                    currentPath = new SpecimenIntakePath().build().start();
                 })
 
                 .state(State.DEPOSIT_CYCLE)
@@ -106,7 +103,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                         () -> {
                             thisCycleIntakeFailCount = 0;
                             scoreCount++;
-                            currentPath = new SpecimenCycleIntakePath().build().start();
+                            currentPath = new SpecimenIntakePath().build().start();
                         })
                 .transition(() -> currentPath.isDone() && !(scoreCount < 4 && runtime.seconds() < 25), State.PARK_INTAKING, () -> {
                     Log.i("Five Specimen Config", "parking, time = " + runtime.seconds());

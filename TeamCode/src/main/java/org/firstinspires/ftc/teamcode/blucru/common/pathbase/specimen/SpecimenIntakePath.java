@@ -12,26 +12,17 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
-public class SpecimenCycleIntakePath extends PIDPathBuilder {
-    public SpecimenCycleIntakePath(boolean spline) {
+public class SpecimenIntakePath extends PIDPathBuilder {
+    public SpecimenIntakePath(boolean spline) {
         super();
         if(spline) {
             this.setPower(0.7)
-//                .schedule(
-//                        new BoxtubeSplineCommand(
-//                        new Pose2d(21, 10.2, 0),
-//                        -Math.PI,
-//                        1
-//                ))
                     .addMappedPoint(25, -48.5, -60, 5)
                     .schedule(new SequentialCommandGroup(
                             new BoxtubeSplineCommand(
                                     new Pose2d(21, 10.8, 0),
                                     -Math.PI,
                                     0.5),
-//                        new WristOppositeCommand(),
-//                        new ArmGlobalAngleCommand(0),
-//                        new WaitCommand(300),
                             new WheelIntakeCommand(),
                             new ClampReleaseCommand()
                     ))
@@ -58,7 +49,7 @@ public class SpecimenCycleIntakePath extends PIDPathBuilder {
         }
     }
 
-    public SpecimenCycleIntakePath() {
+    public SpecimenIntakePath() {
         this(true);
     }
 }

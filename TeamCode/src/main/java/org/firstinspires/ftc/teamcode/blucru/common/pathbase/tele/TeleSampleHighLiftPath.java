@@ -9,8 +9,8 @@ public class TeleSampleHighLiftPath extends PIDPathBuilder {
         super();
         this.setPower(0.8)
                 .schedule(new PivotCommand(Math.PI/2))
-                .addMappedPoint(-53, -53, 45, 5)
-                .schedule(new SampleBackHighCommand())
+                .addMappedPoint(-53, -53, 45, 10)
+                .callback(() -> new SampleBackHighCommand().schedule())
                 .waitMillis(200)
                 .setPower(0.25)
                 .addMappedPoint(-55.8, -55.8, 45);
