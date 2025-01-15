@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
 public class PIDPointSegment implements PathSegment{
-    static double FAIL_TIME = 1000;
+    static double FAIL_TIME = 5000;
 
     Pose2d pose;
     double translationTolerance;

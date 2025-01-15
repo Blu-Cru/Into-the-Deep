@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PIDPathBuilder {
-    private final ArrayList<PathSegment> segments;
-    private HashMap<Integer, ArrayList<Command>> commands; // commands to run before the point of the same index is reached
+    ArrayList<PathSegment> segments;
+    HashMap<Integer, ArrayList<Command>> commands; // commands to run before the point of the same index is reached
     ArrayList<Callback> callbacks;
 
     public PIDPathBuilder() {
