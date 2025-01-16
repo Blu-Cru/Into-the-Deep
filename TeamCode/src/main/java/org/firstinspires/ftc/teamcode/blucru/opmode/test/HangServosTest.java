@@ -8,11 +8,18 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 public class HangServosTest extends BluLinearOpMode {
     @Override
     public void initialize() {
+        addDrivetrain();
         addHangServos();
     }
 
     @Override
     public void periodic() {
+        dt.teleOpDrive(gamepad1);
+
+        if(stickyG1.right_stick_button) {
+            dt.setHeading(Math.PI/2);
+        }
+
         if(stickyG1.a) {
             hangServos.retract();
         } else if(stickyG1.b) {

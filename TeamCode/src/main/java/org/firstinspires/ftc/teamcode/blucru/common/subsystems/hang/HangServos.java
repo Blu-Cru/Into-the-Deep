@@ -6,12 +6,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.BluHardwareDevice;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HangServos implements Subsystem, BluSubsystem {
     List<HangServo> servos;
 
     public HangServos() {
+        servos = new ArrayList<>();
         servos.add(new LeftHangServo());
         servos.add(new RightHangServo());
     }
@@ -20,6 +22,7 @@ public class HangServos implements Subsystem, BluSubsystem {
     public void init() {
         for (HangServo servo : servos) {
             servo.init();
+            servo.retract();
         }
     }
 

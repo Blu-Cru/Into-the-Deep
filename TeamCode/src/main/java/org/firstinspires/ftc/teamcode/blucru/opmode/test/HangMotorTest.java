@@ -14,7 +14,7 @@ public class HangMotorTest extends BluLinearOpMode {
     @Override
     public void periodic() {
         if(Math.abs(gamepad1.left_stick_y) > 0.1) {
-            hangMotor.setManualPower(gamepad1.left_stick_y);
+            hangMotor.setManualPower(-gamepad1.left_stick_y);
         }
     }
 }

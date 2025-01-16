@@ -7,16 +7,16 @@ public class LeftHangServo extends HangServo{
 
     @Override
     public void retract() {
-        setPosition(0.5);
+        setPosition(0.14);
     }
 
     @Override
     public void release() {
-        setPosition(0.5);
+        setPosition(1);
     }
 
     @Override
     public void hang() {
-        setPosition(0.5);
+        setPosition(0.1);
     }
 }
