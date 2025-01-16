@@ -7,7 +7,7 @@ public class PushCommand extends SequentialCommandGroup {
     public PushCommand() {
         super(
                 new PusherExtendCommand(),
-                new WaitCommand(800),
+                new WaitCommand(550),
                 new PusherRetractCommand()
         );
     }

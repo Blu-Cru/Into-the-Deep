@@ -73,6 +73,7 @@ public class Main extends BluLinearOpMode {
         addWrist();
         addIntakeSwitch();
         addPusher();
+        addHangServos();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
@@ -375,6 +376,8 @@ public class Main extends BluLinearOpMode {
         if(stickyG1.right_bumper) {
             new PushCommand().schedule();
         }
+
+        if(stickyG1.y) hangServos.toggle();
         sm.update();
     }
 

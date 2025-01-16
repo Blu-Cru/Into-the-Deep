@@ -19,6 +19,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.IntakeSwitch;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
@@ -40,6 +42,8 @@ public class Robot {
     public IntakeSwitch intakeSwitch;
     public CVMaster cvMaster;
     public Pusher pusher;
+    public HangServos hangServos;
+    public HangMotor hangMotor;
 
     // list of all subsystems
     ArrayList<BluSubsystem> subsystems;
@@ -200,6 +204,18 @@ public class Robot {
         pusher = new Pusher();
         subsystems.add(pusher);
         return pusher;
+    }
+
+    public HangServos addHangServos() {
+        hangServos = new HangServos();
+        subsystems.add(hangServos);
+        return hangServos;
+    }
+
+    public HangMotor addHangMotor() {
+        hangMotor = new HangMotor();
+        subsystems.add(hangMotor);
+        return hangMotor;
     }
 
     public boolean splineDone() {
