@@ -10,9 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HangServos implements Subsystem, BluSubsystem {
+    enum State {
+        RETRACTED,
+        RELEASED,
+        HANGING
+    }
+    State state;
     List<HangServo> servos;
 
     public HangServos() {
+        state = State.RETRACTED;
         servos = new ArrayList<>();
         servos.add(new LeftHangServo());
         servos.add(new RightHangServo());
@@ -41,20 +48,38 @@ public class HangServos implements Subsystem, BluSubsystem {
     }
 
     public void retract() {
+        state = State.RETRACTED;
+
         for (HangServo servo : servos) {
             servo.retract();
         }
     }
 
     public void release() {
+        state = State.RELEASED;
+
         for (HangServo servo : servos) {
             servo.release();
         }
     }
 
     public void hang() {
+        state = State.HANGING;
+
         for (HangServo servo : servos) {
             servo.hang();
+        }
+    }
+
+    public void toggle() {
+        switch (state) {
+            case RETRACTED:
+            case HANGING:
+                release();
+                break;
+            case RELEASED:
+                hang();
+                break;
         }
     }
 
