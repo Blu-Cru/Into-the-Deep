@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @Config
-@TeleOp(name = "Drive PID Test", group = "test")
+@TeleOp(group = "test")
 public class DrivePIDTest extends BluLinearOpMode {
     public static double targetX = 0, targetY = 0, targetHeading = 0;
 
