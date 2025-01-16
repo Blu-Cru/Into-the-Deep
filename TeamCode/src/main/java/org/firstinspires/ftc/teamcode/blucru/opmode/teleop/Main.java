@@ -98,6 +98,7 @@ public class Main extends BluLinearOpMode {
 
                 // INTAKE
                 .transition(() -> stickyG2.left_bumper, State.INTAKING_GROUND, () -> {
+                    new PivotRetractCommand().schedule();
                     new ArmDropToGroundCommand().schedule();
                     new WheelIntakeCommand().schedule();
                     new ClampReleaseCommand().schedule();
@@ -210,7 +211,7 @@ public class Main extends BluLinearOpMode {
                     if(stickyG2.dpad_up) extension.teleExtendIntake(intakeExtendFar);
                     if(stickyG2.dpad_right) extension.teleExtendIntake(intakeExtendMid);
 
-                    extension.teleExtendIntakeDelta(-gamepad2.right_stick_y);
+                    extension.teleExtendIntakeDelta(-gamepad2.right_stick_y * 4.5);
                 })
 
                 .onExit(() -> {
@@ -234,7 +235,7 @@ public class Main extends BluLinearOpMode {
                             new Vector2d(20,42),
                             new Pose2d(-8.6, 30, Math.PI),
                             0,
-                            0.7
+                            0.75
                     ).schedule();
                 })
                 .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
@@ -319,7 +320,7 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ArmGlobalAngleCommand(1.5),
-                            new WaitCommand(250),
+                            new WaitCommand(150),
                             new BoxtubeRetractCommand(),
                             new EndEffectorRetractCommand()
                     ).schedule();
@@ -431,7 +432,10 @@ public class Main extends BluLinearOpMode {
                 currentPath.run();
                 break;
             default:
-                dt.teleOpDrive(gamepad1);
+                if(gamepad1.a)
+                    dt.driveToHeading(gamepad1.left_stick_x, -gamepad1.left_stick_y, Math.PI/4);
+                else
+                    dt.teleOpDrive(gamepad1);
         }
 
         if(gamepad1.right_stick_button) {

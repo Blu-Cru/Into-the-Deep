@@ -71,11 +71,6 @@ public class Drivetrain extends DriveBase implements Subsystem {
         double horiz = g1.left_stick_x;
         double rotate = -g1.right_stick_x * 0.8;
 
-        if(g1.a) {
-            driveToHeading(horiz, vert, Math.PI/4);
-            return;
-        }
-
         boolean translating = Math.abs(vert) > 0.05 || Math.abs(horiz) > 0.05;
         boolean turning = Math.abs(rotate) > 0.05;
 
