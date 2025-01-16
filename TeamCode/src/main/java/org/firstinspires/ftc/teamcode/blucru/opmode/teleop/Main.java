@@ -68,7 +68,7 @@ public class Main extends BluLinearOpMode {
         AUTO_SPECIMEN_INTAKE
     }
 
-    double intakeExtendMid = 5, intakeExtendFar = 13;
+    public static double intakeExtendMid = 5, intakeExtendFar = 13;
 
     StateMachine sm;
     Path currentPath;
