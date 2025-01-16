@@ -361,7 +361,11 @@ public class Main extends BluLinearOpMode {
 
     @Override
     public void periodic() {
-        dt.teleOpDrive(gamepad1);
+        switch (Enum.valueOf(State.class, sm.getStateString())) {
+
+            default:
+                dt.teleOpDrive(gamepad1);
+        }
 
         if(gamepad1.right_stick_button) {
             dt.setHeading(Math.PI/2);
