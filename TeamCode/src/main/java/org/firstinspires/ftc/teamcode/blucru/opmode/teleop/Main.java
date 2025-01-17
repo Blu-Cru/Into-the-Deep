@@ -62,6 +62,10 @@ public class Main extends BluLinearOpMode {
         RETRACTING_FROM_INTAKE,
         MANUAL_RESET,
 
+        HANG_RELEASE,
+        HANG_2,
+        HANG_3,
+
         AUTO_BASKET,
         AUTO_TO_ASCENT,
         AUTO_TO_RUNG,
@@ -85,6 +89,7 @@ public class Main extends BluLinearOpMode {
         addIntakeSwitch();
         addPusher();
         addHangServos();
+        addHangMotor();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
@@ -145,6 +150,10 @@ public class Main extends BluLinearOpMode {
                         new SpecimenBackCommand().schedule())
                 .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () ->
                         new SpecimenFrontCommand().schedule())
+
+                .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
+
+                })
 
                 .loop(() -> {
                     if(stickyG2.right_bumper) {
@@ -390,6 +399,12 @@ public class Main extends BluLinearOpMode {
                             new FullRetractCommand().schedule();
                         })
 
+                .state(State.HANG_RELEASE)
+
+                .state(State.HANG_2)
+
+                .state(State.HANG_3)
+
                 .state(State.MANUAL_RESET)
                 .onEnter(() -> {
                     dt.setDrivePower(0.8);
@@ -430,6 +445,11 @@ public class Main extends BluLinearOpMode {
             case AUTO_TO_ASCENT:
             case AUTO_TO_RUNG:
                 currentPath.run();
+                break;
+            case HANG_RELEASE:
+            case HANG_2:
+            case HANG_3:
+                hangMotor.setManualPower(-gamepad1.right_stick_y);
                 break;
             default:
                 if(gamepad1.a)

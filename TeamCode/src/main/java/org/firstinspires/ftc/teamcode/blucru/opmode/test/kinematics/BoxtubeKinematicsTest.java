@@ -18,7 +18,7 @@ public class BoxtubeKinematicsTest extends BluLinearOpMode {
         RETRACT,
         IVK
     }
-    public static double x = 10, y = 27, angle = 1.4;
+    public static double x = 7, y = 36, angle = 1.3;
     Pose2d targetPose = new Pose2d(x, y, angle);
     StateMachine sm;
     double controlledX, controlledY, controlledAngle;
@@ -60,8 +60,8 @@ public class BoxtubeKinematicsTest extends BluLinearOpMode {
 
     @Override
     public void periodic() {
-        controlledX = x + 5.0 * gamepad1.left_stick_x;
-        controlledY = y + 5.0 * -gamepad1.left_stick_y;
+        controlledX = x + 10.0 * gamepad1.left_stick_x;
+        controlledY = y + 10.0 * -gamepad1.left_stick_y;
         controlledAngle = angle - 0.85 * -gamepad1.right_stick_y;
 
         targetPose = new Pose2d(controlledX, controlledY, controlledAngle);
@@ -71,6 +71,7 @@ public class BoxtubeKinematicsTest extends BluLinearOpMode {
     @Override
     public void telemetry() {
         telemetry.addData("State", sm.getState());
+        telemetry.addData("Boxtube current pose", robot.getBoxtubePose());
         telemetry.addData("X", controlledX);
         telemetry.addData("Y", controlledY);
         telemetry.addData("Angle", controlledAngle);

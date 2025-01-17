@@ -146,8 +146,8 @@ public class Solo extends BluLinearOpMode {
                     new ArmPreIntakeCommand().schedule();
                 })
                 .loop(() -> {
-                    if(stickyG1.b) extension.teleExtendIntake(Main.intakeExtendFar);
-                    if(stickyG1.y) extension.teleExtendIntake(Main.intakeExtendMid);
+                    if(stickyG1.y) extension.teleExtendIntake(Main.intakeExtendFar);
+                    if(stickyG1.b) extension.teleExtendIntake(Main.intakeExtendMid);
 
                     extension.teleExtendIntakeDelta(gamepad1.right_trigger * 6);
                 })
@@ -167,8 +167,8 @@ public class Solo extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .loop(() -> {
-                    if(stickyG1.b) extension.teleExtendIntake(Main.intakeExtendFar);
-                    if(stickyG1.y) extension.teleExtendIntake(Main.intakeExtendMid);
+                    if(stickyG1.y) extension.teleExtendIntake(Main.intakeExtendFar);
+                    if(stickyG1.b) extension.teleExtendIntake(Main.intakeExtendMid);
 
                     extension.teleExtendIntakeDelta(gamepad1.right_trigger * 6);
 
@@ -289,6 +289,9 @@ public class Solo extends BluLinearOpMode {
 
     @Override
     public void onStart() {
+        sm.setState(State.RETRACTED);
+        sm.start();
+
         pivot.pidTo(0);
         extension.pidTo(0);
 
@@ -318,7 +321,7 @@ public class Solo extends BluLinearOpMode {
             new PushCommand().schedule();
         }
 
-        if(stickyG1.left_bumper) hangServos.toggle();
+        if(stickyG1.dpad_down) hangServos.toggle();
         sm.update();
     }
 

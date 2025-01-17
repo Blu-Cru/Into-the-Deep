@@ -73,7 +73,7 @@ public class BoxtubeSplineFollowTest extends BluLinearOpMode {
                         new BoxtubeSplineCommand(
                                 new Vector2d(0,0),
                                 new Pose2d(21, 9, 0),
-                                -Math.PI,
+                                -Math.PI/2,
                                 1.0
                         ).schedule();
                     }
