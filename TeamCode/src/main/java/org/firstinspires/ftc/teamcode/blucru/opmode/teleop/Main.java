@@ -391,7 +391,8 @@ public class Main extends BluLinearOpMode {
                 .transition(() ->
                         Math.abs(gamepad1.left_stick_y) > 0.1
                                 || Math.abs(gamepad1.left_stick_x) > 0.1
-                                || Math.abs(gamepad1.right_stick_x) > 0.1,
+                                || Math.abs(gamepad1.right_stick_x) > 0.1
+                                || currentPath.isDone(),
                         State.RETRACTED, () -> {
                             currentPath.cancel();
                             new FullRetractCommand().schedule();
@@ -401,7 +402,8 @@ public class Main extends BluLinearOpMode {
                 .transition(() ->
                                 Math.abs(gamepad1.left_stick_y) > 0.1
                                         || Math.abs(gamepad1.left_stick_x) > 0.1
-                                        || Math.abs(gamepad1.right_stick_x) > 0.1,
+                                        || Math.abs(gamepad1.right_stick_x) > 0.1
+                                        || currentPath.isDone(),
                         State.RETRACTED, () -> {
                             currentPath.cancel();
                             new FullRetractCommand().schedule();
