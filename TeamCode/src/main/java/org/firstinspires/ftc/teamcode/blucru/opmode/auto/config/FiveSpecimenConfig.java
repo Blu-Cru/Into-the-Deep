@@ -62,6 +62,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone() || (
                             Robot.getInstance().intakeSwitch.pressed()
                             && Robot.getInstance().pivot.getAngle() < 0.4
+                            && Math.abs(Robot.getInstance().getBoxtubePoint3d().y) > 44
                         ),
                         State.SPITTING, () -> {
                             new ArmPreIntakeCommand().schedule();
