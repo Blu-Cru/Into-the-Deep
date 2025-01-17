@@ -11,12 +11,12 @@ public class BoxtubeGetHooksCommand extends SequentialCommandGroup {
     public BoxtubeGetHooksCommand() {
         super(
                 new BoxtubeSplineCommand(
-                        new Vector2d(18, -6),
+                        new Vector2d(30, -6),
                         new Pose2d(8.5, 1.8, -Math.PI/2),
                         -Math.PI/2,
-                        0.5
+                        0.8
                 ),
-                new WaitCommand(800),
+                new WaitCommand(900),
                 new BoxtubeSplineCommand(
                         new Vector2d(18, -6),
                         new Pose2d(12, 1.8, -Math.PI/2),

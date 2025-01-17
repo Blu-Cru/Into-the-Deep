@@ -92,6 +92,9 @@ public class PIDPathBuilder {
     }
 
     public PIDPath build() {
+        while(callbacks.size() <= segments.size()) {
+            callbacks.add(null);
+        }
         return new PIDPath(segments, commands, callbacks);
     }
 }

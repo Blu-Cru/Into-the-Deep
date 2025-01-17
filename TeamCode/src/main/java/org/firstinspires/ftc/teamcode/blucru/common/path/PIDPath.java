@@ -18,7 +18,7 @@ public class PIDPath implements Path {
     boolean pathDone;
 
     public PIDPath(ArrayList<PathSegment> segmentList, HashMap<Integer, ArrayList<Command>> commands) {
-        this(segmentList, commands, new ArrayList<>());
+        this(segmentList, commands, new ArrayList<>(segmentList.size()));
     }
 
     public PIDPath(ArrayList<PathSegment> segmentList, HashMap<Integer, ArrayList<Command>> commands, ArrayList<Callback> callbacks) {
@@ -55,6 +55,9 @@ public class PIDPath implements Path {
     }
 
     public void run() {
+        if(isDone()) {
+            return;
+        }
         PathSegment currentSegment = segmentList.get(segmentIndex);
         Robot.getInstance().dt.pidTo(currentSegment.getPose());
 

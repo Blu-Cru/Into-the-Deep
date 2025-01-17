@@ -10,6 +10,10 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeGetHooksCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
@@ -152,7 +156,8 @@ public class Main extends BluLinearOpMode {
                         new SpecimenFrontCommand().schedule())
 
                 .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
-
+                    new HangServosReleaseCommand().schedule();
+                    new BoxtubeGetHooksCommand().schedule();
                 })
 
                 .loop(() -> {
@@ -400,8 +405,22 @@ public class Main extends BluLinearOpMode {
                         })
 
                 .state(State.HANG_RELEASE)
+                .onEnter(() -> {
+                    dt.setDrivePower(0.55);
+                })
+                .transition(() -> stickyG1.dpad_down, State.HANG_2, () -> {
+                    new SequentialCommandGroup(
+                            new HangServosHangComamnd(),
+                            new WaitCommand(200),
+                            new BoxtubeHooksTopBarCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.dpad_up, State.RETRACTED, () -> {
+                    new FullRetractCommand().schedule();
+                })
 
                 .state(State.HANG_2)
+//                .transition()
 
                 .state(State.HANG_3)
 
@@ -446,7 +465,6 @@ public class Main extends BluLinearOpMode {
             case AUTO_TO_RUNG:
                 currentPath.run();
                 break;
-            case HANG_RELEASE:
             case HANG_2:
             case HANG_3:
                 hangMotor.setManualPower(-gamepad1.right_stick_y);

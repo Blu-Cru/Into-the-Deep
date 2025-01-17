@@ -13,6 +13,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.Extensio
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeGetHooksCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeRetractHang3Command;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -42,20 +46,16 @@ public class HangFullTest extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RETRACT)
                 .transition(() -> stickyG1.b, State.RELEASED, () -> {
-                    hangServos.release();
+                    new HangServosReleaseCommand().schedule();
                     new BoxtubeGetHooksCommand().schedule();
                 })
 
                 .state(State.RELEASED)
                 .transition(() -> stickyG1.b, State.UP, () -> {
-                    hangServos.retract();
                     new SequentialCommandGroup(
+                            new HangServosHangComamnd(),
                             new WaitCommand(200),
-                            new BoxtubeSplineCommand(
-                                new Pose2d(7, 36, 1.5),
-                                -Math.PI/2,
-                                0.7
-                            )
+                            new BoxtubeHooksTopBarCommand()
                     ).schedule();
                 })
                 .transition(() -> stickyG1.a, State.RETRACT, () -> {
@@ -64,12 +64,7 @@ public class HangFullTest extends BluLinearOpMode {
 
                 .state(State.UP)
                 .transition(() -> stickyG1.b, State.RETRACT, () -> {
-                    new SequentialCommandGroup(
-                            new ExtensionRetractCommand(),
-                            new ArmRetractCommand(),
-                            new WaitCommand(600),
-                            new PivotCommand(0.5)
-                    ).schedule();
+                    new BoxtubeRetractHang3Command().schedule();
                 })
                 .build();
 
