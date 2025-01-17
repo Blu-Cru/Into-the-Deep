@@ -12,8 +12,10 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeGetHooksCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeRetractHang3Command;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
@@ -69,6 +71,7 @@ public class Main extends BluLinearOpMode {
         HANG_RELEASE,
         HANG_2,
         HANG_3,
+        HANGING,
 
         AUTO_BASKET,
         AUTO_TO_ASCENT,
@@ -417,12 +420,43 @@ public class Main extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG1.dpad_up, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
+                    new HangServosRetractCommand().schedule();
                 })
 
                 .state(State.HANG_2)
-//                .transition()
+                .transition(() -> stickyG1.dpad_down, State.HANG_3, () -> {
+                    new SequentialCommandGroup(
+                            new WaitCommand(1000),
+                            new BoxtubeRetractHang3Command()
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.dpad_up, State.HANG_RELEASE, () -> {
+                    new HangServosReleaseCommand().schedule();
+                    new BoxtubeSplineCommand(
+                            new Pose2d(2.5, 36, 1.5),
+                            -Math.PI/2,
+                            0.7
+                    ).schedule();
+                })
 
                 .state(State.HANG_3)
+                .transition(() -> stickyG1.dpad_up, State.HANG_2, () -> {
+                    new SequentialCommandGroup(
+                            new PivotCommand(1.5),
+                            new WaitCommand(700),
+                            new BoxtubeHooksTopBarCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.dpad_down, State.HANGING, () -> {
+                    new FullRetractCommand().schedule();
+                    // TODO: new HangPID hold position command
+                })
+
+                .state(State.HANGING)
+                .transition(() -> stickyG1.right_stick_button || stickyG2.right_stick_button, State.RETRACTED, () -> {
+                    new HangServosRetractCommand().schedule();
+                    new FullRetractCommand().schedule();
+                })
 
                 .state(State.MANUAL_RESET)
                 .onEnter(() -> {
@@ -468,6 +502,7 @@ public class Main extends BluLinearOpMode {
             case HANG_2:
             case HANG_3:
                 hangMotor.setManualPower(-gamepad1.right_stick_y);
+                dt.drive(new Pose2d(0,0,0));
                 break;
             default:
                 if(gamepad1.a)

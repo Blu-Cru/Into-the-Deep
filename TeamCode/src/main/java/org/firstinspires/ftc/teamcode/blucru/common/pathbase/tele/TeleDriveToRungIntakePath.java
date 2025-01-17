@@ -17,6 +17,6 @@ public class TeleDriveToRungIntakePath extends PIDPathBuilder {
                 .schedule(new FullRetractCommand())
                 .addMappedPoint(-5, -40, 90, 15)
                 .setPower(0.85)
-                .addMappedPoint(-5, -34, 0, 4);
+                .addMappedPoint(-5, -34, 90, 4);
     }
 }
