@@ -17,7 +17,7 @@ public class SpecimenIntakePath extends PIDPathBuilder {
         super();
         if(spline) {
             this.setPower(0.7)
-                    .addMappedPoint(25, -48.5, -60, 5)
+                    .addMappedPoint(24, -48.5, -60, 5)
                     .schedule(new SequentialCommandGroup(
                             new BoxtubeSplineCommand(
                                     new Pose2d(21, 10.8, 0),

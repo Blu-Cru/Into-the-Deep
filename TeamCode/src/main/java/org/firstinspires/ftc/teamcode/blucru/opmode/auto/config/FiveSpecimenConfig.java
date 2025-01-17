@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
@@ -139,7 +140,12 @@ public class FiveSpecimenConfig extends AutoConfig {
 
     @Override
     public void telemetry() {
+        Telemetry tele = Globals.tele;
 
+        tele.addData("State", sm.getState());
+        tele.addData("Score Count", scoreCount);
+        tele.addData("Spit Count", spitCount);
+        tele.addData("Cycle Intake Fail Count", thisCycleIntakeFailCount);
     }
 
     @Override
