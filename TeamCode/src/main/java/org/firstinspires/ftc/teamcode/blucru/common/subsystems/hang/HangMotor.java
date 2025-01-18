@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Subsystem;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -24,7 +25,7 @@ public class HangMotor implements BluSubsystem, Subsystem {
     double manualPower;
 
     public HangMotor() {
-        motor = new BluMotorWithEncoder("hang", DcMotorSimple.Direction.REVERSE);
+        motor = new BluMotorWithEncoder("hang", DcMotorSimple.Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
 
         state = State.IDLE;
         pid = new PDController(kP, kI, kD);

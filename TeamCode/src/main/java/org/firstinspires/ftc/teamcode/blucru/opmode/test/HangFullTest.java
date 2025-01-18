@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,15 +7,11 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeGetHooksCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeRetractHang3Command;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "test")
@@ -47,7 +41,7 @@ public class HangFullTest extends BluLinearOpMode {
                 .state(State.RETRACT)
                 .transition(() -> stickyG1.b, State.RELEASED, () -> {
                     new HangServosReleaseCommand().schedule();
-                    new BoxtubeGetHooksCommand().schedule();
+                    new GetHooksCommand().schedule();
                 })
 
                 .state(State.RELEASED)

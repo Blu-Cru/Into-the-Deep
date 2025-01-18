@@ -32,12 +32,10 @@ public class FiveSpecimenConfig extends AutoConfig {
 
     enum State {
         LIFTING_PRELOAD,
-        SCORING_PRELOAD,
         COLLECTING_BLOCKS,
         SPITTING,
         INTAKING_CYCLE,
         DEPOSIT_CYCLE,
-        SCORING_CYCLE,
         PARK_INTAKING,
         PARKED,
 
@@ -63,7 +61,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone() || (
                             Robot.getInstance().intakeSwitch.pressed()
                             && Robot.getInstance().pivot.getAngle() < 0.4
-                            && Math.abs(Robot.getInstance().getBoxtubePoint3d().y) > 44
+                            && Math.abs(Robot.getInstance().getBoxtubePoint3d().y) < 44
                         ),
                         State.SPITTING, () -> {
                             new ArmPreIntakeCommand().schedule();
@@ -82,7 +80,10 @@ public class FiveSpecimenConfig extends AutoConfig {
                 })
 
                 .state(State.INTAKING_CYCLE)
-                .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount >= 1) || (Robot.getInstance().intakeSwitch.pressed() && Robot.getInstance().pivot.getAngle() < 0.55),
+                .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount >= 1)
+                                || (Robot.getInstance().intakeSwitch.pressed()
+                                && Robot.getInstance().pivot.getAngle() < 0.55)
+                                && Robot.getInstance().getBoxtubePose().getY() > 5,
                         State.DEPOSIT_CYCLE, () -> {
                             currentPath = new SpecimenCycleDepositPath(scoreCount).build().start();
                         })
