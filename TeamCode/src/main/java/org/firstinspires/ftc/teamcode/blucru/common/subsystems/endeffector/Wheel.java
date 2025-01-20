@@ -12,6 +12,11 @@ public class Wheel extends BluCRServo implements BluSubsystem, Subsystem {
         this.setDirection(Direction.REVERSE);
     }
 
+    @Override
+    public void init() {
+        stop();
+    }
+
     public void intake() {
         super.setPower(1);
     }

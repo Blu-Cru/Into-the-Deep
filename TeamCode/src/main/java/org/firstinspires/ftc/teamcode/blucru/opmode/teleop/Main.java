@@ -145,7 +145,7 @@ public class Main extends BluLinearOpMode {
 
                 // SPECIMEN
                 .transition(() -> stickyG2.dpad_down, State.INTAKING_SPECIMEN, () -> {
-                    new BoxtubeCommand(0.42, 0).schedule();
+                    new BoxtubeCommand(0.45, 0).schedule();
                     new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
@@ -186,7 +186,7 @@ public class Main extends BluLinearOpMode {
                 .loop(() -> {
                     if(stickyG2.dpad_up) extension.teleExtendIntake(intakeExtendFar);
                     if(stickyG2.dpad_right) extension.teleExtendIntake(intakeExtendMid);
-                    extension.teleExtendIntakeDelta(-gamepad2.right_stick_y);
+                    extension.teleExtendIntakeDelta(-gamepad2.right_stick_y * 4.5);
 
                     if(gamepad2.right_bumper) {
                         wheel.reverse();
@@ -307,8 +307,10 @@ public class Main extends BluLinearOpMode {
                 .onEnter(() -> dt.setDrivePower(0.55))
                 .transition(() -> stickyG2.left_bumper, State.DUNKING_SPECIMEN_BACK,
                         () -> new BoxtubeSplineCommand(
+                                new Pose2d(-9, 25.6, Math.PI),
                                 new Vector2d(-8, -1.5),
                                 new Pose2d(-9.271, 21.681, Math.PI),
+                                new Vector2d(0,0),
                                 0,
                                 0.25
                         ).schedule())
@@ -352,7 +354,7 @@ public class Main extends BluLinearOpMode {
                 .loop(() -> {
                     if(gamepad2.left_bumper) {
                         clamp.release();
-                        wheel.reverse();
+                        wheel.setPower(-0.5);
                     } else {
                         clamp.grab();
                         wheel.stop();
@@ -506,6 +508,9 @@ public class Main extends BluLinearOpMode {
             case HANG_3:
                 hangMotor.setManualPower(-gamepad1.right_stick_y);
                 dt.drive(new Pose2d(0,0,0));
+                break;
+            case HANGING:
+                hangMotor.setManualPower(-0.75);
                 break;
             default:
                 if(gamepad1.a)

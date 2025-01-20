@@ -25,6 +25,7 @@ public class SpecimenCycleIntakeFailsafePath extends PIDPathBuilder {
                                 new WheelStopCommand()
                         )
                 )
-                .addMappedPoint(25, -48.5, -60);
+                .addMappedPoint(25, -48.5, -60)
+                .waitMillis(400);
     }
 }
