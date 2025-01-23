@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematic
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.pose.BoxtubeIKPose;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Arm;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.CactusSensor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.IntakeSwitch;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
@@ -43,6 +44,7 @@ public class Robot {
     public Pusher pusher;
     public HangServos hangServos;
     public HangMotor hangMotor;
+    public CactusSensor cactus;
 
     // list of all subsystems
     ArrayList<BluSubsystem> subsystems;
@@ -223,6 +225,12 @@ public class Robot {
         hangMotor = new HangMotor();
         subsystems.add(hangMotor);
         return hangMotor;
+    }
+
+    public CactusSensor addCactus() {
+        cactus = new CactusSensor();
+        subsystems.add(cactus);
+        return cactus;
     }
 
     public boolean splineDone() {

@@ -312,7 +312,7 @@ public class Main extends BluLinearOpMode {
                                 new Pose2d(-9.271, 21.681, Math.PI),
                                 new Vector2d(0,0),
                                 0,
-                                0.25
+                                0.35
                         ).schedule())
 
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {

@@ -119,6 +119,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                         State.PARKED, () -> {
                             new ClampGrabCommand().schedule();
                             new WheelStopCommand().schedule();
+                            new ExtensionCommand(14).schedule();
                         })
                 .state(State.PARKED)
                 .build();

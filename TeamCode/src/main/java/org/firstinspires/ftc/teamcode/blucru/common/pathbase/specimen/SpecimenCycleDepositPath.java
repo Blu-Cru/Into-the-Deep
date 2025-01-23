@@ -45,7 +45,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                                     new Pose2d(-9.271, 22, Math.PI),
                                     new Vector2d(0,0),
                                     0,
-                                    0.25
+                                    0.35
                             ),
                             new WaitCommand(280),
                             new WheelReverseCommand(),
