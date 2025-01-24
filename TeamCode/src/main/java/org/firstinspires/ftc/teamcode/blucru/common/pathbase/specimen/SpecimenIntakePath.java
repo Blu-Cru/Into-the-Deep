@@ -13,11 +13,11 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wris
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenIntakePath extends PIDPathBuilder {
-    public SpecimenIntakePath(boolean spline) {
+    public SpecimenIntakePath() {
         super();
-        if(spline) {
+//        if(spline) {
             this.setPower(0.7)
-                    .addMappedPoint(24, -48.5, -60, 5)
+                    .addMappedPoint(24, -48.5, -60, 7)
                     .schedule(new SequentialCommandGroup(
                             new BoxtubeSplineCommand(
                                     new Pose2d(21, 10.1, 0.1),
@@ -29,27 +29,23 @@ public class SpecimenIntakePath extends PIDPathBuilder {
                     .waitMillis(400)
                     .setPower(0.25)
                     .addMappedPoint(29, -53, -60)
-                    .waitMillis(350);
-        } else {
-            this.setPower(0.7)
-                    .addMappedPoint(27, -48, -60, 5)
-                    .schedule(new SequentialCommandGroup(
-                            new WristOppositeCommand(),
-                            new ArmGlobalAngleCommand(0),
-                            new BoxtubeCommand(0.27, 8),
-                            new WaitCommand(300),
-                            new WheelIntakeCommand(),
-                            new ClampReleaseCommand()
-                    ))
-                    .addMappedPoint(27, -48.5, -60)
-                    .waitMillis(200)
-                    .setPower(0.2)
-                    .addMappedPoint(29, -53, -60)
-                    .waitMillis(500);
-        }
-    }
-
-    public SpecimenIntakePath() {
-        this(true);
+                    .waitMillis(200);
+//        } else {
+//            this.setPower(0.7)
+//                    .addMappedPoint(27, -48, -60, 5)
+//                    .schedule(new SequentialCommandGroup(
+//                            new WristOppositeCommand(),
+//                            new ArmGlobalAngleCommand(0),
+//                            new BoxtubeCommand(0.27, 8),
+//                            new WaitCommand(300),
+//                            new WheelIntakeCommand(),
+//                            new ClampReleaseCommand()
+//                    ))
+//                    .addMappedPoint(27, -48.5, -60)
+//                    .waitMillis(200)
+//                    .setPower(0.2)
+//                    .addMappedPoint(29, -53, -60)
+//                    .waitMillis(250);
+//        }
     }
 }
