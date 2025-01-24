@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wris
 public class SampleFrontLowCommand extends SequentialCommandGroup {
     public SampleFrontLowCommand() {
         super(
-                new BoxtubeCommand(1.0, 16.6),
+                new BoxtubeCommand(1.2, 16.6),
                 new WristUprightForwardCommand(),
                 new WaitCommand(100),
                 new ArmGlobalAngleCommand(-0.2)

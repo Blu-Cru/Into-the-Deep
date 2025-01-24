@@ -11,10 +11,10 @@ public class SampleFrontHighCommand extends SequentialCommandGroup {
     public SampleFrontHighCommand() {
         super(
                 new ArmGlobalAngleCommand(1.4),
-                new BoxtubeCommand(Math.PI/2, 24),
+                new BoxtubeCommand(Math.PI/2, 26),
                 new WristUprightForwardCommand(),
                 new WaitCommand(200),
-                new ArmGlobalAngleCommand(0)
+                new ArmGlobalAngleCommand(0.5)
         );
     }
 }

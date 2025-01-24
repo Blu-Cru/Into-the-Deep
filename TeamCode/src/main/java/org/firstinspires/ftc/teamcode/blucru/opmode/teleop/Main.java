@@ -45,6 +45,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontDunkRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToAscentPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToRungIntakePath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSampleHighLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -69,9 +72,9 @@ public class Main extends BluLinearOpMode {
         HANG_3,
         HANGING,
 
-//        AUTO_BASKET,
-//        AUTO_TO_ASCENT,
-//        AUTO_TO_RUNG,
+        AUTO_BASKET,
+        AUTO_TO_ASCENT,
+        AUTO_TO_RUNG,
         AUTO_SPECIMEN_INTAKE
     }
 
@@ -93,6 +96,8 @@ public class Main extends BluLinearOpMode {
         addPusher();
         addHangServos();
         addHangMotor();
+        addCVMaster();
+        addCactus();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
@@ -103,7 +108,6 @@ public class Main extends BluLinearOpMode {
                     gamepad1.rumble(350);
                     gamepad2.rumble(350);
                 })
-
                 // INTAKE
                 .transition(() -> stickyG2.left_bumper, State.INTAKING_GROUND, () -> {
                     new PivotRetractCommand().schedule();
@@ -124,13 +128,11 @@ public class Main extends BluLinearOpMode {
                     new WristUprightForwardCommand().schedule();
                     extension.teleExtendIntake(intakeExtendMid);
                 })
-
                 // LOW
                 .transition(() -> stickyG2.b && !gamepad2.dpad_left, State.SCORING_BASKET, () ->
                     new SampleBackLowCommand().schedule())
                 .transition(() -> stickyG2.b && gamepad2.dpad_left, State.SCORING_BASKET, () ->
                     new SampleFrontLowCommand().schedule())
-
                 // HIGH
                 .transition(() -> stickyG2.y && !gamepad2.dpad_left, State.SCORING_BASKET, () ->
                     new SampleBackHighCommand().schedule())
@@ -138,10 +140,9 @@ public class Main extends BluLinearOpMode {
                     new SampleFrontHighCommand().schedule())
 
                 // DRIVE PID
-//                .transition(() -> stickyG1.y, State.AUTO_BASKET, () -> {
-//                    currentPath = new TeleSampleHighLiftPath().build().start();
-//                })
-
+                .transition(() -> stickyG1.y, State.AUTO_BASKET, () -> {
+                    currentPath = new TeleSampleHighLiftPath().build().start();
+                })
 
                 // SPECIMEN
                 .transition(() -> stickyG2.dpad_down, State.INTAKING_SPECIMEN, () -> {
@@ -345,12 +346,12 @@ public class Main extends BluLinearOpMode {
                             new EndEffectorRetractCommand()
                     ).schedule();
                 })
-//                .transition(() -> stickyG1.y, State.AUTO_TO_ASCENT, () -> {
-//                    currentPath = new TeleDriveToAscentPath().build().start();
-//                })
-//                .transition(() -> stickyG1.b, State.AUTO_TO_RUNG, () -> {
-//                    currentPath = new TeleDriveToRungIntakePath().build().start();
-//                })
+                .transition(() -> stickyG1.y, State.AUTO_TO_ASCENT, () -> {
+                    currentPath = new TeleDriveToAscentPath().build().start();
+                })
+                .transition(() -> stickyG1.b, State.AUTO_TO_RUNG, () -> {
+                    currentPath = new TeleDriveToRungIntakePath().build().start();
+                })
                 .loop(() -> {
                     if(gamepad2.left_bumper) {
                         clamp.release();
@@ -375,42 +376,42 @@ public class Main extends BluLinearOpMode {
                     wheel.stop();
                 })
 
-//                .state(State.AUTO_BASKET)
-//                .transition(() ->
-//                    Math.abs(gamepad1.left_stick_y) > 0.1
-//                        || Math.abs(gamepad1.left_stick_x) > 0.1
-//                        || Math.abs(gamepad1.right_stick_x) > 0.1,
-//                    State.SCORING_BASKET, () -> {
-//                    currentPath.cancel();
-//                    new SampleBackHighCommand().schedule();
-//                })
-//                .transition(() -> currentPath.isDone() || stickyG2.left_bumper, State.SCORING_BASKET)
-//                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
-//                    currentPath.cancel();
-//                    new FullRetractCommand().schedule();
-//                })
-//
-//                .state(State.AUTO_TO_ASCENT)
-//                .transition(() ->
-//                        Math.abs(gamepad1.left_stick_y) > 0.1
-//                                || Math.abs(gamepad1.left_stick_x) > 0.1
-//                                || Math.abs(gamepad1.right_stick_x) > 0.1
-//                                || currentPath.isDone(),
-//                        State.RETRACTED, () -> {
-//                            currentPath.cancel();
-//                            new FullRetractCommand().schedule();
-//                        })
-//
-//                .state(State.AUTO_TO_RUNG)
-//                .transition(() ->
-//                                Math.abs(gamepad1.left_stick_y) > 0.1
-//                                        || Math.abs(gamepad1.left_stick_x) > 0.1
-//                                        || Math.abs(gamepad1.right_stick_x) > 0.1
-//                                        || currentPath.isDone(),
-//                        State.RETRACTED, () -> {
-//                            currentPath.cancel();
-//                            new FullRetractCommand().schedule();
-//                        })
+                .state(State.AUTO_BASKET)
+                .transition(() ->
+                    Math.abs(gamepad1.left_stick_y) > 0.1
+                        || Math.abs(gamepad1.left_stick_x) > 0.1
+                        || Math.abs(gamepad1.right_stick_x) > 0.1,
+                    State.SCORING_BASKET, () -> {
+                    currentPath.cancel();
+                    new SampleBackHighCommand().schedule();
+                })
+                .transition(() -> currentPath.isDone() || stickyG2.left_bumper, State.SCORING_BASKET)
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    currentPath.cancel();
+                    new FullRetractCommand().schedule();
+                })
+
+                .state(State.AUTO_TO_ASCENT)
+                .transition(() ->
+                        Math.abs(gamepad1.left_stick_y) > 0.1
+                                || Math.abs(gamepad1.left_stick_x) > 0.1
+                                || Math.abs(gamepad1.right_stick_x) > 0.1
+                                || currentPath.isDone(),
+                        State.RETRACTED, () -> {
+                            currentPath.cancel();
+                            new FullRetractCommand().schedule();
+                        })
+
+                .state(State.AUTO_TO_RUNG)
+                .transition(() ->
+                                Math.abs(gamepad1.left_stick_y) > 0.1
+                                        || Math.abs(gamepad1.left_stick_x) > 0.1
+                                        || Math.abs(gamepad1.right_stick_x) > 0.1
+                                        || currentPath.isDone(),
+                        State.RETRACTED, () -> {
+                            currentPath.cancel();
+                            new FullRetractCommand().schedule();
+                        })
 
                 .state(State.HANG_RELEASE)
                 .onEnter(() -> {
@@ -499,11 +500,11 @@ public class Main extends BluLinearOpMode {
     @Override
     public void periodic() {
         switch (Enum.valueOf(State.class, sm.getStateString())) {
-//            case AUTO_BASKET:
-//            case AUTO_TO_ASCENT:
-//            case AUTO_TO_RUNG:
-//                currentPath.run();
-//                break;
+            case AUTO_BASKET:
+            case AUTO_TO_ASCENT:
+            case AUTO_TO_RUNG:
+                currentPath.run();
+                break;
             case HANG_2:
             case HANG_3:
                 hangMotor.setManualPower(-gamepad1.right_stick_y);
