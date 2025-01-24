@@ -8,10 +8,6 @@ public class IntakeSwitch extends LimitSwitch {
         super("intake switch");
     }
 
-    public boolean pressed() {
-        return state;
-    }
-
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Intake limit switch", pressed());

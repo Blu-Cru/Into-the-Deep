@@ -59,12 +59,8 @@ public class Main extends BluLinearOpMode {
         INTAKING_GROUND,
         SCORING_BASKET,
         INTAKING_SPECIMEN,
-        ABOVE_SPECIMEN_FRONT,
         ABOVE_SPECIMEN_BACK,
-        DUNKING_SPECIMEN_FRONT,
         DUNKING_SPECIMEN_BACK,
-        RETRACTING_FROM_SCORING,
-        RETRACTING_FROM_INTAKE,
         MANUAL_RESET,
 
         HANG_RELEASE,
@@ -150,13 +146,10 @@ public class Main extends BluLinearOpMode {
                     new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
-                .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () ->
-                        new SpecimenBackCommand().schedule())
-                .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () ->
-                        new SpecimenFrontCommand().schedule())
+                .transition(() -> stickyG2.x, State.ABOVE_SPECIMEN_BACK, () ->
+                    new SpecimenBackCommand().schedule())
 
                 .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
-//                    new HangServosReleaseCommand().schedule();
                     new GetHooksCommand().schedule();
                 })
 
@@ -204,7 +197,7 @@ public class Main extends BluLinearOpMode {
                     wheel.intake();
                     clamp.release();
                 })
-                .transition(() -> stickyG2.a || intakeSwitch.pressed(), State.RETRACTED, () -> {
+                .transition(() -> stickyG2.a || intakeSwitch.justPressed(), State.RETRACTED, () -> {
                     if(intakeSwitch.pressed()) {
                         gamepad1.rumble(200);
                         gamepad2.rumble(200);
@@ -244,23 +237,18 @@ public class Main extends BluLinearOpMode {
                             new EndEffectorRetractCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () -> {
+                .transition(() -> stickyG2.x || intakeSwitch.justPressed(), State.ABOVE_SPECIMEN_BACK, () -> {
                     new BoxtubeSplineCommand(
                             new Vector2d(20,42),
                             new Pose2d(-8.6, 30, Math.PI),
                             0,
                             0.75
                     ).schedule();
-                })
-                .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT, () -> {
-                    new SequentialCommandGroup(
-                            new ArmGlobalAngleCommand(1.2),
-                            new PivotCommand(1),
-                            new WaitCommand(300),
-                            new BoxtubeCommand(1.4, 5),
-                            new WristOppositeCommand(),
-                            new ArmGlobalAngleCommand(0.64)
-                    ).schedule();
+
+                    if(intakeSwitch.pressed()) {
+                        gamepad1.rumble(200);
+                        gamepad2.rumble(200);
+                    }
                 })
                 .loop(() -> {
                     if(gamepad2.left_bumper) {
@@ -277,31 +265,6 @@ public class Main extends BluLinearOpMode {
                 .onExit(() -> {
                     clamp.grab();
                     wheel.stop();
-                })
-
-                .state(State.ABOVE_SPECIMEN_FRONT)
-                .onEnter(() -> dt.setDrivePower(0.5))
-                .transition(() -> gamepad2.left_bumper, State.DUNKING_SPECIMEN_FRONT, () ->
-                        new SpecimenFrontDunkCommand().schedule())
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
-                    new SequentialCommandGroup(
-                            new ArmGlobalAngleCommand(1.2),
-                            new WaitCommand(200),
-                            new EndEffectorRetractCommand(),
-                            new BoxtubeRetractCommand()
-                    ).schedule();
-                })
-                .transition(() -> stickyG2.x && !gamepad2.dpad_left, State.ABOVE_SPECIMEN_BACK, () -> {
-                    new SpecimenBackCommand().schedule();
-                })
-
-                .state(State.DUNKING_SPECIMEN_FRONT)
-                .onEnter(() -> dt.setDrivePower(0.4))
-                .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN_FRONT, () -> {
-                    new SpecimenFrontCommand().schedule();
-                })
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
-                    new SpecimenFrontDunkRetractCommand().schedule();
                 })
 
                 .state(State.ABOVE_SPECIMEN_BACK)
@@ -324,8 +287,6 @@ public class Main extends BluLinearOpMode {
                             new BoxtubeRetractCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG2.x && gamepad2.dpad_left, State.ABOVE_SPECIMEN_FRONT,
-                        () -> new SpecimenFrontCommand().schedule())
 
                 .state(State.DUNKING_SPECIMEN_BACK)
                 .onEnter(() -> dt.setDrivePower(0.35))

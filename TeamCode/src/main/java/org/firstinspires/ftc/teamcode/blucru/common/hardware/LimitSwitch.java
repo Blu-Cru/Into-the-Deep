@@ -10,6 +10,7 @@ public class LimitSwitch implements BluSubsystem {
     DigitalChannel digitalChannel;
 
     public boolean state;
+    boolean lastState;
 
     private LimitSwitch(DigitalChannel digitalChannel) {
         this.digitalChannel = digitalChannel;
@@ -26,12 +27,25 @@ public class LimitSwitch implements BluSubsystem {
 
     @Override
     public void read() {
+        lastState = state;
         state = digitalChannel.getState();
     }
 
     @Override
     public void write() {
 
+    }
+
+    public boolean pressed() {
+        return state;
+    }
+
+    public boolean changed() {
+        return state != lastState;
+    }
+
+    public boolean justPressed() {
+        return state && changed();
     }
 
     @Override
