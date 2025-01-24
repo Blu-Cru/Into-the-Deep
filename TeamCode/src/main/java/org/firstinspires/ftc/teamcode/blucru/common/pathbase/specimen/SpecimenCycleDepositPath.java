@@ -21,9 +21,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenCycleDepositPath extends PIDPathBuilder {
-    public SpecimenCycleDepositPath(int scoreCount, boolean spline) {
+    public SpecimenCycleDepositPath(int scoreCount) {
         super();
-        if(spline) {
+//        if(spline) {
             this.setPower(0.8)
                     .schedule(new SequentialCommandGroup(
                             new WheelStopCommand(),
@@ -56,38 +56,34 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                             new EndEffectorRetractCommand()
                     ))
                     .waitMillis(200);
-        } else {
-            this.setPower(0.7)
-                    .schedule(new SequentialCommandGroup(
-                            new WheelStopCommand(),
-                            new ClampGrabCommand(),
-                            new PivotCommand(1.2),
-                            new WaitCommand(200),
-                            new ExtensionCommand(2),
-                            new ArmGlobalAngleCommand(2)
-                    ))
-                    .addMappedPoint(10   - scoreCount, -43, 270, 5)
-                    .schedule(
-                            new SpecimenBackCommand()
-                    )
-                    .setPower(0.25)
-                    .addMappedPoint(7 - scoreCount * 1.5, -34, 270)
-                    .schedule(new SequentialCommandGroup(
-                            new WaitCommand(300),
-                            new SpecimenBackDunkCommand(),
-                            new WaitCommand(100),
-                            new WheelReverseCommand(),
-                            new ClampReleaseCommand(),
-                            new WaitCommand(150),
-                            new PivotRetractCommand(),
-                            new ExtensionRetractCommand(),
-                            new EndEffectorRetractCommand()
-                    ))
-                    .waitMillis(400);
-        }
-    }
-
-    public SpecimenCycleDepositPath(int scoreCount) {
-        this(scoreCount, true);
+//        } else {
+//            this.setPower(0.7)
+//                    .schedule(new SequentialCommandGroup(
+//                            new WheelStopCommand(),
+//                            new ClampGrabCommand(),
+//                            new PivotCommand(1.2),
+//                            new WaitCommand(200),
+//                            new ExtensionCommand(2),
+//                            new ArmGlobalAngleCommand(2)
+//                    ))
+//                    .addMappedPoint(10   - scoreCount, -43, 270, 5)
+//                    .schedule(
+//                            new SpecimenBackCommand()
+//                    )
+//                    .setPower(0.25)
+//                    .addMappedPoint(7 - scoreCount * 1.5, -34, 270)
+//                    .schedule(new SequentialCommandGroup(
+//                            new WaitCommand(300),
+//                            new SpecimenBackDunkCommand(),
+//                            new WaitCommand(100),
+//                            new WheelReverseCommand(),
+//                            new ClampReleaseCommand(),
+//                            new WaitCommand(150),
+//                            new PivotRetractCommand(),
+//                            new ExtensionRetractCommand(),
+//                            new EndEffectorRetractCommand()
+//                    ))
+//                    .waitMillis(400);
+//        }
     }
 }
