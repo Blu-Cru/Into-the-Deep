@@ -271,7 +271,7 @@ public class Main extends BluLinearOpMode {
                 .onEnter(() -> dt.setDrivePower(0.55))
                 .transition(() -> stickyG2.left_bumper, State.DUNKING_SPECIMEN_BACK,
                         () -> new BoxtubeSplineCommand(
-                                new Pose2d(-9, 25.6, Math.PI),
+                                new Pose2d(-9, 25.8, Math.PI),
                                 new Vector2d(-8, -1.5),
                                 new Pose2d(-9.271, 21.681, Math.PI),
                                 new Vector2d(0,0),

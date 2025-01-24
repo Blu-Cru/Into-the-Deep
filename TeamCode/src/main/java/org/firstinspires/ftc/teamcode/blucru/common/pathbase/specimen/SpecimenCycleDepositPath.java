@@ -40,7 +40,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                     .addMappedPoint(7 - scoreCount * 1.5, -34, 270)
                     .schedule(new SequentialCommandGroup(
                             new BoxtubeSplineCommand(
-                                    new Pose2d(-9, 25.6, Math.PI),
+                                    new Pose2d(-9, 25.8, Math.PI),
                                     new Vector2d(-8, -1.5),
                                     new Pose2d(-9.271, 22, Math.PI),
                                     new Vector2d(0,0),
