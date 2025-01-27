@@ -16,7 +16,8 @@ public class Drivetrain extends DriveBase implements Subsystem {
 
     enum State {
         IDLE,
-        PID
+        PID,
+        PID_Y_HEADING
     }
 
     public boolean fieldCentric = true;
@@ -54,9 +55,10 @@ public class Drivetrain extends DriveBase implements Subsystem {
     public void write() {
         switch (state) {
             case PID:
-                driveFieldCentric(DriveKinematics.clip(pid.calculate(pose), drivePower));
+                driveFieldCentric(DriveKinematics.clip(pid.calculate(this), drivePower));
                 break;
             case IDLE:
+            case PID_Y_HEADING:
                 break;
         }
 
@@ -98,6 +100,10 @@ public class Drivetrain extends DriveBase implements Subsystem {
         lastTranslating = translating;
     }
 
+    public void driveToYHeading(double xInput, double ySetPoint, double headingSetPoint) {
+        pid.setTargetPose(new Pose2d(xInput, ySetPoint, headingSetPoint));
+    }
+
     public void pidTo(Pose2d targetPose) {
         state = State.PID;
         pid.setTargetPose(targetPose);
@@ -116,7 +122,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
             rotate = pid.getRotate(pv, sp);
         } else {
             pid.setTargetHeading(blockKinematics.getHeadingTowardsPoint(pose));
-            rotate = pid.getRotate(heading);
+            rotate = pid.getRotate(headingState);
         }
 
         driveFieldCentric(new Vector2d(x, y).times(drivePower), rotate);
@@ -124,9 +130,9 @@ public class Drivetrain extends DriveBase implements Subsystem {
 
     public void driveToHeading(double x, double y) {
         if(fieldCentric) {
-            driveFieldCentric(new Vector2d(x, y).times(drivePower), pid.getRotate(heading));
+            driveFieldCentric(new Vector2d(x, y).times(drivePower), pid.getRotate(this));
         } else {
-            drive(new Vector2d(x, y).times(drivePower), pid.getRotate(heading));
+            drive(new Vector2d(x, y).times(drivePower), pid.getRotate(this));
         }
     }
 

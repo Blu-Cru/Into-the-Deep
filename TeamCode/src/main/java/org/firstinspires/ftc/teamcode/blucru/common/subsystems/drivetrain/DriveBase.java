@@ -20,10 +20,9 @@ public class DriveBase implements BluSubsystem {
     BluMotor fl, fr, bl, br;
     BluMotor[] motors;
 
-    public Pose2d pose;
-    public Pose2d vel;
-    public double heading;
-    public double headingVel;
+    public Pose2d pose, vel;
+    public double heading, headingVel;
+    public Vector2d xState, yState, headingState;
 
     public DriveBase() {
         localizer = new FusedLocalizer();
@@ -32,6 +31,10 @@ public class DriveBase implements BluSubsystem {
         fr = new BluMotor("fr", DcMotorSimple.Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
         bl = new BluMotor("bl", DcMotorSimple.Direction.FORWARD, DcMotor.ZeroPowerBehavior.BRAKE);
         br = new BluMotor("br", DcMotorSimple.Direction.REVERSE, DcMotor.ZeroPowerBehavior.BRAKE);
+
+        xState = new Vector2d();
+        yState = new Vector2d();
+        headingState = new Vector2d();
 
         motors = new BluMotor[] {fl, fr, bl, br};
         localizer.setPoseEstimate(startPose);
@@ -56,6 +59,10 @@ public class DriveBase implements BluSubsystem {
         vel = localizer.getPoseVelocity();
         heading = localizer.getHeading();
         headingVel = localizer.getHeadingVelocity();
+
+        xState = new Vector2d(pose.getX(), vel.getX());
+        yState = new Vector2d(pose.getY(), vel.getY());
+        headingState = new Vector2d(heading, headingVel);
 
         for (BluMotor motor : motors) {
             motor.read();

@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.util.Angle;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 
 @Config
@@ -24,16 +25,10 @@ public class DrivePID {
         headingController = new PDController(kPHeading, kIHeading, kDHeading);
     }
 
-    public Vector2d calculate(Vector2d currentPosition) {
-        double xPower = xController.calculate(currentPosition.getX());
-        double yPower = yController.calculate(currentPosition.getY());
-        return new Vector2d(xPower, yPower);
-    }
-
-    public Pose2d calculate(Pose2d currentPose) {
-        double xPower = xController.calculate(currentPose.getX());
-        double yPower = yController.calculate(currentPose.getY());
-        double headingPower = getRotate(currentPose.getHeading());
+    public Pose2d calculate(DriveBase dt) {
+        double xPower = xController.calculate(dt.xState);
+        double yPower = yController.calculate(dt.yState);
+        double headingPower = getRotate(dt.headingState);
         return new Pose2d(xPower, yPower, headingPower);
     }
 
@@ -58,11 +53,12 @@ public class DrivePID {
         headingController.setSetPoint(targetHeading);
     }
 
-    public double getRotate(double heading) {
-        if(heading - headingController.getSetPoint() < -Math.PI) heading += 2*Math.PI;
-        else if(heading - headingController.getSetPoint() > Math.PI) heading -= 2 * Math.PI;
+    public double getRotate(Vector2d pv) {
+        return getRotate(pv, new Vector2d(headingController.getSetPoint(), 0));
+    }
 
-        return Range.clip(headingController.calculate(heading), -1, 1);
+    public double getRotate(DriveBase dt) {
+        return getRotate(dt.headingState);
     }
 
     public double getRotate(Vector2d pv, Vector2d sp) {

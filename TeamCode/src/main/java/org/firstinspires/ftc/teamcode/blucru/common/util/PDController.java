@@ -30,6 +30,10 @@ public class PDController extends PIDController {
         return error.dot(k);
     }
 
+    public double calculate(Vector2d pv) {
+        return calculate(pv, new Vector2d(getSetPoint(), 0));
+    }
+
     public double calculate(Vector2d pv, MotionProfile profile) {
         Vector2d sp = profile.getInstantState();
         return calculate(pv, sp);

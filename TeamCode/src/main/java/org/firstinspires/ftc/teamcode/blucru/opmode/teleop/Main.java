@@ -473,6 +473,7 @@ public class Main extends BluLinearOpMode {
                 break;
             case HANGING:
                 hangMotor.setManualPower(-0.75);
+                dt.drive(new Pose2d(0,0,0));
                 break;
             default:
                 if(gamepad1.a)
