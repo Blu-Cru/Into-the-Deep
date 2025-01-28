@@ -97,4 +97,8 @@ public class PIDPathBuilder {
         }
         return new PIDPath(segments, commands, callbacks);
     }
+
+    public Path start() {
+        return this.build().start();
+    }
 }

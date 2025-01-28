@@ -29,11 +29,9 @@ public class DriveKinematics {
         double robotDeltaX = robotVel.getX() * Math.abs(robotVel.getX()) / (2 * AXIAL_DECEL);
         double robotDeltaY = robotVel.getY() * Math.abs(robotVel.getY()) / (2 * LATERAL_DECEL);
 
-        Pose2d robotDeltaPose = new Pose2d(robotDeltaX, robotDeltaY, getHeadingDecel(pose.getHeading(), fieldVel.getHeading()));
+        Vector2d robotDeltaPose = new Vector2d(robotDeltaX, robotDeltaY);
 
-        Pose2d globalDeltaPose = new Pose2d(robotDeltaPose.vec().rotated(pose.getHeading()), robotDeltaPose.getHeading());
-
-        return new Pose2d(pose.vec().plus(globalDeltaPose.vec()), Angle.norm(pose.getHeading() + globalDeltaPose.getHeading()));
+        return new Pose2d(pose.vec().plus(robotDeltaPose.rotated(pose.getHeading())), getHeadingDecel(pose.getHeading(), fieldVel.getHeading()));
     }
 
 
@@ -80,7 +78,7 @@ public class DriveKinematics {
             double staticMinMagnitude =
                     STRAFE_kStatic * FORWARD_kStatic
                             /
-                            Math.hypot(STRAFE_kStatic * Math.cos(angle), FORWARD_kStatic * Math.sin(angle));
+                    Math.hypot(STRAFE_kStatic * Math.cos(angle), FORWARD_kStatic * Math.sin(angle));
             double newDriveMagnitude = staticMinMagnitude + (1-staticMinMagnitude) * driveVector.norm();
             return new Pose2d(driveVector.div(driveVector.norm()).times(newDriveMagnitude), drivePose.getHeading());
         } else return drivePose;
