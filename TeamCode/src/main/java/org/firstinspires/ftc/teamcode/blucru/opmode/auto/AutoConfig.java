@@ -8,6 +8,7 @@ import com.sfdev.assembly.state.StateMachine;
 
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.FiveSpecimenConfig;
+import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.FiveSpecimenOneSampleConfig;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.FourSampleConfig;
 
 // abstract class for auto config
@@ -16,20 +17,13 @@ public abstract class AutoConfig {
 
     enum AutoType{
         FOUR_SAMPLE,
-//        FIVE_SAMPLE,
-//        FOUR_SPECIMEN,
-        FIVE_SPECIMEN;
+        FIVE_SPECIMEN,
+        FIVE_SPECIMEN_ONE_SAMPLE;
 
         public AutoType flip() {
-            if(this == FOUR_SAMPLE) {
-                return FIVE_SPECIMEN;
-            } else {
-                return FOUR_SAMPLE;
-//            } else if(this == FOUR_SPECIMEN) {
-//                return FIVE_SPECIMEN;
-//            } else {
-//                return FOUR_SPECIMEN;
-            }
+            if(this == FOUR_SAMPLE) return FIVE_SPECIMEN;
+            else if (this == FIVE_SPECIMEN) return FIVE_SPECIMEN_ONE_SAMPLE;
+            else return FOUR_SAMPLE;
         }
     }
 
@@ -55,21 +49,13 @@ public abstract class AutoConfig {
     // this method returns the correct auto config based on the current side and auto type
     public static AutoConfig config() {
         switch (autoType) {
-            case FOUR_SAMPLE:
-                return new FourSampleConfig();
-//            case FIVE_SAMPLE:
-//                return new FiveSampleConfig();
-//            case FOUR_SPECIMEN:
-//                return new FourSpecimenConfig();
-            case FIVE_SPECIMEN:
-                return new FiveSpecimenConfig();
+            case FOUR_SAMPLE: return new FourSampleConfig();
+            case FIVE_SPECIMEN: return new FiveSpecimenConfig();
+            case FIVE_SPECIMEN_ONE_SAMPLE: return new FiveSpecimenOneSampleConfig();
         }
         return null;
     }
 
-    public static AutoType getAutoType() {
-        return autoType;
-    }
     public static void flipAutoType() {
         autoType = autoType.flip();
     }

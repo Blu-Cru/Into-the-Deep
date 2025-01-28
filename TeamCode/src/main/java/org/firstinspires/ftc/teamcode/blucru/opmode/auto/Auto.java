@@ -14,10 +14,12 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractComma
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
+import org.firstinspires.ftc.teamcode.blucru.opmode.teleop.Main;
 
 @Autonomous(name = "Auto", group = "1")
 public class Auto extends BluLinearOpMode {
@@ -36,7 +38,7 @@ public class Auto extends BluLinearOpMode {
                 if(stickyG1.b || stickyG2.b) Globals.flipAlliance();
                 if(stickyG1.a || stickyG2.a) AutoConfig.flipAutoType();
 
-                if(opModeIsActive()) requestOpModeStop();
+                if(opModeIsActive()) requestOpModeStop(); // stop bc not config yet
 
                 configTelemetry();
                 telemetry.addLine("RIGHT JOYSTICK BUTTON TO CONTINUE");
@@ -57,9 +59,9 @@ public class Auto extends BluLinearOpMode {
 
                 // initialize pivot position
                 new SequentialCommandGroup(
-                        new PivotCommand(1.0),
+                        new PivotCommand(1.1),
                         new WaitCommand(400),
-                        new WristHorizontalCommand(),
+                        new WristOppositeCommand(),
                         new ArmGlobalAngleCommand(-1.3)
                 ).schedule();
             })
@@ -67,7 +69,7 @@ public class Auto extends BluLinearOpMode {
             .loop(() -> {
                 configTelemetry();
 
-                telemetry.addLine("LEFT JOYSTICK BUTTON TO CONFIG");
+                telemetry.addLine("CONFIG DONE, LEFT JOYSTICK BUTTON TO CONFIG");
             })
             .transition(() -> stickyG1.left_stick_button || stickyG2.left_stick_button,
                     State.CONFIG, () -> {
@@ -79,9 +81,8 @@ public class Auto extends BluLinearOpMode {
                 config.start();
             })
             .state(State.RUNNING)
-            .loop(() -> {
-                config.run(); // runs whole auto
-            })
+            .loop(() -> config.run()) // runs whole auto
+
             .transition(() -> gamepad1.share, State.RESETTING, () -> {
                 config.stop();
                 new FullRetractCommand().schedule();
