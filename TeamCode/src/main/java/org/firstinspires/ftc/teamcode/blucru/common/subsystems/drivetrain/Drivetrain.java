@@ -147,6 +147,18 @@ public class Drivetrain extends DriveBase implements Subsystem {
         driveToHeading(x, y);
     }
 
+    public void pidYHeadingMapped(double x, double y, double heading) {
+        Pose2d mapped = Globals.mapPose(0, y, Math.toDegrees(heading));
+        y = mapped.getY();
+        heading = mapped.getHeading();
+
+        fieldCentric = true;
+        pid.yController.setSetPoint(y);
+        double yOutput = pid.yController.calculate(yState);
+
+        driveToHeading(x, yOutput, heading);
+    }
+
     public void updatePID() {
         pid.updatePID();
     }
@@ -154,6 +166,10 @@ public class Drivetrain extends DriveBase implements Subsystem {
     public void idle() {
         state = State.IDLE;
         drive(new Pose2d(0,0,0));
+    }
+
+    public Pose2d getStopPose() {
+        return DriveKinematics.getStopPose(pose, vel);
     }
 
     public boolean inRange(double translationTolerance, double headingTolerance) {

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Config
 public class AprilTagPoseGetter {
-    public static double CAM_X = 0.0, CAM_Y = -7.074, CAM_HEADING = Math.toRadians(-90); // position of the camera relative to the center of the robot in inches
+    public static double CAM_X = 0.0, CAM_Y = 7.074, CAM_HEADING = Math.toRadians(90); // position of the camera relative to the center of the robot in inches
     static Pose2d CAM_POS = new Pose2d(CAM_X, CAM_Y, CAM_HEADING); // position of the camera relative to the center of the robot in inches
     static HashMap<Integer, Pose2d> TAGS = new HashMap<Integer, Pose2d>() {{
         put(11, new Pose2d(-72, 48, 0)); // tag 11

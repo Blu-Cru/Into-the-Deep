@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.local
 
 import android.util.Log;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.Localizer;
 import com.acmerobotics.roadrunner.util.Angle;
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.ArrayList;
 
 // this class combines odometry, IMU, and AprilTags with weighted updates
+@Config
 public class FusedLocalizer extends PinpointLocalizer{
     public static double TAG_UPDATE_DELAY = 100; // ms between tag updates
     PoseHistory poseHistory;
@@ -47,14 +49,14 @@ public class FusedLocalizer extends PinpointLocalizer{
         if(System.currentTimeMillis() - lastTagUpdateMillis < TAG_UPDATE_DELAY) return false; // only update every TAG_UPDATE_DELAY ms
 
         ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
-        if(detections.size() < 1) {
+        if(detections.isEmpty()) {
             Log.v("FusedLocalizer", "No tags found");
             return false;
         }
 
         // get odo pose at the time of the tag pose
         long timeOfFrame = detections.get(0).frameAcquisitionNanoTime;
-        if(timeOfFrame==lastFrameTime) {
+        if(Math.abs(timeOfFrame - lastFrameTime) < Math.pow(10, 6)) {
             Log.i("FusedLocalizer", "Already updated with this frame");
             return false;
         }
@@ -88,11 +90,11 @@ public class FusedLocalizer extends PinpointLocalizer{
         Pose2d odoPoseError = tagPose.minus(poseAtFrame);
         Pose2d weightedCorrection = odoPoseError.times(weight);
 
-        Log.d("FusedLocalizer", "Tag pose: " + tagPose);
-        Log.d("FusedLocalizer", "Pose at frame:" + poseAtFrame);
-        Log.d("FusedLocalizer", "Current pose: " + currentPose);
-        Log.d("FusedLocalizer", "Raw correction: " + odoPoseError);
-        Log.d("FusedLocalizer", "Weighted correction: " + weightedCorrection);
+//        Log.d("FusedLocalizer", "Tag pose: " + tagPose);
+//        Log.d("FusedLocalizer", "Pose at frame:" + poseAtFrame);
+//        Log.d("FusedLocalizer", "Current pose: " + currentPose);
+//        Log.d("FusedLocalizer", "Raw correction: " + odoPoseError);
+//        Log.d("FusedLocalizer", "Weighted correction: " + weightedCorrection);
 
         Pose2d newPose = new Pose2d(currentPose.vec().plus(weightedCorrection.vec()), currentPose.getHeading());
         Log.i("FusedLocalizer", "Updated pose to: " + newPose);

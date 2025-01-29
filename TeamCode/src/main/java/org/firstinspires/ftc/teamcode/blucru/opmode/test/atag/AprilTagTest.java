@@ -32,6 +32,8 @@ public class AprilTagTest extends BluLinearOpMode {
 
         if (stickyG1.a) {
             cvMaster.detectTag();
+            cvMaster.setExposure(EXPOSURE_MS);
+            cvMaster.setGain(GAIN);
             state = State.DETECTING;
             FtcDashboard.getInstance().startCameraStream((CameraStreamSource) cvMaster.visionPortal, 30);
         }
@@ -46,10 +48,15 @@ public class AprilTagTest extends BluLinearOpMode {
         cvMaster.setGain(GAIN);
 
         try {
+//            dt.updateAprilTags(ta)
             dt.setPoseEstimate(AprilTagPoseGetter.getRobotPoseAtTimeOfFrame(cvMaster.tagDetector.getDetections()));
-        } catch (Exception e) {
+        } catch (Exception e) {}
 
+        if(stickyG1.right_stick_button) {
+            dt.setHeading(Math.PI/2);
         }
+
+        dt.teleOpDrive(gamepad1);
         dt.drawPose();
     }
 
