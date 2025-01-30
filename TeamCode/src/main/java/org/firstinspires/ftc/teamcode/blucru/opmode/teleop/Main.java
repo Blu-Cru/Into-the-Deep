@@ -400,7 +400,7 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> stickyG1.dpad_up, State.HANG_RELEASE, () -> {
                     new HangServosReleaseCommand().schedule();
                     new BoxtubeSplineCommand(
-                            new Pose2d(2.5, 36, 1.5),
+                            new Pose2d(2.5, 36, Math.PI/4),
                             -Math.PI/2,
                             0.7
                     ).schedule();
@@ -472,7 +472,7 @@ public class Main extends BluLinearOpMode {
                 dt.drive(new Pose2d(0,0,0));
                 break;
             case HANGING:
-                hangMotor.setManualPower(-0.75);
+                hangMotor.setManualPower(-0.35);
                 dt.drive(new Pose2d(0,0,0));
                 break;
             default:

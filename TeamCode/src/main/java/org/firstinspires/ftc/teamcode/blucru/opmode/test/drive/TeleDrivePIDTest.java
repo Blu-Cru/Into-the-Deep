@@ -3,15 +3,25 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.test.drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -21,12 +31,14 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
         IDLE,
         SCANNING,
         CYCLE_INTAKE,
+        CYCLE_FAILSAFE,
         CYCLE_DEPO_PATH,
+        CYCLE_SCORING,
         CYCLE_DEPO_MANUAL
     }
 
     Path currentPath;
-    Path cycleIntakePath, cycleDepoPath;
+    Path cycleDepoPath;
 
     StateMachine sm;
 
@@ -34,15 +46,16 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
     public void initialize() {
         enableFTCDashboard();
         addDrivetrain();
+        addPivot();
+        addExtension();
+        addArm();
+        addWheel();
+        addWrist();
+        addClamp();
+        addIntakeSwitch();
         addCVMaster();
-
-        cycleIntakePath = new PIDPathBuilder().setPower(0.7)
-                .addMappedPoint(24, -48.5, -60, 7)
-                .waitMillis(400)
-                .setPower(0.25)
-                .addMappedPoint(29, -53, -60)
-                .waitMillis(200)
-                .build();
+        pivot.useExtension(extension.getMotor());
+        extension.usePivot(pivot.getMotor());
 
         cycleDepoPath = new PIDPathBuilder().setPower(0.8)
                 .schedule(new SequentialCommandGroup(
@@ -57,23 +70,29 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
                 ))
                 .addMappedPoint(7, -40, 270, 5)
                 .build();
-        currentPath = cycleIntakePath;
+
+        currentPath = new SpecimenIntakePath().start();
 
         sm = new StateMachineBuilder()
                 .state(State.IDLE)
-                .onEnter(() -> currentPath.cancel())
+                .onEnter(() -> {
+                    currentPath.cancel();
+                    new FullRetractCommand().schedule();
+                })
                 .loop(() -> {
                     dt.teleOpDrive(gamepad1);
 //                    dt.updateAprilTags(cvMaster.tagDetector);
                 })
                 .transition(() -> stickyG1.b && cvMaster.numDetections > 0, State.CYCLE_INTAKE, () -> {
                     dt.updateAprilTags(cvMaster.tagDetector);
-                    currentPath = cycleIntakePath.start();
+                    currentPath = new SpecimenIntakePath().start();
                 })
 
                 .state(State.CYCLE_INTAKE)
                 .transition(() -> stickyG1.a, State.IDLE)
-                .transition(() -> currentPath.isDone(), State.CYCLE_DEPO_PATH, () -> currentPath = cycleDepoPath.start())
+                .transition(() -> currentPath.isDone(), State.CYCLE_FAILSAFE, () -> currentPath = new SpecimenCycleIntakeFailsafePath().start())
+                .transition(() -> Robot.getInstance().intakeSwitch.justPressed()
+                        && Robot.getInstance().pivot.getAngle() < 0.6, State.CYCLE_DEPO_PATH, () -> currentPath = cycleDepoPath.start())
                 .loop(() -> {
                     currentPath.run();
 //                    dt.updateAprilTags(cvMaster.tagDetector);
@@ -89,14 +108,40 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
 
                 .state(State.CYCLE_DEPO_MANUAL)
                 .transition(() -> stickyG1.a, State.IDLE)
-                .transition(() -> stickyG1.b, State.CYCLE_INTAKE, () -> currentPath = cycleIntakePath.start())
+                .transition(() -> stickyG1.b, State.CYCLE_SCORING, () -> {
+                    dt.pidTo(dt.pose);
+                    new SequentialCommandGroup(
+                            new BoxtubeSplineCommand(
+                                    new Pose2d(-9, 25.8, Math.PI),
+                                    new Vector2d(-8, -1.5),
+                                    new Pose2d(-9.271, 22, Math.PI),
+                                    new Vector2d(0,0),
+                                    0,
+                                    0.35
+                            ),
+                            new WaitCommand(280),
+                            new WheelReverseCommand(),
+                            new ClampReleaseCommand(),
+                            new WaitCommand(150),
+                            new FullRetractCommand()
+                    ).schedule();
+                })
                 .loop(() -> dt.pidYHeadingMapped(gamepad1.left_stick_x, -34, -Math.PI/2))
 
-//                .state(State.SCANNING)
-//                .onEnter(() -> {
-//                    dt.pidTo(dt.getStopPose());
-//                })
-//                .transitionTimed(0.5, () -> cvMaster.numDetections > 3)
+                .state(State.CYCLE_SCORING)
+                .transitionTimed(0.25, State.CYCLE_INTAKE, () -> {
+                    currentPath = new SpecimenIntakePath().start();
+                })
+
+                .state(State.CYCLE_FAILSAFE)
+                .transition(() -> Robot.getInstance().intakeSwitch.justPressed(), State.CYCLE_DEPO_PATH, () -> {
+                    currentPath = cycleDepoPath.start();
+                })
+                .transition(() -> currentPath.isDone(), State.CYCLE_INTAKE, () -> {
+                    currentPath = new SpecimenIntakePath().start();
+                })
+                .loop(() -> currentPath.run())
+
                 .build();
     }
 

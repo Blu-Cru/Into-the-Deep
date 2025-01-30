@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSp
 public class BoxtubeHooksTopBarCommand extends BoxtubeSplineCommand {
     public BoxtubeHooksTopBarCommand() {
         super(
-                new Pose2d(7, 37, 1.5),
+                new Pose2d(8.2, 35.5, Math.PI/4),
                 -Math.PI/2,
                 0.7
         );
