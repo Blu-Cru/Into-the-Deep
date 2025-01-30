@@ -374,7 +374,7 @@ public class Main extends BluLinearOpMode {
                             new FullRetractCommand().schedule();
                         })
 
-                .state(State.HANG_RELEASE)
+                .state(State.HANG_RELEASE) // 1st stage released, hook is up, not touching bar
                 .onEnter(() -> {
                     dt.setDrivePower(0.55);
                 })
@@ -390,7 +390,7 @@ public class Main extends BluLinearOpMode {
                     new HangServosRetractCommand().schedule();
                 })
 
-                .state(State.HANG_2)
+                .state(State.HANG_2) // hooks are on top bar
                 .transition(() -> stickyG1.dpad_down, State.HANG_3, () -> {
                     new SequentialCommandGroup(
                             new WaitCommand(1000),
@@ -406,7 +406,12 @@ public class Main extends BluLinearOpMode {
                     ).schedule();
                 })
 
-                .state(State.HANG_3)
+                .state(State.HANG_3) // pulling up
+                .onEnter(() -> {
+                    wrist.disable();
+                    clamp.disable();
+                    pusher.disable();
+                })
                 .transition(() -> stickyG1.dpad_up, State.HANG_2, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(1.5),
@@ -417,6 +422,11 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> stickyG1.dpad_down, State.HANGING, () -> {
                     new FullRetractCommand().schedule();
                     // TODO: new HangPID hold position command
+                })
+                .onExit(() -> {
+                    wrist.enable();
+                    clamp.enable();
+                    pusher.enable();
                 })
 
                 .state(State.HANGING)
