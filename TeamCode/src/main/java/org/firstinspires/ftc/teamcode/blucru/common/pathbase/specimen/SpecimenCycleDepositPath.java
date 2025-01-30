@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
@@ -39,14 +40,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                     .setPower(0.3)
                     .addMappedPoint(7 - scoreCount * 1.5, -34, 270)
                     .schedule(new SequentialCommandGroup(
-                            new BoxtubeSplineCommand(
-                                    new Pose2d(-9, 25.8, Math.PI),
-                                    new Vector2d(-8, -1.5),
-                                    new Pose2d(-9.271, 22, Math.PI),
-                                    new Vector2d(0,0),
-                                    0,
-                                    0.35
-                            ),
+                            new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
                             new WheelReverseCommand(),
                             new ClampReleaseCommand(),

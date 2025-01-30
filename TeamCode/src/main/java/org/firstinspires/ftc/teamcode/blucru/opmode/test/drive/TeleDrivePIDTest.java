@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
@@ -111,22 +112,18 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
                 .transition(() -> stickyG1.b, State.CYCLE_SCORING, () -> {
                     dt.pidTo(dt.pose);
                     new SequentialCommandGroup(
-                            new BoxtubeSplineCommand(
-                                    new Pose2d(-9, 25.8, Math.PI),
-                                    new Vector2d(-8, -1.5),
-                                    new Pose2d(-9.271, 22, Math.PI),
-                                    new Vector2d(0,0),
-                                    0,
-                                    0.35
-                            ),
+                            new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
                             new WheelReverseCommand(),
                             new ClampReleaseCommand(),
                             new WaitCommand(150),
+                            new PivotRetractCommand(),
+                            new ExtensionRetractCommand(),
+                            new WaitCommand(100),
                             new FullRetractCommand()
                     ).schedule();
                 })
-                .loop(() -> dt.pidYHeadingMapped(gamepad1.left_stick_x, -34, -Math.PI/2))
+                .loop(() -> dt.pidYHeadingMapped(gamepad1.left_stick_x, -34 + gamepad1.left_stick_y * 3, -Math.PI/2))
 
                 .state(State.CYCLE_SCORING)
                 .transitionTimed(0.25, State.CYCLE_INTAKE, () -> {
