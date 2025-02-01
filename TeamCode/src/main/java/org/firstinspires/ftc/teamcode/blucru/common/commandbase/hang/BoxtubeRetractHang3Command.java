@@ -12,7 +12,7 @@ public class BoxtubeRetractHang3Command extends SequentialCommandGroup {
         super(
                 new ExtensionRetractCommand(),
                 new ArmRetractCommand(),
-                new WaitCommand(600),
+                new WaitCommand(500),
                 new PivotCommand(0.5)
         );
     }
