@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -14,8 +13,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 @Config
@@ -34,6 +35,7 @@ public class CVMaster implements BluSubsystem {
     public AprilTagProcessor tagDetector;
 
     public int numDetections;
+    ArrayList<AprilTagDetection> detections;
 
     public CVMaster() {
         this.tagDetector = new AprilTagProcessor.Builder()
@@ -60,20 +62,18 @@ public class CVMaster implements BluSubsystem {
                 .build();
         visionPortal.setProcessorEnabled(tagDetector, false);
 
-        while(visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {}
-
         exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         gainControl = visionPortal.getCameraControl(GainControl.class);
-
-        numDetections = 0;
     }
 
     public void init() {
-        numDetections = 0;
+        read();
     }
 
     public void read() {
-        if(visionPortal.getProcessorEnabled(tagDetector)) numDetections = tagDetector.getDetections().size();
+        detections = tagDetector.getDetections();
+
+        if(visionPortal.getProcessorEnabled(tagDetector)) numDetections = detections.size();
         else numDetections = 0;
     }
 
@@ -86,7 +86,6 @@ public class CVMaster implements BluSubsystem {
         telemetry.addData("Tag detector enabled", visionPortal.getProcessorEnabled(tagDetector));
         if(visionPortal.getProcessorEnabled(tagDetector)) {
             telemetry.addData("# tags visible: ", numDetections);
-            telemetry.addData("Detection processing time", tagDetector.getPerTagAvgPoseSolveTime());
         }
     }
 
@@ -107,6 +106,24 @@ public class CVMaster implements BluSubsystem {
 
     public boolean setExposure(double exposure) {
         return exposureControl.setExposure((long) exposure, TimeUnit.MILLISECONDS);
+    }
+
+    public boolean seesSpecimenTag() {
+        for (AprilTagDetection detection: detections) {
+            if(detection.id % 3 == 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean seesSampleTag() {
+        for (AprilTagDetection detection: detections) {
+            if(detection.id % 3 == 1) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean setGain(double gain) {
