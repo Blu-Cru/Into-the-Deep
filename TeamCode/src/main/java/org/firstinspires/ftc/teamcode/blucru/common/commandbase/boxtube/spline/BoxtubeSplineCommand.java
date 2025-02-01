@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline;
+package org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline;
 
 import android.util.Log;
 

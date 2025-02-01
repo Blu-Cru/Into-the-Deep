@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.spline.BoxtubeSplineCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 
 public class SpecimenDunkSplineCommand extends BoxtubeSplineCommand {
     public SpecimenDunkSplineCommand() {
