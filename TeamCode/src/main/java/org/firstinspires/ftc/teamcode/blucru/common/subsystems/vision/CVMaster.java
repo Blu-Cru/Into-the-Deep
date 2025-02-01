@@ -62,6 +62,8 @@ public class CVMaster implements BluSubsystem {
                 .build();
         visionPortal.setProcessorEnabled(tagDetector, false);
 
+        while(visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {}
+
         exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         gainControl = visionPortal.getCameraControl(GainControl.class);
     }

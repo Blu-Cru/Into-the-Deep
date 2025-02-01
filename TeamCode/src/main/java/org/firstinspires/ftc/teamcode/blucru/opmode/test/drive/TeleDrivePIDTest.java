@@ -121,7 +121,7 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
                             new FullRetractCommand()
                     ).schedule();
                 })
-                .loop(() -> dt.pidYHeadingMapped(gamepad1.left_stick_x, -34 + gamepad1.left_stick_y * 3, -Math.PI/2))
+                .loop(() -> dt.pidYHeadingMapped(gamepad1.left_stick_x, -34 - gamepad1.left_stick_y * 3, -Math.PI/2))
 
                 .state(State.CYCLE_SCORING)
                 .transitionTimed(0.25, State.CYCLE_INTAKE, () -> {

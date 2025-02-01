@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectLeftBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectRightBlockPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CrossWithYellowPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
@@ -121,18 +123,18 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
 
                 .state(State.INTAKING_YELLOW)
                 .transition(() -> Robot.getInstance().intakeSwitch.pressed() && Robot.getInstance().pivot.getAngle() < 0.35,
-                        State.PARKED, () -> {
-                            new ClampGrabCommand().schedule();
-                            new WheelStopCommand().schedule();
-                            new ExtensionCommand(14).schedule();
+                        State.CROSSING_WITH_YELLOW, () -> {
+                            new FullRetractCommand().schedule();
+                            currentPath = new CrossWithYellowPath().start();
                         })
                 .transition(() -> currentPath.isDone(), State.INTAKE_YELLOW_FAILSAFE)
                 .state(State.INTAKE_YELLOW_FAILSAFE)
                 .onEnter(() -> {
                     new ExtensionCommand(3).schedule();
                 })
-                .transition(() -> Robot.getInstance().intakeSwitch.justPressed(), State.CROSSING_WITH_YELLOW, () -> {
-                    // TODO: Add path
+                .transition(() -> Robot.getInstance().intakeSwitch.justPressed() && Robot.getInstance().pivot.getAngle() < 0.35, State.CROSSING_WITH_YELLOW, () -> {
+                    new FullRetractCommand().schedule();
+                    currentPath = new CrossWithYellowPath().start();
                 })
                 .transitionTimed(0.5, State.INTAKING_YELLOW)
                 .state(State.PARKED)

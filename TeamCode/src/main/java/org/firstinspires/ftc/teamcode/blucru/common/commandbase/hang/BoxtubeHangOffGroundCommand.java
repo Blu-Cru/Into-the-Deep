@@ -6,6 +6,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.B
 
 public class BoxtubeHangOffGroundCommand extends BoxtubeSplineCommand {
     public BoxtubeHangOffGroundCommand() {
-        super(new Pose2d(18, 18, 0), -Math.PI/2, 0.6);
+        super(new Pose2d(15, 20, 0.3), -Math.PI/2, 0.6);
     }
 }

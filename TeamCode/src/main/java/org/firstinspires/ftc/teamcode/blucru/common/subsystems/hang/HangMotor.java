@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 
 @Config
 public class HangMotor implements BluSubsystem, Subsystem {
-    public static double kP = 0.0, kI = 0.0, kD = 0.0;
+    public static double kP = 0.004, kI = 0.0, kD = 0.0;
     enum State {
         IDLE,
         PID,
@@ -65,8 +65,16 @@ public class HangMotor implements BluSubsystem, Subsystem {
         pid.setSetPoint(ticks);
     }
 
+    public void holdPosition() {
+        pidTo(motor.getCurrentPosition());
+    }
+
     public void idle() {
         state = State.IDLE;
+    }
+
+    public void updatePID() {
+        pid.setPID(kP, kI, kD);
     }
 
     public void setManualPower(double power) {

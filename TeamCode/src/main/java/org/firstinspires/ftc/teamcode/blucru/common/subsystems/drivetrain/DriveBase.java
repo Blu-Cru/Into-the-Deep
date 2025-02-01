@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.hardware.motor.BluMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DriveKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.localization.FusedLocalizer;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -91,6 +92,16 @@ public class DriveBase implements BluSubsystem {
 
     public void driveFieldCentric(Pose2d fieldDrivePose) {
         Pose2d robotDrivePose = new Pose2d(fieldDrivePose.vec().rotated(-localizer.getHeading()), fieldDrivePose.getHeading());
+        drive(robotDrivePose);
+    }
+
+    public void driveFieldCentric(Pose2d driverInput, Alliance alliance) {
+        if(alliance == Alliance.RED) {
+            driveFieldCentric(driverInput);
+            return;
+        }
+
+        Pose2d robotDrivePose = new Pose2d(driverInput.vec().rotated(-localizer.getHeading() + Math.PI), driverInput.getHeading());
         drive(robotDrivePose);
     }
 

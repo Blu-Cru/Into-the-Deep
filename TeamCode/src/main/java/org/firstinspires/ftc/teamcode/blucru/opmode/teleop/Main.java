@@ -10,10 +10,9 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHangOffGroundCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeRetractHang3Command;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosRetractCommand;
@@ -46,6 +45,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToAscentPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToRungIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSampleHighLiftPath;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -62,8 +62,9 @@ public class Main extends BluLinearOpMode {
         MANUAL_RESET,
 
         HANG_RELEASE,
-        HANG_2,
-        HANG_3,
+        HANG_HOOKS_ON_BAR,
+        HANG_BOXTUBE_EXTENDED,
+        HANG_PULLING_ABOVE_BAR,
         HANGING,
 
         AUTO_BASKET,
@@ -195,8 +196,8 @@ public class Main extends BluLinearOpMode {
                     wheel.intake();
                     clamp.release();
                 })
-                .transition(() -> stickyG2.a || intakeSwitch.justPressed(), State.RETRACTED, () -> {
-                    if(intakeSwitch.pressed()) {
+                .transition(() -> stickyG2.a || Robot.validSample(), State.RETRACTED, () -> {
+                    if(Robot.validSample()) {
                         gamepad1.rumble(200);
                         gamepad2.rumble(200);
                     }
@@ -235,7 +236,7 @@ public class Main extends BluLinearOpMode {
                             new EndEffectorRetractCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG2.x || intakeSwitch.justPressed(), State.ABOVE_SPECIMEN_BACK, () -> {
+                .transition(() -> stickyG2.x || Robot.validSpecimen(), State.ABOVE_SPECIMEN_BACK, () -> {
                     new BoxtubeSplineCommand(
                             new Vector2d(20,42),
                             new Pose2d(-8.6, 30, Math.PI),
@@ -243,7 +244,7 @@ public class Main extends BluLinearOpMode {
                             0.75
                     ).schedule();
 
-                    if(intakeSwitch.pressed()) {
+                    if(Robot.validSpecimen()) {
                         gamepad1.rumble(200);
                         gamepad2.rumble(200);
                     }
@@ -376,7 +377,7 @@ public class Main extends BluLinearOpMode {
                 .onEnter(() -> {
                     dt.setDrivePower(0.55);
                 })
-                .transition(() -> stickyG1.dpad_down, State.HANG_2, () -> {
+                .transition(() -> stickyG1.dpad_down, State.HANG_HOOKS_ON_BAR, () -> {
                     new SequentialCommandGroup(
                             new HangServosHangComamnd(),
                             new WaitCommand(200),
@@ -388,12 +389,12 @@ public class Main extends BluLinearOpMode {
                     new HangServosRetractCommand().schedule();
                 })
 
-                .state(State.HANG_2) // hooks are on top bar
-                .transition(() -> stickyG1.dpad_down, State.HANG_3, () -> {
+                .state(State.HANG_HOOKS_ON_BAR) // hooks are on top bar
+                .transition(() -> stickyG1.dpad_down, State.HANG_BOXTUBE_EXTENDED, () -> {
                     new SequentialCommandGroup(
-                            new BoxtubeRetractHang3Command(),
+                            new FullRetractCommand(),
                             new WaitCommand(500),
-                            new BoxtubeHangOffGroundCommand()
+                            new ExtensionCommand(18)
                     ).schedule();
                 })
                 .transition(() -> stickyG1.dpad_up, State.HANG_RELEASE, () -> {
@@ -405,17 +406,33 @@ public class Main extends BluLinearOpMode {
                     ).schedule();
                 })
 
-                .state(State.HANG_3) // pulling up
+                .state(State.HANG_BOXTUBE_EXTENDED)
+                .transition(() -> stickyG1.dpad_down, State.HANG_PULLING_ABOVE_BAR, () -> {
+                    new SequentialCommandGroup(
+                            new FullRetractCommand(),
+                            new WaitCommand(300),
+                            new PivotCommand(0.5)
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.dpad_up, State.HANG_HOOKS_ON_BAR, () -> {
+                    new SequentialCommandGroup(
+                            new FullRetractCommand(),
+                            new WaitCommand(200),
+                            new BoxtubeHooksTopBarCommand()
+                    ).schedule();
+                })
+
+                .state(State.HANG_PULLING_ABOVE_BAR) // pulling up
                 .onEnter(() -> {
                     wrist.disable();
                     clamp.disable();
                     pusher.disable();
                 })
-                .transition(() -> stickyG1.dpad_up, State.HANG_2, () -> {
+                .transition(() -> stickyG1.dpad_up, State.HANG_BOXTUBE_EXTENDED, () -> {
                     new SequentialCommandGroup(
-                            new PivotCommand(1.5),
-                            new WaitCommand(700),
-                            new BoxtubeHooksTopBarCommand()
+                            new FullRetractCommand(),
+                            new WaitCommand(500),
+                            new ExtensionCommand(18)
                     ).schedule();
                 })
                 .transition(() -> stickyG1.dpad_down, State.HANGING, () -> {
@@ -429,10 +446,12 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.HANGING)
+                .onEnter(() -> hangMotor.holdPosition())
                 .transition(() -> stickyG1.right_stick_button || stickyG2.right_stick_button, State.RETRACTED, () -> {
                     new HangServosRetractCommand().schedule();
                     new FullRetractCommand().schedule();
                 })
+                .onExit(() -> hangMotor.idle())
 
                 .state(State.MANUAL_RESET)
                 .onEnter(() -> {
@@ -475,13 +494,13 @@ public class Main extends BluLinearOpMode {
             case AUTO_TO_RUNG:
                 currentPath.run();
                 break;
-            case HANG_2:
-            case HANG_3:
+            case HANG_HOOKS_ON_BAR:
+            case HANG_BOXTUBE_EXTENDED:
+            case HANG_PULLING_ABOVE_BAR:
                 hangMotor.setManualPower(-gamepad1.right_stick_y);
                 dt.drive(new Pose2d(0,0,0));
                 break;
             case HANGING:
-                hangMotor.setManualPower(-0.35);
                 dt.drive(new Pose2d(0,0,0));
                 break;
             default:

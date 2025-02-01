@@ -84,7 +84,7 @@ public class BluMotorWithEncoder extends DcMotorImplEx implements BluHardwareDev
     public void telemetry() {
         Telemetry tele = Globals.tele;
         tele.addData(name + " power", power);
-        tele.addLine(name + " pos: " + encoderTicks);
-        tele.addLine(name + " vel: " + vel);
+        tele.addData(name + " pos: ", encoderTicks);
+        tele.addData(name + " vel: ", vel);
     }
 }
