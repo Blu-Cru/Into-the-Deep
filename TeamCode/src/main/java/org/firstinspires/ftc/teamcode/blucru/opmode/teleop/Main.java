@@ -41,10 +41,14 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToAscentPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToRungIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSampleHighLiftPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSpecimenDepoPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
@@ -68,10 +72,15 @@ public class Main extends BluLinearOpMode {
         HANG_PULLING_ABOVE_BAR,
         HANGING,
 
-        AUTO_BASKET,
-        AUTO_TO_ASCENT,
-        AUTO_TO_RUNG,
-        AUTO_SPECIMEN_INTAKE
+        AUTO_SAMPLE_BASKET,
+        AUTO_SAMPLE_TO_ASCENT,
+        AUTO_SAMPLE_TO_RUNG,
+
+        AUTO_SPEC_INTAKE,
+        AUTO_SPEC_INTAKE_FAIL,
+        AUTO_SPEC_DEPO_PATH,
+        AUTO_SPEC_DEPO_MANUAL,
+        AUTO_SPEC_SCORING
     }
 
     public static double intakeExtendMid = 5, intakeExtendFar = 13;
@@ -136,7 +145,7 @@ public class Main extends BluLinearOpMode {
                     new SampleFrontHighCommand().schedule())
 
                 // DRIVE PID
-                .transition(() -> stickyG1.y, State.AUTO_BASKET, () -> {
+                .transition(() -> stickyG1.y, State.AUTO_SAMPLE_BASKET, () -> {
                     currentPath = new TeleSampleHighLiftPath().build().start();
                 })
 
@@ -152,6 +161,15 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
                     new GetHooksCommand().schedule();
                 })
+
+                // AUTO SPEC
+                .transition(() -> stickyG1.b && cvMaster.seesSpecimenTag(), State.AUTO_SPEC_INTAKE, () -> {
+                    dt.updateAprilTags();
+                    currentPath = new SpecimenIntakePath().start();
+                })
+//                .transition(() -> stickyG1.b && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_TO_ASCENT, () -> {
+//                    currentPath = new TeleDriveToAscentPath().build().start();
+//                })
 
                 .loop(() -> {
                     if(stickyG2.right_bumper) {
@@ -307,10 +325,10 @@ public class Main extends BluLinearOpMode {
                             new EndEffectorRetractCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG1.y, State.AUTO_TO_ASCENT, () -> {
+                .transition(() -> stickyG1.y, State.AUTO_SAMPLE_TO_ASCENT, () -> {
                     currentPath = new TeleDriveToAscentPath().build().start();
                 })
-                .transition(() -> stickyG1.b, State.AUTO_TO_RUNG, () -> {
+                .transition(() -> stickyG1.b, State.AUTO_SAMPLE_TO_RUNG, () -> {
                     currentPath = new TeleDriveToRungIntakePath().build().start();
                 })
                 .loop(() -> {
@@ -337,7 +355,7 @@ public class Main extends BluLinearOpMode {
                     wheel.stop();
                 })
 
-                .state(State.AUTO_BASKET)
+                .state(State.AUTO_SAMPLE_BASKET)
                 .transition(() ->
                     Math.abs(gamepad1.left_stick_y) > 0.1
                         || Math.abs(gamepad1.left_stick_x) > 0.1
@@ -352,7 +370,7 @@ public class Main extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
 
-                .state(State.AUTO_TO_ASCENT)
+                .state(State.AUTO_SAMPLE_TO_ASCENT)
                 .transition(() ->
                         Math.abs(gamepad1.left_stick_y) > 0.1
                                 || Math.abs(gamepad1.left_stick_x) > 0.1
@@ -363,7 +381,7 @@ public class Main extends BluLinearOpMode {
                             new FullRetractCommand().schedule();
                         })
 
-                .state(State.AUTO_TO_RUNG)
+                .state(State.AUTO_SAMPLE_TO_RUNG)
                 .transition(() ->
                                 Math.abs(gamepad1.left_stick_y) > 0.1
                                         || Math.abs(gamepad1.left_stick_x) > 0.1
@@ -373,6 +391,61 @@ public class Main extends BluLinearOpMode {
                             currentPath.cancel();
                             new FullRetractCommand().schedule();
                         })
+
+                .state(State.AUTO_SPEC_INTAKE)
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new FullRetractCommand().schedule();
+                })
+                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE_FAIL, () -> {
+                    currentPath = new SpecimenCycleIntakeFailsafePath().start();
+                })
+                .transition(() -> Robot.getInstance().intakeSwitch.justPressed(), State.AUTO_SPEC_DEPO_PATH, () -> {
+                    currentPath = new TeleSpecimenDepoPath().start();
+                })
+
+                .state(State.AUTO_SPEC_DEPO_PATH)
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new FullRetractCommand().schedule();
+                })
+                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_DEPO_MANUAL, () -> {
+                    dt.setDrivePower(0.7);
+                    dt.idle();
+                })
+
+                .state(State.AUTO_SPEC_DEPO_MANUAL)
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new FullRetractCommand().schedule();
+                })
+                .transition(() -> stickyG2.b, State.AUTO_SPEC_SCORING, () -> {
+                    dt.pidTo(dt.pose);
+                    new SequentialCommandGroup(
+                            new SpecimenDunkSplineCommand(),
+                            new WaitCommand(280),
+                            new WheelReverseCommand(),
+                            new ClampReleaseCommand(),
+                            new WaitCommand(150),
+                            new PivotRetractCommand(),
+                            new ExtensionRetractCommand(),
+                            new WaitCommand(100),
+                            new FullRetractCommand()
+                    ).schedule();
+                })
+
+                .state(State.AUTO_SPEC_SCORING)
+                .transitionTimed(0.25, State.AUTO_SPEC_INTAKE, () -> {
+                    currentPath = new SpecimenIntakePath().start();
+                })
+
+                .state(State.AUTO_SPEC_INTAKE_FAIL)
+                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                    new FullRetractCommand().schedule();
+                })
+                .transition(() -> Robot.getInstance().intakeSwitch.justPressed(), State.AUTO_SPEC_DEPO_PATH, () -> {
+                    currentPath = new TeleSpecimenDepoPath().start();
+                })
+                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE, () -> {
+                    currentPath = new SpecimenCycleIntakeFailsafePath().start();
+                })
 
                 .state(State.HANG_RELEASE) // 1st stage released, hook is up, not touching bar
                 .onEnter(() -> {
@@ -440,7 +513,6 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> stickyG1.dpad_down, State.HANGING, () -> {
                     gamepad1.rumble(150);
                     new FullRetractCommand().schedule();
-                    // TODO: new HangPID hold position command
                 })
                 .onExit(() -> {
                     wrist.enable();
@@ -492,9 +564,9 @@ public class Main extends BluLinearOpMode {
     @Override
     public void periodic() {
         switch (Enum.valueOf(State.class, sm.getStateString())) {
-            case AUTO_BASKET:
-            case AUTO_TO_ASCENT:
-            case AUTO_TO_RUNG:
+            case AUTO_SAMPLE_BASKET:
+            case AUTO_SAMPLE_TO_ASCENT:
+            case AUTO_SAMPLE_TO_RUNG:
                 currentPath.run();
                 break;
             case HANG_HOOKS_ON_BAR:
