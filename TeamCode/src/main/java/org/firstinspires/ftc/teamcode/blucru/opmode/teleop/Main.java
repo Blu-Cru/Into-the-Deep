@@ -47,6 +47,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToRun
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSampleHighLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(name = "Main", group = "1")
@@ -511,7 +512,7 @@ public class Main extends BluLinearOpMode {
         }
 
         if(gamepad1.right_stick_button) {
-            dt.setHeading(Math.PI/2);
+            dt.setHeading(Math.PI/2, Globals.alliance);
             gamepad1.rumble(150);
         }
 

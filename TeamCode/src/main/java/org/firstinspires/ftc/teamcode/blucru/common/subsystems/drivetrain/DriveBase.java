@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -119,6 +120,11 @@ public class DriveBase implements BluSubsystem {
 
     public void setHeading(double heading) {
         localizer.setHeading(heading);
+    }
+
+    public void setHeading(double heading, Alliance alliance) {
+        if(alliance == Alliance.RED) localizer.setHeading(heading);
+        else localizer.setHeading(Angle.norm(heading + Math.PI));
     }
 
     private double getHeading() {
