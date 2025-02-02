@@ -376,9 +376,11 @@ public class Main extends BluLinearOpMode {
 
                 .state(State.HANG_RELEASE) // 1st stage released, hook is up, not touching bar
                 .onEnter(() -> {
+                    gamepad1.rumble(150);
                     dt.setDrivePower(0.55);
                 })
                 .transition(() -> stickyG1.dpad_down, State.HANG_HOOKS_ON_BAR, () -> {
+                    gamepad1.rumble(150);
                     new SequentialCommandGroup(
                             new HangServosHangComamnd(),
                             new WaitCommand(200),
@@ -392,6 +394,7 @@ public class Main extends BluLinearOpMode {
 
                 .state(State.HANG_HOOKS_ON_BAR) // hooks are on top bar
                 .transition(() -> stickyG1.dpad_down, State.HANG_BOXTUBE_EXTENDED, () -> {
+                    gamepad1.rumble(150);
                     new SequentialCommandGroup(
                             new FullRetractCommand(),
                             new WaitCommand(500),
@@ -409,11 +412,9 @@ public class Main extends BluLinearOpMode {
 
                 .state(State.HANG_BOXTUBE_EXTENDED)
                 .transition(() -> stickyG1.dpad_down, State.HANG_PULLING_ABOVE_BAR, () -> {
-                    new SequentialCommandGroup(
-                            new FullRetractCommand(),
-                            new WaitCommand(300),
-                            new PivotCommand(0.5)
-                    ).schedule();
+                    gamepad1.rumble(150);
+                    new FullRetractCommand().schedule();
+                    pivot.idle();
                 })
                 .transition(() -> stickyG1.dpad_up, State.HANG_HOOKS_ON_BAR, () -> {
                     new SequentialCommandGroup(
@@ -437,6 +438,7 @@ public class Main extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> stickyG1.dpad_down, State.HANGING, () -> {
+                    gamepad1.rumble(150);
                     new FullRetractCommand().schedule();
                     // TODO: new HangPID hold position command
                 })

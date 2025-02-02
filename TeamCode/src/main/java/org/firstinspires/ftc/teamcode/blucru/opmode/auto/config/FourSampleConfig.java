@@ -59,7 +59,7 @@ public class FourSampleConfig extends AutoConfig {
         sm = new StateMachineBuilder()
                 .state(State.LIFTING)
                 .onEnter(() -> logTransition(State.LIFTING))
-                .transition(() -> Robot.getInstance().extension.getPIDError() < 2 && currentPath.isDone(),
+                .transition(() -> Robot.getInstance().extension.getPIDError() < 5 && currentPath.isDone(),
                         State.DEPOSITING,
                         () -> {
                             currentPath = scorePath.start();

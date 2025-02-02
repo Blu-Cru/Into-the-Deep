@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.motor.BluMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DriveKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.localization.FusedLocalizer;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
@@ -110,6 +111,10 @@ public class DriveBase implements BluSubsystem {
         driveFieldCentric(new Pose2d(translation, rotation));
     }
 
+    public void driveFieldCentric(Vector2d translation, double rotation, Alliance alliance) {
+        driveFieldCentric(new Pose2d(translation, rotation), alliance);
+    }
+
     private Pose2d getPoseEstimate() {
         return localizer.getPoseEstimate();
     }
@@ -141,6 +146,10 @@ public class DriveBase implements BluSubsystem {
 
     public boolean updateAprilTags(AprilTagProcessor processor) {
         return localizer.updateAprilTags(processor);
+    }
+
+    public boolean updateAprilTags() {
+        return localizer.updateAprilTags(Robot.getInstance().cvMaster.tagDetector);
     }
 
     @Override

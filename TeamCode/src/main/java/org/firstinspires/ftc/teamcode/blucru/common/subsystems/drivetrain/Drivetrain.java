@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DriveKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.DrivePID;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.control.TurnToBlockKinematics;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class Drivetrain extends DriveBase implements Subsystem {
@@ -78,14 +79,14 @@ public class Drivetrain extends DriveBase implements Subsystem {
 
         if(turning) {
             // drive normally
-            driveFieldCentric(new Vector2d(horiz, vert).times(drivePower), rotate * drivePower);
+            driveFieldCentric(new Vector2d(horiz, vert).times(drivePower), rotate * drivePower, Globals.alliance);
         } else if(lastTurning) {
             // if just turning, turn to new heading
             pid.headingController.reset();
-            driveToHeading(horiz, vert, DriveKinematics.getHeadingDecel(heading, headingVel));
+            driveToHeading(horiz, vert, DriveKinematics.getHeadingDecel(heading, headingVel), Globals.alliance);
         } else if(translating && !lastTranslating) {
             // if just started translating, drive to current heading
-            driveToHeading(horiz, vert, heading);
+            driveToHeading(horiz, vert, heading, Globals.alliance);
         } else if(!translating) {
             pid.headingController.reset();
             pid.setTargetHeading(heading);
@@ -93,7 +94,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
             drive(new Pose2d(0,0,0));
         } else {
             // if translating and not turning, drive to target heading
-            driveToHeading(horiz, vert);
+            driveToHeading(horiz, vert, Globals.alliance);
         }
 
         lastTurning = turning;
@@ -136,12 +137,26 @@ public class Drivetrain extends DriveBase implements Subsystem {
         }
     }
 
+    public void driveToHeading(double x, double y, Alliance alliance) {
+        if(fieldCentric) {
+            driveFieldCentric(new Vector2d(x, y).times(drivePower), pid.getRotate(this), alliance);
+        } else {
+            drive(new Vector2d(x, y).times(drivePower), pid.getRotate(this));
+        }
+    }
+
     // TODO: implement this
     public void driveTurnToBlock(Vector2d blockPos) {
         blockKinematics = new TurnToBlockKinematics(blockPos);
     }
 
     public void driveToHeading(double x, double y, double targetHeading) {
+        pid.setTargetHeading(targetHeading);
+
+        driveToHeading(x, y);
+    }
+
+    public void driveToHeading(double x, double y, double targetHeading, Alliance alliance) {
         pid.setTargetHeading(targetHeading);
 
         driveToHeading(x, y);

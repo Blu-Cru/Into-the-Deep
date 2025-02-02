@@ -13,7 +13,7 @@ public class GetHooksCommand extends SequentialCommandGroup {
                 new BoxtubeSplineCommand(
                         new Pose2d(9, 2.4, -Math.PI/2),
                         -Math.PI/2,
-                        0.3
+                        0.4
                 ),
                 new WaitCommand(500),
                 new BoxtubeSplineCommand(
@@ -25,17 +25,17 @@ public class GetHooksCommand extends SequentialCommandGroup {
                 new WaitCommand(1000),
                 new BoxtubeSplineCommand(
                         new Vector2d(18, -6),
-                        new Pose2d(11, 3.2, -Math.PI/2),
+                        new Pose2d(10, 3.2, -Math.PI/2),
                         -Math.PI/2,
-                        1.0
+                        0.8
                 ),
                 new WaitCommand(300),
                 new BoxtubeSplineCommand(
-                        new Pose2d(3.5, 39, 0.5),
+                        new Pose2d(4, 39, 0.5),
                         -Math.PI/2,
                         2.3
                 ),
-                new WaitCommand(2000),
+                new WaitCommand(1800),
                 new HangServosReleaseCommand()
         );
     }

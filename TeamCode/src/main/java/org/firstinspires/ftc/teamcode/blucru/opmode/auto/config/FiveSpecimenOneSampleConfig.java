@@ -12,7 +12,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.Extensio
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleScoreHighPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectLeftBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectRightBlockPath;
@@ -21,6 +23,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCy
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenParkIntakePath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenParkYellowDeposit;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenPreloadDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpitPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
@@ -137,6 +140,26 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                     currentPath = new CrossWithYellowPath().start();
                 })
                 .transitionTimed(0.5, State.INTAKING_YELLOW)
+
+                .state(State.CROSSING_WITH_YELLOW)
+                .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.numDetections > 0 && runtime.seconds() < 29, State.LIFTING_YELLOW, () -> {
+                    Robot.getInstance().dt.updateAprilTags();
+                    currentPath = new SpecimenPreloadDepositPath().build().start();
+                })
+                .transition(() -> runtime.seconds() > 29, State.PARKED, () -> new FullRetractCommand().schedule())
+
+                .state(State.LIFTING_YELLOW)
+                .transition(() -> currentPath.isDone() && Robot.getInstance().extension.getDistance() > 20, State.DEPOSIT_YELLOW, () -> {
+                    currentPath = new SampleScoreHighPath().start();
+                })
+
+                .state(State.DEPOSIT_YELLOW)
+                .transition(() -> currentPath.isDone(), State.PARKING, () -> {
+                    currentPath = new SpecimenParkYellowDeposit().start();
+                })
+
+                .state(State.PARKING)
+                .transition(() -> currentPath.isDone(), State.PARKED)
                 .state(State.PARKED)
                 .build();
     }
