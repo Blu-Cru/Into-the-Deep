@@ -47,6 +47,7 @@ public class Auto extends BluLinearOpMode {
                     State.INITIALIZED, () -> {
                 gamepad1.rumble(200);
                 gamepad2.rumble(200);
+                cvMaster.detectTag();
                 telemetry.update();
 
                 telemetry.addLine("Building Paths . . .");
@@ -70,6 +71,7 @@ public class Auto extends BluLinearOpMode {
                 configTelemetry();
 
                 telemetry.addLine("CONFIG DONE, LEFT JOYSTICK BUTTON TO CONFIG");
+                cvMaster.telemetry(telemetry);
             })
             .transition(() -> stickyG1.left_stick_button || stickyG2.left_stick_button,
                     State.CONFIG, () -> {
@@ -102,6 +104,8 @@ public class Auto extends BluLinearOpMode {
         addWheel();
         addWrist();
         addClamp();
+        addCVMaster();
+        addCactus();
         addIntakeSwitch();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());

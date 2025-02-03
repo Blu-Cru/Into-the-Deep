@@ -15,6 +15,7 @@ public class DrivePIDTest extends BluLinearOpMode {
     public void initialize() {
         addDrivetrain();
         enableFTCDashboard();
+        dt.setDrivePower(1.0);
     }
 
     @Override
@@ -47,5 +48,10 @@ public class DrivePIDTest extends BluLinearOpMode {
         }
 
         dt.drawPose();
+    }
+
+    @Override
+    public void telemetry() {
+        telemetry.addData("Target heading", targetHeading);
     }
 }

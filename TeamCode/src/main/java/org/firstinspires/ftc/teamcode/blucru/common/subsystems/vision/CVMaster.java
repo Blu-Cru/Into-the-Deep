@@ -36,6 +36,7 @@ public class CVMaster implements BluSubsystem {
 
     public int numDetections;
     ArrayList<AprilTagDetection> detections;
+    ArrayList<Integer> detectionIds;
 
     public CVMaster() {
         this.tagDetector = new AprilTagProcessor.Builder()
@@ -88,6 +89,13 @@ public class CVMaster implements BluSubsystem {
         telemetry.addData("Tag detector enabled", visionPortal.getProcessorEnabled(tagDetector));
         if(visionPortal.getProcessorEnabled(tagDetector)) {
             telemetry.addData("# tags visible: ", numDetections);
+
+            ArrayList<Integer> ids = new ArrayList<>();
+            for(AprilTagDetection detection : detections) {
+                ids.add(detection.id);
+            }
+
+            telemetry.addData("Detection ids", ids);
         }
     }
 

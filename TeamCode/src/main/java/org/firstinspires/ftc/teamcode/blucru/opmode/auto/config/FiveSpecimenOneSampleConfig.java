@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleLiftingPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleScoreHighPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectLeftBlockPath;
@@ -69,7 +70,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 })
                 .state(State.COLLECTING_BLOCKS)
                 .transition(() -> currentPath.isDone() || (
-                                Robot.getInstance().intakeSwitch.pressed()
+                                Robot.validSample()
                                         && Robot.getInstance().pivot.getAngle() < 0.4
                                         && Math.abs(Robot.getInstance().getBoxtubePoint3d().y) < 44
                         ),
@@ -91,7 +92,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
 
                 .state(State.INTAKING_CYCLE)
                 .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount >= 1)
-                                || (Robot.getInstance().intakeSwitch.pressed()
+                                || (Robot.validSample()
                                 && Robot.getInstance().pivot.getAngle() < 0.55)
                                 && Robot.getInstance().getBoxtubePose().getY() > 5,
                         State.DEPOSIT_CYCLE, () -> {
@@ -103,7 +104,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 })
 
                 .state(State.INTAKE_FAILSAFE_CYCLE)
-                .transition(() -> Robot.getInstance().intakeSwitch.pressed(), State.DEPOSIT_CYCLE, () -> {
+                .transition(() -> Robot.validSample(), State.DEPOSIT_CYCLE, () -> {
                     currentPath = new SpecimenCycleDepositPath(scoreCount).build().start();
                 })
                 .transition(() -> currentPath.isDone(), State.INTAKING_CYCLE, () -> {
@@ -125,7 +126,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 .onExit(() -> thisCycleIntakeFailCount = 0)
 
                 .state(State.INTAKING_YELLOW)
-                .transition(() -> Robot.getInstance().intakeSwitch.pressed() && Robot.getInstance().pivot.getAngle() < 0.35,
+                .transition(() -> Robot.validSample() && Robot.getInstance().pivot.getAngle() < 0.35,
                         State.CROSSING_WITH_YELLOW, () -> {
                             new FullRetractCommand().schedule();
                             currentPath = new CrossWithYellowPath().start();
@@ -135,7 +136,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 .onEnter(() -> {
                     new ExtensionCommand(3).schedule();
                 })
-                .transition(() -> Robot.getInstance().intakeSwitch.justPressed() && Robot.getInstance().pivot.getAngle() < 0.35, State.CROSSING_WITH_YELLOW, () -> {
+                .transition(() -> Robot.validSample() && Robot.getInstance().pivot.getAngle() < 0.35, State.CROSSING_WITH_YELLOW, () -> {
                     new FullRetractCommand().schedule();
                     currentPath = new CrossWithYellowPath().start();
                 })
@@ -144,7 +145,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 .state(State.CROSSING_WITH_YELLOW)
                 .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.numDetections > 0 && runtime.seconds() < 29, State.LIFTING_YELLOW, () -> {
                     Robot.getInstance().dt.updateAprilTags();
-                    currentPath = new SpecimenPreloadDepositPath().build().start();
+                    currentPath = new SampleLiftingPath().start();
                 })
                 .transition(() -> runtime.seconds() > 29, State.PARKED, () -> new FullRetractCommand().schedule())
 

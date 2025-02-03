@@ -29,6 +29,6 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
                         new WaitCommand(300),
                         new ExtensionMotionProfileCommand(14)
                 ))
-                .waitMillis(5000);
+                .waitMillis(4000);
     }
 }

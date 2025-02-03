@@ -11,6 +11,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
@@ -103,6 +104,7 @@ public class Main extends BluLinearOpMode {
         addHangMotor();
         addCVMaster();
         addCactus();
+        enableFTCDashboard();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
@@ -145,7 +147,8 @@ public class Main extends BluLinearOpMode {
                     new SampleFrontHighCommand().schedule())
 
                 // DRIVE PID
-                .transition(() -> stickyG1.y, State.AUTO_SAMPLE_BASKET, () -> {
+                .transition(() -> stickyG1.y && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_BASKET, () -> {
+                    dt.updateAprilTags();
                     currentPath = new TeleSampleHighLiftPath().build().start();
                 })
 
@@ -399,7 +402,7 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE_FAIL, () -> {
                     currentPath = new SpecimenCycleIntakeFailsafePath().start();
                 })
-                .transition(() -> Robot.getInstance().intakeSwitch.justPressed(), State.AUTO_SPEC_DEPO_PATH, () -> {
+                .transition(() -> Robot.getInstance().intakeSwitch.justPressed() && pivot.getAngle() < 0.5, State.AUTO_SPEC_DEPO_PATH, () -> {
                     currentPath = new TeleSpecimenDepoPath().start();
                 })
 
@@ -413,10 +416,10 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.AUTO_SPEC_DEPO_MANUAL)
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
-                .transition(() -> stickyG2.b, State.AUTO_SPEC_SCORING, () -> {
+                .transition(() -> stickyG1.b, State.AUTO_SPEC_SCORING, () -> {
                     dt.pidTo(dt.pose);
                     new SequentialCommandGroup(
                             new SpecimenDunkSplineCommand(),
@@ -437,14 +440,14 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.AUTO_SPEC_INTAKE_FAIL)
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> Robot.getInstance().intakeSwitch.justPressed(), State.AUTO_SPEC_DEPO_PATH, () -> {
                     currentPath = new TeleSpecimenDepoPath().start();
                 })
                 .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE, () -> {
-                    currentPath = new SpecimenCycleIntakeFailsafePath().start();
+                    currentPath = new SpecimenIntakePath().start();
                 })
 
                 .state(State.HANG_RELEASE) // 1st stage released, hook is up, not touching bar
@@ -469,8 +472,11 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> stickyG1.dpad_down, State.HANG_BOXTUBE_EXTENDED, () -> {
                     gamepad1.rumble(150);
                     new SequentialCommandGroup(
+                            new PivotCommand(1.5),
+                            new WaitCommand(200),
                             new FullRetractCommand(),
-                            new WaitCommand(500),
+                            new WaitCommand(400),
+                            new WristHorizontalCommand(),
                             new ExtensionCommand(18)
                     ).schedule();
                 })
@@ -486,7 +492,7 @@ public class Main extends BluLinearOpMode {
                 .state(State.HANG_BOXTUBE_EXTENDED)
                 .transition(() -> stickyG1.dpad_down, State.HANG_PULLING_ABOVE_BAR, () -> {
                     gamepad1.rumble(150);
-                    new FullRetractCommand().schedule();
+                    new ExtensionRetractCommand().schedule();
                     pivot.idle();
                 })
                 .transition(() -> stickyG1.dpad_up, State.HANG_HOOKS_ON_BAR, () -> {
@@ -559,6 +565,8 @@ public class Main extends BluLinearOpMode {
         extension.pidTo(0);
 
         dt.setPoseEstimate(DriveBase.startPose);
+
+        cvMaster.detectTag();
     }
 
     @Override
@@ -567,7 +575,15 @@ public class Main extends BluLinearOpMode {
             case AUTO_SAMPLE_BASKET:
             case AUTO_SAMPLE_TO_ASCENT:
             case AUTO_SAMPLE_TO_RUNG:
+            case AUTO_SPEC_INTAKE:
+            case AUTO_SPEC_DEPO_PATH:
+            case AUTO_SPEC_INTAKE_FAIL:
                 currentPath.run();
+                break;
+            case AUTO_SPEC_SCORING:
+                break;
+            case AUTO_SPEC_DEPO_MANUAL:
+                dt.pidYHeadingMapped(gamepad1.left_stick_x, -34 - gamepad1.left_stick_y * 5.5, -Math.PI/2);
                 break;
             case HANG_HOOKS_ON_BAR:
             case HANG_BOXTUBE_EXTENDED:
@@ -601,5 +617,6 @@ public class Main extends BluLinearOpMode {
     @Override
     public void telemetry() {
         telemetry.addData("state", sm.getState());
+        dt.drawPose();
     }
 }

@@ -171,7 +171,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
         pid.yController.setSetPoint(y);
         double yOutput = pid.yController.calculate(yState);
 
-        driveToHeading(x, yOutput, heading);
+        driveToHeading(x * Globals.reflect, yOutput, heading);
     }
 
     public void updatePID() {
@@ -199,6 +199,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Drivetrain State", state);
         telemetry.addData("Drive Power", drivePower);
+        telemetry.addData("heading", heading);
         super.telemetry(telemetry);
     }
 }

@@ -178,10 +178,12 @@ public class Extension implements BluSubsystem, Subsystem {
         if(pivot == null) ff = 0;
         else ff = Math.sin(pivot.getAngle()) * kFAngle;
 
-        setRawPower(power + ff + Math.signum(power) * kPStatic * getDistance());
+        setRawPower(power + ff + Math.signum(power) * getStaticFF(getDistance()));
     }
 
-
+    public double getStaticFF(double extensionDistance) {
+        return Range.clip((0.1*Math.atan(.07 * extensionDistance-10) + 0.2) * 0.7, 0, 1);
+    }
 
     public void setRawPower(double power) {
         extensionMotor.setPower(power);

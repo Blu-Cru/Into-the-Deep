@@ -28,7 +28,7 @@ public class DrivePID {
     public Pose2d calculate(DriveBase dt) {
         double xPower = xController.calculate(dt.xState);
         double yPower = yController.calculate(dt.yState);
-        double headingPower = getRotate(dt.headingState);
+        double headingPower = getRotate(dt.heading);
         return new Pose2d(xPower, yPower, headingPower);
     }
 
@@ -61,12 +61,20 @@ public class DrivePID {
         return getRotate(dt.headingState);
     }
 
+    public double getRotate(double heading) {
+        if (heading - headingController.getSetPoint() < -Math.PI) heading += 2 * Math.PI;
+        else if (heading - headingController.getSetPoint() > Math.PI) heading -= 2 * Math.PI;
+
+        return Range.clip(headingController.calculate(heading), -1, 1);
+    }
+
     public double getRotate(Vector2d pv, Vector2d sp) {
-        if(pv.getX() - sp.getX() < -Math.PI) {
-            pv = new Vector2d(pv.getX() + 2*Math.PI, pv.getY());
-        } else if(pv.getX() - sp.getX() > Math.PI) {
-            pv = new Vector2d(pv.getX() - 2*Math.PI, pv.getY());
-        }
+//        if(pv.getX() - sp.getX() < -Math.PI) {
+//            pv = new Vector2d(pv.getX() + 2*Math.PI, pv.getY());
+//        } else if(pv.getX() - sp.getX() > Math.PI) {
+//            pv = new Vector2d(pv.getX() - 2*Math.PI, pv.getY());
+//        }
+        pv = new Vector2d(Angle.normDelta(pv.getX() - sp.getX()) + sp.getX(), pv.getY());
 
         return headingController.calculate(pv, sp);
     }
