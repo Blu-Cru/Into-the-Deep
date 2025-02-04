@@ -56,8 +56,8 @@ public class Pusher extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void retract() {
-        state = State.MOTION_PROFILE;
-        profile = new MotionProfile(RETRACT_POS, getPosition(), vMAX, aMAX).start();
+        state = State.SERVO;
+        setPosition(RETRACT_POS);
     }
 
     public void extend() {
