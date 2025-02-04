@@ -109,24 +109,20 @@ public class Robot {
         }
     }
 
-    public static IntakeState getCactusState() {
-        return getInstance().cactus.getState();
-    }
-
     public static boolean validSample() {
-        IntakeState state = getCactusState();
-
-        if(state == IntakeState.YELLOW) return true;
-
-        if(alliance == Alliance.RED) return state == IntakeState.RED;
-        else return state == IntakeState.BLUE;
+        return getInstance().cactus.validSample;
     }
 
     public static boolean validSpecimen() {
-        IntakeState state = getCactusState();
+        return getInstance().cactus.validSpecimen;
+    }
 
-        if(alliance == Alliance.RED) return state == IntakeState.RED;
-        else return state == IntakeState.BLUE;
+    public static boolean justValidSample() {
+        return getInstance().cactus.justValidSample;
+    }
+
+    public static boolean justValidSpecimen() {
+        return getInstance().cactus.justValidSpecimen;
     }
 
     public void followBoxtubeSpline(BoxtubeSpline spline) {

@@ -59,7 +59,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                 })
                 .state(State.COLLECTING_BLOCKS)
                 .transition(() -> currentPath.isDone() || (
-                            Robot.getInstance().intakeSwitch.pressed()
+                            Robot.validSample()
                             && Robot.getInstance().pivot.getAngle() < 0.4
                             && Math.abs(Robot.getInstance().getBoxtubePoint3d().y) < 44
                         ),
@@ -81,7 +81,7 @@ public class FiveSpecimenConfig extends AutoConfig {
 
                 .state(State.INTAKING_CYCLE)
                 .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount >= 1)
-                                || (Robot.getInstance().intakeSwitch.pressed()
+                                || (Robot.justValidSample()
                                 && Robot.getInstance().pivot.getAngle() < 0.55)
                                 && Robot.getInstance().getBoxtubePose().getY() > 5,
                         State.DEPOSIT_CYCLE, () -> {
@@ -93,7 +93,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                 })
 
                 .state(State.INTAKE_FAILSAFE_CYCLE)
-                .transition(() -> Robot.getInstance().intakeSwitch.pressed(), State.DEPOSIT_CYCLE, () -> {
+                .transition(() -> Robot.validSample(), State.DEPOSIT_CYCLE, () -> {
                     currentPath = new SpecimenCycleDepositPath(scoreCount).build().start();
                 })
                 .transition(() -> currentPath.isDone(), State.INTAKING_CYCLE, () -> {
@@ -115,7 +115,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                 .onExit(() -> thisCycleIntakeFailCount = 0)
 
                 .state(State.PARK_INTAKING)
-                .transition(() -> currentPath.isDone() || (Robot.getInstance().intakeSwitch.pressed() && Robot.getInstance().pivot.getAngle() < 0.35),
+                .transition(() -> currentPath.isDone() || (Robot.justValidSample() && Robot.getInstance().pivot.getAngle() < 0.35),
                         State.PARKED, () -> {
                             new ClampGrabCommand().schedule();
                             new WheelStopCommand().schedule();
