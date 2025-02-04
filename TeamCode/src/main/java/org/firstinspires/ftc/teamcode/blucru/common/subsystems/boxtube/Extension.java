@@ -182,7 +182,7 @@ public class Extension implements BluSubsystem, Subsystem {
     }
 
     public double getStaticFF(double extensionDistance) {
-        return Range.clip((0.1*Math.atan(.07 * extensionDistance-10) + 0.2) * 0.7, 0, 1);
+        return Range.clip((0.1*Math.atan(.07 * (extensionDistance-10.0)) + 0.07) * 0.2, 0, 1);
     }
 
     public void setRawPower(double power) {

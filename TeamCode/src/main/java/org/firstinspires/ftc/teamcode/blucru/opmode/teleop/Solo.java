@@ -354,7 +354,7 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE_FAIL, () -> {
                     currentPath = new SpecimenCycleIntakeFailsafePath().start();
                 })
-                .transition(() -> Robot.justValidSpecimen() && pivot.getAngle() < 0.5, State.AUTO_SPEC_DEPO_PATH, () -> {
+                .transition(() -> Robot.justValidSample() && pivot.getAngle() < 0.5, State.AUTO_SPEC_DEPO_PATH, () -> {
                     currentPath = new TeleSpecimenDepoPath().start();
                 })
 
