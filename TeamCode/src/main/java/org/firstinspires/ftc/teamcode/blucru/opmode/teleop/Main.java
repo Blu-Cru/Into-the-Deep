@@ -610,7 +610,6 @@ public class Main extends BluLinearOpMode {
             new PushCommand().schedule();
         }
 
-//        if(stickyG1.left_bumper) hangServos.toggle();
         sm.update();
     }
 

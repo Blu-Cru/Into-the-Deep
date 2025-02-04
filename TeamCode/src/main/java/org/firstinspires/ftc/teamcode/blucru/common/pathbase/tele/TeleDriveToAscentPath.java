@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
@@ -17,7 +18,8 @@ public class TeleDriveToAscentPath extends PIDPathBuilder {
                 .schedule(new FullRetractCommand())
                 .addMappedPoint(-48, -30, 45, 10)
                 .setPower(0.85)
-                .addMappedPoint(-40, -12, 0, 5)
-                .addMappedPoint(-26, -12, 0, 4);
+                .addMappedPoint(-40, -12, 0, 8)
+                .addMappedPoint(-26, -12, 0, 5)
+                .schedule(new ArmPreIntakeCommand());
     }
 }
