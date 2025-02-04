@@ -11,6 +11,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
@@ -24,8 +25,14 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.pusher.PushCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
@@ -125,6 +132,11 @@ public class Solo extends BluLinearOpMode {
                     new ArmGlobalAngleCommand(0).schedule();
                 })
 
+                // HANG
+                .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
+                    new GetHooksCommand().schedule();
+                })
+
                 .loop(() -> {
                     if(stickyG1.right_bumper) {
                         new SequentialCommandGroup(
@@ -168,7 +180,7 @@ public class Solo extends BluLinearOpMode {
                     if(stickyG1.y) extension.teleExtendIntake(Main.intakeExtendFar);
                     if(stickyG1.b) extension.teleExtendIntake(Main.intakeExtendMid);
 
-                    extension.teleExtendIntakeDelta(gamepad1.right_trigger * 6);
+                    extension.teleExtendIntakeDelta(gamepad1.right_trigger * 6.0);
                 })
                 .onExit(() -> {
                     wheel.stop();
@@ -390,7 +402,89 @@ public class Solo extends BluLinearOpMode {
                     currentPath = new SpecimenIntakePath().start();
                 })
 
+                .state(State.HANG_RELEASE) // 1st stage released, hook is up, not touching bar
+                .onEnter(() -> {
+                    gamepad1.rumble(150);
+                    dt.setDrivePower(0.55);
+                })
+                .transition(() -> stickyG1.dpad_down, State.HANG_HOOKS_ON_BAR, () -> {
+                    gamepad1.rumble(150);
+                    new SequentialCommandGroup(
+                            new HangServosHangComamnd(),
+                            new WaitCommand(200),
+                            new BoxtubeHooksTopBarCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.dpad_up, State.RETRACTED, () -> {
+                    new FullRetractCommand().schedule();
+                    new HangServosRetractCommand().schedule();
+                })
 
+                .state(State.HANG_HOOKS_ON_BAR) // hooks are on top bar
+                .transition(() -> stickyG1.dpad_down, State.HANG_BOXTUBE_EXTENDED, () -> {
+                    gamepad1.rumble(150);
+                    new SequentialCommandGroup(
+                            new PivotCommand(1.5),
+                            new WaitCommand(200),
+                            new FullRetractCommand(),
+                            new WaitCommand(400),
+                            new WristHorizontalCommand(),
+                            new ExtensionCommand(18)
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.dpad_up, State.HANG_RELEASE, () -> {
+                    new HangServosReleaseCommand().schedule();
+                    new BoxtubeSplineCommand(
+                            new Pose2d(2.5, 36, Math.PI/4),
+                            -Math.PI/2,
+                            0.7
+                    ).schedule();
+                })
+
+                .state(State.HANG_BOXTUBE_EXTENDED)
+                .transition(() -> stickyG1.dpad_down, State.HANG_PULLING_ABOVE_BAR, () -> {
+                    gamepad1.rumble(150);
+                    new ExtensionRetractCommand().schedule();
+                    pivot.idle();
+                })
+                .transition(() -> stickyG1.dpad_up, State.HANG_HOOKS_ON_BAR, () -> {
+                    new SequentialCommandGroup(
+                            new FullRetractCommand(),
+                            new WaitCommand(200),
+                            new BoxtubeHooksTopBarCommand()
+                    ).schedule();
+                })
+
+                .state(State.HANG_PULLING_ABOVE_BAR) // pulling up
+                .onEnter(() -> {
+                    wrist.disable();
+                    clamp.disable();
+                    pusher.disable();
+                })
+                .transition(() -> stickyG1.dpad_up, State.HANG_BOXTUBE_EXTENDED, () -> {
+                    new SequentialCommandGroup(
+                            new FullRetractCommand(),
+                            new WaitCommand(500),
+                            new ExtensionCommand(18)
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.dpad_down, State.HANGING, () -> {
+                    gamepad1.rumble(150);
+                    new FullRetractCommand().schedule();
+                })
+                .onExit(() -> {
+                    wrist.enable();
+                    clamp.enable();
+                    pusher.enable();
+                })
+
+                .state(State.HANGING)
+                .onEnter(() -> hangMotor.holdPosition())
+                .transition(() -> stickyG1.right_stick_button || stickyG2.right_stick_button, State.RETRACTED, () -> {
+                    new HangServosRetractCommand().schedule();
+                    new FullRetractCommand().schedule();
+                })
+                .onExit(() -> hangMotor.idle())
 
                 .state(State.MANUAL_RESET)
                 .onEnter(() -> dt.setDrivePower(0.8))
@@ -433,6 +527,15 @@ public class Solo extends BluLinearOpMode {
             case AUTO_SPEC_DEPO_PATH:
             case AUTO_SPEC_INTAKE_FAIL:
                 currentPath.run();
+                break;
+            case HANG_HOOKS_ON_BAR:
+            case HANG_BOXTUBE_EXTENDED:
+            case HANG_PULLING_ABOVE_BAR:
+                hangMotor.setManualPower(-gamepad1.right_stick_y);
+                dt.drive(new Pose2d(0,0,0));
+                break;
+            case HANGING:
+                dt.drive(new Pose2d(0,0,0));
                 break;
             case MANUAL_RESET:
             case AUTO_SPEC_SCORING:
