@@ -16,7 +16,7 @@ public class SpecimenCycleIntakeFailsafePath extends PIDPathBuilder {
                 .schedule(
                         new SequentialCommandGroup(
                                 new BoxtubeSplineCommand(
-                                        new Pose2d(10, 12, 1),
+                                        new Pose2d(11, 12, 1),
                                         -Math.PI,
                                         0.4
                                 ),

@@ -14,16 +14,16 @@ public class CrossWithYellowPath extends PIDPathBuilder {
         super();
         this.setPower(1.0)
                 .schedule(
-                        new SequentialCommandGroup(
-                                new ClampGrabCommand(),
-                                new WheelStopCommand(),
-                                new WaitCommand(300),
+//                        new SequentialCommandGroup(
+//                                new ClampGrabCommand(),
+//                                new WheelStopCommand(),
+//                                new WaitCommand(300),
                                 new FullRetractCommand()
-                        )
+//                        )
                 )
                 .addMappedPoint(-30, -55, 0, 20)
                 .schedule(new PivotCommand(Math.PI/2))
                 .setPower(0.75)
-                .addMappedPoint(-36, -58, 75);
+                .addMappedPoint(-30, -58, 80, 4);
     }
 }

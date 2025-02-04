@@ -20,7 +20,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
     public SpecimenCycleDepositPath(int scoreCount) {
         super();
 //        if(spline) {
-            this.setPower(0.8)
+            this.setPower(0.9)
                     .schedule(new SequentialCommandGroup(
                             new WheelStopCommand(),
                             new ClampGrabCommand(),
@@ -32,19 +32,19 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                             )
                     ))
                     .addMappedPoint(10 - scoreCount * 1.2, -40, 270, 5)
-                    .setPower(0.3)
+                    .setPower(0.45)
                     .addMappedPoint(7 - scoreCount * 1.5, -34, 270)
                     .schedule(new SequentialCommandGroup(
                             new SpecimenDunkSplineCommand(),
-                            new WaitCommand(280),
+                            new WaitCommand(250),
                             new WheelReverseCommand(),
                             new ClampReleaseCommand(),
-                            new WaitCommand(150),
+                            new WaitCommand(100),
                             new PivotRetractCommand(),
                             new ExtensionRetractCommand(),
                             new EndEffectorRetractCommand()
                     ))
-                    .waitMillis(200);
+                    .waitMillis(170);
 //        } else {
 //            this.setPower(0.7)
 //                    .schedule(new SequentialCommandGroup(

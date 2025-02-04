@@ -33,6 +33,6 @@ public class SpitPath extends PIDPathBuilder {
                         new ClampGrabCommand(),
                         new ExtensionCommand(4)
                 ))
-                .waitMillis(200);
+                .waitMillis(150);
     }
 }

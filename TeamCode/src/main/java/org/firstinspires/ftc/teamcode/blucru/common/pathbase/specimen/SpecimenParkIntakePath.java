@@ -17,18 +17,20 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
         this.setPower(0.4)
 //                .schedule(new BoxtubeRetractCommand())
                 .addMappedPoint(24, -48, -45, 6)
-                .schedule(new SequentialCommandGroup(
-                        new BoxtubeCommand(0, 8),
-                        new ArmDropToGroundCommand(),
-                        new WheelIntakeCommand(),
-                        new ClampReleaseCommand(),
-                        new WaitCommand(300),
-                        new ExtensionMotionProfileCommand(14),
-                        new WaitCommand(1000),
-                        new ExtensionCommand(6),
-                        new WaitCommand(300),
-                        new ExtensionMotionProfileCommand(14)
-                ))
+                .callback(() ->
+                        new SequentialCommandGroup(
+                            new BoxtubeCommand(0, 8),
+                            new ArmDropToGroundCommand(),
+                            new WheelIntakeCommand(),
+                            new ClampReleaseCommand(),
+                            new WaitCommand(300),
+                            new ExtensionMotionProfileCommand(14),
+                            new WaitCommand(1000),
+                            new ExtensionCommand(6),
+                            new WaitCommand(300),
+                            new ExtensionMotionProfileCommand(14)
+                        ).schedule()
+                )
                 .waitMillis(4000);
     }
 }
