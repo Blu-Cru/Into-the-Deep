@@ -69,7 +69,7 @@ public class FourSampleConfig extends AutoConfig {
                             currentPath = pathsAfterDeposit[scoreCount].start();
                             scoreCount++;
                         })
-                .transition(() ->currentPath.isDone() && scoreCount == 1, State.CENTER_INTAKE, () -> {
+                .transition(() -> currentPath.isDone() && scoreCount == 1, State.CENTER_INTAKE, () -> {
                     currentPath = pathsAfterDeposit[scoreCount].start();
                     scoreCount++;
                 })
@@ -120,8 +120,8 @@ public class FourSampleConfig extends AutoConfig {
 
     @Override
     public void build() {
-        preloadLiftingPath = new SampleHighLiftPath(0).build();
-        cycleLiftingPath = new SampleHighLiftPath(600).build();
+        preloadLiftingPath = new SampleHighLiftPath().build();
+        cycleLiftingPath = new SampleHighLiftPath().build();
 
         scorePath = new SampleHighDepositPath().build();
 

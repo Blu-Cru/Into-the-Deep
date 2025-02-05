@@ -120,7 +120,7 @@ public class PartnerSampleConfig extends AutoConfig {
                             new WheelStopCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
-                            currentPath = new SampleHighLiftPath(700).build().start();
+                            currentPath = new SampleHighLiftPath().build().start();
                         })
                 .state(State.PARKING)
                 .onEnter(() -> logTransition(State.PARKING))
@@ -131,8 +131,8 @@ public class PartnerSampleConfig extends AutoConfig {
 
     @Override
     public void build() {
-        preloadLiftingPath = new SampleHighLiftPath(0).build();
-        cycleLiftingPath = new SampleHighLiftPath(600).build();
+        preloadLiftingPath = new SampleHighLiftPath().build();
+        cycleLiftingPath = new SampleHighLiftPath().build();
 
         scorePath = new SampleHighDepositPath().build();
 
