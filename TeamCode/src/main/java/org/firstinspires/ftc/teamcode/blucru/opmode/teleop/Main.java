@@ -73,6 +73,7 @@ public class Main extends BluLinearOpMode {
         HANG_BOXTUBE_EXTENDED,
         HANG_PULLING_ABOVE_BAR,
         HANG_HOOKS_ON_LOW,
+        HANG_PULLING_LOW,
         HANGING,
 
         AUTO_SAMPLE_BASKET,
@@ -541,6 +542,9 @@ public class Main extends BluLinearOpMode {
                 .onExit(() -> hangMotor.idle())
 
                 .state(State.HANG_HOOKS_ON_LOW)
+                .transition(() -> stickyG1.dpad_up, State.RETRACTED, () -> {
+                    new FullRetractCommand().schedule();
+                })
                 .transition(() -> stickyG1.dpad_left, State.HANG_PULLING_LOW, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(1.5),
@@ -548,6 +552,12 @@ public class Main extends BluLinearOpMode {
                             new FullRetractCommand()
                     ).schedule();
                 })
+                .loop(() -> {
+                    hangMotor.setManualPower(-gamepad2.right_stick_y);
+                })
+
+                .state(State.HANG_PULLING_LOW)
+                .transition(() -> stickyG1.dpad_left, State.HANGING, () -> gamepad1.rumble(150))
                 .loop(() -> {
                     hangMotor.setManualPower(-gamepad2.right_stick_y);
                 })
