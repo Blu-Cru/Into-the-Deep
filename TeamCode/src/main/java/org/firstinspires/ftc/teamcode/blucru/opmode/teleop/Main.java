@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.Extensio
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosRetractCommand;
@@ -71,6 +72,7 @@ public class Main extends BluLinearOpMode {
         HANG_HOOKS_ON_BAR,
         HANG_BOXTUBE_EXTENDED,
         HANG_PULLING_ABOVE_BAR,
+        HANG_HOOKS_ON_LOW,
         HANGING,
 
         AUTO_SAMPLE_BASKET,
@@ -161,8 +163,12 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> stickyG2.x, State.ABOVE_SPECIMEN_BACK, () ->
                     new SpecimenBackCommand().schedule())
 
+                // HANG
                 .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
                     new GetHooksHighCommand().schedule();
+                })
+                .transition(() -> stickyG1.dpad_left, State.HANG_HOOKS_ON_LOW, () -> {
+                    new GetHooksLowCommand().schedule();
                 })
 
                 // AUTO SPEC
@@ -533,6 +539,18 @@ public class Main extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .onExit(() -> hangMotor.idle())
+
+                .state(State.HANG_HOOKS_ON_LOW)
+                .transition(() -> stickyG1.dpad_left, State.HANG_PULLING_LOW, () -> {
+                    new SequentialCommandGroup(
+                            new PivotCommand(1.5),
+                            new WaitCommand(200),
+                            new FullRetractCommand()
+                    ).schedule();
+                })
+                .loop(() -> {
+                    hangMotor.setManualPower(-gamepad2.right_stick_y);
+                })
 
                 .state(State.MANUAL_RESET)
                 .onEnter(() -> {

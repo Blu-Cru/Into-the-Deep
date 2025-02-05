@@ -31,9 +31,9 @@ public class GetHooksLowCommand extends SequentialCommandGroup {
                 ),
                 new WaitCommand(300),
                 new BoxtubeSplineCommand(
-                        new Pose2d(4, 21, 0.5),
+                        new Pose2d(11, 21, 0.5),
                         -Math.PI/2,
-                        2.3
+                        1.5
                 )
         );
     }
