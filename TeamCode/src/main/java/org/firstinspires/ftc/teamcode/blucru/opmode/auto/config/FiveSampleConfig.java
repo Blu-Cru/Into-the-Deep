@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto.config;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -12,10 +10,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeCenterPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeLeftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeRightPath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleLiftingPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleParkPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SamplePartnerIntakePath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleScoreHighPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
@@ -111,8 +109,8 @@ public class FiveSampleConfig extends AutoConfig {
 
     @Override
     public void build() {
-        liftingPath = new SampleLiftingPath(0).build();
-        scorePath = new SampleScoreHighPath().build();
+        liftingPath = new SampleHighLiftPath(0).build();
+        scorePath = new SampleHighDepositPath().build();
 
         rightIntakePath = new SampleIntakeRightPath().build();
         centerIntakePath = new SampleIntakeCenterPath().build();

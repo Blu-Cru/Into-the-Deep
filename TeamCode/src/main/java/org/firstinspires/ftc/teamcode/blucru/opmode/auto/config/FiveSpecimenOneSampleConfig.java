@@ -12,10 +12,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.Extensio
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleLiftingPath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleScoreHighPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectLeftBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectRightBlockPath;
@@ -145,13 +144,13 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 .state(State.CROSSING_WITH_YELLOW)
                 .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.seesSampleTag() && runtime.seconds() < 29, State.LIFTING_YELLOW, () -> {
                     Robot.getInstance().dt.updateAprilTags();
-                    currentPath = new SampleLiftingPath().start();
+                    currentPath = new SampleHighLiftPath().start();
                 })
                 .transition(() -> runtime.seconds() > 29, State.PARKED, () -> new FullRetractCommand().schedule())
 
                 .state(State.LIFTING_YELLOW)
-                .transition(() -> currentPath.isDone() && Robot.getInstance().extension.getDistance() > 20, State.DEPOSIT_YELLOW, () -> {
-                    currentPath = new SampleScoreHighPath().start();
+                .transition(() -> currentPath.isDone() && Robot.getInstance().extension.getDistance() > 22, State.DEPOSIT_YELLOW, () -> {
+                    currentPath = new SampleHighDepositPath().start();
                 })
 
                 .state(State.DEPOSIT_YELLOW)

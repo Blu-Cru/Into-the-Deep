@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto.config;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
@@ -14,10 +12,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeCenterPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeLeftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeRightPath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleLiftingPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleParkPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SamplePartnerIntakePath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleScoreHighPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
@@ -122,7 +120,7 @@ public class PartnerSampleConfig extends AutoConfig {
                             new WheelStopCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
-                            currentPath = new SampleLiftingPath(700).build().start();
+                            currentPath = new SampleHighLiftPath(700).build().start();
                         })
                 .state(State.PARKING)
                 .onEnter(() -> logTransition(State.PARKING))
@@ -133,10 +131,10 @@ public class PartnerSampleConfig extends AutoConfig {
 
     @Override
     public void build() {
-        preloadLiftingPath = new SampleLiftingPath(0).build();
-        cycleLiftingPath = new SampleLiftingPath(600).build();
+        preloadLiftingPath = new SampleHighLiftPath(0).build();
+        cycleLiftingPath = new SampleHighLiftPath(600).build();
 
-        scorePath = new SampleScoreHighPath().build();
+        scorePath = new SampleHighDepositPath().build();
 
         pathsAfterDeposit[0] = new SampleIntakeRightPath().build();
         pathsAfterDeposit[1] = new SampleIntakeCenterPath().build();

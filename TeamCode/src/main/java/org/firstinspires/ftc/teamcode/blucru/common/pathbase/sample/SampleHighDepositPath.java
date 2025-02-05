@@ -10,20 +10,19 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clam
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
-public class SampleScoreHighPath extends PIDPathBuilder {
-    public SampleScoreHighPath() {
+public class SampleHighDepositPath extends PIDPathBuilder {
+    public SampleHighDepositPath() {
         super();
-        this.setPower(0.2)
+        this.setPower(0.25)
                 .addMappedPoint(-55.8, -55.8, 45)
-                .schedule(new SequentialCommandGroup(
-                        new WaitCommand(250),
+                .callback(() -> new SequentialCommandGroup(
                         new ClampReleaseCommand(),
                         new WheelReverseCommand(),
-                        new WaitCommand(500),
+                        new WaitCommand(300),
                         new ArmGlobalAngleCommand(1.5),
-                        new BoxtubeRetractCommand(600),
+                        new BoxtubeRetractCommand(),
                         new EndEffectorRetractCommand()
-                ))
-                .waitMillis(800);
+                ).schedule())
+                .waitMillis(400);
     }
 }

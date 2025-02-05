@@ -45,11 +45,12 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToAscentPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToRungIntakePath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSampleHighLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSpecimenDepoPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
@@ -76,7 +77,8 @@ public class Main extends BluLinearOpMode {
         HANG_PULLING_LOW,
         HANGING,
 
-        AUTO_SAMPLE_BASKET,
+        AUTO_SAMPLE_LIFTING,
+        AUTO_SAMPLE_SCORING,
         AUTO_SAMPLE_TO_ASCENT,
         AUTO_SAMPLE_TO_RUNG,
 
@@ -150,9 +152,9 @@ public class Main extends BluLinearOpMode {
                     new SampleFrontHighCommand().schedule())
 
                 // DRIVE PID
-                .transition(() -> stickyG1.y && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_BASKET, () -> {
+                .transition(() -> stickyG1.y && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_LIFTING, () -> {
                     dt.updateAprilTags();
-                    currentPath = new TeleSampleHighLiftPath().build().start();
+                    currentPath = new SampleHighLiftPath().build().start();
                 })
 
                 // SPECIMEN
@@ -365,16 +367,19 @@ public class Main extends BluLinearOpMode {
                     wheel.stop();
                 })
 
-                .state(State.AUTO_SAMPLE_BASKET)
+                .state(State.AUTO_SAMPLE_LIFTING)
                 .transition(() ->
                     Math.abs(gamepad1.left_stick_y) > 0.1
                         || Math.abs(gamepad1.left_stick_x) > 0.1
-                        || Math.abs(gamepad1.right_stick_x) > 0.1,
+                        || Math.abs(gamepad1.right_stick_x) > 0.1
+                        || stickyG2.left_bumper,
                     State.SCORING_BASKET, () -> {
                     currentPath.cancel();
                     new SampleBackHighCommand().schedule();
                 })
-                .transition(() -> currentPath.isDone() || stickyG2.left_bumper, State.SCORING_BASKET)
+                .transition(() -> currentPath.isDone() && extension.getDistance() > 22, State.AUTO_SAMPLE_SCORING, () -> {
+                    currentPath = new SampleHighDepositPath().start();
+                })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     currentPath.cancel();
                     new FullRetractCommand().schedule();
@@ -600,7 +605,8 @@ public class Main extends BluLinearOpMode {
     @Override
     public void periodic() {
         switch (Enum.valueOf(State.class, sm.getStateString())) {
-            case AUTO_SAMPLE_BASKET:
+            case AUTO_SAMPLE_LIFTING:
+            case AUTO_SAMPLE_SCORING:
             case AUTO_SAMPLE_TO_ASCENT:
             case AUTO_SAMPLE_TO_RUNG:
             case AUTO_SPEC_INTAKE:
