@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.B
 public class GetHooksHighCommand extends SequentialCommandGroup {
     public GetHooksHighCommand() {
         super(
+                new HangServosRetractCommand(),
                 new BoxtubeSplineCommand(
                         new Pose2d(9, 2.4, -Math.PI/2),
                         -Math.PI/2,

@@ -23,6 +23,6 @@ public class TeleSpecimenDepoPath extends PIDPathBuilder {
                                 0.95
                         )
                 ))
-                .addMappedPoint(7, -40, 270, 5);
+                .addMappedPoint(0, -40, 270, 5);
     }
 }

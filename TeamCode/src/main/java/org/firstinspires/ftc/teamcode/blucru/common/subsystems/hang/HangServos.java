@@ -29,7 +29,7 @@ public class HangServos implements Subsystem, BluSubsystem {
     public void init() {
         for (HangServo servo : servos) {
             servo.init();
-            servo.retract();
+            servo.disable();
         }
     }
 
