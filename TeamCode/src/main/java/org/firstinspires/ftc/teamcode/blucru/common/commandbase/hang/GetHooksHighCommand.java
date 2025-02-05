@@ -7,8 +7,8 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 
-public class GetHooksCommand extends SequentialCommandGroup {
-    public GetHooksCommand() {
+public class GetHooksHighCommand extends SequentialCommandGroup {
+    public GetHooksHighCommand() {
         super(
                 new BoxtubeSplineCommand(
                         new Pose2d(9, 2.4, -Math.PI/2),

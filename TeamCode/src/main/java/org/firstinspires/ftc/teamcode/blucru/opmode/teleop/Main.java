@@ -12,7 +12,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosReleaseCommand;
@@ -162,7 +162,7 @@ public class Main extends BluLinearOpMode {
                     new SpecimenBackCommand().schedule())
 
                 .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
-                    new GetHooksCommand().schedule();
+                    new GetHooksHighCommand().schedule();
                 })
 
                 // AUTO SPEC

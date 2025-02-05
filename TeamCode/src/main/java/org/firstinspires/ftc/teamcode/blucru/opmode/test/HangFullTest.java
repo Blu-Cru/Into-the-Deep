@@ -7,7 +7,7 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeRetractHang3Command;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
@@ -41,7 +41,7 @@ public class HangFullTest extends BluLinearOpMode {
                 .state(State.RETRACT)
                 .transition(() -> stickyG1.b, State.RELEASED, () -> {
                     new HangServosReleaseCommand().schedule();
-                    new GetHooksCommand().schedule();
+                    new GetHooksHighCommand().schedule();
                 })
 
                 .state(State.RELEASED)

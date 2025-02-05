@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wris
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosRetractCommand;
@@ -95,6 +95,8 @@ public class Solo extends BluLinearOpMode {
         addClamp();
         addWrist();
         addIntakeSwitch();
+        addCactus();
+        addCVMaster();
         addPusher();
         addHangServos();
         extension.usePivot(pivot.getMotor());
@@ -106,7 +108,7 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> stickyG1.share, State.MANUAL_RESET, () -> gamepad1.rumble(350))
 
                 // INTAKE
-                .transition(() -> gamepad1.left_bumper, State.INTAKING_GROUND, () -> {
+                .transition(() -> stickyG1.left_bumper, State.INTAKING_GROUND, () -> {
                     new PivotRetractCommand().schedule();
                     new ArmDropToGroundCommand().schedule();
                     new WheelIntakeCommand().schedule();
@@ -134,7 +136,7 @@ public class Solo extends BluLinearOpMode {
 
                 // HANG
                 .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
-                    new GetHooksCommand().schedule();
+                    new GetHooksHighCommand().schedule();
                 })
 
                 .loop(() -> {
@@ -296,8 +298,8 @@ public class Solo extends BluLinearOpMode {
                         wheel.stop();
                     }
 
-                    if(stickyG1.y) new SampleBackHighCommand().schedule();
-                    else if(stickyG1.b) new SampleBackLowCommand().schedule();
+//                    if(stickyG1.y) new SampleBackHighCommand().schedule();
+//                    else if(stickyG1.b) new SampleBackLowCommand().schedule();
                 })
                 .onExit(() -> {
                     clamp.grab();
@@ -515,6 +517,8 @@ public class Solo extends BluLinearOpMode {
         extension.pidTo(0);
 
         dt.setPoseEstimate(DriveBase.startPose);
+
+        cvMaster.detectTag();
     }
 
     @Override
