@@ -36,6 +36,6 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
 //                        new SpecimenFrontDunkCommand(),
                         new SpecimenFrontDunkRetractCommand()
                 ))
-                .waitMillis(600);
+                .waitMillis(550);
     }
 }
