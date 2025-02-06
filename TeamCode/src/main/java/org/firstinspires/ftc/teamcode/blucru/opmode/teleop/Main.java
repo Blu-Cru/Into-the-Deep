@@ -368,11 +368,7 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.AUTO_SAMPLE_LIFTING)
-                .transition(() ->
-                    Math.abs(gamepad1.left_stick_y) > 0.1
-                        || Math.abs(gamepad1.left_stick_x) > 0.1
-                        || Math.abs(gamepad1.right_stick_x) > 0.1
-                        || stickyG2.left_bumper,
+                .transition(() -> stickyG1.y,
                     State.SCORING_BASKET, () -> {
                     currentPath.cancel();
                     new SampleBackHighCommand().schedule();
@@ -380,9 +376,23 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> currentPath.isDone() && extension.getDistance() > 22, State.AUTO_SAMPLE_SCORING, () -> {
                     currentPath = new SampleHighDepositPath().start();
                 })
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG2.a || stickyG1.a, State.RETRACTED, () -> {
                     currentPath.cancel();
                     new FullRetractCommand().schedule();
+                })
+
+                .state(State.AUTO_SAMPLE_SCORING)
+                .transition(() ->
+//                                Math.abs(gamepad1.left_stick_y) > 0.1
+//                                        || Math.abs(gamepad1.left_stick_x) > 0.1
+//                                        || Math.abs(gamepad1.right_stick_x) > 0.1
+                                        stickyG2.left_bumper || stickyG1.y,
+                        State.SCORING_BASKET, () -> {
+                            currentPath.cancel();
+                            new SampleBackHighCommand().schedule();
+                        })
+                .transition(() -> currentPath.isDone(), State.RETRACTED, () -> {
+                    currentPath.cancel();
                 })
 
                 .state(State.AUTO_SAMPLE_TO_ASCENT)
@@ -397,11 +407,7 @@ public class Main extends BluLinearOpMode {
                         })
 
                 .state(State.AUTO_SAMPLE_TO_RUNG)
-                .transition(() ->
-                                Math.abs(gamepad1.left_stick_y) > 0.1
-                                        || Math.abs(gamepad1.left_stick_x) > 0.1
-                                        || Math.abs(gamepad1.right_stick_x) > 0.1
-                                        || currentPath.isDone(),
+                .transition(() -> currentPath.isDone(),
                         State.RETRACTED, () -> {
                             currentPath.cancel();
                             new FullRetractCommand().schedule();
@@ -551,6 +557,8 @@ public class Main extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> stickyG1.dpad_left, State.HANG_PULLING_LOW, () -> {
+                    gamepad1.rumble(150);
+                    gamepad2.rumble(150);
                     new SequentialCommandGroup(
                             new PivotCommand(1.5),
                             new WaitCommand(200),
@@ -562,7 +570,9 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.HANG_PULLING_LOW)
-                .transition(() -> stickyG1.dpad_left, State.HANGING, () -> gamepad1.rumble(150))
+                .transition(() -> stickyG1.dpad_left, State.HANGING, () -> {
+                    gamepad1.rumble(150);
+                })
                 .loop(() -> {
                     hangMotor.setManualPower(-gamepad2.right_stick_y);
                 })

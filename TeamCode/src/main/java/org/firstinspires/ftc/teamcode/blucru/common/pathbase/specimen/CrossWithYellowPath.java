@@ -24,6 +24,6 @@ public class CrossWithYellowPath extends PIDPathBuilder {
                 .addMappedPoint(-30, -55, 0, 20)
                 .schedule(new PivotCommand(Math.PI/2))
                 .setPower(0.75)
-                .addMappedPoint(-30, -58, 80, 4);
+                .addMappedPoint(-30, -58, 80);
     }
 }
