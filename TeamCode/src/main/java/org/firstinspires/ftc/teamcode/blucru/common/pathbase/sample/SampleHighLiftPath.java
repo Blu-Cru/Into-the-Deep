@@ -9,7 +9,7 @@ public class SampleHighLiftPath extends PIDPathBuilder {
         super();
         this.setPower(0.8)
                 .schedule(new PivotCommand(Math.PI/2))
-                .addMappedPoint(-53, -53, 45, 8)
+                .addMappedPoint(-53, -53, 45, 10)
                 .callback(() -> new SampleBackHighCommand().schedule())
                 .addMappedPoint(-53, -53, 45);
     }

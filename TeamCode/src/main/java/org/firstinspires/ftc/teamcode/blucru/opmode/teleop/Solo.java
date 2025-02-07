@@ -41,6 +41,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.Specime
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
@@ -64,7 +65,8 @@ public class Solo extends BluLinearOpMode {
         DUNKING_SPECIMEN_BACK,
         MANUAL_RESET,
 
-        AUTO_BASKET,
+        AUTO_SAMPLE_LIFTING,
+        AUTO_SAMPLE_SCORING,
         AUTO_TO_ASCENT,
         AUTO_TO_RUNG,
 
@@ -121,7 +123,7 @@ public class Solo extends BluLinearOpMode {
                     currentPath = new SpecimenIntakePath().start();
                 })
                 // DRIVE PID
-                .transition(() -> stickyG1.y && cvMaster.seesSampleTag(), State.AUTO_BASKET, () -> {
+                .transition(() -> stickyG1.y && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_LIFTING, () -> {
                     dt.updateAprilTags();
                     currentPath = new SampleHighLiftPath().build().start();
                 })
@@ -305,7 +307,7 @@ public class Solo extends BluLinearOpMode {
                     wheel.stop();
                 })
 
-                .state(State.AUTO_BASKET)
+                .state(State.AUTO_SAMPLE_LIFTING)
                 .transition(() ->
                                 Math.abs(gamepad1.left_stick_y) > 0.1
                                         || Math.abs(gamepad1.left_stick_x) > 0.1
@@ -314,11 +316,16 @@ public class Solo extends BluLinearOpMode {
                             currentPath.cancel();
                             new SampleBackHighCommand().schedule();
                         })
-                .transition(() -> currentPath.isDone() || stickyG1.left_bumper, State.SCORING_BASKET)
+                .transition(() -> currentPath.isDone() && extension.getDistance() > 20, State.AUTO_SAMPLE_SCORING, () -> {
+                    currentPath = new SampleHighDepositPath().start();
+                })
                 .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     currentPath.cancel();
                     new FullRetractCommand().schedule();
                 })
+
+                .state(State.AUTO_SAMPLE_SCORING)
+                .transition(() -> currentPath.isDone() || stickyG1.a, State.RETRACTED, () -> currentPath.cancel())
 
                 .state(State.AUTO_TO_ASCENT)
                 .transition(() ->
@@ -523,7 +530,8 @@ public class Solo extends BluLinearOpMode {
     @Override
     public void periodic() {
         switch (Enum.valueOf(State.class, sm.getStateString())) {
-            case AUTO_BASKET:
+            case AUTO_SAMPLE_LIFTING:
+            case AUTO_SAMPLE_SCORING:
             case AUTO_TO_ASCENT:
             case AUTO_TO_RUNG:
             case AUTO_SPEC_INTAKE:

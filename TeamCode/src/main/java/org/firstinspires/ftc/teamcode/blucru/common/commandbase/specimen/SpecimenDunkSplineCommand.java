@@ -10,7 +10,7 @@ public class SpecimenDunkSplineCommand extends BoxtubeSplineCommand {
         super(
                 new Pose2d(-9, 25.8, Math.PI),
                 new Vector2d(-8, -1.5),
-                new Pose2d(-9.271, 22, Math.PI),
+                new Pose2d(-9.271, 21.5, Math.PI),
                 new Vector2d(0,0),
                 0,
                 0.35);
