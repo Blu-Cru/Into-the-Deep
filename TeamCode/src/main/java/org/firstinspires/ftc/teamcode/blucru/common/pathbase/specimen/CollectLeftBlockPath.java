@@ -27,6 +27,7 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
                 .schedule(new SequentialCommandGroup(
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
+                        new WaitCommand(100),
                         new ExtensionMotionProfileCommand(10)
                 ))
                 .waitMillis(1000);
