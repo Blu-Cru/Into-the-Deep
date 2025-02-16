@@ -19,13 +19,39 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 public class SpecimenCycleDepositPath extends PIDPathBuilder {
     public SpecimenCycleDepositPath(int scoreCount) {
         super();
-//        if(spline) {
+        if(scoreCount == -1) {
             this.setPower(0.9)
                     .schedule(new SequentialCommandGroup(
                             new WheelStopCommand(),
                             new ClampGrabCommand(),
                             new BoxtubeSplineCommand(
-                                    new Vector2d(20,42),
+                                    new Vector2d(20, 42),
+                                    new Pose2d(-8.6, 28.5, Math.PI),
+                                    0,
+                                    0.95
+                            )
+                    ))
+                    .addMappedPoint(9, -34, 270, 5)
+                    .setPower(0.5)
+                    .addMappedPoint(6.5, -33.5, 270)
+                    .schedule(new SequentialCommandGroup(
+                            new SpecimenDunkSplineCommand(),
+                            new WaitCommand(320),
+                            new WheelReverseCommand(),
+                            new ClampReleaseCommand(),
+                            new WaitCommand(70),
+                            new PivotRetractCommand(),
+                            new ExtensionRetractCommand(),
+                            new EndEffectorRetractCommand()
+                    ))
+                    .waitMillis(170);
+        } else {
+            this.setPower(0.9)
+                    .schedule(new SequentialCommandGroup(
+                            new WheelStopCommand(),
+                            new ClampGrabCommand(),
+                            new BoxtubeSplineCommand(
+                                    new Vector2d(20, 42),
                                     new Pose2d(-8.6, 30, Math.PI),
                                     0,
                                     0.95
@@ -45,34 +71,6 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                             new EndEffectorRetractCommand()
                     ))
                     .waitMillis(170);
-//        } else {
-//            this.setPower(0.7)
-//                    .schedule(new SequentialCommandGroup(
-//                            new WheelStopCommand(),
-//                            new ClampGrabCommand(),
-//                            new PivotCommand(1.2),
-//                            new WaitCommand(200),
-//                            new ExtensionCommand(2),
-//                            new ArmGlobalAngleCommand(2)
-//                    ))
-//                    .addMappedPoint(10   - scoreCount, -43, 270, 5)
-//                    .schedule(
-//                            new SpecimenBackCommand()
-//                    )
-//                    .setPower(0.25)
-//                    .addMappedPoint(7 - scoreCount * 1.5, -34, 270)
-//                    .schedule(new SequentialCommandGroup(
-//                            new WaitCommand(300),
-//                            new SpecimenBackDunkCommand(),
-//                            new WaitCommand(100),
-//                            new WheelReverseCommand(),
-//                            new ClampReleaseCommand(),
-//                            new WaitCommand(150),
-//                            new PivotRetractCommand(),
-//                            new ExtensionRetractCommand(),
-//                            new EndEffectorRetractCommand()
-//                    ))
-//                    .waitMillis(400);
-//        }
+        }
     }
 }

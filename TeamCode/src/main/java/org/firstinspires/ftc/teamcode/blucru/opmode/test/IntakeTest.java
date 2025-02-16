@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
@@ -26,6 +27,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wris
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
+@TeleOp(group = "test")
 public class IntakeTest extends BluLinearOpMode {
     enum State{
         RETRACTED,
@@ -53,13 +55,19 @@ public class IntakeTest extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
                 .transition(() -> stickyG2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
-                    wrist.front();
-                    robot.setIKPose(new Pose2d(20, 6, -Math.PI/2));
+                    new BoxtubeSplineCommand(
+                            new Pose2d(20, 4.5, -Math.PI/2),
+                            -Math.PI/2,
+                            0.85
+                    ).schedule();
+//                    robot.setIKPose(new Pose2d(20, 6, -Math.PI/2));
                 })
 
                 .state(State.EXTENDING_OVER_INTAKE)
-                .transition(() -> gamepad2.left_bumper, State.INTAKING, () -> {
+                .transition(() -> stickyG2.left_bumper, State.INTAKING, () -> {
                     robot.setIKPose(new Pose2d(20, 2, -Math.PI/2));
+                    clamp.release();
+                    wheel.intake();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
@@ -75,20 +83,26 @@ public class IntakeTest extends BluLinearOpMode {
 
                     if(stickyG2.dpad_left) {
                         wrist.horizontal();
-                        robot.setIKPose(new Pose2d(20, 6, -Math.PI/2));
+                        robot.setIKPose(new Pose2d(20, 4.5, -Math.PI/2));
                     }
                     if(stickyG2.dpad_down) {
                         wrist.front();
-                        robot.setIKPose(new Pose2d(20, 6, -Math.PI/2));
+                        robot.setIKPose(new Pose2d(20, 4.5, -Math.PI/2));
                     }
                 })
 
                 .state(State.INTAKING)
+                .onEnter(() -> {
+                    wheel.intake();
+                    clamp.release();
+                })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> !gamepad2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
-                    robot.setIKPose(new Pose2d(20, 6, -Math.PI/2));
+                    robot.setIKPose(new Pose2d(20, 4.5, -Math.PI/2));
+                    clamp.close();
+                    wheel.stop();
                 })
                 .loop(() -> {
                     if(stickyG2.dpad_left) {
