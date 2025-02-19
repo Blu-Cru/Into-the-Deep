@@ -73,4 +73,8 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                     .waitMillis(170);
         }
     }
+
+    public SpecimenCycleDepositPath() {
+        this(-1);
+    }
 }
