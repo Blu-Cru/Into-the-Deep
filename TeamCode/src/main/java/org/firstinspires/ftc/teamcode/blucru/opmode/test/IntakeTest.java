@@ -36,6 +36,8 @@ public class IntakeTest extends BluLinearOpMode {
     }
 
     StateMachine sm;
+    Pose2d aboveIntakePose = new Pose2d(26, 5.5, -Math.PI/2);
+    Pose2d intakePose = new Pose2d(26, 2, -Math.PI/2);
 
     @Override
     public void initialize() {
@@ -56,16 +58,16 @@ public class IntakeTest extends BluLinearOpMode {
                 .state(State.RETRACTED)
                 .transition(() -> stickyG2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
                     new BoxtubeSplineCommand(
-                            new Pose2d(20, 4.5, -Math.PI/2),
+                            aboveIntakePose,
                             -Math.PI/2,
-                            0.85
+                            0.75
                     ).schedule();
 //                    robot.setIKPose(new Pose2d(20, 6, -Math.PI/2));
                 })
 
                 .state(State.EXTENDING_OVER_INTAKE)
                 .transition(() -> stickyG2.left_bumper, State.INTAKING, () -> {
-                    robot.setIKPose(new Pose2d(20, 2, -Math.PI/2));
+                    robot.setIKPose(intakePose);
                     clamp.release();
                     wheel.intake();
                 })
@@ -83,11 +85,11 @@ public class IntakeTest extends BluLinearOpMode {
 
                     if(stickyG2.dpad_left) {
                         wrist.horizontal();
-                        robot.setIKPose(new Pose2d(20, 4.5, -Math.PI/2));
+                        robot.setIKPose(aboveIntakePose);
                     }
                     if(stickyG2.dpad_down) {
                         wrist.front();
-                        robot.setIKPose(new Pose2d(20, 4.5, -Math.PI/2));
+                        robot.setIKPose(aboveIntakePose);
                     }
                 })
 
@@ -100,18 +102,18 @@ public class IntakeTest extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> !gamepad2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
-                    robot.setIKPose(new Pose2d(20, 4.5, -Math.PI/2));
+                    robot.setIKPose(aboveIntakePose);
                     clamp.close();
                     wheel.stop();
                 })
                 .loop(() -> {
                     if(stickyG2.dpad_left) {
                         wrist.horizontal();
-                        robot.setIKPose(new Pose2d(20, 2, -Math.PI/2));
+                        robot.setIKPose(intakePose);
                     }
                     if(stickyG2.dpad_down) {
                         wrist.front();
-                        robot.setIKPose(new Pose2d(20, 2, -Math.PI/2));
+                        robot.setIKPose(intakePose);
                     }
                 })
                 .build();
