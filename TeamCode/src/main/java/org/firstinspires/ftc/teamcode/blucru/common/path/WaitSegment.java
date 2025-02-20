@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.blucru.common.path;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
+
 public class WaitSegment implements PathSegment{
     final Pose2d pose;
     private final double waitTime;
@@ -29,5 +31,9 @@ public class WaitSegment implements PathSegment{
     @Override
     public boolean failed() {
         return false;
+    }
+
+    public void run() {
+        Robot.getInstance().dt.pidTo(pose);
     }
 }
