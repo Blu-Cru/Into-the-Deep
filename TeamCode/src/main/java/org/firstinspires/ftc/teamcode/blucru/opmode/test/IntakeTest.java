@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -56,7 +57,7 @@ public class IntakeTest extends BluLinearOpMode {
                 .state(State.RETRACTED)
                 .transition(() -> stickyG2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
                     new BoxtubeSplineCommand(
-                            new Pose2d(20, 4.5, -Math.PI/2),
+                            new Pose2d(20, 5.5, -Math.PI/2),
                             -Math.PI/2,
                             0.85
                     ).schedule();
@@ -70,7 +71,16 @@ public class IntakeTest extends BluLinearOpMode {
                     wheel.intake();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
-                    new FullRetractCommand().schedule();
+                    new SequentialCommandGroup(
+                            new BoxtubeSplineCommand(
+                                    new Vector2d(-4, 10),
+                                    new Pose2d(12, 4.5, 0),
+                                    -Math.PI/2,
+                                    0.4
+                            ),
+                            new WaitCommand(300),
+                            new FullRetractCommand()
+                    ).schedule();
                 })
                 .loop(() -> {
                     if(gamepad2.right_bumper) {
@@ -83,11 +93,11 @@ public class IntakeTest extends BluLinearOpMode {
 
                     if(stickyG2.dpad_left) {
                         wrist.horizontal();
-                        robot.setIKPose(new Pose2d(20, 4.5, -Math.PI/2));
+                        robot.setIKPose(new Pose2d(20, 5.5, -Math.PI/2));
                     }
                     if(stickyG2.dpad_down) {
                         wrist.front();
-                        robot.setIKPose(new Pose2d(20, 4.5, -Math.PI/2));
+                        robot.setIKPose(new Pose2d(20, 5.5, -Math.PI/2));
                     }
                 })
 
@@ -97,10 +107,19 @@ public class IntakeTest extends BluLinearOpMode {
                     clamp.release();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
-                    new FullRetractCommand().schedule();
+                    new SequentialCommandGroup(
+                            new BoxtubeSplineCommand(
+                                    new Vector2d(-4, 18),
+                                    new Pose2d(12, 5.5, 0),
+                                    -Math.PI/2,
+                                    0.35
+                            ),
+                            new WaitCommand(300),
+                            new FullRetractCommand()
+                    ).schedule();
                 })
                 .transition(() -> !gamepad2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
-                    robot.setIKPose(new Pose2d(20, 4.5, -Math.PI/2));
+                    robot.setIKPose(new Pose2d(20, 5.5, -Math.PI/2));
                     clamp.close();
                     wheel.stop();
                 })

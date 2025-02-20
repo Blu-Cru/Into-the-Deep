@@ -437,7 +437,7 @@ public class Main extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> Robot.validSample(), State.AUTO_SPEC_DEPO_PATH, () -> {
-                    currentPath = new TeleSpecimenDepoPath().start();
+                    currentPath = new SpecimenCycleDepositPath().start();
                 })
                 .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE, () -> {
                     currentPath = new SpecimenIntakePath().start();
