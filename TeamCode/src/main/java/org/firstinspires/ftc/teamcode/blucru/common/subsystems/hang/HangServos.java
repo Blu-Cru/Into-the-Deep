@@ -55,6 +55,12 @@ public class HangServos implements Subsystem, BluSubsystem {
         }
     }
 
+    public void midway() {
+        for(HangServo servo : servos) {
+            servo.midway();
+        }
+    }
+
     public void release() {
         state = State.RELEASED;
 
@@ -78,6 +84,7 @@ public class HangServos implements Subsystem, BluSubsystem {
                 release();
                 break;
             case RELEASED:
+            default:
                 hang();
                 break;
         }

@@ -16,6 +16,11 @@ public class LeftHangServo extends HangServo{
     }
 
     @Override
+    public void midway() {
+        setPosition(0.5);
+    }
+
+    @Override
     public void hang() {
         setPosition(0.1);
     }

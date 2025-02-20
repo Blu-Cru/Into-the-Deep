@@ -9,5 +9,6 @@ public abstract class HangServo extends BluServo {
 
     public abstract void retract();
     public abstract void release();
+    public abstract void midway();
     public abstract void hang();
 }

@@ -20,6 +20,9 @@ public class HangMotor implements BluSubsystem, Subsystem {
     }
     State state;
 
+    // low hang: 11253
+    // high hooks on bar: -2200
+
     BluMotorWithEncoder motor;
     PDController pid;
     double manualPower;
@@ -58,6 +61,10 @@ public class HangMotor implements BluSubsystem, Subsystem {
                 break;
         }
         motor.write();
+    }
+
+    public void pidHighBar(){
+        pidTo(-2200);
     }
 
     public void pidTo(double ticks) {

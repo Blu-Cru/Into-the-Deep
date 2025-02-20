@@ -33,8 +33,9 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                     ))
                     .addMappedPoint(9, -34, 270, 5)
                     .setPower(0.5)
-                    .addMappedPoint(6.5, -33.5, 270)
+                    .addMappedPoint(6.5, -33.5, 270, 3)
                     .schedule(new SequentialCommandGroup(
+                            new WaitCommand(100),
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(320),
                             new WheelReverseCommand(),
@@ -44,7 +45,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                             new ExtensionRetractCommand(),
                             new EndEffectorRetractCommand()
                     ))
-                    .waitMillis(170);
+                    .waitMillis(270);
         } else {
             this.setPower(0.9)
                     .schedule(new SequentialCommandGroup(

@@ -10,14 +10,16 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksLowCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosHangComamnd;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.HangServosRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.motor.HangMotorHighBarCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosHangComamnd;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
@@ -50,9 +52,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLi
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToAscentPath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToRungIntakePath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSpecimenDepoPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
@@ -324,12 +323,13 @@ public class Main extends BluLinearOpMode {
                 .state(State.SCORING_BASKET)
                 .onEnter(() -> dt.setDrivePower(0.35))
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
-                    new SequentialCommandGroup(
-                            new ArmGlobalAngleCommand(1.5),
-                            new WaitCommand(150),
-                            new BoxtubeRetractCommand(),
-                            new EndEffectorRetractCommand()
-                    ).schedule();
+                    new RetractFromBasketCommand().schedule();
+//                    new SequentialCommandGroup(
+//                            new ArmGlobalAngleCommand(1.5),
+//                            new WaitCommand(150),
+//                            new BoxtubeRetractCommand(),
+//                            new EndEffectorRetractCommand()
+//                    ).schedule();
                 })
 //                .transition(() -> stickyG1.y, State.AUTO_SAMPLE_TO_ASCENT, () -> {
 //                    currentPath = new TeleDriveToAscentPath().build().start();
@@ -453,7 +453,9 @@ public class Main extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new HangServosHangComamnd(),
                             new WaitCommand(200),
-                            new BoxtubeHooksTopBarCommand()
+                            new BoxtubeHooksTopBarCommand(),
+                            new WaitCommand(250),
+                            new HangMotorHighBarCommand()
                     ).schedule();
                 })
                 .transition(() -> stickyG1.dpad_up, State.RETRACTED, () -> {
