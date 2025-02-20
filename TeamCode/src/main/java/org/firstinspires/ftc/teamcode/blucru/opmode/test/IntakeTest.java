@@ -76,7 +76,7 @@ public class IntakeTest extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new BoxtubeSplineCommand(
                                     new Vector2d(-4, 10),
-                                    new Pose2d(12, 4.5, 0),
+                                    new Pose2d(12, 4, 0),
                                     -Math.PI/2,
                                     0.4
                             ),
