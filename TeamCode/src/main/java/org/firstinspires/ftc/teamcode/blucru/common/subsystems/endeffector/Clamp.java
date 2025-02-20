@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 
 @Config
 public class Clamp extends BluServo implements BluSubsystem, Subsystem {
-    public static double HORIZ_POS = 0.68;
+    public static double HORIZ_POS = 0.53;
 
     public Clamp() {
         super("clamp");

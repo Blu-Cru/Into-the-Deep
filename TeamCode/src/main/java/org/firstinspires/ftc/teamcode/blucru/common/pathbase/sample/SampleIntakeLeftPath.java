@@ -13,18 +13,19 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 public class SampleIntakeLeftPath extends PIDPathBuilder {
     public SampleIntakeLeftPath() {
         super();
-        this.setPower(0.2)
+        this.setPower(0.7)
                 .addMappedPoint(-43, -45, 90, 4)
-                .setPower(0.5)
+                .setPower(0.9)
+                .schedule(new SequentialCommandGroup(
+                        new WaitCommand(150),
+                        new ArmDropToGroundCommand(),
+                        new ExtensionCommand(2)
+                ))
                 .addMappedPoint(-52, -32, 162, 5)
                 .schedule(new SequentialCommandGroup(
-                        new ArmDropToGroundCommand(),
-                        new ExtensionCommand(1),
-                        new WaitCommand(300),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
-                        new WaitCommand(100),
-                        new ExtensionMotionProfileCommand(6)
+                        new ExtensionMotionProfileCommand(8)
                 ))
                 .waitMillis(3000);
     }
