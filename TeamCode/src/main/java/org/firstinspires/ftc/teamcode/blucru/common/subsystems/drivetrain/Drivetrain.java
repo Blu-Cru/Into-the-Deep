@@ -159,7 +159,7 @@ public class Drivetrain extends DriveBase implements Subsystem {
     public void driveToHeading(double x, double y, double targetHeading, Alliance alliance) {
         pid.setTargetHeading(targetHeading);
 
-        driveToHeading(x, y);
+        driveToHeading(x, y, alliance);
     }
 
     public void pidYHeadingMapped(double x, double y, double heading) {

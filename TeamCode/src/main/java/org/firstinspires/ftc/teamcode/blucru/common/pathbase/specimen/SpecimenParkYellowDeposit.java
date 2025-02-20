@@ -22,9 +22,9 @@ public class SpecimenParkYellowDeposit extends PIDPathBuilder {
                             new EndEffectorRetractCommand()
                     ).schedule();
                 })
-                .addMappedPoint(-30, -59, 0, 16)
+                .addMappedPoint(-30, -53, 0, 16)
                 .setPower(1)
-                .addMappedPoint(12, -59, -10, 10)
+                .addMappedPoint(15, -55, -10, 10)
                 .callback(() -> {
                     new ExtensionCommand(15).schedule();
                     new ArmPreIntakeCommand().schedule();

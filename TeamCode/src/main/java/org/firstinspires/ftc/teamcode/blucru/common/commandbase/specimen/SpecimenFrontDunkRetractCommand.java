@@ -13,7 +13,7 @@ public class SpecimenFrontDunkRetractCommand extends SequentialCommandGroup {
         super(
                 new ClampReleaseCommand(),
                 new WheelReverseCommand(),
-                new WaitCommand(300),
+                new WaitCommand(170),
                 new EndEffectorRetractCommand(),
                 new BoxtubeRetractCommand()
         );

@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeR
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelPowerCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
@@ -17,7 +18,7 @@ public class SampleHighDepositPath extends PIDPathBuilder {
                 .addMappedPoint(-55.8, -55.8, 45)
                 .callback(() -> new SequentialCommandGroup(
                         new ClampReleaseCommand(),
-                        new WheelReverseCommand(),
+                        new WheelPowerCommand(-0.5),
                         new WaitCommand(300),
                         new ArmGlobalAngleCommand(1.5),
                         new BoxtubeRetractCommand(),
