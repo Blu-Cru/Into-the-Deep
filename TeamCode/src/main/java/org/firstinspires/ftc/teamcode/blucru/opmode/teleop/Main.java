@@ -454,7 +454,7 @@ public class Main extends BluLinearOpMode {
                             new HangServosHangComamnd(),
                             new WaitCommand(200),
                             new BoxtubeHooksTopBarCommand(),
-                            new WaitCommand(250),
+                            new WaitCommand(700),
                             new HangMotorHighBarCommand()
                     ).schedule();
                 })
