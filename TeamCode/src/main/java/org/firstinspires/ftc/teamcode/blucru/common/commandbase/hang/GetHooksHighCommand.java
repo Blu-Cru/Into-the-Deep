@@ -36,7 +36,7 @@ public class GetHooksHighCommand extends SequentialCommandGroup {
                 new BoxtubeSplineCommand(
                         new Pose2d(4, 39, 0.5),
                         -Math.PI/2,
-                        2.1
+                        2.0
                 ),
                 new WaitCommand(1800),
                 new HangServosReleaseCommand()
