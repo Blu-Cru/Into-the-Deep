@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -42,6 +43,13 @@ public class Globals {
         }
 
         return new Pose2d(x, y, Angle.norm(Math.toRadians(headingDeg)));
+    }
+
+    public static Vector2d mapPoint(Vector2d point) {
+        double x = point.getX()*reflect;
+        double y = point.getY()*reflect;
+
+        return new Vector2d(x, y);
     }
 
     public static Pose2d unMapPose(Pose2d pose) {

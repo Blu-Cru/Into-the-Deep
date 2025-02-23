@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -118,8 +119,8 @@ public class Drivetrain extends DriveBase implements Subsystem {
         double y = pid.calcY(yState);
 
         Vector2d pv = new Vector2d(heading, headingVel);
-        Vector2d dtHeadingState = blockKinematics.getHeadingStateTowardsPoint(pose, vel);
-        Vector2d sp = new Vector2d(dtHeadingState.getX(), - dtHeadingState.getY());
+        Vector2d translationHeadingState = blockKinematics.getHeadingStateTowardsPoint(pose, vel);
+        Vector2d sp = new Vector2d(translationHeadingState.getX(), - translationHeadingState.getY());
 
         double rotate = pid.getRotate(pv, sp);
 
@@ -207,8 +208,16 @@ public class Drivetrain extends DriveBase implements Subsystem {
         return pid.inRange(pose, translationTolerance, headingTolerance);
     }
 
-    public boolean inRangeTurnToPoint(double translationTolerance, double headingTolerance) {
-        return
+    public boolean inRangeTurnToPoint(Vector2d drivePoint, Vector2d turnToPoint, double translationTolerance, double headingTolerance) {
+        boolean headingSatisfied = Math.abs(Angle.normDelta(heading - Math.atan2(
+                turnToPoint.getY() - pose.getY(),
+                turnToPoint.getX() - pose.getX()))) < headingTolerance;
+
+        boolean translationSatisfied = Math.hypot(
+                drivePoint.getX() - pose.getX(),
+                drivePoint.getY() - pose.getY()) < translationTolerance;
+
+        return headingSatisfied && translationSatisfied;
     }
 
     public void setDrivePower(double power) {
