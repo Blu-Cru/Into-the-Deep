@@ -14,7 +14,7 @@ public class CollectCenterBlockPath extends PIDPathBuilder {
     public CollectCenterBlockPath() {
         super();
         this.setPower(0.7)
-                .addMappedPoint(39, -32, 18, 4)
+                .addMappedPoint(39, -33, 18, 4)
                 .schedule(new SequentialCommandGroup(
                         new ExtensionCommand(4),
                         new ArmDropToGroundCommand(),

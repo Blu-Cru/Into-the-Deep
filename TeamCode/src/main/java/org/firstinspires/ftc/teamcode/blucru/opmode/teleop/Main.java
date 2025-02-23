@@ -630,6 +630,10 @@ public class Main extends BluLinearOpMode {
             gamepad1.rumble(150);
         }
 
+        if(stickyG1.x) {
+            dt.setPoseEstimate(Globals.unMapPose(new Pose2d(6.5, -30, -Math.PI/2)));
+        }
+
         if(stickyG1.right_bumper) {
             new PushCommand().schedule();
         }
