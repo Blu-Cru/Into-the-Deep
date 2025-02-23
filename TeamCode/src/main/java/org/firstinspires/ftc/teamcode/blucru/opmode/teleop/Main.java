@@ -96,6 +96,7 @@ public class Main extends BluLinearOpMode {
 
     @Override
     public void initialize() {
+        addCVMaster();
         addDrivetrain();
         addExtension();
         addPivot();
@@ -107,7 +108,6 @@ public class Main extends BluLinearOpMode {
         addPusher();
         addHangServos();
         addHangMotor();
-        addCVMaster();
         addCactus();
         enableFTCDashboard();
         extension.usePivot(pivot.getMotor());
@@ -172,6 +172,7 @@ public class Main extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG1.dpad_left, State.HANG_HOOKS_ON_LOW, () -> {
                     new GetHooksLowCommand().schedule();
+                    hangMotor.pidTo(-6100);
                 })
 
                 // AUTO SPEC
@@ -454,7 +455,7 @@ public class Main extends BluLinearOpMode {
                             new HangServosHangComamnd(),
                             new WaitCommand(200),
                             new BoxtubeHooksTopBarCommand(),
-                            new WaitCommand(250),
+                            new WaitCommand(700),
                             new HangMotorHighBarCommand()
                     ).schedule();
                 })

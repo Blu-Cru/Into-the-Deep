@@ -85,8 +85,10 @@ public class HangMotor implements BluSubsystem, Subsystem {
     }
 
     public void setManualPower(double power) {
-        state = State.MANUAL;
-        manualPower = power;
+        if(Math.abs(power) > 0.1) {
+            state = State.MANUAL;
+            manualPower = power;
+        }
     }
 
     @Override
