@@ -31,7 +31,8 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                                     0.95
                             )
                     ))
-                    .addMappedPoint(-5, -30, 270, 25)
+                    .addMappedPoint(-10, -45, 270, 30)
+                    .setPower(0.7)
                     .addMappedPoint(7, -34, 270, 5)
                     .setPower(0.5)
                     .addMappedPoint(4, -33.5, 270, 3)

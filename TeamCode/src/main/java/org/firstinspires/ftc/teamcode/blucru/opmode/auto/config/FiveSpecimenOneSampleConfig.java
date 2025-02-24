@@ -142,7 +142,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 .transitionTimed(0.5, State.INTAKING_YELLOW)
 
                 .state(State.CROSSING_WITH_YELLOW)
-                .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.seesSampleTag() && runtime.seconds() < 29, State.LIFTING_YELLOW, () -> {
+                .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.seesSampleTag() && runtime.seconds() < 28.6, State.LIFTING_YELLOW, () -> {
                     Robot.getInstance().dt.updateAprilTags();
                     currentPath = new SampleHighLiftPath().start();
                 })
