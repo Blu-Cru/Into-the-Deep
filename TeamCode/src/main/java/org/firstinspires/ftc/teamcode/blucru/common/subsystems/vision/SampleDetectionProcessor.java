@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision;
 
 import android.graphics.Canvas;
 
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.calib3d.Calib3d;
@@ -24,8 +26,9 @@ public class SampleDetectionProcessor implements VisionProcessor {
             {895.0, 607.0}, {1155.0, 602.0},
             {870.0, 810.0}, {1207, 805.0}
     };
-    static double[] REF_CENTER = {400.0, 400.0};
-    static double PIXELS_PER_INCH = 20.0,
+    static double[] REF_TOP_LEFT_PIXELS = {400.0, 400.0},
+        REF_TOP_LEFT_INCHES = {0.0, 0.0};
+    static double PIXELS_PER_INCH = 40.0,
         RED_HUE_LOW = 150.0, RED_HUE_HIGH = 12.0,
         YELLOW_HUE_LOW = 12.0, YELLOW_HUE_HIGH = 55.0,
         BLUE_HUE_LOW = 80.0, BLUE_HUE_HIGH = 150.0,
@@ -33,10 +36,11 @@ public class SampleDetectionProcessor implements VisionProcessor {
         // calib
         fx = 1279.33, fy = 1279.33, cx = 958.363, cy = 492.062,
         // distortion
-        K1 = -0.448017, K2 = 0.245668, K3 = -0.0768575,
+        K1 = -0.448017, K2 = 0.245668, K3 = 0.0,
         P1 = -0.000901464, P2 = 0.000996399;
 
     Mat K, DIST_COEFFS;
+    public double processingTimeMillis = 0;
 
     public SampleDetectionProcessor() {
         K = new Mat(3, 3, CvType.CV_64F);
@@ -53,13 +57,15 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
+        double startNanoTime = System.nanoTime();
+
         Mat undistorted = undistort(frame);
 
         Mat wbCorrected = applyGrayWorldWhiteBalance(undistorted);
 
         Mat transformed = doHomographyTransform(wbCorrected);
 
-        Imgproc.resize(transformed, transformed, new Size(960, 520));
+//        Imgproc.resize(transformed, transformed, new Size(960, 520));
 
         Mat hsv = new Mat();
         Imgproc.cvtColor(transformed, hsv, Imgproc.COLOR_BGR2HSV);
@@ -94,7 +100,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             MatOfPoint cnt = contours.get(i);
 
             double area = Imgproc.contourArea(cnt);
-            if(area < 750.0 || area > 1750.0) {
+            if(area < 3000.0 || area > 7000.0) {
                 continue;
             }
 
@@ -111,6 +117,20 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //
         }
 
+        frame.release();
+        undistorted.release();
+        wbCorrected.release();
+        transformed.release();
+        hsv.release();
+        saturationThresh.release();
+        satMasked.release();
+        satEdges.release();
+        edges.release();
+        combinedEdges.release();
+        dilated.release();
+        hierarchy.release();
+
+        processingTimeMillis = (System.nanoTime() - startNanoTime) / 1e6;
         return null;
     }
 
@@ -164,8 +184,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
                         new Point(HOMOG_IMAGE_POINTS[2][0], HOMOG_IMAGE_POINTS[2][1]), new Point(HOMOG_IMAGE_POINTS[3][0], HOMOG_IMAGE_POINTS[3][1])
                 ),
                 new MatOfPoint2f(
-                        new Point(REF_CENTER[0], REF_CENTER[1]), new Point(REF_CENTER[0] + PIXELS_PER_INCH * 5.0, REF_CENTER[1]),
-                        new Point(REF_CENTER[0], REF_CENTER[1] + PIXELS_PER_INCH * 5.0), new Point(REF_CENTER[0] + PIXELS_PER_INCH * 5.0, REF_CENTER[1] + PIXELS_PER_INCH * 5.0)
+                        new Point(REF_TOP_LEFT_PIXELS[0], REF_TOP_LEFT_PIXELS[1]), new Point(REF_TOP_LEFT_PIXELS[0] + PIXELS_PER_INCH * 5.0, REF_TOP_LEFT_PIXELS[1]),
+                        new Point(REF_TOP_LEFT_PIXELS[0], REF_TOP_LEFT_PIXELS[1] + PIXELS_PER_INCH * 5.0), new Point(REF_TOP_LEFT_PIXELS[0] + PIXELS_PER_INCH * 5.0, REF_TOP_LEFT_PIXELS[1] + PIXELS_PER_INCH * 5.0)
                 )
         );
 
@@ -173,5 +193,30 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Imgproc.warpPerspective(src, transformed, M, src.size());
 
         return transformed;
+    }
+
+    private Vector2d getPosition(RotatedRect rect) {
+        double pixelOffsetX = rect.center.x - REF_TOP_LEFT_PIXELS[0];
+        double pixelOffsetY = rect.center.y - REF_TOP_LEFT_PIXELS[1];
+
+        return new Vector2d(
+                REF_TOP_LEFT_INCHES[0] + pixelOffsetX / PIXELS_PER_INCH,
+                REF_TOP_LEFT_INCHES[1] + pixelOffsetY / PIXELS_PER_INCH
+        );
+    }
+
+    private double[] getMeanHueSat(Mat hsv, RotatedRect rect) {
+        Mat roi = new Mat(hsv, rect.boundingRect());
+
+        List<Mat> channels = new ArrayList<>();
+        Core.split(hsv, channels);
+
+        Mat hue = channels.get(0);
+        Mat sat = channels.get(1);
+
+        Scalar meanHue = Core.mean(hue);
+        Scalar meanSat = Core.mean(sat);
+
+        return new double[] {meanHue.val[0], meanSat.val[0]};
     }
 }
