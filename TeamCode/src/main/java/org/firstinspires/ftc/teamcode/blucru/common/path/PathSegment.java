@@ -10,4 +10,6 @@ public interface PathSegment {
     boolean failed();
 
     Pose2d getPose();
+
+    void run();
 }

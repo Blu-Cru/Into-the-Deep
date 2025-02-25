@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -110,6 +111,22 @@ public class Drivetrain extends DriveBase implements Subsystem {
         pid.setTargetPose(targetPose);
     }
 
+    public void pidTurnToPos(Vector2d pidPoint, Vector2d turnToPoint) {
+        pid.setTargetPose(pidPoint);
+        blockKinematics = new TurnToBlockKinematics(turnToPoint);
+
+        double x = pid.calcX(xState);
+        double y = pid.calcY(yState);
+
+        Vector2d pv = new Vector2d(heading, headingVel);
+        Vector2d translationHeadingState = blockKinematics.getHeadingStateTowardsPoint(pose, vel);
+        Vector2d sp = new Vector2d(translationHeadingState.getX(), - translationHeadingState.getY());
+
+        double rotate = pid.getRotate(pv, sp);
+
+        driveFieldCentric(DriveKinematics.clip(new Pose2d(x, y, rotate), drivePower));
+    }
+
     public void teleDriveTurnToPos(double x, double y, Vector2d pos, boolean useVel) {
         state = State.IDLE;
         blockKinematics = new TurnToBlockKinematics(pos);
@@ -189,6 +206,18 @@ public class Drivetrain extends DriveBase implements Subsystem {
 
     public boolean inRange(double translationTolerance, double headingTolerance) {
         return pid.inRange(pose, translationTolerance, headingTolerance);
+    }
+
+    public boolean inRangeTurnToPoint(Vector2d drivePoint, Vector2d turnToPoint, double translationTolerance, double headingTolerance) {
+        boolean headingSatisfied = Math.abs(Angle.normDelta(heading - Math.atan2(
+                turnToPoint.getY() - pose.getY(),
+                turnToPoint.getX() - pose.getX()))) < headingTolerance;
+
+        boolean translationSatisfied = Math.hypot(
+                drivePoint.getX() - pose.getX(),
+                drivePoint.getY() - pose.getY()) < translationTolerance;
+
+        return headingSatisfied && translationSatisfied;
     }
 
     public void setDrivePower(double power) {

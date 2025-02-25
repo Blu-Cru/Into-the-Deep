@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.blucru.common.path;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 public class WaitSegment implements PathSegment{
-    final Pose2d pose;
+    final PathSegment prevSegment;
     private final double waitTime;
     private double startTime;
 
-    public WaitSegment(Pose2d pose, double waitTime) {
-        this.pose = pose;
+    public WaitSegment(PathSegment prevSegment, double waitTime) {
+        this.prevSegment = prevSegment;
         this.waitTime = waitTime;
     }
 
@@ -23,11 +23,15 @@ public class WaitSegment implements PathSegment{
     }
 
     public Pose2d getPose() {
-        return pose;
+        return prevSegment.getPose();
     }
 
     @Override
     public boolean failed() {
         return false;
+    }
+
+    public void run() {
+        prevSegment.run();
     }
 }
