@@ -34,6 +34,7 @@ public class CVMaster implements BluSubsystem {
 
     public VisionPortal visionPortal;
     public AprilTagProcessor tagDetector;
+    public SampleDetectionProcessor sampleDetector;
 
     public int numDetections;
     ArrayList<AprilTagDetection> detections;

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
-import org.firstinspires.ftc.teamcode.blucru.common.util.IntakeState;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Sample;
 
 public class CactusSensor implements BluSubsystem {
     DigitalChannel channel0, channel1;
@@ -46,27 +46,27 @@ public class CactusSensor implements BluSubsystem {
 
     }
 
-    public IntakeState getState() {
-        if(pin0 && pin1) return IntakeState.YELLOW;
-        else if(pin0) return IntakeState.BLUE;
-        else if(pin1) return IntakeState.RED;
-        else return IntakeState.EMPTY;
+    public Sample getState() {
+        if(pin0 && pin1) return Sample.YELLOW;
+        else if(pin0) return Sample.BLUE;
+        else if(pin1) return Sample.RED;
+        else return Sample.EMPTY;
     }
 
     private boolean validSpecimen() {
-        IntakeState state = getState();
+        Sample state = getState();
 
-        if(alliance == Alliance.RED) return state == IntakeState.RED;
-        else return state == IntakeState.BLUE;
+        if(alliance == Alliance.RED) return state == Sample.RED;
+        else return state == Sample.BLUE;
     }
 
     private boolean validSample() {
-        IntakeState state = getState();
+        Sample state = getState();
 
-        if(state == IntakeState.YELLOW) return true;
+        if(state == Sample.YELLOW) return true;
 
-        if(alliance == Alliance.RED) return state == IntakeState.RED;
-        else return state == IntakeState.BLUE;
+        if(alliance == Alliance.RED) return state == Sample.RED;
+        else return state == Sample.BLUE;
     }
 
     @Override

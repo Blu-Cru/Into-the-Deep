@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems;
 
-import static org.firstinspires.ftc.teamcode.blucru.common.util.Globals.alliance;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -23,9 +21,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
-import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
-import org.firstinspires.ftc.teamcode.blucru.common.util.IntakeState;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Point3d;
 
 import java.util.ArrayList;
