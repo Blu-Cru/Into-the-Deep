@@ -35,7 +35,7 @@ public class AprilTagTest extends BluLinearOpMode {
             cvMaster.setExposure(EXPOSURE_MS);
             cvMaster.setGain(GAIN);
             state = State.DETECTING;
-            FtcDashboard.getInstance().startCameraStream((CameraStreamSource) cvMaster.visionPortal, 30);
+            FtcDashboard.getInstance().startCameraStream((CameraStreamSource) cvMaster.atagPortal, 30);
         }
 
         if (stickyG1.x) {

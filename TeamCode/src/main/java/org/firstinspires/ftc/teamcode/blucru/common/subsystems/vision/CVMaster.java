@@ -1,19 +1,23 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision;
 
+import android.graphics.Bitmap;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.CameraControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
-import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -32,7 +36,7 @@ public class CVMaster implements BluSubsystem {
     ExposureControl exposureControl;
     GainControl gainControl;
 
-    public VisionPortal visionPortal;
+    public VisionPortal atagPortal, samplePortal;
     public AprilTagProcessor tagDetector;
     public SampleDetectionProcessor sampleDetector;
 
@@ -57,18 +61,27 @@ public class CVMaster implements BluSubsystem {
 
                 .build();
 
-        visionPortal = new VisionPortal.Builder()
+        this.sampleDetector = new SampleDetectionProcessor();
+
+        atagPortal = new VisionPortal.Builder()
                 .setCamera(Globals.hwMap.get(WebcamName.class, "webcam"))
                 .setCameraResolution(new Size(1280, 720))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(tagDetector)
                 .build();
-        visionPortal.setProcessorEnabled(tagDetector, false);
+        atagPortal.setProcessorEnabled(tagDetector, false);
 
-        while(visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {}
+        while(atagPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {}
 
-        exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-        gainControl = visionPortal.getCameraControl(GainControl.class);
+        exposureControl = atagPortal.getCameraControl(ExposureControl.class);
+        gainControl = atagPortal.getCameraControl(GainControl.class);
+
+        samplePortal = new VisionPortal.Builder()
+                .setCamera(Globals.hwMap.get(WebcamName.class, "sample cam"))
+                .setCameraResolution(new Size(1920, 1080))
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                .addProcessor(sampleDetector)
+                .build();
     }
 
     public void init() {
@@ -78,7 +91,7 @@ public class CVMaster implements BluSubsystem {
     public void read() {
         detections = tagDetector.getDetections();
 
-        if(visionPortal.getProcessorEnabled(tagDetector)) numDetections = detections.size();
+        if(atagPortal.getProcessorEnabled(tagDetector)) numDetections = detections.size();
         else numDetections = 0;
     }
 
@@ -87,9 +100,9 @@ public class CVMaster implements BluSubsystem {
     }
 
     public void telemetry(Telemetry telemetry) {
-        telemetry.addData("camera state", visionPortal.getCameraState());
-        telemetry.addData("Tag detector enabled", visionPortal.getProcessorEnabled(tagDetector));
-        if(visionPortal.getProcessorEnabled(tagDetector)) {
+        telemetry.addData("Tag Portal State", atagPortal.getCameraState());
+        telemetry.addData("Tag detector enabled", atagPortal.getProcessorEnabled(tagDetector));
+        if(atagPortal.getProcessorEnabled(tagDetector)) {
             telemetry.addData("# tags visible: ", numDetections);
 
             ArrayList<Integer> ids = new ArrayList<>();
@@ -99,21 +112,42 @@ public class CVMaster implements BluSubsystem {
 
             telemetry.addData("Detection ids", ids);
         }
+
+        telemetry.addData("Sample Portal State", samplePortal.getCameraState());
+        telemetry.addData("Sample detector enabled", samplePortal.getProcessorEnabled(sampleDetector));
+        sampleDetector.telemetry();
     }
 
     public void detectTag() {
-        visionPortal.resumeStreaming();
+        atagPortal.resumeStreaming();
 
-        visionPortal.setProcessorEnabled(tagDetector, true);
+        atagPortal.setProcessorEnabled(tagDetector, true);
 
         exposureControl.setMode(ExposureControl.Mode.Manual);
         exposureControl.setExposure(EXPOSURE, TimeUnit.MILLISECONDS);
         gainControl.setGain(GAIN);
     }
 
+    public void startSampleStreaming() {
+        samplePortal.resumeStreaming();
+    }
+
+    public void stopSampleStreaming() {
+        disableSampleDetector();
+        samplePortal.stopStreaming();
+    }
+
+    public void enableSampleDetector() {
+        samplePortal.setProcessorEnabled(sampleDetector, true);
+    }
+
+    public void disableSampleDetector() {
+        samplePortal.setProcessorEnabled(sampleDetector, false);
+    }
+
     public void stop() {
-        visionPortal.setProcessorEnabled(tagDetector, false);
-        visionPortal.stopStreaming();
+        atagPortal.setProcessorEnabled(tagDetector, false);
+        atagPortal.stopStreaming();
     }
 
     public boolean setExposure(double exposure) {

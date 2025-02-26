@@ -49,6 +49,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
     Mat K, DIST_COEFFS;
     public double processingTimeMillis = 0;
     List<Pose2d> validPoses;
+    int numValidPoses;
 
     public SampleDetectionProcessor() {
         K = new Mat(3, 3, CvType.CV_64F);
@@ -182,6 +183,10 @@ public class SampleDetectionProcessor implements VisionProcessor {
         }
 
         Imgproc.drawContours(detectionOverlay, validRects, -1, new Scalar(0, 255, 0), 2);
+
+        numValidPoses = validPoses.size();
+        // TODO: loop through detections, score them based on location, orientation
+        // find pose of highest score
 
         frame.release();
         undistorted.release();
