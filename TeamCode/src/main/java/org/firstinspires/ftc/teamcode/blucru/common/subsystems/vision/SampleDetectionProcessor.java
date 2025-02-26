@@ -6,6 +6,7 @@ import android.util.Log;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
@@ -41,11 +42,13 @@ public class SampleDetectionProcessor implements VisionProcessor {
         fx = 1279.33, fy = 1279.33, cx = 958.363, cy = 492.062,
         // distortion
         K1 = -0.448017, K2 = 0.245668, K3 = 0.0,
-        P1 = -0.000901464, P2 = 0.000996399;
+        P1 = -0.000901464, P2 = 0.000996399,
+        MIN_X_INCHES = -20.0, MAX_X_INCHES = 20.0,
+        MIN_Y_INCHES = 9.0, MAX_Y_INCHES = 20.0;
 
     Mat K, DIST_COEFFS;
     public double processingTimeMillis = 0;
-    List<Pose2d> validDetections;
+    List<Pose2d> validPoses;
 
     public SampleDetectionProcessor() {
         K = new Mat(3, 3, CvType.CV_64F);
@@ -53,7 +56,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
         DIST_COEFFS = new Mat(5, 1, CvType.CV_64F);
         DIST_COEFFS.put(0, 0, new double[] {K1, K2, P1, P2, K3});
-        validDetections = new ArrayList<>();
+        validPoses = new ArrayList<>();
     }
 
     @Override
@@ -64,7 +67,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
         double startNanoTime = System.nanoTime();
-        validDetections = new ArrayList<>();
+        validPoses = new ArrayList<>();
 
         Mat undistorted = undistort(frame);
 
@@ -108,6 +111,9 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //        RotatedRect[] rects = new RotatedRect[contours.size()];
 //        double[] normalizedAngles = new double[contours.size()];
 
+        Mat detectionOverlay = transformed.clone();
+        List<MatOfPoint> validRects = new ArrayList<>();
+
         for(int i = 0; i < contours.size(); i++) {
             MatOfPoint cnt = contours.get(i);
 
@@ -134,10 +140,10 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             Point[] boxPoints = new Point[4];
             rect.points(boxPoints);
-            MatOfPoint matOfPoint = new MatOfPoint(boxPoints);
+            MatOfPoint matOfRectPoints = new MatOfPoint(boxPoints);
 
             Mat rotatedRectMask = Mat.zeros(transformed.size(), CvType.CV_8UC1);
-            Imgproc.fillConvexPoly(rotatedRectMask, matOfPoint, new Scalar(255));
+            Imgproc.fillConvexPoly(rotatedRectMask, matOfRectPoints, new Scalar(255));
 
             Scalar meanHue = Core.mean(hueChannel, rotatedRectMask);
             Scalar meanSat = Core.mean(satChannel, rotatedRectMask);
@@ -159,12 +165,23 @@ public class SampleDetectionProcessor implements VisionProcessor {
                 }
             }
 
-            validDetections.add(new Pose2d(getPoint(rect.center), normalizedAngle));
+            Pose2d blockPose = new Pose2d(getPoint(rect.center), Math.toRadians(normalizedAngle));
+
+            if(blockPose.getX() < MIN_X_INCHES || blockPose.getX() > MAX_X_INCHES
+                    || blockPose.getY() < MIN_Y_INCHES || blockPose.getY() > MAX_Y_INCHES) {
+                Log.d("SampleDetectionProcessor", "Contour discarded with position: " + blockPose);
+                continue;
+            }
+
+            validRects.add(matOfRectPoints);
+            validPoses.add(new Pose2d(getPoint(rect.center), Math.toRadians(normalizedAngle)));
 
             cnt.release();
-            matOfPoint.release();
+            matOfRectPoints.release();
             rotatedRectMask.release();
         }
+
+        Imgproc.drawContours(detectionOverlay, validRects, -1, new Scalar(0, 255, 0), 2);
 
         frame.release();
         undistorted.release();
@@ -178,9 +195,10 @@ public class SampleDetectionProcessor implements VisionProcessor {
         combinedEdges.release();
         dilated.release();
         hierarchy.release();
+//        detectionOverlay.release();
 
         processingTimeMillis = (System.nanoTime() - startNanoTime) / 1e6;
-        return null;
+        return detectionOverlay;
     }
 
     @Override
@@ -244,14 +262,13 @@ public class SampleDetectionProcessor implements VisionProcessor {
         return transformed;
     }
 
-    private Vector2d getPosition(RotatedRect rect) {
-        double pixelOffsetX = rect.center.x - REF_TOP_LEFT_PIXELS[0];
-        double pixelOffsetY = rect.center.y - REF_TOP_LEFT_PIXELS[1];
+    private Vector2d getPoint(Point centerPixels) {
+        double refOffsetX = centerPixels.x-REF_TOP_LEFT_PIXELS[0];
+        double refOffsetY = -(centerPixels.y-REF_TOP_LEFT_PIXELS[1]);
 
-        return new Vector2d(
-                REF_TOP_LEFT_INCHES[0] + pixelOffsetX / PIXELS_PER_INCH,
-                REF_TOP_LEFT_INCHES[1] + pixelOffsetY / PIXELS_PER_INCH
-        );
+        double inchOffsetX = REF_TOP_LEFT_INCHES[0]+refOffsetX/PIXELS_PER_INCH;
+        double inchOffsetY = REF_TOP_LEFT_INCHES[1]+refOffsetY/PIXELS_PER_INCH;
+        return new Vector2d(inchOffsetX, inchOffsetY);
     }
 
     private double[] getMeanHueSat(Mat hsv, RotatedRect rect) {
@@ -269,12 +286,13 @@ public class SampleDetectionProcessor implements VisionProcessor {
         return new double[] {meanHue.val[0], meanSat.val[0]};
     }
 
-    private Vector2d getPoint(Point centerPixels) {
-        double refOffsetX = centerPixels.x-REF_TOP_LEFT_PIXELS[0];
-        double refOffsetY = -(centerPixels.y-REF_TOP_LEFT_PIXELS[1]);
-
-        double inchOffsetX = REF_TOP_LEFT_INCHES[0]+refOffsetX/PIXELS_PER_INCH;
-        double inchOffsetY = REF_TOP_LEFT_INCHES[1]+refOffsetY/PIXELS_PER_INCH;
-        return new Vector2d(inchOffsetX, inchOffsetY);
+    public void telemetry() {
+        Telemetry tele = Globals.tele;
+        tele.addLine("Sample Detection Processor:");
+        tele.addData("Num. of Sample Detections", validPoses.size());
+        for(Pose2d pose : validPoses) {
+            tele.addData("Detected valid pose: ", pose);
+        }
+        tele.addData("Processing time (ms)", processingTimeMillis);
     }
 }
