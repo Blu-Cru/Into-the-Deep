@@ -11,9 +11,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 public class SampleParkPath extends PIDPathBuilder {
     public SampleParkPath() {
         super();
-        this.setPower(0.2)
+        this.setPower(0.6)
                 .addMappedPoint(-50, -40, 90, 4)
-                .setPower(0.6)
+                .setPower(0.8)
                 .addMappedPoint(-48, -20, 135, 8)
                 .addMappedPoint(-26, -12, 180, 4)
                 .schedule(new SequentialCommandGroup(

@@ -45,6 +45,10 @@ public class Globals {
         return new Pose2d(x, y, Angle.norm(Math.toRadians(headingDeg)));
     }
 
+    public static Pose2d mapPose(Pose2d pose) {
+        return mapPose(pose.getX(), pose.getY(), pose.getHeading());
+    }
+
     public static Vector2d mapPoint(Vector2d point) {
         double x = point.getX()*reflect;
         double y = point.getY()*reflect;

@@ -21,8 +21,8 @@ public class BoxtubeForwardKinematics extends BoxtubeKinematics {
 
         CommonOps_DDF3.mult(pivot2, P2toBlock, result);
 
-        System.out.println("\nEnd Effector Matrix");
-        result.print();
+//        System.out.println("\nEnd Effector Matrix");
+//        result.print();
         return result;
     }
 
@@ -44,8 +44,8 @@ public class BoxtubeForwardKinematics extends BoxtubeKinematics {
         DMatrix3x3 p1 = getPivot1(pivotAngle);
 
         CommonOps_DDF3.mult(p1, extensionMatrix, result);
-        System.out.println("\nMatrix 2");
-        result.print();
+//        System.out.println("\nMatrix 2");
+//        result.print();
         return result;
     }
 
@@ -59,8 +59,8 @@ public class BoxtubeForwardKinematics extends BoxtubeKinematics {
                 0, 0, 1
         );
 
-        System.out.println("\nMatrix 1");
-        res.print();
+//        System.out.println("\nMatrix 1");
+//        res.print();
         return res;
     }
 }
