@@ -71,16 +71,13 @@ public class SampleDetectionProcessor implements VisionProcessor {
         double startNanoTime = System.nanoTime();
         validPoses = new ArrayList<>();
 
-        Mat newCameraMatrix = Calib3d.getOptimalNewCameraMatrix(K, DIST_COEFFS, frame.size(), 1, frame.size());
+//        Mat newCameraMatrix = Calib3d.getOptimalNewCameraMatrix(K, DIST_COEFFS, frame.size(), 1, frame.size());
+//
+//        Mat undistorted = new Mat();
+//        Calib3d.undistort(frame, undistorted, K, DIST_COEFFS, newCameraMatrix);
+//        newCameraMatrix.release();
 
-        Log.i("SampleDetectionProcessor", newCameraMatrix.toString());
-
-        Mat undistorted = new Mat();
-        Calib3d.undistort(frame, undistorted, K, DIST_COEFFS, newCameraMatrix);
-        newCameraMatrix.release();
-//        return undistorted;
-
-//        Mat undistorted = undistort(frame);
+        Mat undistorted = undistort(frame);
 
 //        Mat wbCorrected = applyGrayWorldWhiteBalance(undistorted);
 //
@@ -198,7 +195,6 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //        // TODO: loop through detections, score them based on location, orientation
 //        // find pose of highest score
 //
-        frame.release();
 //        undistorted.release();
 //        wbCorrected.release();
 //        transformed.release();
@@ -212,7 +208,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //        hierarchy.release();
 ////        detectionOverlay.release();
 //
-//        processingTimeMillis = (System.nanoTime() - startNanoTime) / 1e6;
+        processingTimeMillis = (System.nanoTime() - startNanoTime) / 1e6;
         return undistorted;
     }
 
