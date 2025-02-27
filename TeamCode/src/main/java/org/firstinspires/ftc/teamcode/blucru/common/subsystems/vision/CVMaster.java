@@ -45,6 +45,8 @@ public class CVMaster implements BluSubsystem {
     ArrayList<Integer> detectionIds;
 
     public CVMaster() {
+        int[] viewIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.HORIZONTAL);
+
         this.tagDetector = new AprilTagProcessor.Builder()
                 .setDrawAxes(false)
                 .setDrawCubeProjection(false)
@@ -68,6 +70,7 @@ public class CVMaster implements BluSubsystem {
                 .setCameraResolution(new Size(1280, 720))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(tagDetector)
+                .setLiveViewContainerId(viewIds[0])
                 .build();
         atagPortal.setProcessorEnabled(tagDetector, false);
 
@@ -76,11 +79,14 @@ public class CVMaster implements BluSubsystem {
         exposureControl = atagPortal.getCameraControl(ExposureControl.class);
         gainControl = atagPortal.getCameraControl(GainControl.class);
 
+        atagPortal.stopStreaming();
+
         samplePortal = new VisionPortal.Builder()
                 .setCamera(Globals.hwMap.get(WebcamName.class, "sample cam"))
-                .setCameraResolution(new Size(1920, 1080))
+                .setCameraResolution(new Size(640, 480))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(sampleDetector)
+                .setLiveViewContainerId(viewIds[1])
                 .build();
     }
 

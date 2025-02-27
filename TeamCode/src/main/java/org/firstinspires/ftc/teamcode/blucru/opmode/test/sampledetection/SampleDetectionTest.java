@@ -42,6 +42,9 @@ public class SampleDetectionTest extends BluLinearOpMode {
     @Override
     public void initLoop() {
         sm.update();
+
+        cvMaster.telemetry(telemetry);
+        telemetry();
     }
 
     @Override
