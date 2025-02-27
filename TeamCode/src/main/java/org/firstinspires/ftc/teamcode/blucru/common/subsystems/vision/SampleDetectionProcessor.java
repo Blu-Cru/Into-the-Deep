@@ -53,11 +53,17 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
     public SampleDetectionProcessor() {
         K = new Mat(3, 3, CvType.CV_64F);
-        K.put(0, 0, new double[] {fx, 0, cx, 0, fy, cy, 0, 0, 1});
-        Log.i("SampleDetectionProcessor", K.toString());
+        K.put(0, 0, fx, 0, cx,
+                0, fy, cy,
+                0, 0, 1);
 
-        DIST_COEFFS = new Mat(5, 1, CvType.CV_64F);
-        DIST_COEFFS.put(0, 0, new double[] {K1, K2, P1, P2, K3});
+        DIST_COEFFS = new Mat(4, 1, CvType.CV_64F);
+        DIST_COEFFS.put(0, 0, K1, K2, P1, P2, K3);
+
+//        Log.i("SampleDetectionProcessor", K.toString());
+
+//        DIST_COEFFS = new Mat(5, 1, CvType.CV_64F);
+//        DIST_COEFFS.put(0, 0, new double[] {K1, K2, P1, P2, K3});
         validPoses = new ArrayList<>();
     }
 
@@ -67,7 +73,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
     }
 
     @Override
-    public Object processFrame(Mat frame, long captureTimeNanos) {
+    public Mat processFrame(Mat frame, long captureTimeNanos) {
         double startNanoTime = System.nanoTime();
         validPoses = new ArrayList<>();
 
@@ -77,7 +83,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //        Calib3d.undistort(frame, undistorted, K, DIST_COEFFS, newCameraMatrix);
 //        newCameraMatrix.release();
 
-        Mat undistorted = undistort(frame);
+//        Mat undistorted = undistort(frame);
 
 //        Mat wbCorrected = applyGrayWorldWhiteBalance(undistorted);
 //
@@ -85,13 +91,13 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //
 ////        Imgproc.resize(transformed, transformed, new Size(960, 520));
 //
-//        Mat hsv = new Mat();
-//        Imgproc.cvtColor(transformed, hsv, Imgproc.COLOR_BGR2HSV);
+        Mat hsv = new Mat();
+        Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_BGR2HSV);
 //
-//        Mat hueChannel = new Mat();
-//        Mat satChannel = new Mat();
-//        Core.extractChannel(hsv, hueChannel, 0);
-//        Core.extractChannel(hsv, satChannel, 1);
+        Mat hueChannel = new Mat();
+        Mat satChannel = new Mat();
+        Core.extractChannel(hsv, hueChannel, 0);
+        Core.extractChannel(hsv, satChannel, 1);
 //
 //        Mat saturationThresh = new Mat();
 //        Core.inRange(hsv, new Scalar(0, 45, 0), new Scalar(255, 255, 255), saturationThresh);
@@ -208,8 +214,14 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //        hierarchy.release();
 ////        detectionOverlay.release();
 //
+
+        Mat inputHSV = new Mat();
+
+        Imgproc.cvtColor(frame, inputHSV, Imgproc.COLOR_RGB2HSV);
+
         processingTimeMillis = (System.nanoTime() - startNanoTime) / 1e6;
-        return undistorted;
+//        return undistorted;
+        return hueChannel;
     }
 
     @Override
@@ -220,10 +232,11 @@ public class SampleDetectionProcessor implements VisionProcessor {
     public Mat undistort(Mat frame) {
         Mat newCameraMatrix = Calib3d.getOptimalNewCameraMatrix(K, DIST_COEFFS, frame.size(), 1, frame.size());
 
-        Log.i("SampleDetectionProcessor", newCameraMatrix.toString());
+//        Log.i("SampleDetectionProcessor", newCameraMatrix.toString());
 
         Mat undistorted = new Mat();
-        Calib3d.undistort(frame, undistorted, K, DIST_COEFFS, newCameraMatrix);
+        Calib3d.undistort(frame, undistorted, K, DIST_COEFFS);
+//        Calib3d.undistort(frame, undistorted, K, DIST_COEFFS, newCameraMatrix);
         return undistorted;
     }
 

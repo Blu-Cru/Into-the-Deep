@@ -83,7 +83,7 @@ public class CVMaster implements BluSubsystem {
 
         samplePortal = new VisionPortal.Builder()
                 .setCamera(Globals.hwMap.get(WebcamName.class, "sample cam"))
-                .setCameraResolution(new Size(640, 480))
+                .setCameraResolution(new Size(1920, 1080))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(sampleDetector)
                 .setLiveViewContainerId(viewIds[1])

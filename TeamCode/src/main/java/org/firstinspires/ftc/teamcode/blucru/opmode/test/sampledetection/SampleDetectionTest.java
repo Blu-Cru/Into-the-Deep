@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "test")
@@ -26,7 +27,7 @@ public class SampleDetectionTest extends BluLinearOpMode {
                 .transition(() -> stickyG1.a, State.DETECTING, () -> {
                     cvMaster.startSampleStreaming();
                     cvMaster.enableSampleDetector();
-                    FtcDashboard.getInstance().startCameraStream(cvMaster.samplePortal, 30);
+                    FtcDashboard.getInstance().startCameraStream((CameraStreamSource) cvMaster.samplePortal, 30);
                 })
                 .state(State.DETECTING)
                 .transition(() -> stickyG1.a, State.IDLE, () -> {
