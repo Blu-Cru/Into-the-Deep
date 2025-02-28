@@ -160,6 +160,11 @@ public class DriveBase implements BluSubsystem {
         }
     }
 
+    public Pose2d getGlobalPose(Pose2d robotPose) {
+        Vector2d vec = robotPose.vec().rotated(localizer.getHeading()).plus(pose.vec());
+        return new Pose2d(vec, robotPose.getHeading() + localizer.getHeading());
+    }
+
     @Override
     public void telemetry(Telemetry telemetry) {
         localizer.telemetry();

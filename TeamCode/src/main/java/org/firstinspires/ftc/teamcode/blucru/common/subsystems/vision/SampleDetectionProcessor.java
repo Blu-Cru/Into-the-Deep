@@ -217,7 +217,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
                 }
             }
 
-            Pose2d blockPose = new Pose2d(getPoint(rect.center), Math.toRadians(normalizedAngle));
+            Pose2d blockPose = new Pose2d(getRobotPoint(rect.center), Math.toRadians(normalizedAngle));
 
             if(blockPose.getX() < MIN_X_INCHES || blockPose.getX() > MAX_X_INCHES
                     || blockPose.getY() < MIN_Y_INCHES || blockPose.getY() > MAX_Y_INCHES) {
@@ -226,7 +226,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             }
 
             validRects.add(matOfRectPoints);
-            Pose2d pose = new Pose2d(getPoint(rect.center), Math.toRadians(normalizedAngle));
+            Pose2d pose = new Pose2d(getRobotPoint(rect.center), Math.toRadians(normalizedAngle));
             tempValidPoses.add(pose);
             penalty += pose.vec().norm();
 
@@ -272,7 +272,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         edges.release();
         combinedEdges.release();
         dilated.release();
-//        hierarchy.release();
+        hierarchy.release();
         detectionOverlay.release();
 
 
@@ -303,13 +303,13 @@ public class SampleDetectionProcessor implements VisionProcessor {
         return transformed;
     }
 
-    private Vector2d getPoint(Point centerPixels) {
+    private Vector2d getRobotPoint(Point centerPixels) {
         double refOffsetX = centerPixels.x-REF_TOP_LEFT_PIXELS[0];
         double refOffsetY = -(centerPixels.y-REF_TOP_LEFT_PIXELS[1]);
 
         double inchOffsetX = REF_TOP_LEFT_INCHES[0]+refOffsetX/PIXELS_PER_INCH;
         double inchOffsetY = REF_TOP_LEFT_INCHES[1]+refOffsetY/PIXELS_PER_INCH;
-        return new Vector2d(inchOffsetX, inchOffsetY);
+        return new Vector2d(inchOffsetX, inchOffsetY).rotated(Math.toRadians(-90));
     }
 
     private double[] getMeanHueSat(Mat hsv, RotatedRect rect) {
@@ -331,9 +331,10 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Telemetry tele = Globals.tele;
         tele.addLine("Sample Detection Processor:");
         tele.addData("Num. of Sample Detections", validPoses.size());
-        for(Pose2d pose : validPoses) {
-            tele.addData("Detected valid pose: ", pose);
-        }
+//        for(Pose2d pose : validPoses) {
+//            tele.addData("Detected valid pose: ", pose);
+//        }
+        tele.addData("Best Pose", bestPoseMarker.pose);
         tele.addData("Processing time (ms)", processingTimeMillis);
     }
 

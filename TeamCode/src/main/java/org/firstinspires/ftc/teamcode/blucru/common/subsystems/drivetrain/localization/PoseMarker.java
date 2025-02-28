@@ -8,7 +8,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 // this class is used for a single marker with pose, velocity, and timestamp for the PoseHistory class
 public class PoseMarker {
     long nanoTime;
-    Pose2d pose, velocity;
+    public Pose2d pose, velocity;
 
     public PoseMarker(Pose2d pose, Pose2d velocity) {
 //        Log.i("", "******************************************************************************************");
