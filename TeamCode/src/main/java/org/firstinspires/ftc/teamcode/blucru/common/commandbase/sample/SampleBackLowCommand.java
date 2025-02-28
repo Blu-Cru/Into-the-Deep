@@ -11,7 +11,7 @@ public class SampleBackLowCommand extends SequentialCommandGroup {
         super(
                 new BoxtubeCommand(Math.PI/2, 13.5),
                 new WristUprightBackwardCommand(),
-                new ArmGlobalAngleCommand(3.4)
+                new ArmGlobalAngleCommand(3.2)
         );
     }
 }

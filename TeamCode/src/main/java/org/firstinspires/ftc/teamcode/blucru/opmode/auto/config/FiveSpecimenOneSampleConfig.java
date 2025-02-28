@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleLowDepositPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleLowLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectLeftBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectRightBlockPath;
@@ -34,6 +36,8 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
     int scoreCount;
     int spitCount = 0, thisCycleIntakeFailCount = 0;
     Path[] collectPaths;
+    double latestHighLiftTime = 28.9;
+    double latestLowLiftTime = 29.3;
 
     enum State {
         LIFTING_PRELOAD,
@@ -43,7 +47,8 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
         DEPOSIT_CYCLE,
         INTAKING_YELLOW,
         CROSSING_WITH_YELLOW,
-        LIFTING_YELLOW,
+        LIFTING_YELLOW_HIGH,
+        LIFTING_YELLOW_LOW,
         DEPOSIT_YELLOW,
         PARKING,
         PARKED,
@@ -142,15 +147,23 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 .transitionTimed(0.5, State.INTAKING_YELLOW)
 
                 .state(State.CROSSING_WITH_YELLOW)
-                .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.seesSampleTag() && runtime.seconds() < 28.6, State.LIFTING_YELLOW, () -> {
+                .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.seesSampleTag() && runtime.seconds() < latestHighLiftTime, State.LIFTING_YELLOW_HIGH, () -> {
                     Robot.getInstance().dt.updateAprilTags();
                     currentPath = new SampleHighLiftPath().start();
                 })
-                .transition(() -> runtime.seconds() > 29, State.PARKED, () -> new FullRetractCommand().schedule())
+                .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.seesSampleTag() && runtime.seconds() > latestHighLiftTime && runtime.seconds() < latestLowLiftTime, State.LIFTING_YELLOW_LOW, () -> {
+                    currentPath = new SampleLowLiftPath().start();
+                })
+                .transition(() -> runtime.seconds() > latestLowLiftTime, State.PARKED, () -> new FullRetractCommand().schedule())
 
-                .state(State.LIFTING_YELLOW)
+                .state(State.LIFTING_YELLOW_HIGH)
                 .transition(() -> currentPath.isDone() && Robot.getInstance().extension.getDistance() > 22, State.DEPOSIT_YELLOW, () -> {
                     currentPath = new SampleHighDepositPath().start();
+                })
+
+                .state(State.LIFTING_YELLOW_LOW)
+                .transition(() -> currentPath.isDone() && Robot.getInstance().extension.getDistance() > 5, State.DEPOSIT_YELLOW, () -> {
+                    currentPath = new SampleLowDepositPath().start();
                 })
 
                 .state(State.DEPOSIT_YELLOW)
