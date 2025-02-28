@@ -1,21 +1,21 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.util.Log;
+import android.graphics.Paint;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
-import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
@@ -47,6 +47,19 @@ public class SampleDetectionProcessor implements VisionProcessor {
         MIN_Y_INCHES = 9.0, MAX_Y_INCHES = 20.0;
 
     Mat K, DIST_COEFFS;
+//        undistorted,
+//        wbCorrected,
+//        transformed,
+//        hsv,
+//        saturationThresh,
+//        satMasked,
+//        satEdges,
+//        edges,
+//        combinedEdges,
+//        dilated,
+//        hierarchy,
+//        detectionOverlay;
+
     public double processingTimeMillis = 0;
     List<Pose2d> validPoses;
     int numValidPoses;
@@ -69,7 +82,6 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
-
     }
 
     @Override
@@ -83,7 +95,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //        Calib3d.undistort(frame, undistorted, K, DIST_COEFFS, newCameraMatrix);
 //        newCameraMatrix.release();
 
-//        Mat undistorted = undistort(frame);
+        Mat undistorted = undistort(frame);
 
 //        Mat wbCorrected = applyGrayWorldWhiteBalance(undistorted);
 //
@@ -91,13 +103,13 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //
 ////        Imgproc.resize(transformed, transformed, new Size(960, 520));
 //
-        Mat hsv = new Mat();
-        Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_BGR2HSV);
-//
-        Mat hueChannel = new Mat();
-        Mat satChannel = new Mat();
-        Core.extractChannel(hsv, hueChannel, 0);
-        Core.extractChannel(hsv, satChannel, 1);
+//        Mat hsv = new Mat();
+//        Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_BGR2HSV);
+////
+//        Mat hueChannel = new Mat();
+//        Mat satChannel = new Mat();
+//        Core.extractChannel(hsv, hueChannel, 0);
+//        Core.extractChannel(hsv, satChannel, 1);
 //
 //        Mat saturationThresh = new Mat();
 //        Core.inRange(hsv, new Scalar(0, 45, 0), new Scalar(255, 255, 255), saturationThresh);
@@ -200,8 +212,10 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //        numValidPoses = validPoses.size();
 //        // TODO: loop through detections, score them based on location, orientation
 //        // find pose of highest score
-//
-//        undistorted.release();
+
+        undistorted.copyTo(frame);
+
+        undistorted.release();
 //        wbCorrected.release();
 //        transformed.release();
 //        hsv.release();
@@ -215,27 +229,31 @@ public class SampleDetectionProcessor implements VisionProcessor {
 ////        detectionOverlay.release();
 //
 
-        Mat inputHSV = new Mat();
-
-        Imgproc.cvtColor(frame, inputHSV, Imgproc.COLOR_RGB2HSV);
-
         processingTimeMillis = (System.nanoTime() - startNanoTime) / 1e6;
-//        return undistorted;
-        return hueChannel;
+        return null;
     }
 
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-
     }
 
     public Mat undistort(Mat frame) {
-        Mat newCameraMatrix = Calib3d.getOptimalNewCameraMatrix(K, DIST_COEFFS, frame.size(), 1, frame.size());
+        Mat newCameraMatrix = Calib3d.getOptimalNewCameraMatrix(
+                K,
+                DIST_COEFFS,
+                frame.size(),
+                0,
+                frame.size());
 
-//        Log.i("SampleDetectionProcessor", newCameraMatrix.toString());
-
+        Mat map1 = new Mat(), map2 = new Mat();
+        Calib3d.initUndistortRectifyMap(K, DIST_COEFFS, new Mat(), newCameraMatrix, frame.size(), CvType.CV_16SC2, map1, map2);
         Mat undistorted = new Mat();
-        Calib3d.undistort(frame, undistorted, K, DIST_COEFFS);
+        Imgproc.remap(frame, undistorted, map1, map2, Imgproc.INTER_LINEAR);
+//
+////        Log.i("SampleDetectionProcessor", newCameraMatrix.toString());
+//
+//        Mat undistorted = new Mat();
+////        Calib3d.undistort(frame, undistorted, K, DIST_COEFFS);
 //        Calib3d.undistort(frame, undistorted, K, DIST_COEFFS, newCameraMatrix);
         return undistorted;
     }

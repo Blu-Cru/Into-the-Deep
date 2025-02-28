@@ -38,14 +38,14 @@ public class CVMaster implements BluSubsystem {
 
     public VisionPortal atagPortal, samplePortal;
     public AprilTagProcessor tagDetector;
-    public SampleDetectionProcessor sampleDetector;
+    public VisionProcessor sampleDetector;
 
     public int numDetections;
     ArrayList<AprilTagDetection> detections;
     ArrayList<Integer> detectionIds;
 
     public CVMaster() {
-        int[] viewIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.HORIZONTAL);
+        int[] viewIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.VERTICAL);
 
         this.tagDetector = new AprilTagProcessor.Builder()
                 .setDrawAxes(false)
@@ -88,6 +88,7 @@ public class CVMaster implements BluSubsystem {
                 .addProcessor(sampleDetector)
                 .setLiveViewContainerId(viewIds[1])
                 .build();
+        samplePortal.stopStreaming();
     }
 
     public void init() {
@@ -121,7 +122,7 @@ public class CVMaster implements BluSubsystem {
 
         telemetry.addData("Sample Portal State", samplePortal.getCameraState());
         telemetry.addData("Sample detector enabled", samplePortal.getProcessorEnabled(sampleDetector));
-        sampleDetector.telemetry();
+//        sampleDetector.telemetry();
     }
 
     public void detectTag() {

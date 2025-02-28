@@ -22,6 +22,8 @@ public class SampleDetectionTest extends BluLinearOpMode {
         addCVMaster();
         enableFTCDashboard();
 
+        cvMaster.startSampleStreaming();
+
         sm = new StateMachineBuilder()
                 .state(State.IDLE)
                 .transition(() -> stickyG1.a, State.DETECTING, () -> {
