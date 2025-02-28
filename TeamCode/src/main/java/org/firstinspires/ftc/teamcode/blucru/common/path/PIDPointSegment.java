@@ -59,4 +59,8 @@ public class PIDPointSegment implements PathSegment{
     public void setTranslationTolerance(double translationTolerance) {
         this.translationTolerance = translationTolerance;
     }
+
+    public void run() {
+        Robot.getInstance().dt.pidTo(pose);
+    }
 }

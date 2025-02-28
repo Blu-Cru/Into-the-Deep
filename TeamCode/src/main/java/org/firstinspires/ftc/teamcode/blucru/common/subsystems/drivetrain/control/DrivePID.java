@@ -32,6 +32,14 @@ public class DrivePID {
         return new Pose2d(xPower, yPower, headingPower);
     }
 
+    public double calcX(Vector2d xState) {
+        return xController.calculate(xState);
+    }
+
+    public double calcY(Vector2d yState) {
+        return yController.calculate(yState);
+    }
+
     public void setTargetPose(Vector2d targetPosition) {
         xController.setSetPoint(targetPosition.getX());
         yController.setSetPoint(targetPosition.getY());
@@ -87,5 +95,10 @@ public class DrivePID {
         boolean headingInRange = angleDelta < headingTolerance;
 
         return translationInRange && headingInRange;
+    }
+
+    public boolean pointInRange(Vector2d point, double translationTolerance) {
+        Vector2d targetVec = new Vector2d(xController.getSetPoint(), yController.getSetPoint());
+        return point.minus(targetVec).norm() < translationTolerance;
     }
 }

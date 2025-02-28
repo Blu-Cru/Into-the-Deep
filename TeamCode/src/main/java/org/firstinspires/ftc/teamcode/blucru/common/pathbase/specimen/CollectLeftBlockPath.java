@@ -20,13 +20,14 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
                 .schedule(new SequentialCommandGroup(
                         new PivotRetractCommand(),
                         new WaitCommand(200),
-                        new ExtensionCommand(4),
+                        new ExtensionCommand(2),
                         new ArmDropToGroundCommand()
                 ))
-                .addMappedPoint(29, -35, 23,3)
+                .addMappedPoint(29, -32.5, 18,3)
                 .schedule(new SequentialCommandGroup(
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
+                        new WaitCommand(100),
                         new ExtensionMotionProfileCommand(10)
                 ))
                 .waitMillis(1000);

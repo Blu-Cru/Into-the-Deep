@@ -15,7 +15,7 @@ public class SpecimenIntakePath extends PIDPathBuilder {
                 .addMappedPoint(24, -48.5, -60, 9)
                 .schedule(new SequentialCommandGroup(
                         new BoxtubeSplineCommand(
-                                new Pose2d(21, 10.1, 0.1),
+                                new Pose2d(21, 9.8, 0.05),
                                 -Math.PI,
                                 0.5),
                         new WheelIntakeCommand(),
@@ -24,6 +24,6 @@ public class SpecimenIntakePath extends PIDPathBuilder {
                 .waitMillis(400)
                 .setPower(0.25)
                 .addMappedPoint(29, -53, -60)
-                .waitMillis(200);
+                .waitMillis(150);
     }
 }

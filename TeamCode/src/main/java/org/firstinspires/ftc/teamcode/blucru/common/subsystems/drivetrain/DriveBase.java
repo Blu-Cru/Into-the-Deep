@@ -145,11 +145,19 @@ public class DriveBase implements BluSubsystem {
     }
 
     public boolean updateAprilTags(AprilTagProcessor processor) {
-        return localizer.updateAprilTags(processor);
+        try {
+            return localizer.updateAprilTags(processor);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public boolean updateAprilTags() {
-        return localizer.updateAprilTags(Robot.getInstance().cvMaster.tagDetector);
+        try {
+            return localizer.updateAprilTags(Robot.getInstance().cvMaster.tagDetector);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

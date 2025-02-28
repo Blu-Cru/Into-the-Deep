@@ -6,17 +6,27 @@ public class RightHangServo extends HangServo{
     }
 
     @Override
+    double getSidewaysPosition() {
+        return 0.57;
+    }
+
+    @Override
     public void retract() {
-        setPosition(0.87);
+        setPosition(getSidewaysPosition() + RETRACT_DELTA);
     }
 
     @Override
     public void release() {
-        setPosition(0);
+        setPosition(getSidewaysPosition() - RELEASE_DELTA);
+    }
+
+    @Override
+    public void midway() {
+        setPosition(getSidewaysPosition() - MIDWAY_DELTA);
     }
 
     @Override
     public void hang() {
-        setPosition(0.91);
+        setPosition(getSidewaysPosition() + HANG_DELTA);
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang;
+package org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 

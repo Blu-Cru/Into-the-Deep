@@ -6,11 +6,13 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosMidwayCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosReleaseCommand;
 
 public class GetHooksHighCommand extends SequentialCommandGroup {
     public GetHooksHighCommand() {
         super(
-                new HangServosRetractCommand(),
+                new HangServosMidwayCommand(),
                 new BoxtubeSplineCommand(
                         new Pose2d(9, 2.4, -Math.PI/2),
                         -Math.PI/2,
@@ -34,7 +36,7 @@ public class GetHooksHighCommand extends SequentialCommandGroup {
                 new BoxtubeSplineCommand(
                         new Pose2d(4, 39, 0.5),
                         -Math.PI/2,
-                        2.3
+                        2.0
                 ),
                 new WaitCommand(1800),
                 new HangServosReleaseCommand()

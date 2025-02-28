@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.path;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Vector;
 
 public class PIDPathBuilder {
     ArrayList<PathSegment> segments;
@@ -61,6 +63,16 @@ public class PIDPathBuilder {
         return this;
     }
 
+    public PIDPathBuilder addMappedTurnToPoint(Vector2d drivePoint, Vector2d turnToPoint, double tolerance) {
+        segments.add(new PIDTurnToPointSegment(Globals.mapPoint(drivePoint), Globals.mapPoint(turnToPoint), tolerance));
+        return this;
+    }
+
+    public PIDPathBuilder addMappedTurnToPoint(Vector2d drivePoint, Vector2d turnToPoint) {
+        segments.add(new PIDTurnToPointSegment(Globals.mapPoint(drivePoint), Globals.mapPoint(turnToPoint)));
+        return this;
+    }
+
     public PIDPathBuilder addSegment(PathSegment segment) {
         segments.add(segment);
         return this;
@@ -87,7 +99,7 @@ public class PIDPathBuilder {
     }
 
     public PIDPathBuilder waitMillis(double milliseconds) {
-        segments.add(new WaitSegment(segments.get(segments.size() - 1).getPose(), milliseconds));
+        segments.add(new WaitSegment(segments.get(segments.size() - 1), milliseconds));
         return this;
     }
 

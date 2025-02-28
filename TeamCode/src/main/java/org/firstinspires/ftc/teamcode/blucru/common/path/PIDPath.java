@@ -59,7 +59,8 @@ public class PIDPath implements Path {
             return;
         }
         PathSegment currentSegment = segmentList.get(segmentIndex);
-        Robot.getInstance().dt.pidTo(currentSegment.getPose());
+        currentSegment.run();
+//        Robot.getInstance().dt.pidTo(currentSegment.getPose());
 
         if(currentSegment.isDone() && !pathDone) {
             segmentIndex++;

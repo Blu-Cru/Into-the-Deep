@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 @Config
 public class Pivot implements BluSubsystem, Subsystem {
     public static double
-            kP = 5.0, kI = 0.0, kD = 0.28, tolerance = 0.0,
-            kFF_COS = 0.11, kFF_EXTENSION = 0.011,
+            kP = 6.2, kI = 0.0, kD = 0.28, tolerance = 0.0,
+            kFF_COS = 0.11, kFF_EXTENSION = 0.017,
             MIN_RAD = 0.0, MAX_RAD = 1.9,
             MAX_UP_POWER = 1.0, MAX_DOWN_POWER = -0.75,
             MAX_VELO = 1.0, MAX_ACCEL = 0.5;

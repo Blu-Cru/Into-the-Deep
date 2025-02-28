@@ -95,7 +95,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                                 && Robot.getInstance().pivot.getAngle() < 0.55)
                                 && Robot.getInstance().getBoxtubePose().getY() > 5,
                         State.DEPOSIT_CYCLE, () -> {
-                            currentPath = new SpecimenCycleDepositPath(scoreCount).build().start();
+                            currentPath = new SpecimenCycleDepositPath().build().start();
                         })
                 .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount < 1), State.INTAKE_FAILSAFE_CYCLE, () -> {
                     currentPath = new SpecimenCycleIntakeFailsafePath().build().start();
@@ -104,7 +104,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
 
                 .state(State.INTAKE_FAILSAFE_CYCLE)
                 .transition(() -> Robot.validSample(), State.DEPOSIT_CYCLE, () -> {
-                    currentPath = new SpecimenCycleDepositPath(scoreCount).build().start();
+                    currentPath = new SpecimenCycleDepositPath().build().start();
                 })
                 .transition(() -> currentPath.isDone(), State.INTAKING_CYCLE, () -> {
                     currentPath = new SpecimenIntakePath().build().start();
@@ -142,7 +142,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 .transitionTimed(0.5, State.INTAKING_YELLOW)
 
                 .state(State.CROSSING_WITH_YELLOW)
-                .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.seesSampleTag() && runtime.seconds() < 29, State.LIFTING_YELLOW, () -> {
+                .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.seesSampleTag() && runtime.seconds() < 28.6, State.LIFTING_YELLOW, () -> {
                     Robot.getInstance().dt.updateAprilTags();
                     currentPath = new SampleHighLiftPath().start();
                 })
