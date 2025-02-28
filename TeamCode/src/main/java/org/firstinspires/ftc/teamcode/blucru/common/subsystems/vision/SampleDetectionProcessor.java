@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.util.Log;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -10,15 +8,14 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.localization.PoseMarker;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.vision.VisionProcessor;
-import org.opencv.android.Utils;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
@@ -28,7 +25,6 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SampleDetectionProcessor implements VisionProcessor {
@@ -56,9 +52,9 @@ public class SampleDetectionProcessor implements VisionProcessor {
         map1, map2,
         homogM, dilationElement;
 
-    public double processingTimeMillis = 0;
+    double processingTimeMillis = 0;
     List<Pose2d> validPoses, tempValidPoses;
-    Pose2d bestPose;
+    public PoseMarker bestPoseMarker;
 
     public SampleDetectionProcessor() {
         K = new Mat(3, 3, CvType.CV_64F);
@@ -75,6 +71,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //        DIST_COEFFS.put(0, 0, new double[] {K1, K2, P1, P2, K3});
         validPoses = new ArrayList<>();
         tempValidPoses = new ArrayList<>();
+        bestPoseMarker = new PoseMarker((long) Double.NEGATIVE_INFINITY, new Pose2d());
     }
 
     @Override
@@ -243,7 +240,9 @@ public class SampleDetectionProcessor implements VisionProcessor {
             rotatedRectMask.release();
         }
 
-        bestPose = tempValidPoses.get(minPenaltyIndex);
+        if(!validPoses.isEmpty()) {
+            bestPoseMarker = new PoseMarker(captureTimeNanos, tempValidPoses.get(minPenaltyIndex));
+        }
 
         // copy arraylist, so it doesnt access at same time
         validPoses = new ArrayList<>(tempValidPoses);
