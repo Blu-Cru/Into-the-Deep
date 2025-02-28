@@ -6,9 +6,10 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
-@TeleOp(group = "test")
+@TeleOp(group = "3")
 public class SampleDetectionTest extends BluLinearOpMode {
     enum State {
         IDLE,
@@ -46,6 +47,10 @@ public class SampleDetectionTest extends BluLinearOpMode {
     public void initLoop() {
         sm.update();
 
+        if(stickyG1.b) {
+            Globals.flipAlliance();
+        }
+
         cvMaster.telemetry(telemetry);
         telemetry();
     }
@@ -53,5 +58,6 @@ public class SampleDetectionTest extends BluLinearOpMode {
     @Override
     public void telemetry() {
         telemetry.addData("State", sm.getState());
+        telemetry.addData("Alliance", Globals.alliance);
     }
 }

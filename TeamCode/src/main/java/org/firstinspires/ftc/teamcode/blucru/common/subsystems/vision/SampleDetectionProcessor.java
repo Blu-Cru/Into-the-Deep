@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision;
 import android.graphics.Canvas;
 import android.util.Log;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
@@ -26,7 +27,9 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
+@Config
 public class SampleDetectionProcessor implements VisionProcessor {
     static double[][] HOMOG_IMAGE_POINTS = {
             {945, 598}, {1168, 600},
@@ -34,11 +37,11 @@ public class SampleDetectionProcessor implements VisionProcessor {
     };
     static double[] REF_TOP_LEFT_PIXELS = {300.0, 300.0},
         REF_TOP_LEFT_INCHES = {-5.0, 20.0};
-    static double PIXELS_PER_INCH = 20.0,
+    public static double PIXELS_PER_INCH = 20.0,
         MIN_SAT_MASK,
-        RED_HUE_LOW = 150.0, RED_HUE_HIGH = 12.0,
+        RED_HUE_LOW = 105.0, RED_HUE_HIGH = 140.0,
         YELLOW_HUE_LOW = 12.0, YELLOW_HUE_HIGH = 55.0,
-        BLUE_HUE_LOW = 80.0, BLUE_HUE_HIGH = 150.0,
+        BLUE_HUE_LOW = 0.0, BLUE_HUE_HIGH = 35.0,
 
         // calib
         fx = 1279.33, fy = 1279.33, cx = 958.363, cy = 492.062,
@@ -109,15 +112,15 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
         Mat undistorted = undistort(frame);
 
-//        Mat wbCorrected = applyGrayWorldWhiteBalance(undistorted);
-//
         Mat transformed = doHomographyTransform(undistorted);
+
+        Mat wbCorrected = applyGrayWorldAWB(transformed);
 
 //        Mat downsized = new Mat();
 //        Imgproc.resize(transformed, downsized, new Size(960, 540));
 
         Mat hsv = new Mat();
-        Imgproc.cvtColor(transformed, hsv, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(wbCorrected, hsv, Imgproc.COLOR_BGR2HSV);
 
         List<Mat> channels = new ArrayList<>(3);
         Core.split(hsv, channels);
@@ -130,13 +133,13 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Core.inRange(satChannel, new Scalar(45), new Scalar(255), saturationThresh);
 
         Mat satMasked = new Mat();
-        Core.bitwise_and(transformed, transformed, satMasked, saturationThresh);
+        Core.bitwise_and(wbCorrected, wbCorrected, satMasked, saturationThresh);
 
         Mat satEdges = new Mat();
         Imgproc.Canny(satMasked, satEdges, 100, 200);
 
         Mat edges = new Mat();
-        Imgproc.Canny(transformed, edges, 40, 100);
+        Imgproc.Canny(wbCorrected, edges, 50, 130);
 
         Mat combinedEdges = new Mat();
         Core.bitwise_or(edges, satEdges, combinedEdges);
@@ -148,52 +151,46 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Mat hierarchy = new Mat();
         Imgproc.findContours(dilated, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
-
-        RotatedRect[] rects = new RotatedRect[contours.size()];
-        double[] normalizedAngles = new double[contours.size()];
-
-        Mat detectionOverlay = transformed.clone();
+        Mat detectionOverlay = wbCorrected.clone();
         List<MatOfPoint> validRects = new ArrayList<>();
         List<Double> penalties = new ArrayList<>();
         double minPenalty = Double.MAX_VALUE;
         int minPenaltyIndex = -1;
+
+        Scalar meanHue, meanSat;
 
         for(int i = 0; i < contours.size(); i++) {
             MatOfPoint cnt = contours.get(i);
             double penalty = 0;
 
             double area = Imgproc.contourArea(cnt);
-            if(area < 1200.0 || area > 5000.0) {
+            if(area < 1700.0 || area > 4500.0) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with area:" + area);
                 continue;
             }
 
             RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(cnt.toArray()));
-            rects[i] = rect;
-            double normalizedAngle = rect.size.height > rect.size.width ? 90.0 - rect.angle : -rect.angle;
-//            normalizedAngles[i] = rect.size.height > rect.size.width ? 90.0 - rect.angle : -rect.angle;
-
+//            double normalizedAngle = rect.size.height > rect.size.width ? 90.0 - rect.angle : -rect.angle;
+////            normalizedAngles[i] = rect.size.height > rect.size.width ? 90.0 - rect.angle : -rect.angle;
+//
             if(rect.size.width == 0 || rect.size.height == 0) continue;
             double ratio = Math.max(rect.size.width, rect.size.height) / Math.min(rect.size.width, rect.size.height);
-            if(ratio < 2.0 || ratio > 3.0) {
+            if(ratio < 2.0 || ratio > 3.8) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with ratio:" + ratio);
                 continue;
             }
-//
-////            List<Mat> channels = new ArrayList<>();
-////            Core.split(hsv, channels);
-//
+
             Point[] boxPoints = new Point[4];
             rect.points(boxPoints);
             MatOfPoint matOfRectPoints = new MatOfPoint(boxPoints);
 
-            Mat rotatedRectMask = Mat.zeros(transformed.size(), CvType.CV_8UC1);
+            Mat rotatedRectMask = Mat.zeros(wbCorrected.size(), CvType.CV_8UC1);
             Imgproc.fillConvexPoly(rotatedRectMask, matOfRectPoints, new Scalar(255));
 
-            Scalar meanHue = Core.mean(hueChannel, rotatedRectMask);
-            Scalar meanSat = Core.mean(satChannel, rotatedRectMask);
+            meanSat = Core.mean(satChannel, rotatedRectMask);
 
-            if(meanSat.val[0] < 45.0) {
+            double minSat = 45.0;
+            if(meanSat.val[0] < minSat) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with sat: " + meanSat.val[0]);
                 continue;
             } else {
@@ -202,45 +199,58 @@ public class SampleDetectionProcessor implements VisionProcessor {
                 // y = m(x - 45) + 5
                 // m = -10 / 210
 
-                penalty += -(meanSat.val[0] - 45.0) / 21.0 + 5.0;
+                penalty += -(meanSat.val[0] - minSat) / (-10.0/(255.0-minSat)) + 5.0;
             }
+
+            meanHue = Core.mean(hueChannel, rotatedRectMask);
 
             if(Globals.alliance == Alliance.RED) {
                 if (BLUE_HUE_LOW < meanHue.val[0] && meanHue.val[0] < BLUE_HUE_HIGH){
-                    Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + meanHue.val[0]);
+                    Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + (int) meanHue.val[0]);
                     continue;
                 }
             } else {
-                if((meanHue.val[0] > RED_HUE_LOW || meanHue.val[0] < RED_HUE_HIGH)) {
+                if(meanHue.val[0] > RED_HUE_LOW && meanHue.val[0] < RED_HUE_HIGH) {
                     Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + meanHue.val[0]);
                     continue;
                 }
             }
 
-            Pose2d blockPose = new Pose2d(getRobotPoint(rect.center), Math.toRadians(normalizedAngle));
-
-            if(blockPose.getX() < MIN_X_INCHES || blockPose.getX() > MAX_X_INCHES
-                    || blockPose.getY() < MIN_Y_INCHES || blockPose.getY() > MAX_Y_INCHES) {
-                Log.d("SampleDetectionProcessor", "Contour discarded with position: " + blockPose);
-                continue;
+            double normalizedAngle;
+            if (rect.size.width < rect.size.height) {
+                normalizedAngle = 90.0 - rect.angle;
+            } else {
+                normalizedAngle = -rect.angle;
             }
 
+            Vector2d point = getRobotPoint(rect.center);
+
+            Imgproc.putText(detectionOverlay, "(" + (int)point.getX() + ", " + (int)point.getY() + ")", rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+//
+//            Pose2d blockPose = new Pose2d(getRobotPoint(rect.center), Math.toRadians(normalizedAngle));
+//
+//            if(blockPose.getX() < MIN_X_INCHES || blockPose.getX() > MAX_X_INCHES
+//                    || blockPose.getY() < MIN_Y_INCHES || blockPose.getY() > MAX_Y_INCHES) {
+//                Log.d("SampleDetectionProcessor", "Contour discarded with position: " + blockPose);
+//                continue;
+//            }
+//
             validRects.add(matOfRectPoints);
-            Pose2d pose = new Pose2d(getRobotPoint(rect.center), Math.toRadians(normalizedAngle));
-            tempValidPoses.add(pose);
-            penalty += pose.vec().norm();
-
-            if(penalty < minPenalty) {
-                minPenalty = penalty;
-                minPenaltyIndex = tempValidPoses.size() - 1;
-            }
-
-            cnt.release();
-            matOfRectPoints.release();
-            rotatedRectMask.release();
+//            Pose2d pose = new Pose2d(getRobotPoint(rect.center), Math.toRadians(normalizedAngle));
+//            tempValidPoses.add(pose);
+//            penalty += pose.vec().norm();
+//
+//            if(penalty < minPenalty) {
+//                minPenalty = penalty;
+//                minPenaltyIndex = tempValidPoses.size() - 1;
+//            }
+//
+//            cnt.release();
+//            matOfRectPoints.release();
+//            rotatedRectMask.release();
         }
 
-        if(!validPoses.isEmpty()) {
+        if(!tempValidPoses.isEmpty()) {
             bestPoseMarker = new PoseMarker(captureTimeNanos, tempValidPoses.get(minPenaltyIndex));
         }
 
@@ -248,10 +258,6 @@ public class SampleDetectionProcessor implements VisionProcessor {
         validPoses = new ArrayList<>(tempValidPoses);
 
         Imgproc.drawContours(detectionOverlay, validRects, -1, new Scalar(0, 255, 0), 2);
-//
-//        numValidPoses = validPoses.size();
-//        // TODO: loop through detections, score them based on location, orientation
-//        // find pose of highest score
 
         Mat output = new Mat();
         Imgproc.resize(detectionOverlay, output, frame.size());
@@ -262,7 +268,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
         undistorted.release();
 //        wbCorrected.release();
-        transformed.release();
+        wbCorrected.release();
         hueChannel.release();
         satChannel.release();
         hsv.release();
@@ -309,7 +315,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
         double inchOffsetX = REF_TOP_LEFT_INCHES[0]+refOffsetX/PIXELS_PER_INCH;
         double inchOffsetY = REF_TOP_LEFT_INCHES[1]+refOffsetY/PIXELS_PER_INCH;
-        return new Vector2d(inchOffsetX, inchOffsetY).rotated(Math.toRadians(-90));
+        return new Vector2d(inchOffsetX, inchOffsetY);
     }
 
     private double[] getMeanHueSat(Mat hsv, RotatedRect rect) {
@@ -336,6 +342,25 @@ public class SampleDetectionProcessor implements VisionProcessor {
 //        }
         tele.addData("Best Pose", bestPoseMarker.pose);
         tele.addData("Processing time (ms)", processingTimeMillis);
+    }
+
+    public Mat applyGrayWorldAWB(Mat src) {
+        List<Mat> channels = new ArrayList<>();
+        Core.split(src, channels);
+
+        Scalar avgR = Core.mean(channels.get(2)); // Red channel
+        Scalar avgG = Core.mean(channels.get(1)); // Green channel
+        Scalar avgB = Core.mean(channels.get(0)); // Blue channel
+
+        double avgGray = (avgR.val[0] + avgG.val[0] + avgB.val[0]) / 3.0;
+
+        channels.get(2).convertTo(channels.get(2), -1, avgGray / avgR.val[0]); // Normalize Red
+        channels.get(1).convertTo(channels.get(1), -1, avgGray / avgG.val[0]); // Normalize Green
+        channels.get(0).convertTo(channels.get(0), -1, avgGray / avgB.val[0]); // Normalize Blue
+
+        Mat balanced = new Mat();
+        Core.merge(channels, balanced);
+        return balanced;
     }
 
     public Mat applyGrayWorldWhiteBalance(Mat src) {
