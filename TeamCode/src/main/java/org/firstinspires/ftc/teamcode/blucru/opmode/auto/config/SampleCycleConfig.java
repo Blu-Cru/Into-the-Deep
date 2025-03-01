@@ -52,15 +52,10 @@ public class SampleCycleConfig extends AutoConfig {
     int scoreCount;
     double scanTimeMillis;
 
-    CVMaster cvMaster;
-    Drivetrain dt;
-
     public SampleCycleConfig() {
         runtime = Globals.runtime;
         pathsAfterDeposit = new Path[4];
         scoreCount = 0;
-        cvMaster = Robot.getInstance().cvMaster;
-        dt = Robot.getInstance().dt;
 
         sm = new StateMachineBuilder()
                 .state(State.LIFTING)
@@ -91,7 +86,7 @@ public class SampleCycleConfig extends AutoConfig {
                 })
                 .state(State.RIGHT_INTAKE)
                 .onEnter(() -> logTransition(State.RIGHT_INTAKE))
-                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                .transition(() -> currentPath.isDone() || Robot.justValidSample(),
                         State.LIFTING, () -> {
                             new ClampGrabCommand().schedule();
                             new WheelStopCommand().schedule();
@@ -101,7 +96,7 @@ public class SampleCycleConfig extends AutoConfig {
                         })
                 .state(State.CENTER_INTAKE)
                 .onEnter(() -> logTransition(State.CENTER_INTAKE))
-                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                .transition(() -> currentPath.isDone() || Robot.justValidSample(),
                         State.LIFTING, () -> {
                             new ClampGrabCommand().schedule();
                             new WheelStopCommand().schedule();
@@ -111,7 +106,7 @@ public class SampleCycleConfig extends AutoConfig {
                         })
                 .state(State.LEFT_INTAKE)
                 .onEnter(() -> logTransition(State.LEFT_INTAKE))
-                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                .transition(() -> currentPath.isDone() || Robot.justValidSample(),
                         State.LIFTING, () -> {
                             new ClampGrabCommand().schedule();
                             new WheelStopCommand().schedule();
@@ -121,20 +116,22 @@ public class SampleCycleConfig extends AutoConfig {
                         })
                 .state(State.DRIVING_TO_SUB_CYCLE)
                 .onEnter(() -> Robot.getInstance().cvMaster.enableSampleDetector())
-                .transition(() -> currentPath.isDone(), State.SCANNING_SUB, () -> {
+                .transition(() -> currentPath.isDone(), State.SCANNING_SUB)
+                .state(State.SCANNING_SUB)
+                .onEnter(() -> {
                     scanTimeMillis = System.currentTimeMillis();
                 })
-                .state(State.SCANNING_SUB)
-                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 500 && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(), State.INTAKE_SUB, () -> {
-                    Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.getGlobalPose(dt.pose);
-                    currentPath = new SampleIntakeAtPointPath(dt.pose.vec(), blockPose).start();
+                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 500 && System.currentTimeMillis() - scanTimeMillis < 700 && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(), State.INTAKE_SUB, () -> {
+                    Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.getGlobalPose(
+                            Robot.getInstance().dt.pose);
+                    currentPath = new SampleIntakeAtPointPath(Robot.getInstance().dt.pose.vec(), blockPose).start();
                 })
                 .transitionTimed(1.0, State.INTAKE_SUB_FAIL, () -> {
                     currentPath = new SampleSubIntakeFailPath().start();
                 })
                 .state(State.INTAKE_SUB)
                 .transition(() -> Robot.justValidSample() && runtime.seconds() < 27.5, State.LIFTING, () -> {
-                    cvMaster.disableSampleDetector();
+                    Robot.getInstance().cvMaster.disableSampleDetector();
                     new RetractFromVerticalIntakeCommand().schedule();
                     currentPath = new SampleLiftHighFromSubPath().start();
                 })
@@ -146,7 +143,7 @@ public class SampleCycleConfig extends AutoConfig {
                     currentPath = new SampleDriveToSubIntakePath().start();
                 })
                 .transition(() -> Robot.justValidSample(), State.LIFTING, () -> {
-                    cvMaster.disableSampleDetector();
+                    Robot.getInstance().cvMaster.disableSampleDetector();
                     new RetractFromVerticalIntakeCommand().schedule();
                     currentPath = new SampleLiftHighFromSubPath().start();
                 })
@@ -169,7 +166,10 @@ public class SampleCycleConfig extends AutoConfig {
         pathsAfterDeposit[2] = new SampleIntakeLeftPath().build();
         pathsAfterDeposit[3] = new SampleParkPath().build();
 
+        Robot.getInstance().cvMaster.stop();
+
         Robot.getInstance().cvMaster.startSampleStreaming();
+        Robot.getInstance().cvMaster.disableSampleDetector();
     }
 
     @Override
@@ -187,7 +187,7 @@ public class SampleCycleConfig extends AutoConfig {
     @Override
     public void telemetry() {
         Telemetry tele = Globals.tele;
-        tele.addLine("Four Sample Config");
+        tele.addLine("Sample Cycle Config");
         tele.addData("Config state", sm.getState());
         tele.addData("runtime", runtime.seconds());
     }

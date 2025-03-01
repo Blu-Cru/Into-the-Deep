@@ -17,7 +17,7 @@ public class SampleHighDepositPath extends PIDPathBuilder {
     public SampleHighDepositPath(boolean retractAfterDone) {
         super();
         this.setPower(0.25)
-                .addMappedPoint(-55.8, -55.8, 45)
+                .addMappedPoint(-56.1, -56.1, 45)
                 .callback(() -> {
                     if(retractAfterDone) {
                         new SequentialCommandGroup(

@@ -10,7 +10,7 @@ public class SampleBackHighCommand extends SequentialCommandGroup {
     public SampleBackHighCommand() {
         super(
                 new WristUprightBackwardCommand(),
-                new BoxtubeCommand(Math.PI/2, 26),
+                new BoxtubeCommand(Math.PI/2, 27.5),
                 new ArmGlobalAngleCommand(2.6)
         );
     }

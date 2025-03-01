@@ -42,10 +42,10 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
                     new BoxtubeSplineCommand(
                             new Pose2d(x, 6, -Math.PI/2),
                             rawWristFinal,
-                            0.65
+                            0.6
                     ).schedule();
                 })
-                .waitMillis(1000)
+                .waitMillis(700)
                 .addTurnToPoint(rawDrivePoint, rawBlockPose.vec())
                 .callback(() -> {
                     new WheelIntakeCommand().schedule();
