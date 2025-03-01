@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto.config;
 
+import android.util.Log;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromVerticalIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
@@ -20,6 +25,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleLiftHi
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleParkPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleSubIntakeFailPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SampleParkFromSubIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
@@ -118,33 +124,55 @@ public class SampleCycleConfig extends AutoConfig {
                             currentPath = cycleLiftingPath.start();
                         })
                 .state(State.DRIVING_TO_SUB_CYCLE)
-                .onEnter(() -> Robot.getInstance().cvMaster.enableSampleDetector())
+                .onEnter(() -> {
+                    logTransition(State.DRIVING_TO_SUB_CYCLE);
+                    Robot.getInstance().cvMaster.enableSampleDetector();
+                })
                 .transition(() -> currentPath.isDone(), State.SCANNING_SUB)
                 .state(State.SCANNING_SUB)
                 .onEnter(() -> {
+                    logTransition(State.SCANNING_SUB);
                     scanTimeMillis = System.currentTimeMillis();
                 })
                 .transition(() -> System.currentTimeMillis() - scanTimeMillis > 500 && System.currentTimeMillis() - scanTimeMillis < 700 && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(), State.INTAKE_SUB, () -> {
                     Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.getGlobalPose(
                             Robot.getInstance().dt.pose);
+
+                    Log.i("SampleCycleConfig", "got block pose at " + blockPose);
+                    Log.i("SampleCycleConfig", "dt pose at " + Robot.getInstance().dt.pose);
                     currentPath = new SampleIntakeAtPointPath(Robot.getInstance().dt.pose.vec(), blockPose).start();
                 })
                 .transitionTimed(1.0, State.INTAKE_SUB_FAIL, () -> {
                     currentPath = new SampleSubIntakeFailPath().start();
                 })
                 .state(State.INTAKE_SUB)
-                .transition(() -> Robot.getInstance().intakeSwitch.justPressed() && runtime.seconds() < 27.5, State.LIFTING, () -> {
+                .onEnter(() -> logTransition(State.INTAKE_SUB))
+                .transition(() -> Robot.justValidSample() && runtime.seconds() < 26.0, State.LIFTING, () -> {
                     Robot.getInstance().cvMaster.disableSampleDetector();
+                    new WheelStopCommand().schedule();
+                    new ClampGrabCommand().schedule();
                     new RetractFromVerticalIntakeCommand().schedule();
                     currentPath = new SampleLiftHighFromSubPath().start();
                 })
-                .transition(() -> currentPath.isDone(), State.INTAKE_SUB_FAIL, () -> {
+                .transition(() -> Robot.justValidSample() && runtime.seconds() > 26.0, State.PARKING, () -> {
+                    new RetractFromVerticalIntakeCommand().schedule();
+                    currentPath = new SampleParkFromSubIntakePath().start();
+                })
+                .transition(() -> currentPath.isDone() && runtime.seconds() < 27.0, State.INTAKE_SUB_FAIL, () -> {
                     currentPath = new SampleSubIntakeFailPath().start();
                 })
+                .transition(()  -> currentPath.isDone() && runtime.seconds() > 27.0, State.DONE, () -> {
+                    new WheelStopCommand().schedule();
+                    new ClampGrabCommand().schedule();
+                    new RetractFromVerticalIntakeCommand().schedule();
+                })
                 .state(State.INTAKE_SUB_FAIL)
-                .transition(() -> currentPath.isDone() && runtime.seconds() < 28.7, State.SCANNING_SUB)
-                .transition(() -> Robot.validSample(), State.LIFTING, () -> {
+                .onEnter(() -> logTransition(State.INTAKE_SUB_FAIL))
+                .transition(() -> currentPath.isDone() && runtime.seconds() < 28.7 && !Robot.validSample(), State.SCANNING_SUB)
+                .transition(() -> Robot.validSample() && runtime.seconds() < 26.0, State.LIFTING, () -> {
                     Robot.getInstance().cvMaster.disableSampleDetector();
+                    new WheelStopCommand().schedule();
+                    new ClampGrabCommand().schedule();
                     new RetractFromVerticalIntakeCommand().schedule();
                     currentPath = new SampleLiftHighFromSubPath().start();
                 })

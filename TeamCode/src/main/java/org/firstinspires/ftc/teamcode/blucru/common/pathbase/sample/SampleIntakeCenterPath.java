@@ -23,6 +23,7 @@ public class SampleIntakeCenterPath extends PIDPathBuilder {
                 ))
                 .addMappedPoint(-42, -32, 162, 8)
                 .schedule(new SequentialCommandGroup(
+                        new WaitCommand(200),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
                         new ExtensionMotionProfileCommand(8)

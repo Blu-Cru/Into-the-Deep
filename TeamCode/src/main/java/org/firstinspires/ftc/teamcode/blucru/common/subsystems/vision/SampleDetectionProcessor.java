@@ -47,7 +47,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         // distortion
         K1 = -0.448017, K2 = 0.245668, K3 = 0.0,
         P1 = -0.000901464, P2 = 0.000996399,
-        MIN_DETECTION_DISTANCE = 15.0;
+        MAX_DETECTION_DISTANCE = 12.0, MIN_DETECTION_X = 12.0;
     static Vector2d OPTIMAL_POINT = new Vector2d(16.0, 2.0);
 
     int numDetections;
@@ -197,14 +197,24 @@ public class SampleDetectionProcessor implements VisionProcessor {
                 }
             }
 
+            Vector2d point = getRobotPoint(rect.center);
+            double distance = point.minus(OPTIMAL_POINT).norm();
+
+            if(minDistance < MAX_DETECTION_DISTANCE) {
+                Log.d("SampleDetectionProcessor", "Contour discarded with distance: " + distance);
+                continue;
+            }
+
+            if(point.getX() < MIN_DETECTION_X) {
+                Log.d("SampleDetectionProcessor", "Contour discarded with x: " + point.getX());
+                continue;
+            }
+
             tempNumDetections ++;
 
             double normalizedAngle;
             if (rect.size.width < rect.size.height) normalizedAngle = - rect.angle;
             else normalizedAngle = -rect.angle - 90.0;
-
-            Vector2d point = getRobotPoint(rect.center);
-            double distance = point.minus(OPTIMAL_POINT).norm();
 
             if(distance < minDistance) {
                 tempBestPose = new Pose2d(point, Angle.norm(Math.toRadians(normalizedAngle)));
@@ -356,7 +366,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
     }
 
     public boolean hasValidDetection() {
-        return numDetections > 0 && bestDistance < MIN_DETECTION_DISTANCE;
+        return numDetections > 0 && bestDistance < MAX_DETECTION_DISTANCE;
     }
 
     public Pose2d getBestRobotPose() {

@@ -64,7 +64,7 @@ public class HangMotor implements BluSubsystem, Subsystem {
     }
 
     public void pidHighBar(){
-        pidTo(-2200);
+        pidTo(-2000);
     }
 
     public void pidTo(double ticks) {

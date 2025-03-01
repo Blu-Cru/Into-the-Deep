@@ -36,8 +36,8 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
     int scoreCount;
     int spitCount = 0, thisCycleIntakeFailCount = 0;
     Path[] collectPaths;
-    double latestHighLiftTime = 28.9;
-    double latestLowLiftTime = 29.3;
+    double latestHighLiftTime = 28.3;
+    double latestLowLiftTime = 28.6;
 
     enum State {
         LIFTING_PRELOAD,
