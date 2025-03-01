@@ -6,6 +6,7 @@ import android.util.Log;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.util.Angle;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
@@ -147,6 +148,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Scalar meanHue, meanSat;
 
         double minDistance = Double.POSITIVE_INFINITY;
+        Pose2d tempBestPose = new Pose2d();
 
         for(int i = 0; i < contours.size(); i++) {
             MatOfPoint cnt = contours.get(i);
@@ -205,7 +207,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             double distance = point.minus(OPTIMAL_POINT).norm();
 
             if(distance < minDistance) {
-                bestPose = new Pose2d(point, normalizedAngle);
+                tempBestPose = new Pose2d(point, Angle.norm(Math.toRadians(normalizedAngle)));
                 minDistance = distance;
             }
 
@@ -220,6 +222,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
         this.numDetections = tempNumDetections;
         this.bestDistance = minDistance;
+        this.bestPose = tempBestPose;
 
         Mat output = new Mat();
         Imgproc.resize(detectionOverlay, output, frame.size());
@@ -358,5 +361,14 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
     public Pose2d getBestRobotPose() {
         return this.bestPose;
+    }
+
+    public Pose2d getGlobalPose(Pose2d drivePose) {
+        Pose2d bestPose = getBestRobotPose();
+        Vector2d vec = drivePose.vec().plus(bestPose.vec().rotated(drivePose.getHeading()));
+
+        double heading = drivePose.getHeading() + bestPose.getHeading();
+
+        return new Pose2d(vec, heading);
     }
 }

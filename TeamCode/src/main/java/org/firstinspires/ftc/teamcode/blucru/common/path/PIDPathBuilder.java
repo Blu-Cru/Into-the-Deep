@@ -63,6 +63,16 @@ public class PIDPathBuilder {
         return this;
     }
 
+    public PIDPathBuilder addTurnToPoint(Vector2d drivePoint, Vector2d turnToPoint, double tolerance) {
+        segments.add(new PIDTurnToPointSegment(drivePoint, turnToPoint, tolerance));
+        return this;
+    }
+
+    public PIDPathBuilder addTurnToPoint(Vector2d drivePoint, Vector2d turnToPoint) {
+        segments.add(new PIDTurnToPointSegment(drivePoint, turnToPoint));
+        return this;
+    }
+
     public PIDPathBuilder addMappedTurnToPoint(Vector2d drivePoint, Vector2d turnToPoint, double tolerance) {
         segments.add(new PIDTurnToPointSegment(Globals.mapPoint(drivePoint), Globals.mapPoint(turnToPoint), tolerance));
         return this;

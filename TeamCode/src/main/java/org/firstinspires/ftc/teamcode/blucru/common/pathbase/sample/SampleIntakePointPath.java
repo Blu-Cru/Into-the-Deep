@@ -10,15 +10,15 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeKinematics;
 
 public class SampleIntakePointPath extends PIDPathBuilder {
-    public SampleIntakePointPath(Vector2d drivePoint, Pose2d intakePoint) {
+    public SampleIntakePointPath(Vector2d rawDrivePoint, Pose2d rawIntakePoint) {
         super();
 
-        double distanceToPoint = drivePoint.minus(intakePoint.vec()).norm();
-        double heading = drivePoint.minus(intakePoint.vec()).angle();
-        double wristAngle = intakePoint.getHeading() - heading;
+        double distanceToPoint = rawDrivePoint.minus(rawIntakePoint.vec()).norm();
+        double heading = rawDrivePoint.minus(rawIntakePoint.vec()).angle();
+        double wristAngle = rawIntakePoint.getHeading() - heading;
 
         this.setPower(0.7)
-                .addMappedTurnToPoint(drivePoint, intakePoint.vec(), 7)
+                .addTurnToPoint(rawDrivePoint, rawIntakePoint.vec(), 7)
                 .callback(() -> {
                     new BoxtubeSplineCommand(
                             new Pose2d(distanceToPoint - Math.sin(wristAngle) * BoxtubeKinematics.WRIST_y, 6, -Math.PI/2),
@@ -27,7 +27,7 @@ public class SampleIntakePointPath extends PIDPathBuilder {
                     ).schedule();
                 })
                 .waitMillis(450)
-                .addMappedTurnToPoint(drivePoint, intakePoint.vec())
+                .addTurnToPoint(rawDrivePoint, rawIntakePoint.vec())
                 .callback(() -> {
                     new WheelIntakeCommand().schedule();
                     new ClampReleaseCommand().schedule();
