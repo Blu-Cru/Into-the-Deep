@@ -84,6 +84,9 @@ public class SampleCycleConfig extends AutoConfig {
                     currentPath = new SampleDriveToSubIntakePath().start();
                     scoreCount++;
                 })
+                .transition(() -> currentPath.isDone() && runtime.seconds() > 26.0, State.PARKING, () -> {
+                    currentPath = new SampleParkPath().start();
+                })
                 .state(State.RIGHT_INTAKE)
                 .onEnter(() -> logTransition(State.RIGHT_INTAKE))
                 .transition(() -> currentPath.isDone() || Robot.justValidSample(),
@@ -130,7 +133,7 @@ public class SampleCycleConfig extends AutoConfig {
                     currentPath = new SampleSubIntakeFailPath().start();
                 })
                 .state(State.INTAKE_SUB)
-                .transition(() -> Robot.justValidSample() && runtime.seconds() < 27.5, State.LIFTING, () -> {
+                .transition(() -> Robot.getInstance().intakeSwitch.justPressed() && runtime.seconds() < 27.5, State.LIFTING, () -> {
                     Robot.getInstance().cvMaster.disableSampleDetector();
                     new RetractFromVerticalIntakeCommand().schedule();
                     currentPath = new SampleLiftHighFromSubPath().start();
@@ -139,10 +142,8 @@ public class SampleCycleConfig extends AutoConfig {
                     currentPath = new SampleSubIntakeFailPath().start();
                 })
                 .state(State.INTAKE_SUB_FAIL)
-                .transition(() -> currentPath.isDone() && runtime.seconds() < 28.7, State.DRIVING_TO_SUB_CYCLE, () -> {
-                    currentPath = new SampleDriveToSubIntakePath().start();
-                })
-                .transition(() -> Robot.justValidSample(), State.LIFTING, () -> {
+                .transition(() -> currentPath.isDone() && runtime.seconds() < 28.7, State.SCANNING_SUB)
+                .transition(() -> Robot.validSample(), State.LIFTING, () -> {
                     Robot.getInstance().cvMaster.disableSampleDetector();
                     new RetractFromVerticalIntakeCommand().schedule();
                     currentPath = new SampleLiftHighFromSubPath().start();
@@ -194,6 +195,6 @@ public class SampleCycleConfig extends AutoConfig {
 
     @Override
     public Pose2d getStartPose() {
-        return Globals.mapPose(-40.5, -64, 90);
+        return Globals.mapPose(-40, -64, 90);
     }
 }

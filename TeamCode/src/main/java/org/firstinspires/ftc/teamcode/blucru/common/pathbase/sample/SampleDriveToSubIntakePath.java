@@ -12,10 +12,10 @@ public class SampleDriveToSubIntakePath extends PIDPathBuilder {
         this.setPower(0.85)
                 .addMappedPoint(-42, -12, 20, 8)
                 .schedule(new BoxtubeSplineCommand(
-                        new Pose2d(8, 8, -Math.PI/4),
+                        new Pose2d(8, 8, -0.65),
                         -Math.PI/2,
-                        0.6
+                        0.45
                 ))
-                .addMappedPoint(-25, -12, 0);
+                .addMappedPoint(-26, -12, 0);
     }
 }

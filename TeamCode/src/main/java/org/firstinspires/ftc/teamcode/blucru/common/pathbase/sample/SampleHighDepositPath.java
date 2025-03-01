@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
@@ -24,9 +25,7 @@ public class SampleHighDepositPath extends PIDPathBuilder {
                                 new ClampReleaseCommand(),
                                 new WheelPowerCommand(-0.5),
                                 new WaitCommand(200),
-                                new ArmGlobalAngleCommand(1.5),
-                                new BoxtubeRetractCommand(),
-                                new EndEffectorRetractCommand()
+                                new RetractFromBasketCommand()
                         ).schedule();
                     } else {
                         new SequentialCommandGroup(
