@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 
 @Config
 public class Pusher extends BluServo implements BluSubsystem, Subsystem {
-    public static double RETRACT_POS = 0.965,
+    public static double RETRACT_POS = 0.95,
             vMAX = 8.0, aMAX = 5.0;
 
     enum State {
@@ -62,6 +62,6 @@ public class Pusher extends BluServo implements BluSubsystem, Subsystem {
 
     public void extend() {
         state = State.MOTION_PROFILE;
-        profile = new MotionProfile(RETRACT_POS - .29, getPosition(), vMAX, aMAX).start();
+        profile = new MotionProfile(RETRACT_POS - .225, getPosition(), vMAX, aMAX).start();
     }
 }

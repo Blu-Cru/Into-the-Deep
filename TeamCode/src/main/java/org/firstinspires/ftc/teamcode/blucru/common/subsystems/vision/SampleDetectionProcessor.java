@@ -35,7 +35,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             {931, 774}, {1203, 782}
     };
     static double[] REF_TOP_LEFT_PIXELS = {300.0, 150.0},
-        REF_TOP_LEFT_INCHES = {-5.0, 19.7};
+        REF_TOP_LEFT_INCHES = {-5.0, 15.7};
     public static double PIXELS_PER_INCH = 20.0,
         MIN_SAT_MASK,
         RED_HUE_LOW = 105.0, RED_HUE_HIGH = 140.0,
@@ -200,8 +200,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
             tempNumDetections ++;
 
             double normalizedAngle;
-            if (rect.size.width < rect.size.height) normalizedAngle = 90.0 - rect.angle;
-            else normalizedAngle = -rect.angle;
+            if (rect.size.width < rect.size.height) normalizedAngle = - rect.angle;
+            else normalizedAngle = -rect.angle - 90.0;
 
             Vector2d point = getRobotPoint(rect.center);
             double distance = point.minus(OPTIMAL_POINT).norm();

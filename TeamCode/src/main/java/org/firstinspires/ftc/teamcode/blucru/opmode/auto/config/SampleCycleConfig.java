@@ -4,18 +4,25 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromVerticalIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleDriveToSubIntakePath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeAtPointPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeCenterPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeLeftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeRightPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleLiftHighFromSubPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleParkPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleSubIntakeFailPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
 
@@ -32,27 +39,28 @@ public class SampleCycleConfig extends AutoConfig {
         RIGHT_FAILSAFE,
         CENTER_FAILSAFE,
         LEFT_FAILSAFE,
+        DRIVING_TO_SUB_CYCLE,
+        SCANNING_SUB,
+        INTAKE_SUB,
+        INTAKE_SUB_FAIL,
         PARKING,
         DONE
     }
 
-    public State[] statesAfterDeposit;
     public Path[] pathsAfterDeposit;
 
     int scoreCount;
+    double scanTimeMillis;
+
+    CVMaster cvMaster;
+    Drivetrain dt;
 
     public SampleCycleConfig() {
         runtime = Globals.runtime;
-
-//        statesAfterDeposit = new State[4];
-//        statesAfterDeposit[0] = State.RIGHT_INTAKE;
-//        statesAfterDeposit[1] = State.CENTER_INTAKE;
-//        statesAfterDeposit[2] = State.LEFT_INTAKE;
-//        statesAfterDeposit[3] = State.PARKING;
-
         pathsAfterDeposit = new Path[4];
-
         scoreCount = 0;
+        cvMaster = Robot.getInstance().cvMaster;
+        dt = Robot.getInstance().dt;
 
         sm = new StateMachineBuilder()
                 .state(State.LIFTING)
@@ -77,8 +85,8 @@ public class SampleCycleConfig extends AutoConfig {
                     currentPath = pathsAfterDeposit[scoreCount].start();
                     scoreCount++;
                 })
-                .transition(() -> currentPath.isDone() && scoreCount >= 3, State.PARKING, () -> {
-                    currentPath = pathsAfterDeposit[scoreCount].start();
+                .transition(() -> currentPath.isDone() && scoreCount >= 3 && runtime.seconds() < 26.0, State.DRIVING_TO_SUB_CYCLE, () -> {
+                    currentPath = new SampleDriveToSubIntakePath().start();
                     scoreCount++;
                 })
                 .state(State.RIGHT_INTAKE)
@@ -111,6 +119,37 @@ public class SampleCycleConfig extends AutoConfig {
                             new BoxtubeRetractCommand().schedule();
                             currentPath = cycleLiftingPath.start();
                         })
+                .state(State.DRIVING_TO_SUB_CYCLE)
+                .onEnter(() -> Robot.getInstance().cvMaster.enableSampleDetector())
+                .transition(() -> currentPath.isDone(), State.SCANNING_SUB, () -> {
+                    scanTimeMillis = System.currentTimeMillis();
+                })
+                .state(State.SCANNING_SUB)
+                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 500 && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(), State.INTAKE_SUB, () -> {
+                    Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.getGlobalPose(dt.pose);
+                    currentPath = new SampleIntakeAtPointPath(dt.pose.vec(), blockPose).start();
+                })
+                .transitionTimed(1.0, State.INTAKE_SUB_FAIL, () -> {
+                    currentPath = new SampleSubIntakeFailPath().start();
+                })
+                .state(State.INTAKE_SUB)
+                .transition(() -> Robot.justValidSample() && runtime.seconds() < 27.5, State.LIFTING, () -> {
+                    cvMaster.disableSampleDetector();
+                    new RetractFromVerticalIntakeCommand().schedule();
+                    currentPath = new SampleLiftHighFromSubPath().start();
+                })
+                .transition(() -> currentPath.isDone(), State.INTAKE_SUB_FAIL, () -> {
+                    currentPath = new SampleSubIntakeFailPath().start();
+                })
+                .state(State.INTAKE_SUB_FAIL)
+                .transition(() -> currentPath.isDone() && runtime.seconds() < 28.7, State.DRIVING_TO_SUB_CYCLE, () -> {
+                    currentPath = new SampleDriveToSubIntakePath().start();
+                })
+                .transition(() -> Robot.justValidSample(), State.LIFTING, () -> {
+                    cvMaster.disableSampleDetector();
+                    new RetractFromVerticalIntakeCommand().schedule();
+                    currentPath = new SampleLiftHighFromSubPath().start();
+                })
                 .state(State.PARKING)
                 .onEnter(() -> logTransition(State.PARKING))
                 .transition(() -> currentPath.isDone(), State.DONE)
@@ -129,6 +168,8 @@ public class SampleCycleConfig extends AutoConfig {
         pathsAfterDeposit[1] = new SampleIntakeCenterPath().build();
         pathsAfterDeposit[2] = new SampleIntakeLeftPath().build();
         pathsAfterDeposit[3] = new SampleParkPath().build();
+
+        Robot.getInstance().cvMaster.startSampleStreaming();
     }
 
     @Override
@@ -140,6 +181,7 @@ public class SampleCycleConfig extends AutoConfig {
         sm.start();
         sm.setState(State.LIFTING);
         runtime = Globals.runtime;
+        runtime.reset();
     }
 
     @Override

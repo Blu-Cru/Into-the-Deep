@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.FiveSpecimenConfig;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.FiveSpecimenOneSampleConfig;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.FourSampleConfig;
+import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.SampleCycleConfig;
 
 // abstract class for auto config
 public abstract class AutoConfig {
@@ -18,11 +19,13 @@ public abstract class AutoConfig {
     enum AutoType{
         FOUR_SAMPLE,
         FIVE_SPECIMEN,
-        FIVE_SPECIMEN_ONE_SAMPLE;
+        FIVE_SPECIMEN_ONE_SAMPLE,
+        SAMPLE_CYCLE;
 
         public AutoType flip() {
             if(this == FOUR_SAMPLE) return FIVE_SPECIMEN;
             else if (this == FIVE_SPECIMEN) return FIVE_SPECIMEN_ONE_SAMPLE;
+            else if (this == FIVE_SPECIMEN_ONE_SAMPLE) return SAMPLE_CYCLE;
             else return FOUR_SAMPLE;
         }
     }
@@ -52,6 +55,7 @@ public abstract class AutoConfig {
             case FOUR_SAMPLE: return new FourSampleConfig();
             case FIVE_SPECIMEN: return new FiveSpecimenConfig();
             case FIVE_SPECIMEN_ONE_SAMPLE: return new FiveSpecimenOneSampleConfig();
+            case SAMPLE_CYCLE: return new SampleCycleConfig();
         }
         return null;
     }
