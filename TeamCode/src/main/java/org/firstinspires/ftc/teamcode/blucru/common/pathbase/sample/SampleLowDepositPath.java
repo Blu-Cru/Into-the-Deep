@@ -13,35 +13,22 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
-public class SampleHighDepositPath extends PIDPathBuilder {
-    public SampleHighDepositPath(boolean retractAfterDone) {
+public class SampleLowDepositPath extends PIDPathBuilder {
+    public SampleLowDepositPath() {
         super();
         this.setPower(0.25)
                 .addMappedPoint(-55.8, -55.8, 45)
                 .callback(() -> {
-                    if(retractAfterDone) {
-                        new SequentialCommandGroup(
-                                new ClampReleaseCommand(),
-                                new WheelPowerCommand(-0.5),
-                                new WaitCommand(200),
-                                new ArmGlobalAngleCommand(1.5),
-                                new BoxtubeRetractCommand(),
-                                new EndEffectorRetractCommand()
-                        ).schedule();
-                    } else {
-                        new SequentialCommandGroup(
-                                new ClampReleaseCommand(),
-                                new WheelPowerCommand(-0.5),
-                                new WaitCommand(200),
-                                new ClampGrabCommand(),
-                                new WheelStopCommand()
-                        ).schedule();
-                    }
+                    new SequentialCommandGroup(
+                            new ClampReleaseCommand(),
+                            new WheelPowerCommand(-0.5),
+                            new WaitCommand(200),
+                            new ArmGlobalAngleCommand(1.5),
+                            new WaitCommand(100),
+                            new BoxtubeRetractCommand(),
+                            new EndEffectorRetractCommand()
+                    ).schedule();
                 })
                 .waitMillis(250);
-    }
-
-    public SampleHighDepositPath() {
-        this(true);
     }
 }
