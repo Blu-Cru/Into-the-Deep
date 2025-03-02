@@ -33,12 +33,13 @@ public class CVMaster implements BluSubsystem {
     public static int GAIN = 0;
     public static long EXPOSURE = 5; // ms
 
-    ExposureControl exposureControl;
-    GainControl gainControl;
+//    ExposureControl exposureControl;
+//    GainControl gainControl;
 
-    public VisionPortal atagPortal, samplePortal;
+    public VisionPortal atagPortal;
+//            samplePortal;
     public AprilTagProcessor tagDetector;
-    public SampleDetectionProcessor sampleDetector;
+//    public SampleDetectionProcessor sampleDetector;
 
     public int numDetections;
     ArrayList<AprilTagDetection> detections;
@@ -63,7 +64,7 @@ public class CVMaster implements BluSubsystem {
 
                 .build();
 
-        this.sampleDetector = new SampleDetectionProcessor();
+//        this.sampleDetector = new SampleDetectionProcessor();
 
         atagPortal = new VisionPortal.Builder()
                 .setCamera(Globals.hwMap.get(WebcamName.class, "webcam"))
@@ -74,21 +75,29 @@ public class CVMaster implements BluSubsystem {
                 .build();
         atagPortal.setProcessorEnabled(tagDetector, false);
 
-        while(atagPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {}
+//        while(atagPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {}
+//
+//        exposureControl = atagPortal.getCameraControl(ExposureControl.class);
+//        gainControl = atagPortal.getCameraControl(GainControl.class);
 
-        exposureControl = atagPortal.getCameraControl(ExposureControl.class);
-        gainControl = atagPortal.getCameraControl(GainControl.class);
+        try {
+            atagPortal.stopStreaming();
+        } catch(Exception e) {
 
-        atagPortal.stopStreaming();
+        }
+//
+//        samplePortal = new VisionPortal.Builder()
+//                .setCamera(Globals.hwMap.get(WebcamName.class, "sample cam"))
+//                .setCameraResolution(new Size(1920, 1080))
+//                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+//                .addProcessor(sampleDetector)
+//                .setLiveViewContainerId(viewIds[1])
+//                .build();
+//        try {
+//            samplePortal.stopStreaming();
+//        } catch (Exception e) {
 
-        samplePortal = new VisionPortal.Builder()
-                .setCamera(Globals.hwMap.get(WebcamName.class, "sample cam"))
-                .setCameraResolution(new Size(1920, 1080))
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .addProcessor(sampleDetector)
-                .setLiveViewContainerId(viewIds[1])
-                .build();
-        samplePortal.stopStreaming();
+        // }
     }
 
     public void init() {
@@ -120,9 +129,9 @@ public class CVMaster implements BluSubsystem {
             telemetry.addData("Detection ids", ids);
         }
 
-        telemetry.addData("Sample Portal State", samplePortal.getCameraState());
-        telemetry.addData("Sample detector enabled", samplePortal.getProcessorEnabled(sampleDetector));
-        sampleDetector.telemetry();
+//        telemetry.addData("Sample Portal State", samplePortal.getCameraState());
+//        telemetry.addData("Sample detector enabled", samplePortal.getProcessorEnabled(sampleDetector));
+//        sampleDetector.telemetry();
     }
 
     public void detectTag() {
@@ -130,36 +139,36 @@ public class CVMaster implements BluSubsystem {
 
         atagPortal.setProcessorEnabled(tagDetector, true);
 
-        exposureControl.setMode(ExposureControl.Mode.Manual);
-        exposureControl.setExposure(EXPOSURE, TimeUnit.MILLISECONDS);
-        gainControl.setGain(GAIN);
+//        exposureControl.setMode(ExposureControl.Mode.Manual);
+//        exposureControl.setExposure(EXPOSURE, TimeUnit.MILLISECONDS);
+//        gainControl.setGain(GAIN);
     }
 
-    public void startSampleStreaming() {
-        samplePortal.resumeStreaming();
-    }
+//    public void startSampleStreaming() {
+//        samplePortal.resumeStreaming();
+//    }
 
-    public void stopSampleStreaming() {
-        disableSampleDetector();
-        samplePortal.stopStreaming();
-    }
+//    public void stopSampleStreaming() {
+//        disableSampleDetector();
+//        samplePortal.stopStreaming();
+//    }
 
-    public void enableSampleDetector() {
-        samplePortal.setProcessorEnabled(sampleDetector, true);
-    }
+//    public void enableSampleDetector() {
+//        samplePortal.setProcessorEnabled(sampleDetector, true);
+//    }
 
-    public void disableSampleDetector() {
-        samplePortal.setProcessorEnabled(sampleDetector, false);
-    }
+//    public void disableSampleDetector() {
+//        samplePortal.setProcessorEnabled(sampleDetector, false);
+//    }
 
     public void stop() {
         atagPortal.setProcessorEnabled(tagDetector, false);
         atagPortal.stopStreaming();
     }
 
-    public boolean setExposure(double exposure) {
-        return exposureControl.setExposure((long) exposure, TimeUnit.MILLISECONDS);
-    }
+//    public boolean setExposure(double exposure) {
+//        return exposureControl.setExposure((long) exposure, TimeUnit.MILLISECONDS);
+//    }
 
     public boolean seesSpecimenTag() {
         for (AprilTagDetection detection: detections) {
@@ -179,7 +188,7 @@ public class CVMaster implements BluSubsystem {
         return false;
     }
 
-    public boolean setGain(double gain) {
-        return gainControl.setGain((int) gain);
-    }
+//    public boolean setGain(double gain) {
+//        return gainControl.setGain((int) gain);
+//    }
 }

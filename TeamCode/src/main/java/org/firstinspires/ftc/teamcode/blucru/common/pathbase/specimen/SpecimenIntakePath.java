@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenIntakePath extends PIDPathBuilder {
-    public SpecimenIntakePath() {
+    public SpecimenIntakePath(boolean firstCycle) {
         super();
         this.setPower(0.7)
                 .addMappedPoint(24, -48.5, -60, 9)
                 .schedule(new SequentialCommandGroup(
                         new BoxtubeSplineCommand(
-                                new Pose2d(21, 10.1, 0.05),
+                                new Pose2d(21, 10.6, 0.05),
                                 -Math.PI,
                                 0.5),
                         new WheelIntakeCommand(),
@@ -25,5 +25,9 @@ public class SpecimenIntakePath extends PIDPathBuilder {
                 .setPower(0.25)
                 .addMappedPoint(29, -53, -60)
                 .waitMillis(150);
+    }
+
+    public SpecimenIntakePath() {
+        this(false);
     }
 }

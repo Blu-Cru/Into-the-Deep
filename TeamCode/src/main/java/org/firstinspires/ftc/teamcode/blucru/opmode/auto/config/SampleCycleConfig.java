@@ -126,7 +126,7 @@ public class SampleCycleConfig extends AutoConfig {
                 .state(State.DRIVING_TO_SUB_CYCLE)
                 .onEnter(() -> {
                     logTransition(State.DRIVING_TO_SUB_CYCLE);
-                    Robot.getInstance().cvMaster.enableSampleDetector();
+//                    Robot.getInstance().cvMaster.enableSampleDetector();
                 })
                 .transition(() -> currentPath.isDone(), State.SCANNING_SUB)
                 .state(State.SCANNING_SUB)
@@ -134,21 +134,21 @@ public class SampleCycleConfig extends AutoConfig {
                     logTransition(State.SCANNING_SUB);
                     scanTimeMillis = System.currentTimeMillis();
                 })
-                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 500 && System.currentTimeMillis() - scanTimeMillis < 700 && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(), State.INTAKE_SUB, () -> {
-                    Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.getGlobalPose(
-                            Robot.getInstance().dt.pose);
-
-                    Log.i("SampleCycleConfig", "got block pose at " + blockPose);
-                    Log.i("SampleCycleConfig", "dt pose at " + Robot.getInstance().dt.pose);
-                    currentPath = new SampleIntakeAtPointPath(Robot.getInstance().dt.pose.vec(), blockPose).start();
-                })
+//                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 500 && System.currentTimeMillis() - scanTimeMillis < 700 && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(), State.INTAKE_SUB, () -> {
+//                    Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.getGlobalPose(
+//                            Robot.getInstance().dt.pose);
+//
+//                    Log.i("SampleCycleConfig", "got block pose at " + blockPose);
+//                    Log.i("SampleCycleConfig", "dt pose at " + Robot.getInstance().dt.pose);
+//                    currentPath = new SampleIntakeAtPointPath(Robot.getInstance().dt.pose.vec(), blockPose).start();
+//                })
                 .transitionTimed(1.0, State.INTAKE_SUB_FAIL, () -> {
                     currentPath = new SampleSubIntakeFailPath().start();
                 })
                 .state(State.INTAKE_SUB)
                 .onEnter(() -> logTransition(State.INTAKE_SUB))
                 .transition(() -> Robot.justValidSample() && runtime.seconds() < 26.0, State.LIFTING, () -> {
-                    Robot.getInstance().cvMaster.disableSampleDetector();
+//                    Robot.getInstance().cvMaster.disableSampleDetector();
                     new WheelStopCommand().schedule();
                     new ClampGrabCommand().schedule();
                     new RetractFromVerticalIntakeCommand().schedule();
@@ -170,7 +170,7 @@ public class SampleCycleConfig extends AutoConfig {
                 .onEnter(() -> logTransition(State.INTAKE_SUB_FAIL))
                 .transition(() -> currentPath.isDone() && runtime.seconds() < 28.7 && !Robot.validSample(), State.SCANNING_SUB)
                 .transition(() -> Robot.validSample() && runtime.seconds() < 26.0, State.LIFTING, () -> {
-                    Robot.getInstance().cvMaster.disableSampleDetector();
+//                    Robot.getInstance().cvMaster.disableSampleDetector();
                     new WheelStopCommand().schedule();
                     new ClampGrabCommand().schedule();
                     new RetractFromVerticalIntakeCommand().schedule();
@@ -197,8 +197,8 @@ public class SampleCycleConfig extends AutoConfig {
 
         Robot.getInstance().cvMaster.stop();
 
-        Robot.getInstance().cvMaster.startSampleStreaming();
-        Robot.getInstance().cvMaster.disableSampleDetector();
+//        Robot.getInstance().cvMaster.startSampleStreaming();
+//        Robot.getInstance().cvMaster.disableSampleDetector();
     }
 
     @Override

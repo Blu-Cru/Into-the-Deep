@@ -159,7 +159,7 @@ public class Main extends BluLinearOpMode {
 
                 // SPECIMEN
                 .transition(() -> stickyG2.dpad_down, State.INTAKING_SPECIMEN, () -> {
-                    new BoxtubeCommand(0.45, 0).schedule();
+                    new BoxtubeCommand(0.435, 0).schedule();
                     new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
@@ -271,7 +271,7 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> stickyG2.x || Robot.validSpecimen(), State.ABOVE_SPECIMEN_BACK, () -> {
                     new BoxtubeSplineCommand(
                             new Vector2d(20,42),
-                            new Pose2d(-8.6, 30, Math.PI),
+                            new Pose2d(-8.6, 31, Math.PI),
                             0,
                             0.75
                     ).schedule();

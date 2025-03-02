@@ -15,7 +15,7 @@ public class SampleSubIntakeFailPath extends PIDPathBuilder {
                     new ClampGrabCommand().schedule();
                     new WheelStopCommand().schedule();
                     new BoxtubeSplineCommand(
-                            new Pose2d(5, 10, -0.65),
+                            new Pose2d(8, 8, -0.65),
                             -Math.PI/2,
                             0.4
                     ).schedule();

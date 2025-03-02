@@ -21,12 +21,12 @@ public class SampleIntakeLeftPath extends PIDPathBuilder {
                         new ArmDropToGroundCommand(),
                         new ExtensionCommand(2)
                 ))
-                .addMappedPoint(-52, -32, 162, 5)
+                .addMappedPoint(-52, -26.5, 180, 5)
                 .schedule(new SequentialCommandGroup(
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
                         new ExtensionMotionProfileCommand(8)
                 ))
-                .waitMillis(3000);
+                .waitMillis(1200);
     }
 }
