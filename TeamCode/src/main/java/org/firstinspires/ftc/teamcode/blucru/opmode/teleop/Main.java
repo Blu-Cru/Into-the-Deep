@@ -592,8 +592,8 @@ public class Main extends BluLinearOpMode {
         dt.setPoseEstimate(DriveBase.startPose);
 
         cvMaster.detectTag();
-        cvMaster.stopSampleStreaming();
-        cvMaster.disableSampleDetector();
+//        cvMaster.stopSampleStreaming();
+//        cvMaster.disableSampleDetector();
     }
 
     @Override
