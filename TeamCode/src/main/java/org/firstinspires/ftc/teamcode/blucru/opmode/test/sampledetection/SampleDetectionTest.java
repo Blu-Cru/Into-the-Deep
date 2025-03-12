@@ -23,20 +23,20 @@ public class SampleDetectionTest extends BluLinearOpMode {
         addCVMaster();
         enableFTCDashboard();
 
-//        cvMaster.startSampleStreaming();
+        cvMaster.startSampleStreaming();
 
         sm = new StateMachineBuilder()
                 .state(State.IDLE)
-//                .transition(() -> stickyG1.a, State.DETECTING, () -> {
-//                    cvMaster.startSampleStreaming();
-//                    cvMaster.enableSampleDetector();
-//                    FtcDashboard.getInstance().startCameraStream((CameraStreamSource) cvMaster.samplePortal, 30);
-//                })
+                .transition(() -> stickyG1.a, State.DETECTING, () -> {
+                    cvMaster.startSampleStreaming();
+                    cvMaster.enableSampleDetector();
+                    FtcDashboard.getInstance().startCameraStream((CameraStreamSource) cvMaster.samplePortal, 30);
+                })
                 .state(State.DETECTING)
-//                .transition(() -> stickyG1.a, State.IDLE, () -> {
-//                    cvMaster.stopSampleStreaming();
-//                    FtcDashboard.getInstance().stopCameraStream();
-//                })
+                .transition(() -> stickyG1.a, State.IDLE, () -> {
+                    cvMaster.stopSampleStreaming();
+                    FtcDashboard.getInstance().stopCameraStream();
+                })
                 .build();
 
         sm.setState(State.IDLE);

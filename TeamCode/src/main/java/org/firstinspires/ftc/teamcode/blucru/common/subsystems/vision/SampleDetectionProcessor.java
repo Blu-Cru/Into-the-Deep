@@ -221,7 +221,16 @@ public class SampleDetectionProcessor implements VisionProcessor {
                 minDistance = distance;
             }
 
-            Imgproc.putText(detectionOverlay, "(" + (int)point.getX() + ", " + (int)point.getY() + ")", rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+            // print saturation
+//            Imgproc.putText(detectionOverlay, "Sat: " + meanSat, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+            // print hue
+//            Imgproc.putText(detectionOverlay, "Hue: " + meanHue, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+            // print area
+//            Imgproc.putText(detectionOverlay, "Area: " + area, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+            // print ratio
+            Imgproc.putText(detectionOverlay, "Ratio: " + ratio, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+            // print center
+//            Imgproc.putText(detectionOverlay, "(" + (int)point.getX() + ", " + (int)point.getY() + ")", rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
 
             cnt.release();
             matOfRectPoints.release();
