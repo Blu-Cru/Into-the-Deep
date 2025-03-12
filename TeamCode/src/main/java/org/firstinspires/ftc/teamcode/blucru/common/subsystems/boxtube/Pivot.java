@@ -85,7 +85,7 @@ public class Pivot implements BluSubsystem, Subsystem {
             case RESETTING:
                 setRawPower(0);
 
-                if(Globals.timeSince(resetTime) > 300 && getAngle() < 0.12) {
+                if(Globals.timeSince(resetTime) > 250 && getAngle() < 0.04) {
                     resetEncoder();
                     pidTo(0.0);
                 }

@@ -78,7 +78,7 @@ public class Extension implements BluSubsystem, Subsystem {
                 }
                 break;
             case RETRACTING:
-                if(Math.abs(extensionMotor.getDistance()) < 1.0 && Math.abs(extensionMotor.getDistanceVel()) < 0.3) {
+                if(Math.abs(extensionMotor.getDistance()) < 0.2 && Math.abs(extensionMotor.getDistanceVel()) < 0.5) {
                     state = State.RESETTING;
                     resetTimer.reset();
                 }
