@@ -134,16 +134,13 @@ public class SampleCycleConfig extends AutoConfig {
                     logTransition(State.SCANNING_SUB);
                     scanTimeMillis = System.currentTimeMillis();
                 })
-                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 500 && System.currentTimeMillis() - scanTimeMillis < 700 && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(), State.INTAKE_SUB, () -> {
+                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 450 && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(), State.INTAKE_SUB, () -> {
                     Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.getGlobalPose(
                             Robot.getInstance().dt.pose);
 
                     Log.i("SampleCycleConfig", "got block pose at " + blockPose);
                     Log.i("SampleCycleConfig", "dt pose at " + Robot.getInstance().dt.pose);
                     currentPath = new SampleIntakeAtPointPath(Robot.getInstance().dt.pose.vec(), blockPose).start();
-                })
-                .transitionTimed(1.0, State.INTAKE_SUB_FAIL, () -> {
-                    currentPath = new SampleSubIntakeFailPath().start();
                 })
                 .state(State.INTAKE_SUB)
                 .onEnter(() -> logTransition(State.INTAKE_SUB))

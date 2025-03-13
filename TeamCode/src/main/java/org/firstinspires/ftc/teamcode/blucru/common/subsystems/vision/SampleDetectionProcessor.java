@@ -47,7 +47,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         // distortion
         K1 = -0.448017, K2 = 0.245668, K3 = 0.0,
         P1 = -0.000901464, P2 = 0.000996399,
-        MAX_DETECTION_DISTANCE = 12.0, MIN_DETECTION_X = 12.0;
+        MAX_DETECTION_DISTANCE = 12.0, MIN_DETECTION_X = 10.0;
     static Vector2d OPTIMAL_POINT = new Vector2d(16.0, 2.0);
 
     int numDetections;
@@ -154,7 +154,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             MatOfPoint cnt = contours.get(i);
 
             double area = Imgproc.contourArea(cnt);
-            if(area < 1700.0 || area > 4500.0) {
+            if(area < 2300.0 || area > 3300.0) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with area:" + area);
                 continue;
             }
@@ -163,7 +163,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             if(rect.size.width == 0 || rect.size.height == 0) continue;
             double ratio = Math.max(rect.size.width, rect.size.height) / Math.min(rect.size.width, rect.size.height);
-            if(ratio < 2.0 || ratio > 3.8) {
+            if(ratio < 2.05 || ratio > 2.4) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with ratio:" + ratio);
                 continue;
             }
@@ -200,7 +200,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             Vector2d point = getRobotPoint(rect.center);
             double distance = point.minus(OPTIMAL_POINT).norm();
 
-            if(minDistance < MAX_DETECTION_DISTANCE) {
+            if(distance > MAX_DETECTION_DISTANCE) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with distance: " + distance);
                 continue;
             }
@@ -222,18 +222,20 @@ public class SampleDetectionProcessor implements VisionProcessor {
             }
 
             // print saturation
-//            Imgproc.putText(detectionOverlay, "Sat: " + meanSat, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+            Imgproc.putText(detectionOverlay, "Sat: " + meanSat, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print hue
 //            Imgproc.putText(detectionOverlay, "Hue: " + meanHue, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print area
 //            Imgproc.putText(detectionOverlay, "Area: " + area, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print ratio
-            Imgproc.putText(detectionOverlay, "Ratio: " + ratio, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+//            Imgproc.putText(detectionOverlay, "Ratio: " + ratio, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print center
 //            Imgproc.putText(detectionOverlay, "(" + (int)point.getX() + ", " + (int)point.getY() + ")", rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
 
+            validRects.add(matOfRectPoints);
+
             cnt.release();
-            matOfRectPoints.release();
+//            matOfRectPoints.release();
             rotatedRectMask.release();
         }
 

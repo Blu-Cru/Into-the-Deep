@@ -56,7 +56,7 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
                             0.28
                     ).schedule();
                 })
-                .waitMillis(1000);
+                .waitMillis(750);
 
     }
 }

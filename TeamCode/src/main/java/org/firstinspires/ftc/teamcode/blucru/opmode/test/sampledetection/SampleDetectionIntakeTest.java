@@ -75,7 +75,7 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
                 .transition(() -> stickyG1.a, State.RETRACT, () -> {
                     new FullRetractCommand().schedule();
                 })
-                .transitionTimed(0.5, State.RETRACT, () -> {
+                .transitionTimed(0.8, State.RETRACT, () -> {
                     new FullRetractCommand().schedule();
                 })
                 .state(State.RUNNING_PATH)
