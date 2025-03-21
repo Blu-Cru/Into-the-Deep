@@ -35,7 +35,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             {931, 774}, {1203, 782}
     };
     static double[] REF_TOP_LEFT_PIXELS = {300.0, 150.0},
-        REF_TOP_LEFT_INCHES = {-5.0, 15.7};
+        REF_TOP_LEFT_INCHES = {-5.0, 15.2};
     public static double PIXELS_PER_INCH = 20.0,
         MIN_SAT_MASK,
         RED_HUE_LOW = 105.0, RED_HUE_HIGH = 140.0,

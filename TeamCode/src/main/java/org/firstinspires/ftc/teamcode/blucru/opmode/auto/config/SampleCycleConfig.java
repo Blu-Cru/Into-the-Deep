@@ -142,6 +142,9 @@ public class SampleCycleConfig extends AutoConfig {
                     Log.i("SampleCycleConfig", "dt pose at " + Robot.getInstance().dt.pose);
                     currentPath = new SampleIntakeAtPointPath(Robot.getInstance().dt.pose.vec(), blockPose).start();
                 })
+                .transition(() -> runtime.seconds() > 29.6, State.DONE, () -> {
+                    new FullRetractCommand().schedule();
+                })
                 .state(State.INTAKE_SUB)
                 .onEnter(() -> logTransition(State.INTAKE_SUB))
                 .transition(() -> Robot.justValidSample() && runtime.seconds() < 26.0, State.LIFTING, () -> {
