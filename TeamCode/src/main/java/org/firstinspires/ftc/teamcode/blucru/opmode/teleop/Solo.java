@@ -9,6 +9,7 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
@@ -35,6 +36,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangS
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.pusher.PushCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkRetractCommand;
@@ -100,6 +102,7 @@ public class Solo extends BluLinearOpMode {
         addCVMaster();
         addPusher();
         addHangServos();
+        addHangMotor();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
@@ -122,11 +125,14 @@ public class Solo extends BluLinearOpMode {
                     dt.updateAprilTags();
                     currentPath = new SpecimenIntakePath().start();
                 })
-                // DRIVE PID
-                .transition(() -> stickyG1.y && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_LIFTING, () -> {
-                    dt.updateAprilTags();
-                    currentPath = new SampleHighLiftPath().build().start();
+                .transition(() -> stickyG1.y, State.SCORING_BASKET, () -> {
+                    new SampleBackHighCommand().schedule();
                 })
+//                // DRIVE PID
+//                .transition(() -> stickyG1.y && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_LIFTING, () -> {
+//                    dt.updateAprilTags();
+//                    currentPath = new SampleHighLiftPath().build().start();
+//                })
 
                 // SPECIMEN
                 .transition(() -> stickyG1.x, State.INTAKING_SPECIMEN, () -> {
@@ -277,19 +283,14 @@ public class Solo extends BluLinearOpMode {
                 .state(State.SCORING_BASKET)
                 .onEnter(() -> dt.setDrivePower(0.35))
                 .transition(() -> stickyG1.a, State.RETRACTED, () -> {
-                    new SequentialCommandGroup(
-                            new ArmGlobalAngleCommand(1.5),
-                            new WaitCommand(150),
-                            new BoxtubeRetractCommand(),
-                            new EndEffectorRetractCommand()
-                    ).schedule();
+                    new RetractFromBasketCommand().schedule();
                 })
-                .transition(() -> stickyG1.y, State.AUTO_TO_ASCENT, () -> {
-                    currentPath = new TeleDriveToAscentPath().build().start();
-                })
-                .transition(() -> stickyG1.b, State.AUTO_TO_RUNG, () -> {
-                    currentPath = new TeleDriveToRungIntakePath().build().start();
-                })
+//                .transition(() -> stickyG1.y, State.AUTO_TO_ASCENT, () -> {
+//                    currentPath = new TeleDriveToAscentPath().build().start();
+//                })
+//                .transition(() -> stickyG1.b, State.AUTO_TO_RUNG, () -> {
+//                    currentPath = new TeleDriveToRungIntakePath().build().start();
+//                })
                 .loop(() -> {
                     if(gamepad1.left_bumper) {
                         clamp.release();
@@ -299,8 +300,8 @@ public class Solo extends BluLinearOpMode {
                         wheel.stop();
                     }
 
-//                    if(stickyG1.y) new SampleBackHighCommand().schedule();
-//                    else if(stickyG1.b) new SampleBackLowCommand().schedule();
+                    if(stickyG1.y) new SampleBackHighCommand().schedule();
+                    else if(stickyG1.b) new SampleBackLowCommand().schedule();
                 })
                 .onExit(() -> {
                     clamp.grab();
@@ -496,7 +497,7 @@ public class Solo extends BluLinearOpMode {
 
                 .state(State.MANUAL_RESET)
                 .onEnter(() -> dt.setDrivePower(0.8))
-                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.left_bumper, State.RETRACTED, () -> {
                     gamepad1.rumble(150);
                 })
                 .loop(() -> {

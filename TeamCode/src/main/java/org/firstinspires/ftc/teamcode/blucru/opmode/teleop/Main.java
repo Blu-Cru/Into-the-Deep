@@ -52,6 +52,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLi
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
+import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSpecimenDepoPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
@@ -398,16 +399,18 @@ public class Main extends BluLinearOpMode {
                     currentPath = new SpecimenCycleIntakeFailsafePath().start();
                 })
                 .transition(() -> Robot.justValidSample() && pivot.getAngle() < 0.5, State.AUTO_SPEC_DEPO_PATH, () -> {
-                    currentPath = new SpecimenCycleDepositPath().start();
+//                    currentPath = new SpecimenCycleDepositPath().start();
+                    currentPath = new TeleSpecimenDepoPath().start();
                 })
 
                 .state(State.AUTO_SPEC_DEPO_PATH)
                 .transition(() -> stickyG2.a || stickyG1.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
-                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE, () -> {
-                    currentPath = new SpecimenIntakePath().start();
-                })
+//                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE, () -> {
+//                    currentPath = new SpecimenIntakePath().start();
+//                })
+                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_DEPO_MANUAL)
 
                 .state(State.AUTO_SPEC_DEPO_MANUAL)
                 .transition(() -> stickyG1.a || stickyG2.a, State.RETRACTED, () -> {
