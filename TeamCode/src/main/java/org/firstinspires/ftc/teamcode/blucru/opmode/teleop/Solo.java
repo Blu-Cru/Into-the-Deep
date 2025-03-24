@@ -31,6 +31,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wris
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksHighCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.motor.HangMotorHighBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosHangComamnd;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosRetractCommand;
@@ -166,7 +167,7 @@ public class Solo extends BluLinearOpMode {
                     clamp.release();
                 })
                 .transition(() -> stickyG1.a || Robot.justValidSample(), State.RETRACTED, () -> {
-                    if(intakeSwitch.pressed()) {
+                    if(Robot.justValidSample()) {
                         gamepad1.rumble(200);
                     }
 
@@ -281,7 +282,7 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .state(State.SCORING_BASKET)
-                .onEnter(() -> dt.setDrivePower(0.35))
+                .onEnter(() -> dt.setDrivePower(0.45))
                 .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new RetractFromBasketCommand().schedule();
                 })
@@ -421,7 +422,9 @@ public class Solo extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new HangServosHangComamnd(),
                             new WaitCommand(200),
-                            new BoxtubeHooksTopBarCommand()
+                            new BoxtubeHooksTopBarCommand(),
+                            new WaitCommand(700),
+                            new HangMotorHighBarCommand()
                     ).schedule();
                 })
                 .transition(() -> stickyG1.dpad_up, State.RETRACTED, () -> {
@@ -468,7 +471,7 @@ public class Solo extends BluLinearOpMode {
                 .onEnter(() -> {
                     wrist.disable();
                     clamp.disable();
-                    pusher.disable();
+//                    pusher.disable();
                 })
                 .transition(() -> stickyG1.dpad_up, State.HANG_BOXTUBE_EXTENDED, () -> {
                     new SequentialCommandGroup(

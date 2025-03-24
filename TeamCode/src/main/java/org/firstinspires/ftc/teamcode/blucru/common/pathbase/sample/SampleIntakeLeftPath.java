@@ -28,6 +28,6 @@ public class SampleIntakeLeftPath extends PIDPathBuilder {
                         new ClampReleaseCommand(),
                         new ExtensionMotionProfileCommand(8)
                 ))
-                .waitMillis(1200);
+                .waitMillis(700);
     }
 }
