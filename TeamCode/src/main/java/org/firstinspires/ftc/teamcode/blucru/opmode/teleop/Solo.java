@@ -295,7 +295,7 @@ public class Solo extends BluLinearOpMode {
                 .loop(() -> {
                     if(gamepad1.left_bumper) {
                         clamp.release();
-                        wheel.reverse();
+                        wheel.setPower(-0.5);
                     } else {
                         clamp.grab();
                         wheel.stop();
@@ -469,8 +469,9 @@ public class Solo extends BluLinearOpMode {
 
                 .state(State.HANG_PULLING_ABOVE_BAR) // pulling up
                 .onEnter(() -> {
-                    wrist.disable();
-                    clamp.disable();
+//                    wrist.disable();
+//                    clamp.disable();
+//                    pusher.retract();
 //                    pusher.disable();
                 })
                 .transition(() -> stickyG1.dpad_up, State.HANG_BOXTUBE_EXTENDED, () -> {
@@ -487,7 +488,7 @@ public class Solo extends BluLinearOpMode {
                 .onExit(() -> {
                     wrist.enable();
                     clamp.enable();
-                    pusher.enable();
+//                    pusher.enable();
                 })
 
                 .state(State.HANGING)

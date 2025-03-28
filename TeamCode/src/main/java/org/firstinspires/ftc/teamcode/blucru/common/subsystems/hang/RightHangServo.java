@@ -7,7 +7,7 @@ public class RightHangServo extends HangServo{
 
     @Override
     double getSidewaysPosition() {
-        return 0.57;
+        return 0.58;
     }
 
     @Override

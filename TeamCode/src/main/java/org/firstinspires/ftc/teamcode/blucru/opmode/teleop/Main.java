@@ -506,7 +506,7 @@ public class Main extends BluLinearOpMode {
                 .onEnter(() -> {
                     wrist.disable();
                     clamp.disable();
-                    pusher.disable();
+//                    pusher.disable();
                 })
                 .transition(() -> stickyG1.dpad_up, State.HANG_BOXTUBE_EXTENDED, () -> {
                     new SequentialCommandGroup(

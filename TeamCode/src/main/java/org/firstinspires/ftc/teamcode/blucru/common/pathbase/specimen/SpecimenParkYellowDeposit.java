@@ -24,10 +24,10 @@ public class SpecimenParkYellowDeposit extends PIDPathBuilder {
                 })
                 .addMappedPoint(-30, -53, 0, 16)
                 .setPower(1)
-                .addMappedPoint(15, -55, -10, 10)
+                .addMappedPoint(37, -57, -10, 10)
                 .callback(() -> {
-                    new ExtensionCommand(15).schedule();
-                    new ArmPreIntakeCommand().schedule();
+//                    new ExtensionCommand(15).schedule();
+//                    new ArmPreIntakeCommand().schedule();
                 });
     }
 }
