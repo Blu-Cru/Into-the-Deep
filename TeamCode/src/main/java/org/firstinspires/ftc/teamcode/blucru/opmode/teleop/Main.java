@@ -413,6 +413,7 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> currentPath.isDone(), State.AUTO_SPEC_DEPO_MANUAL)
 
                 .state(State.AUTO_SPEC_DEPO_MANUAL)
+                .onEnter(() -> currentPath.cancel())
                 .transition(() -> stickyG1.a || stickyG2.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
