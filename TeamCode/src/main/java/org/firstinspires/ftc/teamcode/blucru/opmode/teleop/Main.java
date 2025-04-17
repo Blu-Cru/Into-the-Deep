@@ -413,6 +413,7 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> currentPath.isDone(), State.AUTO_SPEC_DEPO_MANUAL)
 
                 .state(State.AUTO_SPEC_DEPO_MANUAL)
+                .onEnter(() -> currentPath.cancel())
                 .transition(() -> stickyG1.a || stickyG2.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
@@ -503,11 +504,11 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.HANG_PULLING_ABOVE_BAR) // pulling up
-                .onEnter(() -> {
-                    wrist.disable();
-                    clamp.disable();
-//                    pusher.disable();
-                })
+//                .onEnter(() -> {
+////                    wrist.disable();
+////                    clamp.disable();
+////                    pusher.disable();
+//                })
                 .transition(() -> stickyG1.dpad_up, State.HANG_BOXTUBE_EXTENDED, () -> {
                     new SequentialCommandGroup(
                             new FullRetractCommand(),
