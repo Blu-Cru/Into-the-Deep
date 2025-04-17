@@ -47,7 +47,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         // distortion
         K1 = -0.448017, K2 = 0.245668, K3 = 0.0,
         P1 = -0.000901464, P2 = 0.000996399,
-        MAX_DETECTION_DISTANCE = 12.0, MIN_DETECTION_X = 10.0;
+        MAX_DETECTION_DISTANCE = 15.0, MIN_DETECTION_X = 10.0;
     static Vector2d OPTIMAL_POINT = new Vector2d(16.0, 2.0);
 
     int numDetections;

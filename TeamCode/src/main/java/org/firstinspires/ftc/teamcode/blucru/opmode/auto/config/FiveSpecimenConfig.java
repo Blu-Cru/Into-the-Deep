@@ -76,7 +76,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                     currentPath = collectPaths[spitCount].start();
                 })
                 .transition(() -> currentPath.isDone() && spitCount >= 2, State.INTAKING_CYCLE, () -> {
-                    currentPath = new SpecimenIntakePath().build().start();
+                    currentPath = new SpecimenIntakePath(11.0).build().start();
                 })
 
                 .state(State.INTAKING_CYCLE)

@@ -20,7 +20,7 @@ public class CollectCenterBlockPath extends PIDPathBuilder {
                         new ArmDropToGroundCommand(),
                         new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
-                        new WaitCommand(350),
+                        new WaitCommand(330),
                         new ExtensionMotionProfileCommand(10)
                 ))
                 .waitMillis(1300);

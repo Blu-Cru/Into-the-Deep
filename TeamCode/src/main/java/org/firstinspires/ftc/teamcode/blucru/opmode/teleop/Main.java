@@ -179,7 +179,7 @@ public class Main extends BluLinearOpMode {
                 // AUTO SPEC
                 .transition(() -> stickyG1.b && cvMaster.seesSpecimenTag(), State.AUTO_SPEC_INTAKE, () -> {
                     dt.updateAprilTags();
-                    currentPath = new SpecimenIntakePath().start();
+                    currentPath = new SpecimenIntakePath(11.9).start();
                 })
 //                .transition(() -> stickyG1.b && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_TO_ASCENT, () -> {
 //                    currentPath = new TeleDriveToAscentPath().build().start();
@@ -434,7 +434,7 @@ public class Main extends BluLinearOpMode {
 
                 .state(State.AUTO_SPEC_SCORING)
                 .transitionTimed(0.25, State.AUTO_SPEC_INTAKE, () -> {
-                    currentPath = new SpecimenIntakePath().start();
+                    currentPath = new SpecimenIntakePath(11.9).start();
                 })
 
                 .state(State.AUTO_SPEC_INTAKE_FAIL)
@@ -442,10 +442,10 @@ public class Main extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> Robot.validSample(), State.AUTO_SPEC_DEPO_PATH, () -> {
-                    currentPath = new SpecimenCycleDepositPath().start();
+                    currentPath = new TeleSpecimenDepoPath().start();
                 })
                 .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE, () -> {
-                    currentPath = new SpecimenIntakePath().start();
+                    currentPath = new SpecimenIntakePath(11.9).start();
                 })
 
                 .state(State.HANG_RELEASE) // 1st stage released, hook is up, not touching bar
