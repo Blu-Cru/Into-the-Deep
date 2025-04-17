@@ -504,11 +504,11 @@ public class Main extends BluLinearOpMode {
                 })
 
                 .state(State.HANG_PULLING_ABOVE_BAR) // pulling up
-                .onEnter(() -> {
-                    wrist.disable();
-                    clamp.disable();
-//                    pusher.disable();
-                })
+//                .onEnter(() -> {
+////                    wrist.disable();
+////                    clamp.disable();
+////                    pusher.disable();
+//                })
                 .transition(() -> stickyG1.dpad_up, State.HANG_BOXTUBE_EXTENDED, () -> {
                     new SequentialCommandGroup(
                             new FullRetractCommand(),
