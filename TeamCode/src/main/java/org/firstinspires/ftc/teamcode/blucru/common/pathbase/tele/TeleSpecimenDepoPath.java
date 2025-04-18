@@ -18,7 +18,7 @@ public class TeleSpecimenDepoPath extends PIDPathBuilder {
                         new ClampGrabCommand(),
                         new BoxtubeSplineCommand(
                                 new Vector2d(20,42),
-                                new Pose2d(-8.6, 29, Math.PI),
+                                new Pose2d(-8.6, 29.3, Math.PI),
                                 0,
                                 0.95
                         )

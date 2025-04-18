@@ -38,7 +38,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         REF_TOP_LEFT_INCHES = {-5.0, 15.2};
     public static double PIXELS_PER_INCH = 20.0,
         MIN_SAT_MASK,
-        RED_HUE_LOW = 105.0, RED_HUE_HIGH = 140.0,
+        RED_HUE_LOW = 100.0, RED_HUE_HIGH = 140.0,
         YELLOW_HUE_LOW = 12.0, YELLOW_HUE_HIGH = 55.0,
         BLUE_HUE_LOW = 0.0, BLUE_HUE_HIGH = 35.0,
 
@@ -163,7 +163,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             if(rect.size.width == 0 || rect.size.height == 0) continue;
             double ratio = Math.max(rect.size.width, rect.size.height) / Math.min(rect.size.width, rect.size.height);
-            if(ratio < 2.05 || ratio > 2.4) {
+            if(ratio < 1.9 || ratio > 2.6) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with ratio:" + ratio);
                 continue;
             }
@@ -177,7 +177,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             meanSat = Core.mean(satChannel, rotatedRectMask);
 
-            double minSat = 45.0;
+            double minSat = 30.0;
             if(meanSat.val[0] < minSat) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with sat: " + meanSat.val[0]);
                 continue;

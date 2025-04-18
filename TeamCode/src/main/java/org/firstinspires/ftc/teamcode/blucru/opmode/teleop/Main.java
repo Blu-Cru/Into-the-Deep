@@ -179,7 +179,7 @@ public class Main extends BluLinearOpMode {
                 // AUTO SPEC
                 .transition(() -> stickyG1.b && cvMaster.seesSpecimenTag(), State.AUTO_SPEC_INTAKE, () -> {
                     dt.updateAprilTags();
-                    currentPath = new SpecimenIntakePath(11.9).start();
+                    currentPath = new SpecimenIntakePath().start();
                 })
 //                .transition(() -> stickyG1.b && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_TO_ASCENT, () -> {
 //                    currentPath = new TeleDriveToAscentPath().build().start();
