@@ -123,7 +123,7 @@ public class FourSpecimenOneSampleConfig extends AutoConfig {
                             scoreCount++;
                             currentPath = new SpecimenIntakePath().build().start();
                         })
-                .transition(() -> currentPath.isDone() && !(scoreCount < 4 && runtime.seconds() < 25), State.INTAKING_YELLOW, () -> {
+                .transition(() -> currentPath.isDone() && !(scoreCount < 3 && runtime.seconds() < 25), State.INTAKING_YELLOW, () -> {
                     Log.i("Five Specimen Config", "parking, time = " + runtime.seconds());
                     currentPath = new SpecimenParkIntakePath().build().start();
                 })

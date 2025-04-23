@@ -33,8 +33,8 @@ public class CVMaster implements BluSubsystem {
     public static int GAIN = 0;
     public static long EXPOSURE = 5; // ms
 
-//    ExposureControl exposureControl;
-//    GainControl gainControl;
+    ExposureControl sampleExposureControl;
+    GainControl sampleGainControl;
 
     public VisionPortal atagPortal, samplePortal;
     public AprilTagProcessor tagDetector;
@@ -92,6 +92,16 @@ public class CVMaster implements BluSubsystem {
                 .addProcessor(sampleDetector)
                 .setLiveViewContainerId(viewIds[1])
                 .build();
+
+//        while(samplePortal.getCameraState() != VisionPortal.CameraState.STREAMING) {}
+//
+//
+//        sampleExposureControl = samplePortal.getCameraControl(ExposureControl.class);
+//        sampleGainControl = samplePortal.getCameraControl(GainControl.class);
+//
+//        sampleExposureControl.setExposure(40, TimeUnit.MILLISECONDS);
+//        sampleGainControl.setGain(1);
+
         try {
             samplePortal.stopStreaming();
         } catch (Exception e) {

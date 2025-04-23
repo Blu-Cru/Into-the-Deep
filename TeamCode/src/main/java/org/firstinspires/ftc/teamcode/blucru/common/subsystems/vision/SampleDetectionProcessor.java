@@ -154,7 +154,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             MatOfPoint cnt = contours.get(i);
 
             double area = Imgproc.contourArea(cnt);
-            if(area < 2300.0 || area > 3300.0) {
+            if(area < 2000.0 || area > 3700.0) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with area:" + area);
                 continue;
             }
@@ -222,11 +222,11 @@ public class SampleDetectionProcessor implements VisionProcessor {
             }
 
             // print saturation
-            Imgproc.putText(detectionOverlay, "Sat: " + meanSat, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+//            Imgproc.putText(detectionOverlay, "Sat: " + meanSat, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print hue
 //            Imgproc.putText(detectionOverlay, "Hue: " + meanHue, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print area
-//            Imgproc.putText(detectionOverlay, "Area: " + area, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+            Imgproc.putText(detectionOverlay, "Area: " + area, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print ratio
 //            Imgproc.putText(detectionOverlay, "Ratio: " + ratio, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print center
