@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public static double
             PARALLEL_POS = 0.52,
-            vMAX = 25.0, aMAX = 30.0,
+            vMAX = 30.0, aMAX = 40.0,
             MAX_ANGLE = 1.8, MIN_ANGLE = -1.7,
             RETRACT_ANGLE = 1.7,
             PRE_INTAKE_ANGLE = 0.15,
@@ -92,7 +92,7 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
 
     public void setMotionProfileAngle(double targetRad) {
         state = State.MOTION_PROFILE;
-        profile = new MotionProfile(targetRad, getAngle(), vMAX, aMAX).start();
+        profile = new MotionProfile(Range.clip(targetRad, MIN_ANGLE, MAX_ANGLE), getAngle(), vMAX, aMAX).start();
     }
 
     public void preIntake() {

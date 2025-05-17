@@ -12,10 +12,10 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmSampleScorePositionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.motor.HangMotorHighBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosHangComamnd;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosReleaseCommand;
@@ -26,9 +26,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.pusher.PushCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighLiftCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleFrontHighCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleFrontLowCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
@@ -47,9 +47,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.whee
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSpecimenDepoPath;
@@ -62,13 +59,23 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 public class SonnyTele extends BluLinearOpMode {
     enum State {
         RETRACTED,
-        EXTENDING_OVER_INTAKE,
-        INTAKING_GROUND,
-        SCORING_BASKET,
+        MANUAL_RESET,
+
+        EXTENDED_OVER_INTAKE_CLOSE,
+        EXTENDED_OVER_INTAKE_FAR,
+        INTAKING_CLOSE,
+        INTAKING_FAR,
+
+        SPITTING_RETRACT,
+        SPITTING_FAR,
+
+        LIFTING_BASKET_HIGH,
+        SCORING_BASKET_HIGH,
+        SCORING_BASKET_LOW,
+
         INTAKING_SPECIMEN,
         ABOVE_SPECIMEN_BACK,
         DUNKING_SPECIMEN_BACK,
-        MANUAL_RESET,
 
         HANG_RELEASE,
         HANG_HOOKS_ON_BAR,
@@ -78,8 +85,8 @@ public class SonnyTele extends BluLinearOpMode {
         HANG_PULLING_LOW,
         HANGING,
 
-        AUTO_SAMPLE_LIFTING,
-        AUTO_SAMPLE_SCORING,
+//        AUTO_SAMPLE_LIFTING,
+//        AUTO_SAMPLE_SCORING,
 //        AUTO_SAMPLE_TO_ASCENT,
 //        AUTO_SAMPLE_TO_RUNG,
 
@@ -90,7 +97,7 @@ public class SonnyTele extends BluLinearOpMode {
         AUTO_SPEC_SCORING
     }
 
-    public static double intakeExtendMid = 5, intakeExtendFar = 13;
+    public static double intakeExtendMid = 6, intakeExtendFar = 17;
 
     StateMachine sm;
     Path currentPath;
@@ -114,81 +121,56 @@ public class SonnyTele extends BluLinearOpMode {
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
-        dt.fieldCentric = false;
+//        dt.fieldCentric = false;
 
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
                 .onEnter(() -> dt.setDrivePower(1.0))
-                .transition(() -> stickyG2.share, State.MANUAL_RESET, () -> {
-                    gamepad1.rumble(350);
-                    gamepad2.rumble(350);
-                })
+                .transition(() -> stickyG1.share || stickyG2.share, State.MANUAL_RESET, () -> gamepad1.rumble(350))
+
                 // INTAKE
-//                .transition(() -> stickyG1.left_bumper, State.INTAKING_GROUND, () -> {
-//                    new PivotRetractCommand().schedule();
-//                    new ArmDropToGroundCommand().schedule();
-//                    new WheelIntakeCommand().schedule();
-//                    new ClampReleaseCommand().schedule();
-//                    extension.teleExtendIntake(0);
-//                })
-                .transition(() -> stickyG1.right_bumper, State.EXTENDING_OVER_INTAKE, () -> {
-                    new ArmPreIntakeCommand().schedule();
+                .transition(() -> stickyG1.left_bumper, State.INTAKING_CLOSE, () -> {
                     new PivotRetractCommand().schedule();
+                    new ArmDropToGroundCommand().schedule();
                     new WristUprightForwardCommand().schedule();
+                    new WheelIntakeCommand().schedule();
+                    new ClampReleaseCommand().schedule();
+                    extension.teleExtendIntake(0);
+                })
+                .transition(() -> stickyG1.right_trigger, State.EXTENDED_OVER_INTAKE_FAR, () -> {
+                    new PivotRetractCommand().schedule();
+                    new ArmPreIntakeCommand().schedule();
+                    new WristUprightForwardCommand().schedule();
+                    new WheelStopCommand().schedule();
+                    new ClampGrabCommand().schedule();
                     extension.teleExtendIntake(intakeExtendFar);
                 })
-//                .transition(() -> stickyG2.dpad_right, State.EXTENDING_OVER_INTAKE, () -> {
-//                    new ArmPreIntakeCommand().schedule();
-//                    new PivotRetractCommand().schedule();
-//                    new WristUprightForwardCommand().schedule();
-//                    extension.teleExtendIntake(intakeExtendMid);
-//                })
-                // LOW
-                .transition(() -> stickyG2.b && !gamepad2.dpad_left, State.SCORING_BASKET, () ->
-                        new SampleBackLowCommand().schedule())
-//                .transition(() -> stickyG2.b && gamepad2.dpad_left, State.SCORING_BASKET, () ->
-//                        new SampleFrontLowCommand().schedule())
-                // HIGH
-                .transition(() -> stickyG2.left_bumper, State.SCORING_BASKET, () ->
-                        new SampleBackHighCommand().schedule())
-//                .transition(() -> stickyG2.y && gamepad2.dpad_left, State.SCORING_BASKET, () ->
-//                        new SampleFrontHighCommand().schedule())
 
-                // DRIVE PID
-                .transition(() -> stickyG1.y && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_LIFTING, () -> {
-                    dt.updateAprilTags();
-                    currentPath = new SampleHighLiftPath().build().start();
+                // sample
+                .transition(() -> stickyG1.right_bumper, State.LIFTING_BASKET_HIGH, () -> {
+                    new SampleBackHighLiftCommand().schedule();
                 })
 
                 // SPECIMEN
-                .transition(() -> stickyG2.dpad_down, State.INTAKING_SPECIMEN, () -> {
-                    new BoxtubeCommand(0.435, 0).schedule();
+                .transition(() -> stickyG1.b && cvMaster.seesSpecimenTag(), State.AUTO_SPEC_INTAKE, () -> {
+                    dt.updateAprilTags();
+                    currentPath = new SpecimenIntakePath().start();
+                })
+
+                // SPECIMEN
+                .transition(() -> stickyG1.x, State.INTAKING_SPECIMEN, () -> {
+                    new BoxtubeCommand(0.42, 0).schedule();
                     new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
-                .transition(() -> stickyG2.x, State.ABOVE_SPECIMEN_BACK, () ->
-                        new SpecimenBackCommand().schedule())
 
                 // HANG
                 .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
                     new GetHooksHighCommand().schedule();
                 })
-                .transition(() -> stickyG1.dpad_left, State.HANG_HOOKS_ON_LOW, () -> {
-                    new GetHooksLowCommand().schedule();
-                    hangMotor.pidTo(-6100);
-                })
-
-                // AUTO SPEC
-                .transition(() -> stickyG1.b && cvMaster.seesSpecimenTag(), State.AUTO_SPEC_INTAKE, () -> {
-                    dt.updateAprilTags();
-                    currentPath = new SpecimenIntakePath().start();
-                })
-//                .transition(() -> stickyG1.b && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_TO_ASCENT, () -> {
-//                    currentPath = new TeleDriveToAscentPath().build().start();
-//                })
 
                 .loop(() -> {
-                    if(stickyG2.right_bumper) {
+                    if(stickyG1.a) {
                         new SequentialCommandGroup(
                                 new ArmPreIntakeCommand(),
                                 new WaitCommand(300),
@@ -200,69 +182,187 @@ public class SonnyTele extends BluLinearOpMode {
                     }
                 })
 
-                .state(State.EXTENDING_OVER_INTAKE)
-                .onEnter(() -> dt.setDrivePower(0.75))
-                .transition(() -> gamepad2.left_bumper, State.INTAKING_GROUND, () -> {
-                    new ArmDropToGroundCommand().schedule();
-                    new WheelIntakeCommand().schedule();
-                    new ClampReleaseCommand().schedule();
-                })
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
-                    new ExtensionRetractCommand().schedule();
-                    new EndEffectorRetractCommand().schedule();
-                })
-                .loop(() -> {
-                    if(stickyG2.dpad_up) extension.teleExtendIntake(intakeExtendFar);
-                    if(stickyG2.dpad_right) extension.teleExtendIntake(intakeExtendMid);
-                    extension.teleExtendIntakeDelta(-gamepad2.right_stick_y * 4.5);
-
-                    if(gamepad2.right_bumper) {
-                        wheel.reverse();
-                        clamp.release();
-                    } else {
-                        wheel.stop();
-                        clamp.grab();
-                    }
-                })
-
-                .state(State.INTAKING_GROUND)
+                .state(State.INTAKING_CLOSE)
                 .onEnter(() -> {
-                    dt.setDrivePower(0.55);
+                    dt.setDrivePower(0.6);
                     wheel.intake();
                     clamp.release();
                 })
-                .transition(() -> stickyG2.a || Robot.validSample(), State.RETRACTED, () -> {
-                    if(Robot.validSample()) {
+                .transition(() -> stickyG1.right_trigger, State.INTAKING_FAR, () -> {
+                    extension.teleExtendIntake(intakeExtendFar);
+                })
+                .transition(() -> stickyG1.right_bumper || Robot.justValidSample(), State.RETRACTED, () -> {
+                    if(Robot.justValidSample()) {
                         gamepad1.rumble(200);
-                        gamepad2.rumble(200);
                     }
 
-                    new SequentialCommandGroup(
-                            new EndEffectorRetractCommand(),
-                            new WaitCommand(100),
-                            new BoxtubeRetractCommand()
-                    ).schedule();
+                    new FullRetractCommand().schedule();
                 })
-                .transition(() -> !gamepad2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
+                .transition(() -> !gamepad1.left_bumper, State.EXTENDED_OVER_INTAKE_CLOSE, () -> {
                     new ClampGrabCommand().schedule();
                     new WheelStopCommand().schedule();
                     new ArmPreIntakeCommand().schedule();
                 })
-                .loop(() -> {
-                    if(stickyG2.dpad_up) extension.teleExtendIntake(intakeExtendFar);
-                    if(stickyG2.dpad_right) extension.teleExtendIntake(intakeExtendMid);
-
-                    extension.teleExtendIntakeDelta(-gamepad2.right_stick_y * 4.5);
-                })
-
+                .transition(() -> stickyG1.a, State.SPITTING_RETRACT)
                 .onExit(() -> {
                     wheel.stop();
                     clamp.close();
                 })
 
+                .state(State.EXTENDED_OVER_INTAKE_CLOSE)
+                .onEnter(() -> dt.setDrivePower(0.9))
+                .transition(() -> gamepad1.left_bumper, State.INTAKING_CLOSE, () -> {
+                    new ArmDropToGroundCommand().schedule();
+                    new WheelIntakeCommand().schedule();
+                    new ClampReleaseCommand().schedule();
+                })
+                .transition(() -> stickyG1.right_bumper, State.RETRACTED, () -> {
+                    new FullRetractCommand().schedule();
+                })
+                .transition(() -> stickyG1.right_trigger, State.EXTENDED_OVER_INTAKE_FAR, () -> {
+                    extension.teleExtendIntake(intakeExtendFar);
+                })
+                .transition(() -> stickyG1.a, State.SPITTING_RETRACT)
+
+                .state(State.INTAKING_FAR)
+                .onEnter(() -> {
+                    dt.setDrivePower(0.45);
+                    wheel.intake();
+                    clamp.release();
+                })
+                .transition(() -> stickyG1.right_bumper || Robot.justValidSample(), State.RETRACTED, () -> {
+                    if(Robot.justValidSample()) {
+                        gamepad1.rumble(200);
+                    }
+
+                    new SequentialCommandGroup(
+                            new ClampGrabCommand(),
+                            new WheelStopCommand(),
+                            new WristUprightForwardCommand(),
+                            new WaitCommand(100),
+                            new ArmRetractCommand(),
+                            new BoxtubeRetractCommand()
+                    ).schedule();
+                })
+                .transition(() -> !gamepad1.left_bumper, State.EXTENDED_OVER_INTAKE_FAR, () -> {
+                    new ClampGrabCommand().schedule();
+                    new WheelStopCommand().schedule();
+                    new ArmPreIntakeCommand().schedule();
+                })
+                .transition(() -> stickyG1.a, State.SPITTING_FAR)
+                .loop(() -> {
+                    extension.teleExtendIntakeDelta(-gamepad1.right_trigger * 7.0);
+                })
+                .onExit(() -> {
+                    wheel.stop();
+                    clamp.close();
+                })
+
+                .state(State.EXTENDED_OVER_INTAKE_FAR)
+                .onEnter(() -> dt.setDrivePower(0.7))
+                .transition(() -> gamepad1.left_bumper, State.INTAKING_FAR, () -> {
+                    new ArmDropToGroundCommand().schedule();
+                    new WheelIntakeCommand().schedule();
+                    new ClampReleaseCommand().schedule();
+                })
+                .transition(() -> stickyG1.right_bumper, State.RETRACTED, () -> {
+                    new FullRetractCommand().schedule();
+                })
+                .transition(() -> stickyG1.a, State.SPITTING_FAR)
+                .loop(() -> {
+                    extension.teleExtendIntakeDelta(-gamepad1.right_trigger * 7.0);
+                })
+
+                .state(State.SPITTING_RETRACT)
+                .onEnter(() -> {
+                    new SequentialCommandGroup(
+                            new ArmPreIntakeCommand(),
+                            new WaitCommand(150),
+                            new ClampReleaseCommand(),
+                            new WheelReverseCommand(),
+                            new ArmRetractCommand(),
+                            new WaitCommand(100),
+                            new FullRetractCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.right_bumper, State.RETRACTED, () -> new FullRetractCommand().schedule())
+                .transitionTimed(0.25, State.RETRACTED)
+
+                .state(State.SPITTING_FAR)
+                .onEnter(() -> {
+                    extension.teleExtendIntake(intakeExtendFar);
+                    new SequentialCommandGroup(
+                            new ArmPreIntakeCommand(),
+                            new ClampReleaseCommand(),
+                            new WheelReverseCommand(),
+                            new ArmRetractCommand(),
+                            new WaitCommand(100),
+                            new WheelStopCommand(),
+                            new ClampGrabCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.right_bumper, State.RETRACTED, () -> new FullRetractCommand().schedule())
+                .transitionTimed(0.1, State.EXTENDED_OVER_INTAKE_FAR)
+
+                .state(State.LIFTING_BASKET_HIGH)
+                .onEnter(() -> dt.setDrivePower(0.7))
+                .transition(() -> stickyG1.right_bumper, State.RETRACTED, () -> {
+                    new RetractFromBasketCommand().schedule();
+                })
+                .transition(() -> stickyG1.right_trigger, State.SCORING_BASKET_LOW, () -> {
+                    new SampleBackLowCommand().schedule();
+                })
+                .transition(() -> extension.getDistance() > 17.0, State.SCORING_BASKET_HIGH, () -> {
+                    new ArmSampleScorePositionCommand().schedule();
+                })
+
+                .state(State.SCORING_BASKET_HIGH)
+                .onEnter(() -> dt.setDrivePower(0.4))
+                .transition(() -> stickyG1.right_trigger, State.SCORING_BASKET_LOW, () -> {
+                    new SampleBackLowCommand().schedule();
+                })
+                .transition(() -> stickyG1.right_bumper, State.RETRACTED, () -> {
+                    new RetractFromBasketCommand().schedule();
+                })
+                .loop(() -> {
+                    if(gamepad1.left_bumper) {
+                        clamp.release();
+                        wheel.setPower(-0.45);
+                    } else {
+                        clamp.grab();
+                        wheel.stop();
+                    }
+                })
+                .onExit(() -> {
+                    clamp.grab();
+                    wheel.stop();
+                })
+
+                .state(State.SCORING_BASKET_LOW)
+                .onEnter(() -> dt.setDrivePower(0.8))
+                .transition(() -> stickyG1.right_trigger, State.LIFTING_BASKET_HIGH, () -> {
+                    new SampleBackHighLiftCommand().schedule();
+                })
+                .transition(() -> stickyG1.right_bumper, State.RETRACTED, () -> {
+                    new RetractFromBasketCommand().schedule();
+                })
+                .loop(() -> {
+                    if(gamepad1.left_bumper) {
+                        clamp.release();
+                        wheel.setPower(-0.45);
+                    } else {
+                        clamp.grab();
+                        wheel.stop();
+                    }
+                })
+                .onExit(() -> {
+                    clamp.grab();
+                    wheel.stop();
+                })
+
                 .state(State.INTAKING_SPECIMEN)
                 .onEnter(() -> dt.setDrivePower(0.4))
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ArmRetractCommand(),
                             new PivotCommand(1),
@@ -271,24 +371,19 @@ public class SonnyTele extends BluLinearOpMode {
                             new EndEffectorRetractCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG2.x || Robot.validSpecimen(), State.ABOVE_SPECIMEN_BACK, () -> {
+                .transition(() -> stickyG1.x || Robot.justValidSpecimen(), State.ABOVE_SPECIMEN_BACK, () -> {
                     new BoxtubeSplineCommand(
                             new Vector2d(20,42),
-                            new Pose2d(-8.6, 31, Math.PI),
+                            new Pose2d(-8.6, 30, Math.PI),
                             0,
                             0.75
                     ).schedule();
-
-                    if(Robot.validSpecimen()) {
-                        gamepad1.rumble(200);
-                        gamepad2.rumble(200);
-                    }
                 })
                 .loop(() -> {
-                    if(gamepad2.left_bumper) {
+                    if(gamepad1.left_bumper) {
                         clamp.release();
                         wheel.intake();
-                    } else if(gamepad2.right_bumper) {
+                    } else if(gamepad1.right_bumper) {
                         clamp.release();
                         wheel.reverse();
                     } else {
@@ -303,13 +398,13 @@ public class SonnyTele extends BluLinearOpMode {
 
                 .state(State.ABOVE_SPECIMEN_BACK)
                 .onEnter(() -> dt.setDrivePower(0.55))
-                .transition(() -> stickyG2.left_bumper, State.DUNKING_SPECIMEN_BACK,
-                        () -> new SpecimenDunkSplineCommand().schedule()
-                )
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.left_bumper, State.DUNKING_SPECIMEN_BACK,
+                        () -> new SpecimenBackDunkCommand().schedule())
+
+                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(0.9),
-                            new WaitCommand(200),
+                            new WaitCommand(150),
                             new EndEffectorRetractCommand(),
                             new BoxtubeRetractCommand()
                     ).schedule();
@@ -317,106 +412,35 @@ public class SonnyTele extends BluLinearOpMode {
 
                 .state(State.DUNKING_SPECIMEN_BACK)
                 .onEnter(() -> dt.setDrivePower(0.35))
-                .transition(() -> !gamepad2.left_bumper, State.ABOVE_SPECIMEN_BACK, () ->
+                .transition(() -> !gamepad1.left_bumper, State.ABOVE_SPECIMEN_BACK, () ->
                         new SpecimenBackCommand().schedule())
 
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new SpecimenBackDunkRetractCommand().schedule();
                 })
 
-                .state(State.SCORING_BASKET)
-                .onEnter(() -> dt.setDrivePower(0.35))
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
-                    new RetractFromBasketCommand().schedule();
-//                    new SequentialCommandGroup(
-//                            new ArmGlobalAngleCommand(1.5),
-//                            new WaitCommand(150),
-//                            new BoxtubeRetractCommand(),
-//                            new EndEffectorRetractCommand()
-//                    ).schedule();
-                })
-//                .transition(() -> stickyG1.y, State.AUTO_SAMPLE_TO_ASCENT, () -> {
-//                    currentPath = new TeleDriveToAscentPath().build().start();
-//                })
-//                .transition(() -> stickyG1.b, State.AUTO_SAMPLE_TO_RUNG, () -> {
-//                    currentPath = new TeleDriveToRungIntakePath().build().start();
-//                })
-                .loop(() -> {
-                    if(gamepad2.left_bumper) {
-                        clamp.release();
-                        wheel.setPower(-0.5);
-                    } else {
-                        clamp.grab();
-                        wheel.stop();
-                    }
-
-                    if(stickyG2.y && !gamepad2.dpad_left) {
-                        new SampleBackHighCommand().schedule();
-                    } else if(stickyG2.y && gamepad2.dpad_left) {
-                        new SampleFrontHighCommand().schedule();
-                    } else if(stickyG2.b && !gamepad2.dpad_left) {
-                        new SampleBackLowCommand().schedule();
-                    } else if(stickyG2.b && gamepad2.dpad_left) {
-                        new SampleFrontLowCommand().schedule();
-                    }
-                })
-                .onExit(() -> {
-                    clamp.grab();
-                    wheel.stop();
-                })
-
-                .state(State.AUTO_SAMPLE_LIFTING)
-                .transition(() -> stickyG1.y,
-                        State.SCORING_BASKET, () -> {
-                            currentPath.cancel();
-                            new SampleBackHighCommand().schedule();
-                        })
-                .transition(() -> currentPath.isDone() && extension.getDistance() > 20, State.AUTO_SAMPLE_SCORING, () -> {
-                    currentPath = new SampleHighDepositPath().start();
-                })
-                .transition(() -> stickyG2.a || stickyG1.a, State.RETRACTED, () -> {
-                    currentPath.cancel();
-                    new FullRetractCommand().schedule();
-                })
-
-                .state(State.AUTO_SAMPLE_SCORING)
-                .transition(() ->
-//                                Math.abs(gamepad1.left_stick_y) > 0.1
-//                                        || Math.abs(gamepad1.left_stick_x) > 0.1
-//                                        || Math.abs(gamepad1.right_stick_x) > 0.1
-                                stickyG2.left_bumper || stickyG1.y,
-                        State.SCORING_BASKET, () -> {
-                            currentPath.cancel();
-                            new SampleBackHighCommand().schedule();
-                        })
-                .transition(() -> currentPath.isDone(), State.RETRACTED, () -> {
-                    currentPath.cancel();
-                })
-
                 .state(State.AUTO_SPEC_INTAKE)
-                .transition(() -> stickyG2.a || stickyG1.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE_FAIL, () -> {
                     currentPath = new SpecimenCycleIntakeFailsafePath().start();
                 })
                 .transition(() -> Robot.justValidSample() && pivot.getAngle() < 0.5, State.AUTO_SPEC_DEPO_PATH, () -> {
-//                    currentPath = new SpecimenCycleDepositPath().start();
                     currentPath = new TeleSpecimenDepoPath().start();
                 })
 
                 .state(State.AUTO_SPEC_DEPO_PATH)
-                .transition(() -> stickyG2.a || stickyG1.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
-//                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE, () -> {
-//                    currentPath = new SpecimenIntakePath().start();
-//                })
-                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_DEPO_MANUAL)
+                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_DEPO_MANUAL, () -> {
+                    dt.setDrivePower(0.7);
+                    dt.idle();
+                })
 
                 .state(State.AUTO_SPEC_DEPO_MANUAL)
-                .onEnter(() -> currentPath.cancel())
-                .transition(() -> stickyG1.a || stickyG2.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> stickyG1.b, State.AUTO_SPEC_SCORING, () -> {
@@ -435,8 +459,8 @@ public class SonnyTele extends BluLinearOpMode {
                 })
 
                 .state(State.AUTO_SPEC_SCORING)
-                .transitionTimed(0.25, State.AUTO_SPEC_INTAKE, () -> {
-                    currentPath = new SpecimenIntakePath(11.9).start();
+                .transitionTimed(0.2, State.AUTO_SPEC_INTAKE, () -> {
+                    currentPath = new SpecimenIntakePath().start();
                 })
 
                 .state(State.AUTO_SPEC_INTAKE_FAIL)
@@ -446,8 +470,8 @@ public class SonnyTele extends BluLinearOpMode {
                 .transition(() -> Robot.validSample(), State.AUTO_SPEC_DEPO_PATH, () -> {
                     currentPath = new TeleSpecimenDepoPath().start();
                 })
-                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE, () -> {
-                    currentPath = new SpecimenIntakePath(11.9).start();
+                .transition(() -> currentPath.isDone() || stickyG1.b, State.AUTO_SPEC_INTAKE, () -> {
+                    currentPath = new SpecimenIntakePath().start();
                 })
 
                 .state(State.HANG_RELEASE) // 1st stage released, hook is up, not touching bar
@@ -506,11 +530,12 @@ public class SonnyTele extends BluLinearOpMode {
                 })
 
                 .state(State.HANG_PULLING_ABOVE_BAR) // pulling up
-//                .onEnter(() -> {
-////                    wrist.disable();
-////                    clamp.disable();
-////                    pusher.disable();
-//                })
+                .onEnter(() -> {
+//                    wrist.disable();
+//                    clamp.disable();
+//                    pusher.retract();
+//                    pusher.disable();
+                })
                 .transition(() -> stickyG1.dpad_up, State.HANG_BOXTUBE_EXTENDED, () -> {
                     new SequentialCommandGroup(
                             new FullRetractCommand(),
@@ -525,7 +550,7 @@ public class SonnyTele extends BluLinearOpMode {
                 .onExit(() -> {
                     wrist.enable();
                     clamp.enable();
-                    pusher.enable();
+//                    pusher.enable();
                 })
 
                 .state(State.HANGING)
@@ -536,46 +561,14 @@ public class SonnyTele extends BluLinearOpMode {
                 })
                 .onExit(() -> hangMotor.idle())
 
-                .state(State.HANG_HOOKS_ON_LOW)
-                .transition(() -> stickyG1.dpad_up, State.RETRACTED, () -> {
-                    new FullRetractCommand().schedule();
-                })
-                .transition(() -> stickyG1.dpad_left, State.HANG_PULLING_LOW, () -> {
-                    gamepad1.rumble(150);
-                    gamepad2.rumble(150);
-                    new SequentialCommandGroup(
-                            new PivotCommand(1.5),
-                            new WaitCommand(200),
-                            new FullRetractCommand()
-                    ).schedule();
-                })
-                .loop(() -> {
-                    hangMotor.setManualPower(-gamepad2.right_stick_y);
-                })
-
-                .state(State.HANG_PULLING_LOW)
-                .transition(() -> stickyG1.dpad_left, State.HANGING, () -> {
-                    gamepad1.rumble(150);
-                })
-                .loop(() -> {
-                    hangMotor.setManualPower(-gamepad2.right_stick_y);
-                })
-
                 .state(State.MANUAL_RESET)
-                .onEnter(() -> {
-                    dt.setDrivePower(0.8);
-                })
-                .transition(() -> stickyG2.left_bumper || stickyG1.left_bumper, State.RETRACTED, () -> {
+                .onEnter(() -> dt.setDrivePower(0.8))
+                .transition(() -> stickyG1.left_bumper, State.RETRACTED, () -> {
                     gamepad1.rumble(150);
-                    gamepad2.rumble(150);
                 })
                 .loop(() -> {
-                    extension.setManualPower(-gamepad2.right_stick_y);
-                    pivot.setManualPower(-gamepad2.left_stick_y);
-
-                    if(gamepad2.right_trigger > 0.1) hangMotor.setManualPower(gamepad2.right_trigger);
-                    else if(gamepad2.left_trigger > 0.1) hangMotor.setManualPower(-gamepad2.left_trigger);
-                    else hangMotor.setManualPower(0);
+                    extension.setManualPower(-gamepad1.right_stick_y);
+                    pivot.setManualPower(-gamepad1.left_stick_y);
                 })
                 .onExit(() -> {
                     extension.resetEncoder();
@@ -584,6 +577,7 @@ public class SonnyTele extends BluLinearOpMode {
                     extension.pidTo(0);
                     pivot.pidTo(0);
                 })
+
                 .build();
 
         sm.setState(State.MANUAL_RESET);
@@ -605,8 +599,6 @@ public class SonnyTele extends BluLinearOpMode {
     @Override
     public void periodic() {
         switch (Enum.valueOf(State.class, sm.getStateString())) {
-            case AUTO_SAMPLE_LIFTING:
-            case AUTO_SAMPLE_SCORING:
             case AUTO_SPEC_INTAKE:
             case AUTO_SPEC_DEPO_PATH:
             case AUTO_SPEC_INTAKE_FAIL:
