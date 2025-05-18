@@ -13,11 +13,12 @@ import java.util.Arrays;
 public class BoxtubeForwardKinematicsTest {
     @Test
     public void testForwardKinematics() {
-        doForwardKinematics(1.35, 8.5, -0.3-1.35, -Math.PI);
-        doForwardKinematics(0.27, 8, -0.27, 0);
-        doForwardKinematics(1.45, 10, Math.PI-1.45, -Math.PI);
-        doForwardKinematics(1.45, 3, Math.PI-1.45, -Math.PI);
-        doForwardKinematics(0, 0, 1.7, -Math.PI/2); // retract
+        doForwardKinematics(Math.PI/2, 25.9, 1.1, Math.PI/2);
+//        doForwardKinematics(1.35, 8.5, -0.3-1.35, -Math.PI);
+//        doForwardKinematics(0.27, 8, -0.27, 0);
+//        doForwardKinematics(1.45, 10, Math.PI-1.45, -Math.PI);
+//        doForwardKinematics(1.45, 3, Math.PI-1.45, -Math.PI);
+//        doForwardKinematics(0, 0, 1.7, -Math.PI/2); // retract
 //        doForwardKinematics(0, 0, 0, -Math.PI/2);
 //        doForwardKinematics(0, 0, Math.PI/2, 0);
 //        doForwardKinematics(0, 0, Math.PI/2, -Math.PI/2);

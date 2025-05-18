@@ -37,6 +37,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangS
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.pusher.PushCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkCommand;
@@ -128,6 +129,7 @@ public class Solo extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG1.y, State.SCORING_BASKET, () -> {
                     new SampleBackHighCommand().schedule();
+//                    new SampleBackHighSplineCommand().schedule();
                 })
 //                // DRIVE PID
 //                .transition(() -> stickyG1.y && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_LIFTING, () -> {

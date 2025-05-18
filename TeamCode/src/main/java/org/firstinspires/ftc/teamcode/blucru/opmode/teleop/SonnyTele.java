@@ -129,7 +129,7 @@ public class SonnyTele extends BluLinearOpMode {
                 .transition(() -> stickyG1.share || stickyG2.share, State.MANUAL_RESET, () -> gamepad1.rumble(350))
 
                 // INTAKE
-                .transition(() -> stickyG1.left_bumper, State.INTAKING_CLOSE, () -> {
+                .transition(() -> stickyG1.left_bumper && pivot.getAngle() < 0.2, State.INTAKING_CLOSE, () -> {
                     new PivotRetractCommand().schedule();
                     new ArmDropToGroundCommand().schedule();
                     new WristUprightForwardCommand().schedule();
@@ -137,7 +137,7 @@ public class SonnyTele extends BluLinearOpMode {
                     new ClampReleaseCommand().schedule();
                     extension.teleExtendIntake(0);
                 })
-                .transition(() -> stickyG1.right_trigger, State.EXTENDED_OVER_INTAKE_FAR, () -> {
+                .transition(() -> stickyG1.right_trigger && pivot.getAngle() < 0.2, State.EXTENDED_OVER_INTAKE_FAR, () -> {
                     new PivotRetractCommand().schedule();
                     new ArmPreIntakeCommand().schedule();
                     new WristUprightForwardCommand().schedule();
@@ -147,7 +147,7 @@ public class SonnyTele extends BluLinearOpMode {
                 })
 
                 // sample
-                .transition(() -> stickyG1.right_bumper, State.LIFTING_BASKET_HIGH, () -> {
+                .transition(() -> stickyG1.right_bumper && extension.getDistance() < 3, State.LIFTING_BASKET_HIGH, () -> {
                     new SampleBackHighLiftCommand().schedule();
                 })
 
@@ -165,7 +165,7 @@ public class SonnyTele extends BluLinearOpMode {
                 })
 
                 // HANG
-                .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
+                .transition(() -> stickyG1.dpad_down && pivot.getAngle() < 0.2, State.HANG_RELEASE, () -> {
                     new GetHooksHighCommand().schedule();
                 })
 
@@ -295,7 +295,6 @@ public class SonnyTele extends BluLinearOpMode {
                             new ArmPreIntakeCommand(),
                             new ClampReleaseCommand(),
                             new WheelReverseCommand(),
-                            new ArmRetractCommand(),
                             new WaitCommand(100),
                             new WheelStopCommand(),
                             new ClampGrabCommand()
@@ -615,6 +614,7 @@ public class SonnyTele extends BluLinearOpMode {
                 hangMotor.setManualPower(-gamepad1.right_stick_y);
                 dt.drive(new Pose2d(0,0,0));
                 break;
+            case MANUAL_RESET:
             case HANGING:
                 dt.drive(new Pose2d(0,0,0));
                 break;
@@ -634,7 +634,7 @@ public class SonnyTele extends BluLinearOpMode {
 //            dt.setPoseEstimate(Globals.unMapPose(new Pose2d(6.5, -30, -Math.PI/2)));
 //        }
 
-        if(stickyG1.right_bumper) {
+        if(stickyG1.left_trigger) {
             new PushCommand().schedule();
         }
 

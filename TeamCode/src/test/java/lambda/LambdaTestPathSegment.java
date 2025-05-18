@@ -30,4 +30,9 @@ public class LambdaTestPathSegment implements PathSegment {
     public Pose2d getPose() {
         return null;
     }
+
+    @Override
+    public void run() {
+
+    }
 }

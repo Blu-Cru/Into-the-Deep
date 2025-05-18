@@ -11,7 +11,7 @@ public class SampleBackHighLiftCommand extends SequentialCommandGroup {
         super(
                 new WristUprightBackwardCommand(),
                 new BoxtubeCommand(Math.PI/2, 25.9),
-                new ArmGlobalAngleCommand(1.8)
+                new ArmGlobalAngleCommand(1.6)
         );
     }
 }
