@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 @Config
 public class Extension implements BluSubsystem, Subsystem {
     public static double
-            kP = 0.26,
-            kI = 0.0, kD = 0.012 , kFAngle = 0.2, tolerance = 0.0, kPStatic = 0.005,
+            kP = 0.26, kI = 0.0, kD = 0.012 ,
+            kFAngle = 0.2, tolerance = 0.0, kPStatic = 0.005,
             MIN_INCHES = 0.0, MAX_INCHES = 27.5, MAX_HORIZ_EXTENSION = 17.0, // pid distance to change based on input
             MAX_EXTEND_POWER = 1.0, MAX_RETRACT_POWER = -1.0;
 
@@ -179,7 +179,7 @@ public class Extension implements BluSubsystem, Subsystem {
         if(pivot == null) ff = 0;
         else ff = Math.sin(pivot.getAngle()) * kFAngle;
 
-        setRawPower(power + ff + Math.signum(power) * getStaticFF(getDistance()));
+        setRawPower(power + ff);
     }
 
     public double getStaticFF(double extensionDistance) {
