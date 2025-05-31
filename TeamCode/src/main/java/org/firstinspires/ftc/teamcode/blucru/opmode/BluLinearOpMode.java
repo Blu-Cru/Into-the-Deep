@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Cactu
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.IntakeSwitch;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Turret;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
@@ -29,7 +29,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public Robot robot;
     public Drivetrain dt;
     public Arm arm;
-    public Wrist wrist;
+    public Turret turret;
     public Clamp clamp;
     public Pivot pivot;
     public Wheel wheel;
@@ -116,7 +116,8 @@ public abstract class BluLinearOpMode extends LinearOpMode {
 
     public void addDrivetrain() {dt = robot.addDrivetrain();}
     public void addArm() {arm = robot.addArm();}
-    public void addWrist() {wrist = robot.addWrist();}
+    public void addWrist() {
+        turret = robot.addWrist();}
     public void addClamp() {clamp = robot.addClamp();}
     public void addPivot() {pivot = robot.addPivot();}
     public void addWheel() {wheel = robot.addWheel();}

@@ -37,7 +37,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangS
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangServosRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.pusher.PushCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkCommand;
@@ -46,11 +45,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.B
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToAscentPath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleDriveToRungIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSpecimenDepoPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
@@ -488,7 +484,7 @@ public class Solo extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .onExit(() -> {
-                    wrist.enable();
+                    turret.enable();
                     clamp.enable();
 //                    pusher.enable();
                 })

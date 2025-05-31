@@ -7,9 +7,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 public class WristOppositeCommand extends InstantCommand {
     public WristOppositeCommand() {
         super(
-                () -> Robot.getInstance().wrist.opposite()
+                () -> Robot.getInstance().turret.opposite()
         );
 
-        addRequirements(Robot.getInstance().wrist);
+        addRequirements(Robot.getInstance().turret);
     }
 }

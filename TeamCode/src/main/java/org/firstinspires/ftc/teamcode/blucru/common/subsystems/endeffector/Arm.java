@@ -15,14 +15,15 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 @Config
 public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public static double
-            PARALLEL_POS = 0.52,
+            // positive is more retracted
+            VERTICAL_POS = 0.49,
             vMAX = 30.0, aMAX = 40.0,
             MAX_ANGLE = 1.8, MIN_ANGLE = -1.7,
             RETRACT_ANGLE = 1.7,
             PRE_INTAKE_ANGLE = 0.15,
             GROUND_ANGLE = -0.56,
 
-            TICKS_PER_RAD = 0.1782;
+            TICKS_PER_RAD = 0.2 / (Math.PI/2);
 
     enum State{
         SERVO,
@@ -83,11 +84,11 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void setAngle(double angle) {
-        super.setPosition(PARALLEL_POS + toTicks(Range.clip(angle, MIN_ANGLE, MAX_ANGLE)));
+        super.setPosition(VERTICAL_POS + toTicks(Range.clip(angle, MIN_ANGLE, MAX_ANGLE)));
     }
 
     public double getAngle() {
-        return toRad(super.getPosition() - PARALLEL_POS);
+        return toRad(super.getPosition() - VERTICAL_POS);
     }
 
     public void setMotionProfileAngle(double targetRad) {

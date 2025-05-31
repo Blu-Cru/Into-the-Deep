@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Cactu
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.IntakeSwitch;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wrist;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Turret;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
@@ -34,7 +34,7 @@ public class Robot {
     // all subsystems
     public Drivetrain dt;
     public Arm arm;
-    public Wrist wrist;
+    public Turret turret;
     public Clamp clamp;
     public Wheel wheel;
     public Pivot pivot;
@@ -125,13 +125,13 @@ public class Robot {
         this.spline = spline.start();
         followingSpline = true;
         arm.followBoxtubeSpline(spline);
-        wrist.followBoxtubeSpline(spline);
+        turret.followBoxtubeSpline(spline);
         pivot.followBoxtubeSpline(spline);
         extension.followBoxtubeSpline(spline);
     }
 
     public void setIKPose(Pose2d pose) {
-        double wristAngle = wrist.getAngle();
+        double wristAngle = turret.getAngle();
         BoxtubeIKPose ikPose = new BoxtubeIKPose(pose, wristAngle);
         arm.setIKPose(ikPose);
         pivot.setIKPose(ikPose);
@@ -139,13 +139,13 @@ public class Robot {
     }
 
     public Pose2d getBoxtubePose() {
-        return BoxtubeForwardKinematics.getEndEffectorPose(pivot.getAngle(), extension.getDistance(), arm.getAngle(), wrist.getAngle());
+        return BoxtubeForwardKinematics.getEndEffectorPose(pivot.getAngle(), extension.getDistance(), arm.getAngle(), turret.getAngle());
     }
 
     public Point3d getBoxtubePoint3d() {
         Pose2d pose = dt.pose;
         double heading = dt.heading;
-        Pose2d boxtubePose = BoxtubeForwardKinematics.getEndEffectorPose(pivot.getAngle(), extension.getDistance(), arm.getAngle(), wrist.getAngle());
+        Pose2d boxtubePose = BoxtubeForwardKinematics.getEndEffectorPose(pivot.getAngle(), extension.getDistance(), arm.getAngle(), turret.getAngle());
 
         double x = pose.getX() + boxtubePose.getX() * Math.cos(heading);
         double y = pose.getY() + boxtubePose.getX() * Math.sin(heading);
@@ -183,10 +183,10 @@ public class Robot {
         return arm;
     }
 
-    public Wrist addWrist() {
-        wrist = new Wrist();
-        subsystems.add(wrist);
-        return wrist;
+    public Turret addWrist() {
+        turret = new Turret();
+        subsystems.add(turret);
+        return turret;
     }
 
     public Clamp addClamp() {

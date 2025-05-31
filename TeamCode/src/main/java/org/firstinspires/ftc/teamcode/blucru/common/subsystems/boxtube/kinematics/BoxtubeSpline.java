@@ -43,7 +43,7 @@ public class BoxtubeSpline extends TimedHermiteSpline {
         Log.i("BoxtubeSpline", "spline started");
         super.start();
         blockAngleProfile = getTimeConstrainedMotionProfile(startPose.getHeading(), endPose.getHeading(), duration).start();
-        wristAngleProfile = getTimeConstrainedMotionProfile(Robot.getInstance().wrist.getAngle(), endWristAngle, duration).start();
+        wristAngleProfile = getTimeConstrainedMotionProfile(Robot.getInstance().turret.getAngle(), endWristAngle, duration).start();
 
         return this;
     }

@@ -123,6 +123,6 @@ public class BoxtubeSplineFollowTest extends BluLinearOpMode {
         telemetry.addData("Retract Pose", retractPose);
         telemetry.addData("State", sm.getState());
         telemetry.addData("Arm get angle", arm.getAngle());
-        telemetry.addData("Wrist get angle", wrist.getAngle());
+        telemetry.addData("Wrist get angle", turret.getAngle());
     }
 }

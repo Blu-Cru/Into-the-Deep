@@ -37,7 +37,7 @@ public class SplineGraphTest extends BluLinearOpMode {
             createNewSpline();
         }
 
-        wrist.setAngle(wristI);
+        turret.setAngle(wristI);
 
         spline.update();
     }

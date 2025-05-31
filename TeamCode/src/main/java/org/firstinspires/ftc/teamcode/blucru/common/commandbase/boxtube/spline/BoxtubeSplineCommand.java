@@ -14,7 +14,7 @@ public class BoxtubeSplineCommand extends InstantCommand {
         this(startVelocity, endPose, new Vector2d(0,0), wristAngle, duration);
 
         addRequirements(
-                Robot.getInstance().wrist,
+                Robot.getInstance().turret,
                 Robot.getInstance().pivot,
                 Robot.getInstance().extension,
                 Robot.getInstance().arm);
@@ -46,7 +46,7 @@ public class BoxtubeSplineCommand extends InstantCommand {
         });
 
         addRequirements(
-                Robot.getInstance().wrist,
+                Robot.getInstance().turret,
                 Robot.getInstance().pivot,
                 Robot.getInstance().extension,
                 Robot.getInstance().arm);
@@ -66,7 +66,7 @@ public class BoxtubeSplineCommand extends InstantCommand {
         });
 
         addRequirements(
-                Robot.getInstance().wrist,
+                Robot.getInstance().turret,
                 Robot.getInstance().pivot,
                 Robot.getInstance().extension,
                 Robot.getInstance().arm);

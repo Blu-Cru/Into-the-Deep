@@ -25,7 +25,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRet
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.pusher.PushCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighLiftCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenBackDunkCommand;
@@ -547,7 +546,7 @@ public class SonnyTele extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .onExit(() -> {
-                    wrist.enable();
+                    turret.enable();
                     clamp.enable();
 //                    pusher.enable();
                 })

@@ -49,7 +49,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.Specime
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
-import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele.TeleSpecimenDepoPath;
@@ -521,7 +520,7 @@ public class Main extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .onExit(() -> {
-                    wrist.enable();
+                    turret.enable();
                     clamp.enable();
                     pusher.enable();
                 })
