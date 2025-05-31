@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto;
 
-import android.util.Log;
-
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.util.Angle;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -13,13 +9,10 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
-import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
-import org.firstinspires.ftc.teamcode.blucru.opmode.teleop.Main;
 
 @Autonomous(name = "Auto", group = "1")
 public class Auto extends BluLinearOpMode {
@@ -103,7 +96,7 @@ public class Auto extends BluLinearOpMode {
         addArm();
         addWheel();
         addWrist();
-        addClamp();
+        addClaw();
         addCVMaster();
         addCactus();
         addIntakeSwitch();

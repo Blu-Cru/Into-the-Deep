@@ -38,7 +38,7 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
         addPivot();
         addArm();
         addWheel();
-        addClamp();
+        addClaw();
         addWrist();
         addCactus();
         enableFTCDashboard();

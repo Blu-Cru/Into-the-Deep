@@ -7,9 +7,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 public class ClampReleaseCommand extends InstantCommand {
     public ClampReleaseCommand() {
         super(
-                () -> Robot.getInstance().clamp.release()
+                () -> Robot.getInstance().claw.release()
         );
 
-        addRequirements(Robot.getInstance().clamp);
+        addRequirements(Robot.getInstance().claw);
     }
 }

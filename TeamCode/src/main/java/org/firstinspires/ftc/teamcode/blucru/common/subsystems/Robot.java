@@ -14,10 +14,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematic
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.CactusSensor;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.IntakeSwitch;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Claw;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.SpinWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Turret;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.UpDownWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
@@ -35,11 +35,11 @@ public class Robot {
     public Drivetrain dt;
     public Arm arm;
     public Turret turret;
-    public Clamp clamp;
-    public Wheel wheel;
+    public Claw claw;
+    public SpinWrist spinWrist;
+    public UpDownWrist upDownWrist;
     public Pivot pivot;
     public Extension extension;
-    public IntakeSwitch intakeSwitch;
     public CVMaster cvMaster;
     public Pusher pusher;
     public HangServos hangServos;
@@ -189,16 +189,22 @@ public class Robot {
         return turret;
     }
 
-    public Clamp addClamp() {
-        clamp = new Clamp();
-        subsystems.add(clamp);
-        return clamp;
+    public Claw addClaw() {
+        claw = new Claw();
+        subsystems.add(claw);
+        return claw;
     }
 
-    public Wheel addWheel() {
-        wheel = new Wheel();
-        subsystems.add(wheel);
-        return wheel;
+    public SpinWrist addSpinWrist() {
+        spinWrist = new SpinWrist();
+        subsystems.add(spinWrist);
+        return spinWrist;
+    }
+
+    public UpDownWrist addUpDownWrist() {
+        upDownWrist = new UpDownWrist();
+        subsystems.add(upDownWrist);
+        return upDownWrist;
     }
 
     public Pivot addPivot() {
@@ -211,12 +217,6 @@ public class Robot {
         extension = new Extension();
         subsystems.add(extension);
         return extension;
-    }
-
-    public IntakeSwitch addIntakeSwitch() {
-        intakeSwitch = new IntakeSwitch();
-        subsystems.add(intakeSwitch);
-        return intakeSwitch;
     }
 
     public CVMaster addCVMaster() {

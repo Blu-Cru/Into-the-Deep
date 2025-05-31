@@ -8,11 +8,11 @@ import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.BluServo;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 
 @Config
-public class Clamp extends BluServo implements BluSubsystem, Subsystem {
+public class Claw extends BluServo implements BluSubsystem, Subsystem {
     public static double
             LOOSE_POS = 0.44, FIRM_POS = LOOSE_POS - 0.06, OPEN_POS = LOOSE_POS + 0.21;
 
-    public Clamp() {
+    public Claw() {
         super("clamp");
     }
 
@@ -22,11 +22,15 @@ public class Clamp extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void grab() {
-//        setPosition(HORIZ_POS - 0.08);
+        setPosition(FIRM_POS);
     }
 
     public void release() {
-//        setPosition(HORIZ_POS - 0.37);
+        setPosition(OPEN_POS);
+    }
+
+    public void looseGrab() {
+        setPosition(LOOSE_POS);
     }
 
     @Override

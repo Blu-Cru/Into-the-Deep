@@ -38,7 +38,7 @@ public class BoxtubeSplineFollowTest extends BluLinearOpMode {
         pivot.useExtension(extension.getMotor());
         addWrist();
         addArm();
-        addClamp();
+        addClaw();
 
         enableFTCDashboard();
 

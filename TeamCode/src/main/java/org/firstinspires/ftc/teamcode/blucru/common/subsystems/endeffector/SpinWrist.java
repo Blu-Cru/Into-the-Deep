@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector;
 
+import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.BluServo;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 
-public class SpinWrist extends BluServo {
+public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     public static double
             // positive turns clockwise when intaking
             CENTER_POS = 0.38;
@@ -15,6 +18,21 @@ public class SpinWrist extends BluServo {
 
     public SpinWrist() {
         super("spinwrist");
+    }
+
+    @Override
+    public void read() {
+        super.read();
+    }
+
+    @Override
+    public void write() {
+        super.write();
+    }
+
+    @Override
+    public void telemetry(Telemetry telemetry) {
+        super.telemetry();
     }
 
     public void setAngle(double rad) {

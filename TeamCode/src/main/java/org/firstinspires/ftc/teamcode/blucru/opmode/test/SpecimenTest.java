@@ -47,7 +47,7 @@ public class SpecimenTest extends BluLinearOpMode {
         addArm();
         addWheel();
         addWrist();
-        addClamp();
+        addClaw();
         addPivot();
         addExtension();
 
@@ -124,10 +124,10 @@ public class SpecimenTest extends BluLinearOpMode {
                     if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.manualExtendOverIntake(-gamepad2.right_stick_y);
                     if(gamepad2.right_bumper) {
                         wheel.reverse();
-                        clamp.release();
+                        claw.release();
                     } else {
                         wheel.stop();
-                        clamp.grab();
+                        claw.grab();
                     }
                 })
 
@@ -151,7 +151,7 @@ public class SpecimenTest extends BluLinearOpMode {
                     if(Math.abs(-gamepad2.right_stick_y) > 0.2) {
                         extension.manualExtendOverIntake(-gamepad2.right_stick_y);
                     }
-                    clamp.release();
+                    claw.release();
                     wheel.intake();
                 })
 

@@ -15,10 +15,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.CactusSensor;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Clamp;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.IntakeSwitch;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Wheel;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Claw;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.SpinWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Turret;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.UpDownWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
@@ -30,11 +30,11 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public Drivetrain dt;
     public Arm arm;
     public Turret turret;
-    public Clamp clamp;
+    public Claw claw;
+    public SpinWrist spinWrist;
+    public UpDownWrist upDownWrist;
     public Pivot pivot;
-    public Wheel wheel;
     public Extension extension;
-    public IntakeSwitch intakeSwitch;
     public Pusher pusher;
     public HangServos hangServos;
     public HangMotor hangMotor;
@@ -116,13 +116,12 @@ public abstract class BluLinearOpMode extends LinearOpMode {
 
     public void addDrivetrain() {dt = robot.addDrivetrain();}
     public void addArm() {arm = robot.addArm();}
-    public void addWrist() {
-        turret = robot.addWrist();}
-    public void addClamp() {clamp = robot.addClamp();}
+    public void addWrist() {turret = robot.addWrist();}
+    public void addClaw() {claw = robot.addClaw();}
+    public void addSpinWrist() {spinWrist = robot.addSpinWrist();}
+    public void addUpDownWrist() {upDownWrist = robot.addUpDownWrist();}
     public void addPivot() {pivot = robot.addPivot();}
-    public void addWheel() {wheel = robot.addWheel();}
     public void addExtension() {extension = robot.addExtension();}
-    public void addIntakeSwitch() {intakeSwitch = robot.addIntakeSwitch();}
     public void addCVMaster() {cvMaster = robot.addCVMaster();}
     public void addPusher() {pusher = robot.addPusher();}
     public void addHangServos() {hangServos = robot.addHangServos();}

@@ -12,7 +12,7 @@ public class EndEffectorTest extends BluLinearOpMode {
     public void initialize() {
         addArm();
         addWrist();
-        addClamp();
+        addClaw();
         addWheel();
     }
 
@@ -38,28 +38,28 @@ public class EndEffectorTest extends BluLinearOpMode {
     public void startIntaking() {
         arm.dropToGround();
         turret.front();
-        clamp.release();
+        claw.release();
         wheel.intake();
     }
 
     public void stopIntaking() {
         arm.dropToGround();
         turret.front();
-        clamp.grab();
+        claw.grab();
         wheel.stop();
     }
 
     public void spitOut() {
         arm.dropToGround();
         turret.front();
-        clamp.release();
+        claw.release();
         wheel.reverse();
     }
 
     public void retract() {
         arm.retract();
         turret.horizontal();
-        clamp.grab();
+        claw.grab();
         wheel.stop();
     }
 }

@@ -32,7 +32,7 @@ public class HangFullTest extends BluLinearOpMode {
         pivot.useExtension(extension.getMotor());
         addWrist();
         addArm();
-        addClamp();
+        addClaw();
         addWheel();
         addHangMotor();
         addHangServos();

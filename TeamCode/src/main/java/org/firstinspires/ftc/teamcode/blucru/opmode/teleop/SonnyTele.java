@@ -109,7 +109,7 @@ public class SonnyTele extends BluLinearOpMode {
         addPivot();
         addArm();
         addWheel();
-        addClamp();
+        addClaw();
         addWrist();
         addIntakeSwitch();
         addPusher();
@@ -185,7 +185,7 @@ public class SonnyTele extends BluLinearOpMode {
                 .onEnter(() -> {
                     dt.setDrivePower(0.6);
                     wheel.intake();
-                    clamp.release();
+                    claw.release();
                 })
                 .transition(() -> stickyG1.right_trigger, State.INTAKING_FAR, () -> {
                     extension.teleExtendIntake(intakeExtendFar);
@@ -205,7 +205,7 @@ public class SonnyTele extends BluLinearOpMode {
                 .transition(() -> stickyG1.a, State.SPITTING_RETRACT)
                 .onExit(() -> {
                     wheel.stop();
-                    clamp.close();
+                    claw.close();
                 })
 
                 .state(State.EXTENDED_OVER_INTAKE_CLOSE)
@@ -227,7 +227,7 @@ public class SonnyTele extends BluLinearOpMode {
                 .onEnter(() -> {
                     dt.setDrivePower(0.45);
                     wheel.intake();
-                    clamp.release();
+                    claw.release();
                 })
                 .transition(() -> stickyG1.right_bumper || Robot.justValidSample(), State.RETRACTED, () -> {
                     if(Robot.justValidSample()) {
@@ -254,7 +254,7 @@ public class SonnyTele extends BluLinearOpMode {
                 })
                 .onExit(() -> {
                     wheel.stop();
-                    clamp.close();
+                    claw.close();
                 })
 
                 .state(State.EXTENDED_OVER_INTAKE_FAR)
@@ -324,15 +324,15 @@ public class SonnyTele extends BluLinearOpMode {
                 })
                 .loop(() -> {
                     if(gamepad1.left_bumper) {
-                        clamp.release();
+                        claw.release();
                         wheel.setPower(-0.45);
                     } else {
-                        clamp.grab();
+                        claw.grab();
                         wheel.stop();
                     }
                 })
                 .onExit(() -> {
-                    clamp.grab();
+                    claw.grab();
                     wheel.stop();
                 })
 
@@ -346,15 +346,15 @@ public class SonnyTele extends BluLinearOpMode {
                 })
                 .loop(() -> {
                     if(gamepad1.left_bumper) {
-                        clamp.release();
+                        claw.release();
                         wheel.setPower(-0.45);
                     } else {
-                        clamp.grab();
+                        claw.grab();
                         wheel.stop();
                     }
                 })
                 .onExit(() -> {
-                    clamp.grab();
+                    claw.grab();
                     wheel.stop();
                 })
 
@@ -379,18 +379,18 @@ public class SonnyTele extends BluLinearOpMode {
                 })
                 .loop(() -> {
                     if(gamepad1.left_bumper) {
-                        clamp.release();
+                        claw.release();
                         wheel.intake();
                     } else if(gamepad1.right_bumper) {
-                        clamp.release();
+                        claw.release();
                         wheel.reverse();
                     } else {
-                        clamp.grab();
+                        claw.grab();
                         wheel.stop();
                     }
                 })
                 .onExit(() -> {
-                    clamp.grab();
+                    claw.grab();
                     wheel.stop();
                 })
 
@@ -547,7 +547,7 @@ public class SonnyTele extends BluLinearOpMode {
                 })
                 .onExit(() -> {
                     turret.enable();
-                    clamp.enable();
+                    claw.enable();
 //                    pusher.enable();
                 })
 

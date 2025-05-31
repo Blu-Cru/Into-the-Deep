@@ -93,7 +93,7 @@ public class Solo extends BluLinearOpMode {
         addPivot();
         addArm();
         addWheel();
-        addClamp();
+        addClaw();
         addWrist();
         addIntakeSwitch();
         addCactus();
@@ -162,7 +162,7 @@ public class Solo extends BluLinearOpMode {
                 .onEnter(() -> {
                     dt.setDrivePower(0.4);
                     wheel.intake();
-                    clamp.release();
+                    claw.release();
                 })
                 .transition(() -> stickyG1.a || Robot.justValidSample(), State.RETRACTED, () -> {
                     if(Robot.justValidSample()) {
@@ -192,7 +192,7 @@ public class Solo extends BluLinearOpMode {
                 })
                 .onExit(() -> {
                     wheel.stop();
-                    clamp.close();
+                    claw.close();
                 })
 
                 .state(State.EXTENDING_OVER_INTAKE)
@@ -213,10 +213,10 @@ public class Solo extends BluLinearOpMode {
 
                     if(gamepad1.right_bumper) {
                         wheel.reverse();
-                        clamp.release();
+                        claw.release();
                     } else {
                         wheel.stop();
-                        clamp.grab();
+                        claw.grab();
                     }
                 })
 
@@ -241,18 +241,18 @@ public class Solo extends BluLinearOpMode {
                 })
                 .loop(() -> {
                     if(gamepad1.left_bumper) {
-                        clamp.release();
+                        claw.release();
                         wheel.intake();
                     } else if(gamepad1.right_bumper) {
-                        clamp.release();
+                        claw.release();
                         wheel.reverse();
                     } else {
-                        clamp.grab();
+                        claw.grab();
                         wheel.stop();
                     }
                 })
                 .onExit(() -> {
-                    clamp.grab();
+                    claw.grab();
                     wheel.stop();
                 })
 
@@ -292,10 +292,10 @@ public class Solo extends BluLinearOpMode {
 //                })
                 .loop(() -> {
                     if(gamepad1.left_bumper) {
-                        clamp.release();
+                        claw.release();
                         wheel.setPower(-0.5);
                     } else {
-                        clamp.grab();
+                        claw.grab();
                         wheel.stop();
                     }
 
@@ -303,7 +303,7 @@ public class Solo extends BluLinearOpMode {
                     else if(stickyG1.b) new SampleBackLowCommand().schedule();
                 })
                 .onExit(() -> {
-                    clamp.grab();
+                    claw.grab();
                     wheel.stop();
                 })
 
@@ -485,7 +485,7 @@ public class Solo extends BluLinearOpMode {
                 })
                 .onExit(() -> {
                     turret.enable();
-                    clamp.enable();
+                    claw.enable();
 //                    pusher.enable();
                 })
 

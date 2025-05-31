@@ -102,7 +102,7 @@ public class Main extends BluLinearOpMode {
         addPivot();
         addArm();
         addWheel();
-        addClamp();
+        addClaw();
         addWrist();
         addIntakeSwitch();
         addPusher();
@@ -215,10 +215,10 @@ public class Main extends BluLinearOpMode {
 
                     if(gamepad2.right_bumper) {
                         wheel.reverse();
-                        clamp.release();
+                        claw.release();
                     } else {
                         wheel.stop();
-                        clamp.grab();
+                        claw.grab();
                     }
                 })
 
@@ -226,7 +226,7 @@ public class Main extends BluLinearOpMode {
                 .onEnter(() -> {
                     dt.setDrivePower(0.55);
                     wheel.intake();
-                    clamp.release();
+                    claw.release();
                 })
                 .transition(() -> stickyG2.a || Robot.validSample(), State.RETRACTED, () -> {
                     if(Robot.validSample()) {
@@ -254,7 +254,7 @@ public class Main extends BluLinearOpMode {
 
                 .onExit(() -> {
                     wheel.stop();
-                    clamp.close();
+                    claw.close();
                 })
 
                 .state(State.INTAKING_SPECIMEN)
@@ -283,18 +283,18 @@ public class Main extends BluLinearOpMode {
                 })
                 .loop(() -> {
                     if(gamepad2.left_bumper) {
-                        clamp.release();
+                        claw.release();
                         wheel.intake();
                     } else if(gamepad2.right_bumper) {
-                        clamp.release();
+                        claw.release();
                         wheel.reverse();
                     } else {
-                        clamp.grab();
+                        claw.grab();
                         wheel.stop();
                     }
                 })
                 .onExit(() -> {
-                    clamp.grab();
+                    claw.grab();
                     wheel.stop();
                 })
 
@@ -340,10 +340,10 @@ public class Main extends BluLinearOpMode {
 //                })
                 .loop(() -> {
                     if(gamepad2.left_bumper) {
-                        clamp.release();
+                        claw.release();
                         wheel.setPower(-0.5);
                     } else {
-                        clamp.grab();
+                        claw.grab();
                         wheel.stop();
                     }
 
@@ -358,7 +358,7 @@ public class Main extends BluLinearOpMode {
                     }
                 })
                 .onExit(() -> {
-                    clamp.grab();
+                    claw.grab();
                     wheel.stop();
                 })
 
@@ -521,7 +521,7 @@ public class Main extends BluLinearOpMode {
                 })
                 .onExit(() -> {
                     turret.enable();
-                    clamp.enable();
+                    claw.enable();
                     pusher.enable();
                 })
 

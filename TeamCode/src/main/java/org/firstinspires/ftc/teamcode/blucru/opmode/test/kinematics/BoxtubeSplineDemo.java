@@ -39,7 +39,7 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
         pivot.useExtension(extension.getMotor());
         addWrist();
         addArm();
-        addClamp();
+        addClaw();
         addWheel();
 
         poses = new Pose2d[] {

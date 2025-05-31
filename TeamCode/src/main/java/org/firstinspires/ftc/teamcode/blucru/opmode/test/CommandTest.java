@@ -17,7 +17,7 @@ public class CommandTest extends BluLinearOpMode {
         addWrist();
         addWheel();
         addArm();
-        addClamp();
+        addClaw();
 
         pivot.useExtension(extension.getMotor());
         extension.usePivot(pivot.getMotor());

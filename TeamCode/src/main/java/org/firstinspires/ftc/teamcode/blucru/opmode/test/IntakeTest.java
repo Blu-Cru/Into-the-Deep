@@ -29,7 +29,7 @@ public class IntakeTest extends BluLinearOpMode {
         addDrivetrain();
         addArm();
         addWheel();
-        addClamp();
+        addClaw();
         addWrist();
         addPivot();
         addExtension();
@@ -53,7 +53,7 @@ public class IntakeTest extends BluLinearOpMode {
                 .state(State.EXTENDING_OVER_INTAKE)
                 .transition(() -> stickyG2.left_bumper, State.INTAKING, () -> {
                     robot.setIKPose(intakePose);
-                    clamp.release();
+                    claw.release();
                     wheel.intake();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
@@ -71,10 +71,10 @@ public class IntakeTest extends BluLinearOpMode {
                 .loop(() -> {
                     if(gamepad2.right_bumper) {
                         wheel.reverse();
-                        clamp.release();
+                        claw.release();
                     } else {
                         wheel.stop();
-                        clamp.grab();
+                        claw.grab();
                     }
 
                     if(stickyG2.dpad_left) {
@@ -90,7 +90,7 @@ public class IntakeTest extends BluLinearOpMode {
                 .state(State.INTAKING)
                 .onEnter(() -> {
                     wheel.intake();
-                    clamp.release();
+                    claw.release();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
@@ -106,7 +106,7 @@ public class IntakeTest extends BluLinearOpMode {
                 })
                 .transition(() -> !gamepad2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
                     robot.setIKPose(aboveIntakePose);
-                    clamp.close();
+                    claw.close();
                     wheel.stop();
                 })
                 .loop(() -> {

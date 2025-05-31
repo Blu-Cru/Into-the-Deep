@@ -7,9 +7,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 public class ClampGrabCommand extends InstantCommand {
     public ClampGrabCommand() {
         super(
-                () -> Robot.getInstance().clamp.grab()
+                () -> Robot.getInstance().claw.grab()
         );
 
-        addRequirements(Robot.getInstance().clamp);
+        addRequirements(Robot.getInstance().claw);
     }
 }

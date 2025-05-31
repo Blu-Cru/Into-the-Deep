@@ -27,7 +27,7 @@ public class BoxtubeKinematicsTest extends BluLinearOpMode {
     public void initialize() {
         addArm();
         addWrist();
-        addClamp();
+        addClaw();
         addPivot();
         addExtension();
         pivot.useExtension(extension.getMotor());

@@ -50,7 +50,7 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
         addArm();
         addWheel();
         addWrist();
-        addClamp();
+        addClaw();
         addIntakeSwitch();
         addCVMaster();
         pivot.useExtension(extension.getMotor());
