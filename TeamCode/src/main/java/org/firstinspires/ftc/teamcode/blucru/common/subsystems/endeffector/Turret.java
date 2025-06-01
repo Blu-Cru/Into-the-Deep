@@ -62,6 +62,7 @@ public class Turret extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void setAngle(double angle) {
+        state = State.SERVO;
         angle = Range.clip(angle, MIN_ANGLE, MAX_ANGLE);
         setPosition(CENTER_POS + angle * TICKS_PER_RAD);
     }
