@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Turre
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.UpDownWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangServos;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.ptoservo.PTOServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
@@ -40,6 +41,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public HangMotor hangMotor;
     public CVMaster cvMaster;
     public CactusSensor cactus;
+    public PTOServos ptoServos;
 
     public StickyGamepad stickyG1, stickyG2;
 
@@ -128,6 +130,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public void addHangServos() {hangServos = robot.addHangServos();}
     public void addHangMotor() {hangMotor = robot.addHangMotor();}
     public void addCactus() {cactus = robot.addCactus();}
+    public void addPTOServos() {ptoServos = robot.addPTOServos();}
 
     // enable the FTC Dashboard telemetry and field overlay
     public void enableFTCDashboard() {

@@ -9,10 +9,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 
 public class UpDownWrist extends SmoothServo implements BluSubsystem, Subsystem {
     // positive is more down
-    public static double PARALLEL_POS = 0.435;
+    public static double PARALLEL_POS = 0.48;
     final double
             TICKS_PER_RAD = 0.275 / (Math.PI / 2),
-            MAX_ANGLE = 1.0, MIN_ANGLE = -2.7;
+            MAX_ANGLE = 1.5, MIN_ANGLE = -2.7;
 
     public UpDownWrist() {
         super("updownwrist", false, 6.0, 15.0);

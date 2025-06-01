@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Turre
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.UpDownWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangServos;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.ptoservo.PTOServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Point3d;
@@ -45,6 +46,7 @@ public class Robot {
     public HangServos hangServos;
     public HangMotor hangMotor;
     public CactusSensor cactus;
+    public PTOServos ptoServos;
 
     // list of all subsystems
     ArrayList<BluSubsystem> subsystems;
@@ -247,6 +249,12 @@ public class Robot {
         cactus = new CactusSensor();
         subsystems.add(cactus);
         return cactus;
+    }
+
+    public PTOServos addPTOServos() {
+        ptoServos = new PTOServos();
+        subsystems.add(ptoServos);
+        return ptoServos;
     }
 
     public boolean splineDone() {

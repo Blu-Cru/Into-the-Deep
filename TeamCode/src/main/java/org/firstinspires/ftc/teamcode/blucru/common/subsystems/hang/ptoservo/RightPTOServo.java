@@ -8,12 +8,18 @@ public class RightPTOServo extends BluServo implements PTOServo {
     }
 
     @Override
+    public void init() {
+        super.init();
+        disengage();
+    }
+
+    @Override
     public void engage() {
-//        setPosition();
+        setPosition(0.3);
     }
 
     @Override
     public void disengage() {
-
+        setPosition(0.15);
     }
 }
