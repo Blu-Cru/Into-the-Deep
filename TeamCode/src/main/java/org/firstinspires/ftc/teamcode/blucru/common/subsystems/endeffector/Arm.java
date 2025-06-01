@@ -17,8 +17,8 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public static double
             // positive is more retracted
             VERTICAL_POS = 0.49,
-            vMAX = 15.0, aMAX = 30.0,
-            MAX_ANGLE = 1.8, MIN_ANGLE = -0.45,
+            vMAX = 10.0, aMAX = 22.0,
+            MAX_ANGLE = 2.67, MIN_ANGLE = -0.45,
             RETRACT_ANGLE = 2.67,
             PRE_INTAKE_ANGLE = 0.0,
             GROUND_ANGLE = -0.2,
@@ -84,7 +84,7 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void setAngle(double angle) {
-        super.setPosition(VERTICAL_POS + toTicks(Range.clip(angle - Math.PI/2, MIN_ANGLE, MAX_ANGLE)));
+        super.setPosition(VERTICAL_POS + toTicks(Range.clip(angle, MIN_ANGLE, MAX_ANGLE) - Math.PI/2));
     }
 
     public double getAngle() {

@@ -48,31 +48,34 @@ public class EndEffectorTest extends BluLinearOpMode {
         }
 
         if(stickyG1.dpad_right) {
-            new SpinWristAngleCommand(Math.PI/2).schedule();
+            new SpinWristAngleCommand(-Math.PI/2).schedule();
         }
 
         if(stickyG1.dpad_up) {
             new SpinWristCenterCommand().schedule();
         }
+
+        turret.setAngle(gamepad1.right_stick_x);
     }
 
     public void preIntake() {
         new SequentialCommandGroup(
                 new ArmMotionProfileCommand(0),
                 new SpinWristCenterCommand(),
-                new ClawOpenCommand(),
                 new TurretCenterCommand(),
-                new UpDownWristAngleCommand(-Math.PI/2)
+                new UpDownWristAngleCommand(-Math.PI/2),
+                new WaitCommand(100),
+                new ClawOpenCommand()
         ).schedule();
     }
 
     public void grab() {
         new SequentialCommandGroup(
-                new ArmMotionProfileCommand(-0.4),
-                new UpDownWristAngleCommand(-Math.PI/2 + 0.4),
-                new WaitCommand(250),
+                new ArmMotionProfileCommand(-0.45),
+                new UpDownWristAngleCommand(-Math.PI/2 + 0.45),
+                new WaitCommand(200),
                 new ClawGrabCommand(),
-                new WaitCommand(250),
+                new WaitCommand(120),
                 new ArmMotionProfileCommand(0),
                 new UpDownWristAngleCommand(-Math.PI/2)
         ).schedule();
@@ -81,10 +84,10 @@ public class EndEffectorTest extends BluLinearOpMode {
     public void spitOut() {
         new SequentialCommandGroup(
                 new UpDownWristAngleCommand(-2.5),
-                new WaitCommand(70),
+                new WaitCommand(250),
                 new ClawOpenCommand(),
-                new WaitCommand(100),
-                new ClawGrabCommand(),
+                new WaitCommand(300),
+                new ClawLooseCommand(),
                 new UpDownWristRetractCommand()
         ).schedule();
     }

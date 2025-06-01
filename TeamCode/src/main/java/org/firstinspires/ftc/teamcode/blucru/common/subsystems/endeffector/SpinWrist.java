@@ -47,7 +47,7 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
 
     public void setAngle(double rad) {
         double angle = Range.clip(rad, MIN_ANGLE, MAX_ANGLE);
-        super.setPosition(toTicks(angle));
+        super.setPosition(toTicks(angle) + CENTER_POS);
     }
 
     double toTicks(double rad) {

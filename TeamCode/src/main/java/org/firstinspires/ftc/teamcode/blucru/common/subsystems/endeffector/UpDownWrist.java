@@ -15,7 +15,7 @@ public class UpDownWrist extends SmoothServo implements BluSubsystem, Subsystem 
             MAX_ANGLE = 1.0, MIN_ANGLE = -2.7;
 
     public UpDownWrist() {
-        super("updownwrist", false);
+        super("updownwrist", false, 6.0, 15.0);
     }
 
     @Override
