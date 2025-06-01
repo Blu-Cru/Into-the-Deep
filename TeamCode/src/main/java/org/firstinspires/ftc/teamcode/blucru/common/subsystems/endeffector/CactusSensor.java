@@ -69,6 +69,10 @@ public class CactusSensor implements BluSubsystem {
         else return state == Sample.BLUE;
     }
 
+    public boolean isEmpty() {
+        return getState() == Sample.EMPTY;
+    }
+
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Cactus Sensor", getState());

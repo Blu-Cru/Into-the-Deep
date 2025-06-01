@@ -78,6 +78,11 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
         return rad;
     }
 
+    public void setTurretGlobalAngle(double globalAngle) {
+        state = State.TURRET_IK;
+        this.globalAngle = globalAngle;
+    }
+
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("SPIN WRIST State", state);

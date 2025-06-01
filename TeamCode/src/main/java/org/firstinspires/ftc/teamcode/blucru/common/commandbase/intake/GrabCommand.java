@@ -5,6 +5,8 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawLooseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.spinwrist.SpinWristCenterCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.updownwrist.UpDownWristAngleCommand;
 
 public class GrabCommand extends SequentialCommandGroup {
@@ -16,7 +18,10 @@ public class GrabCommand extends SequentialCommandGroup {
                 new ClawGrabCommand(),
                 new WaitCommand(120),
                 new ArmMotionProfileCommand(0),
-                new UpDownWristAngleCommand(-Math.PI/2)
+                new UpDownWristAngleCommand(0),
+                new WaitCommand(100),
+                new SpinWristCenterCommand(),
+                new ClawLooseCommand()
         );
     }
 }
