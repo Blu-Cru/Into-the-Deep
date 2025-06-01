@@ -21,6 +21,12 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     }
 
     @Override
+    public void init() {
+        super.init();
+        center();
+    }
+
+    @Override
     public void read() {
         super.read();
     }
@@ -28,6 +34,10 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     @Override
     public void write() {
         super.write();
+    }
+
+    public void center() {
+        setPosition(CENTER_POS);
     }
 
     @Override

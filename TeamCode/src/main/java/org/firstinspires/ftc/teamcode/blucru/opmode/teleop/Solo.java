@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRet
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
@@ -107,7 +107,7 @@ public class Solo extends BluLinearOpMode {
                     new PivotRetractCommand().schedule();
 //                    new ArmDropToGroundCommand().schedule();
 //                    new WheelIntakeCommand().schedule();
-                    new ClampReleaseCommand().schedule();
+                    new ClawReleaseCommand().schedule();
                     extension.teleExtendIntake(0);
                 })
 
@@ -162,7 +162,7 @@ public class Solo extends BluLinearOpMode {
                     }
 
                     new SequentialCommandGroup(
-                            new ClampGrabCommand(),
+                            new ClawGrabCommand(),
 //                            new WheelStopCommand(),
 //                            new ArmPreIntakeCommand(),
                             new WristUprightForwardCommand(),
@@ -172,7 +172,7 @@ public class Solo extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> !gamepad1.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
-                    new ClampGrabCommand().schedule();
+                    new ClawGrabCommand().schedule();
 //                    new WheelStopCommand().schedule();
 //                    new ArmPreIntakeCommand().schedule();
                 })
@@ -192,7 +192,7 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> gamepad1.left_bumper, State.INTAKING_GROUND, () -> {
 //                    new ArmDropToGroundCommand().schedule();
 //                    new WheelIntakeCommand().schedule();
-                    new ClampReleaseCommand().schedule();
+                    new ClawReleaseCommand().schedule();
                 })
                 .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
@@ -376,7 +376,7 @@ public class Solo extends BluLinearOpMode {
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
 //                            new WheelReverseCommand(),
-                            new ClampReleaseCommand(),
+                            new ClawReleaseCommand(),
                             new WaitCommand(150),
                             new PivotRetractCommand(),
                             new ExtensionRetractCommand(),

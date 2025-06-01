@@ -19,8 +19,10 @@ public class Turret extends BluServo implements BluSubsystem, Subsystem {
     }
 
     // positive is more clockwise looking down
-    public static double CENTER_POS = 0.48,
-            MIN_ANGLE = -Math.PI, MAX_ANGLE = Math.PI/2,
+    public static double
+            CENTER_POS = 0.48,
+            MIN_ANGLE = -Math.PI/2, MAX_ANGLE = Math.PI/2,
+            MAX_VEL = 3.0, MAX_ACCEL = 4.0,
 
             TICKS_PER_RAD = 0.28/(Math.PI/2);
 
@@ -37,7 +39,7 @@ public class Turret extends BluServo implements BluSubsystem, Subsystem {
     public void init() {
         state = State.SERVO;
         super.init();
-        front();
+        setPosition(CENTER_POS);
     }
 
     @Override
@@ -64,8 +66,18 @@ public class Turret extends BluServo implements BluSubsystem, Subsystem {
         setPosition(CENTER_POS + angle * TICKS_PER_RAD);
     }
 
+    public void setMotionProfileAngle(double angle) {
+        state = State.MOTION_PROFILE;
+        angle = Range.clip(angle, MIN_ANGLE, MAX_ANGLE);
+        profile = new MotionProfile(angle, getAngle(), MAX_VEL, MAX_ACCEL);
+    }
+
     public double getAngle() {
         return (getPosition() - CENTER_POS) / TICKS_PER_RAD;
+    }
+
+    public void center() {
+        setMotionProfileAngle(0);
     }
 
     public void front() {

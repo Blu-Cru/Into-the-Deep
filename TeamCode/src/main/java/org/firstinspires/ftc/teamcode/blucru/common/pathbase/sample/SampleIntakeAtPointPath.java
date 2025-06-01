@@ -1,17 +1,14 @@
 package org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample;
 
-import android.util.Log;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeKinematics;
-import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class SampleIntakeAtPointPath extends PIDPathBuilder {
     public SampleIntakeAtPointPath(Vector2d rawDrivePoint, Pose2d rawBlockPose) {
@@ -47,7 +44,7 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
                 .waitMillis(700)
                 .addTurnToPoint(rawDrivePoint, rawBlockPose.vec())
                 .callback(() -> {
-                    new ClampReleaseCommand().schedule();
+                    new ClawReleaseCommand().schedule();
                     new BoxtubeSplineCommand(
                             new Pose2d(x, 2, -Math.PI/2),
                             rawWristFinal,
