@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.turret.TurretCenterCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @Disabled
@@ -26,7 +29,7 @@ public class EndEffectorTest extends BluLinearOpMode {
         }
 
         if(stickyG1.a) {
-            stopIntaking();
+            retract();
         }
 
         if(stickyG1.b) {
@@ -56,8 +59,13 @@ public class EndEffectorTest extends BluLinearOpMode {
     }
 
     public void retract() {
+        new SequentialCommandGroup(
+                new TurretCenterCommand(),
+                new ArmRetractCommand(),
+                new
+        )
         arm.retract();
-        turret.horizontal();
+        turret.center();
         claw.grab();
     }
 }

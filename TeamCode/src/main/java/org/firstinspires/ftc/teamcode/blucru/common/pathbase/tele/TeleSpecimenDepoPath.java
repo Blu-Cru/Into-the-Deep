@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class TeleSpecimenDepoPath extends PIDPathBuilder {
@@ -13,7 +13,7 @@ public class TeleSpecimenDepoPath extends PIDPathBuilder {
         super();
         this.setPower(0.8)
                 .schedule(new SequentialCommandGroup(
-                        new ClampGrabCommand(),
+                        new ClawGrabCommand(),
                         new BoxtubeSplineCommand(
                                 new Vector2d(20,42),
                                 new Pose2d(-8.6, 29.3, Math.PI),

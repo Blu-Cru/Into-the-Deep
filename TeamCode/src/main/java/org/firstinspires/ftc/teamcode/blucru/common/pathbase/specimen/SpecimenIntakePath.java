@@ -4,7 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenIntakePath extends PIDPathBuilder {
@@ -18,7 +18,7 @@ public class SpecimenIntakePath extends PIDPathBuilder {
                                 -Math.PI,
                                 0.5
                         ),
-                        new ClampReleaseCommand()
+                        new ClawReleaseCommand()
                 ))
                 .waitMillis(400)
                 .setPower(0.25)

@@ -5,7 +5,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenCycleIntakeFailsafePath extends PIDPathBuilder {
@@ -20,7 +20,7 @@ public class SpecimenCycleIntakeFailsafePath extends PIDPathBuilder {
                                         0.4
                                 ),
                                 new WaitCommand(250),
-                                new ClampGrabCommand()
+                                new ClawGrabCommand()
                         )
                 )
                 .addMappedPoint(25, -48.5, -60)

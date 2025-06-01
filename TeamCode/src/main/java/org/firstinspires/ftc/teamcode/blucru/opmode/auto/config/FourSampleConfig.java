@@ -6,7 +6,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeCenterPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeLeftPath;
@@ -84,7 +84,7 @@ public class FourSampleConfig extends AutoConfig {
                 .onEnter(() -> logTransition(State.RIGHT_INTAKE))
                 .transition(() -> currentPath.isDone(), // || Robot.getInstance().intakeSwitch.pressed(),
                         State.LIFTING, () -> {
-                            new ClampGrabCommand().schedule();
+                            new ClawGrabCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
                             currentPath = cycleLiftingPath.start();
@@ -93,7 +93,7 @@ public class FourSampleConfig extends AutoConfig {
                 .onEnter(() -> logTransition(State.CENTER_INTAKE))
                 .transition(() -> currentPath.isDone(), // || Robot.getInstance().intakeSwitch.pressed(),
                         State.LIFTING, () -> {
-                            new ClampGrabCommand().schedule();
+                            new ClawGrabCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
                             currentPath = cycleLiftingPath.start();
@@ -102,7 +102,7 @@ public class FourSampleConfig extends AutoConfig {
                 .onEnter(() -> logTransition(State.LEFT_INTAKE))
                 .transition(() -> currentPath.isDone(), // || Robot.getInstance().intakeSwitch.pressed(),
                         State.LIFTING, () -> {
-                            new ClampGrabCommand().schedule();
+                            new ClawGrabCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
                             currentPath = cycleLiftingPath.start();

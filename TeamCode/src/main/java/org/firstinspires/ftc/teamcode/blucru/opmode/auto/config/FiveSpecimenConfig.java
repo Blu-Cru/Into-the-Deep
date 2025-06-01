@@ -8,7 +8,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectLeftBlockPath;
@@ -115,7 +115,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                 .state(State.PARK_INTAKING)
                 .transition(() -> currentPath.isDone() || (Robot.justValidSample() && Robot.getInstance().pivot.getAngle() < 0.35),
                         State.PARKED, () -> {
-                            new ClampGrabCommand().schedule();
+                            new ClawGrabCommand().schedule();
 //                            new WheelStopCommand().schedule();
                             new ExtensionCommand(14).schedule();
                         })

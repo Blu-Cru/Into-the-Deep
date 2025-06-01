@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector;
 
 import com.arcrobotics.ftclib.command.Subsystem;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.SmoothServo;
@@ -9,7 +10,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 public class UpDownWrist extends SmoothServo implements BluSubsystem, Subsystem {
     // positive is more down
     public static double PARALLEL_POS = 0.435;
-    final double TICKS_PER_RAD = 0.275 / (Math.PI / 2);
+    final double
+            TICKS_PER_RAD = 0.275 / (Math.PI / 2),
+            MAX_ANGLE = 1.0, MIN_ANGLE = -2.7;
 
     public UpDownWrist() {
         super("updownwrist", false);
@@ -23,6 +26,19 @@ public class UpDownWrist extends SmoothServo implements BluSubsystem, Subsystem 
     @Override
     public void write() {
         super.write();
+    }
+
+    public void setAngle(double rad) {
+        rad = Range.clip(rad, MIN_ANGLE, MAX_ANGLE);
+        setPosition(PARALLEL_POS + toTicks(rad));
+    }
+
+    public double toTicks(double rad) {
+        return rad * TICKS_PER_RAD;
+    }
+
+    public double toRad(double ticks) {
+        return ticks / TICKS_PER_RAD;
     }
 
     @Override

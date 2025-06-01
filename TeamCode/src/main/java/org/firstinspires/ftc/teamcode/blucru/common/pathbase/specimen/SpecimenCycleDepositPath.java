@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.B
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenCycleDepositPath extends PIDPathBuilder {
@@ -20,7 +20,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
         if(scoreCount == -1) {
             this.setPower(0.9)
                     .schedule(new SequentialCommandGroup(
-                            new ClampGrabCommand(),
+                            new ClawGrabCommand(),
                             new BoxtubeSplineCommand(
                                     new Vector2d(20, 42),
                                     new Pose2d(-8.6, 28.5, Math.PI),
@@ -37,7 +37,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                             new WaitCommand(100),
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(320),
-                            new ClampReleaseCommand(),
+                            new ClawReleaseCommand(),
                             new WaitCommand(70),
                             new PivotRetractCommand(),
                             new ExtensionRetractCommand(),
@@ -47,7 +47,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
         } else {
             this.setPower(0.9)
                     .schedule(new SequentialCommandGroup(
-                            new ClampGrabCommand(),
+                            new ClawGrabCommand(),
                             new BoxtubeSplineCommand(
                                     new Vector2d(20, 42),
                                     new Pose2d(-8.6, 30, Math.PI),
@@ -61,7 +61,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                     .schedule(new SequentialCommandGroup(
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
-                            new ClampReleaseCommand(),
+                            new ClawReleaseCommand(),
                             new WaitCommand(170),
                             new PivotRetractCommand(),
                             new ExtensionRetractCommand(),

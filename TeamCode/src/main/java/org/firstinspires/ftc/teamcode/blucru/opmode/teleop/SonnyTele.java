@@ -36,8 +36,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.Extensio
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
@@ -126,7 +126,7 @@ public class SonnyTele extends BluLinearOpMode {
 //                    new ArmDropToGroundCommand().schedule();
 //                    new WristUprightForwardCommand().schedule();
 //                    new WheelIntakeCommand().schedule();
-                    new ClampReleaseCommand().schedule();
+                    new ClawReleaseCommand().schedule();
                     extension.teleExtendIntake(0);
                 })
                 .transition(() -> stickyG1.right_trigger && pivot.getAngle() < 0.2, State.EXTENDED_OVER_INTAKE_FAR, () -> {
@@ -134,7 +134,7 @@ public class SonnyTele extends BluLinearOpMode {
 //                    new ArmPreIntakeCommand().schedule();
 //                    new WristUprightForwardCommand().schedule();
 //                    new WheelStopCommand().schedule();
-                    new ClampGrabCommand().schedule();
+                    new ClawGrabCommand().schedule();
                     extension.teleExtendIntake(intakeExtendFar);
                 })
 
@@ -190,7 +190,7 @@ public class SonnyTele extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> !gamepad1.left_bumper, State.EXTENDED_OVER_INTAKE_CLOSE, () -> {
-                    new ClampGrabCommand().schedule();
+                    new ClawGrabCommand().schedule();
 //                    new WheelStopCommand().schedule();
 //                    new ArmPreIntakeCommand().schedule();
                 })
@@ -204,7 +204,7 @@ public class SonnyTele extends BluLinearOpMode {
                 .transition(() -> gamepad1.left_bumper, State.INTAKING_CLOSE, () -> {
 //                    new ArmDropToGroundCommand().schedule();
 //                    new WheelIntakeCommand().schedule();
-                    new ClampReleaseCommand().schedule();
+                    new ClawReleaseCommand().schedule();
                 })
                 .transition(() -> stickyG1.right_bumper, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
@@ -226,7 +226,7 @@ public class SonnyTele extends BluLinearOpMode {
                     }
 
                     new SequentialCommandGroup(
-                            new ClampGrabCommand(),
+                            new ClawGrabCommand(),
 //                            new WheelStopCommand(),
                             new WristUprightForwardCommand(),
                             new WaitCommand(100),
@@ -235,7 +235,7 @@ public class SonnyTele extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> !gamepad1.left_bumper, State.EXTENDED_OVER_INTAKE_FAR, () -> {
-                    new ClampGrabCommand().schedule();
+                    new ClawGrabCommand().schedule();
 //                    new WheelStopCommand().schedule();
 //                    new ArmPreIntakeCommand().schedule();
                 })
@@ -253,7 +253,7 @@ public class SonnyTele extends BluLinearOpMode {
                 .transition(() -> gamepad1.left_bumper, State.INTAKING_FAR, () -> {
 //                    new ArmDropToGroundCommand().schedule();
 //                    new WheelIntakeCommand().schedule();
-                    new ClampReleaseCommand().schedule();
+                    new ClawReleaseCommand().schedule();
                 })
                 .transition(() -> stickyG1.right_bumper, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
@@ -287,7 +287,7 @@ public class SonnyTele extends BluLinearOpMode {
 //                            new WheelReverseCommand(),
 //                            new WaitCommand(100),
 //                            new WheelStopCommand(),
-                            new ClampGrabCommand()
+                            new ClawGrabCommand()
                     ).schedule();
                 })
                 .transition(() -> stickyG1.right_bumper, State.RETRACTED, () -> new FullRetractCommand().schedule())
@@ -436,7 +436,7 @@ public class SonnyTele extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
-                            new ClampReleaseCommand(),
+                            new ClawReleaseCommand(),
                             new WaitCommand(150),
                             new PivotRetractCommand(),
                             new ExtensionRetractCommand(),
