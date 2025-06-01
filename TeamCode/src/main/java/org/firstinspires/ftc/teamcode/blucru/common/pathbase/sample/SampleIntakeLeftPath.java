@@ -5,7 +5,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionMotionProfileCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SampleIntakeLeftPath extends PIDPathBuilder {
@@ -21,7 +21,7 @@ public class SampleIntakeLeftPath extends PIDPathBuilder {
                 .addMappedPoint(-52, -26.5, 180, 5)
                 .schedule(new SequentialCommandGroup(
                         new WaitCommand(70),
-                        new ClawReleaseCommand(),
+                        new ClawOpenCommand(),
                         new ExtensionMotionProfileCommand(8)
                 ))
                 .waitMillis(700);

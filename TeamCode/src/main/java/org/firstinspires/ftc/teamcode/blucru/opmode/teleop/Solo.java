@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndE
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
@@ -88,7 +88,6 @@ public class Solo extends BluLinearOpMode {
         addPivot();
         addArm();
         addClaw();
-        addWrist();
         addCactus();
         addCVMaster();
         addPusher();
@@ -107,7 +106,7 @@ public class Solo extends BluLinearOpMode {
                     new PivotRetractCommand().schedule();
 //                    new ArmDropToGroundCommand().schedule();
 //                    new WheelIntakeCommand().schedule();
-                    new ClawReleaseCommand().schedule();
+                    new ClawOpenCommand().schedule();
                     extension.teleExtendIntake(0);
                 })
 
@@ -192,7 +191,7 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> gamepad1.left_bumper, State.INTAKING_GROUND, () -> {
 //                    new ArmDropToGroundCommand().schedule();
 //                    new WheelIntakeCommand().schedule();
-                    new ClawReleaseCommand().schedule();
+                    new ClawOpenCommand().schedule();
                 })
                 .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
@@ -376,7 +375,7 @@ public class Solo extends BluLinearOpMode {
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
 //                            new WheelReverseCommand(),
-                            new ClawReleaseCommand(),
+                            new ClawOpenCommand(),
                             new WaitCommand(150),
                             new PivotRetractCommand(),
                             new ExtensionRetractCommand(),

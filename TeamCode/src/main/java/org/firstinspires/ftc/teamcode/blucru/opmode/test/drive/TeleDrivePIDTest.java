@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractComma
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
@@ -45,7 +45,6 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
         addPivot();
         addExtension();
         addArm();
-        addWrist();
         addClaw();
         addCVMaster();
         pivot.useExtension(extension.getMotor());
@@ -106,7 +105,7 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
-                            new ClawReleaseCommand(),
+                            new ClawOpenCommand(),
                             new WaitCommand(150),
                             new PivotRetractCommand(),
                             new ExtensionRetractCommand(),

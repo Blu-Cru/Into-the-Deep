@@ -35,7 +35,6 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
         addPivot();
         addArm();
         addClaw();
-        addWrist();
         addCactus();
         enableFTCDashboard();
         extension.usePivot(pivot.getMotor());

@@ -13,7 +13,7 @@ public class Claw extends BluServo implements BluSubsystem, Subsystem {
             LOOSE_POS = 0.44, FIRM_POS = LOOSE_POS - 0.06, OPEN_POS = LOOSE_POS + 0.21;
 
     public Claw() {
-        super("clamp");
+        super("claw");
     }
 
     public void init() {

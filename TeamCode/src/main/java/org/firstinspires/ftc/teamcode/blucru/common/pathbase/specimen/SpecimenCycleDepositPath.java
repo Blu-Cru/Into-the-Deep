@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.Extensio
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenCycleDepositPath extends PIDPathBuilder {
@@ -37,7 +37,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                             new WaitCommand(100),
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(320),
-                            new ClawReleaseCommand(),
+                            new ClawOpenCommand(),
                             new WaitCommand(70),
                             new PivotRetractCommand(),
                             new ExtensionRetractCommand(),
@@ -61,7 +61,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                     .schedule(new SequentialCommandGroup(
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
-                            new ClawReleaseCommand(),
+                            new ClawOpenCommand(),
                             new WaitCommand(170),
                             new PivotRetractCommand(),
                             new ExtensionRetractCommand(),

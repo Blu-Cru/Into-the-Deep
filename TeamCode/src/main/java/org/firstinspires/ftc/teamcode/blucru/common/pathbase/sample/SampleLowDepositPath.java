@@ -6,7 +6,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SampleLowDepositPath extends PIDPathBuilder {
@@ -16,7 +16,7 @@ public class SampleLowDepositPath extends PIDPathBuilder {
                 .addMappedPoint(-55.8, -55.8, 45)
                 .callback(() -> {
                     new SequentialCommandGroup(
-                            new ClawReleaseCommand(),
+                            new ClawOpenCommand(),
                             new WaitCommand(200),
                             new ArmGlobalAngleCommand(1.5),
                             new WaitCommand(100),

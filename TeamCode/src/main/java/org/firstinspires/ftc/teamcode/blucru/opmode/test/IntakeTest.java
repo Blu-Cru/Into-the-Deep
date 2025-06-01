@@ -29,7 +29,6 @@ public class IntakeTest extends BluLinearOpMode {
         addDrivetrain();
         addArm();
         addClaw();
-        addWrist();
         addPivot();
         addExtension();
 

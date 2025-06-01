@@ -5,12 +5,12 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 
 public class SpecimenFrontDunkRetractCommand extends SequentialCommandGroup {
     public SpecimenFrontDunkRetractCommand() {
         super(
-                new ClawReleaseCommand(),
+                new ClawOpenCommand(),
                 new WaitCommand(170),
                 new EndEffectorRetractCommand(),
                 new BoxtubeRetractCommand()

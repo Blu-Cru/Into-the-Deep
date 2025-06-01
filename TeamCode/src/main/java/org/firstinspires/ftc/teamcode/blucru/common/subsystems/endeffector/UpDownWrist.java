@@ -19,6 +19,12 @@ public class UpDownWrist extends SmoothServo implements BluSubsystem, Subsystem 
     }
 
     @Override
+    public void init() {
+        super.init();
+        retract();
+    }
+
+    @Override
     public void read() {
         super.read();
     }
@@ -30,7 +36,11 @@ public class UpDownWrist extends SmoothServo implements BluSubsystem, Subsystem 
 
     public void setAngle(double rad) {
         rad = Range.clip(rad, MIN_ANGLE, MAX_ANGLE);
-        setPosition(PARALLEL_POS + toTicks(rad));
+        setPosition(PARALLEL_POS - toTicks(rad));
+    }
+
+    public void retract() {
+        setAngle(-0.7);
     }
 
     public double toTicks(double rad) {

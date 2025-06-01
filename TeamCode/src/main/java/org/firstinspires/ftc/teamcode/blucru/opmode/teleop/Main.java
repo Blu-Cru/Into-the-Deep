@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCom
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
@@ -97,7 +97,6 @@ public class Main extends BluLinearOpMode {
         addPivot();
         addArm();
         addClaw();
-        addWrist();
         addPusher();
         addHangServos();
         addHangMotor();
@@ -118,7 +117,7 @@ public class Main extends BluLinearOpMode {
                     new PivotRetractCommand().schedule();
 //                    new ArmDropToGroundCommand().schedule();
 //                    new WheelIntakeCommand().schedule();
-                    new ClawReleaseCommand().schedule();
+                    new ClawOpenCommand().schedule();
                     extension.teleExtendIntake(0);
                 })
                 .transition(() -> stickyG2.dpad_up, State.EXTENDING_OVER_INTAKE, () -> {
@@ -182,7 +181,7 @@ public class Main extends BluLinearOpMode {
                         new SequentialCommandGroup(
 //                                new ArmPreIntakeCommand(),
                                 new WaitCommand(300),
-                                new ClawReleaseCommand(),
+                                new ClawOpenCommand(),
 //                                new WheelReverseCommand(),
                                 new WaitCommand(100),
                                 new EndEffectorRetractCommand()
@@ -195,7 +194,7 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> gamepad2.left_bumper, State.INTAKING_GROUND, () -> {
 //                    new ArmDropToGroundCommand().schedule();
 //                    new WheelIntakeCommand().schedule();
-                    new ClawReleaseCommand().schedule();
+                    new ClawOpenCommand().schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new ExtensionRetractCommand().schedule();
@@ -415,7 +414,7 @@ public class Main extends BluLinearOpMode {
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
 //                            new WheelReverseCommand(),
-                            new ClawReleaseCommand(),
+                            new ClawOpenCommand(),
                             new WaitCommand(150),
                             new PivotRetractCommand(),
                             new ExtensionRetractCommand(),

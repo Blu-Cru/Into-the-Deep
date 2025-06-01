@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndE
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
@@ -40,7 +40,6 @@ public class SpecimenTest extends BluLinearOpMode {
     public void initialize() {
         addDrivetrain();
         addArm();
-        addWrist();
         addClaw();
         addPivot();
         addExtension();
@@ -73,7 +72,7 @@ public class SpecimenTest extends BluLinearOpMode {
 
                 .state(State.EXTENDING_TO_WALL)
                 .transition(() -> gamepad2.left_bumper, State.INTAKING_WALL, () -> {
-                    new ClawReleaseCommand().schedule();
+                    new ClawOpenCommand().schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
@@ -102,7 +101,7 @@ public class SpecimenTest extends BluLinearOpMode {
 
                 .state(State.EXTENDING_OVER_INTAKE)
                 .transition(() -> gamepad2.left_bumper, State.INTAKING, () -> {
-                    new ClawReleaseCommand().schedule();
+                    new ClawOpenCommand().schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new ExtensionRetractCommand().schedule();

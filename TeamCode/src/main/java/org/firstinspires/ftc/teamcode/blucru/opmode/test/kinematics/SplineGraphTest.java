@@ -23,7 +23,6 @@ public class SplineGraphTest extends BluLinearOpMode {
 
     @Override
     public void initialize() {
-        addWrist();
         addArm();
         createNewSpline();
 

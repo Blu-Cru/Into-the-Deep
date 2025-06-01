@@ -6,7 +6,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class CollectLeftBlockPath extends PIDPathBuilder {
@@ -21,7 +21,7 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
                 ))
                 .addMappedPoint(29, -31.5, 14,3)
                 .schedule(new SequentialCommandGroup(
-                        new ClawReleaseCommand(),
+                        new ClawOpenCommand(),
                         new WaitCommand(100),
                         new ExtensionMotionProfileCommand(10)
                 ))

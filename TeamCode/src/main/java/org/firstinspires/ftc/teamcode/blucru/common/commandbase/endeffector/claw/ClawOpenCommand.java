@@ -4,8 +4,8 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
-public class ClawReleaseCommand extends InstantCommand {
-    public ClawReleaseCommand() {
+public class ClawOpenCommand extends InstantCommand {
+    public ClawOpenCommand() {
         super(
                 () -> Robot.getInstance().claw.release()
         );

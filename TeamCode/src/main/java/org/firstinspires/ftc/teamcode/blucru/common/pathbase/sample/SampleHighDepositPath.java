@@ -4,7 +4,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromBasketCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SampleHighDepositPath extends PIDPathBuilder {
@@ -15,13 +15,13 @@ public class SampleHighDepositPath extends PIDPathBuilder {
                 .callback(() -> {
                     if(retractAfterDone) {
                         new SequentialCommandGroup(
-                                new ClawReleaseCommand(),
+                                new ClawOpenCommand(),
                                 new WaitCommand(200),
                                 new RetractFromBasketCommand()
                         ).schedule();
                     } else {
                         new SequentialCommandGroup(
-                                new ClawReleaseCommand()
+                                new ClawOpenCommand()
 //                                new WheelPowerCommand(-0.5),
 //                                new WaitCommand(200),
 //                                new ClampGrabCommand(),

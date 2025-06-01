@@ -94,7 +94,6 @@ public class Auto extends BluLinearOpMode {
         addExtension();
         addPivot();
         addArm();
-        addWrist();
         addClaw();
         addCVMaster();
         addCactus();

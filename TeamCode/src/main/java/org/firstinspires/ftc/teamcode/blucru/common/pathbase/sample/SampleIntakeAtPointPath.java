@@ -6,7 +6,7 @@ import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeKinematics;
 
@@ -44,7 +44,7 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
                 .waitMillis(700)
                 .addTurnToPoint(rawDrivePoint, rawBlockPose.vec())
                 .callback(() -> {
-                    new ClawReleaseCommand().schedule();
+                    new ClawOpenCommand().schedule();
                     new BoxtubeSplineCommand(
                             new Pose2d(x, 2, -Math.PI/2),
                             rawWristFinal,
