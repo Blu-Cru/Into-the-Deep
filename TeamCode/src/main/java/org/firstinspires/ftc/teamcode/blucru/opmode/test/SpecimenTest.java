@@ -12,15 +12,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeR
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
@@ -45,7 +40,6 @@ public class SpecimenTest extends BluLinearOpMode {
     public void initialize() {
         addDrivetrain();
         addArm();
-        addWheel();
         addWrist();
         addClaw();
         addPivot();
@@ -60,7 +54,6 @@ public class SpecimenTest extends BluLinearOpMode {
                 .state(State.RETRACTED)
                 .transition(() -> -gamepad2.right_stick_y > 0.2, State.EXTENDING_OVER_INTAKE, () -> {
                     extension.manualExtendOverIntake(-gamepad2.right_stick_y);
-                    new ArmPreIntakeCommand().schedule();
                 })
                 .transition(() -> stickyG2.b, State.ABOVE_SPECIMEN, () -> {
                     new BoxtubeCommand(1.4, 5).schedule();
@@ -80,7 +73,6 @@ public class SpecimenTest extends BluLinearOpMode {
 
                 .state(State.EXTENDING_TO_WALL)
                 .transition(() -> gamepad2.left_bumper, State.INTAKING_WALL, () -> {
-                    new WheelIntakeCommand().schedule();
                     new ClampReleaseCommand().schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
@@ -97,7 +89,6 @@ public class SpecimenTest extends BluLinearOpMode {
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ClampGrabCommand(),
-                            new WheelStopCommand(),
                             new ArmGlobalAngleCommand(1),
                             new BoxtubeCommand(0.45, 5.6),
                             new WaitCommand(300),
@@ -107,13 +98,10 @@ public class SpecimenTest extends BluLinearOpMode {
                 })
                 .transition(() -> !gamepad2.left_bumper, State.EXTENDING_TO_WALL, () -> {
                     new ClampGrabCommand().schedule();
-                    new WheelStopCommand().schedule();
                 })
 
                 .state(State.EXTENDING_OVER_INTAKE)
                 .transition(() -> gamepad2.left_bumper, State.INTAKING, () -> {
-                    new ArmDropToGroundCommand().schedule();
-                    new WheelIntakeCommand().schedule();
                     new ClampReleaseCommand().schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
@@ -122,21 +110,21 @@ public class SpecimenTest extends BluLinearOpMode {
                 })
                 .loop(() -> {
                     if(Math.abs(gamepad2.right_stick_y) > 0.2) extension.manualExtendOverIntake(-gamepad2.right_stick_y);
-                    if(gamepad2.right_bumper) {
-                        wheel.reverse();
-                        claw.release();
-                    } else {
-                        wheel.stop();
-                        claw.grab();
-                    }
+//                    if(gamepad2.right_bumper) {
+//                        wheel.reverse();
+//                        claw.release();
+//                    } else {
+//                        wheel.stop();
+//                        claw.grab();
+//                    }
                 })
 
                 .state(State.INTAKING)
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ClampGrabCommand(),
-                            new WheelStopCommand(),
-                            new ArmPreIntakeCommand(),
+//                            new WheelStopCommand(),
+//                            new ArmPreIntakeCommand(),
 //                            new WaitCommand(300),
                             new ExtensionRetractCommand(),
                             new EndEffectorRetractCommand()
@@ -144,15 +132,14 @@ public class SpecimenTest extends BluLinearOpMode {
                 })
                 .transition(() -> !gamepad2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
                     new ClampGrabCommand().schedule();
-                    new WheelStopCommand().schedule();
-                    new ArmPreIntakeCommand().schedule();
+//                    new WheelStopCommand().schedule();
+//                    new ArmPreIntakeCommand().schedule();
                 })
                 .loop(() -> {
                     if(Math.abs(-gamepad2.right_stick_y) > 0.2) {
                         extension.manualExtendOverIntake(-gamepad2.right_stick_y);
                     }
                     claw.release();
-                    wheel.intake();
                 })
 
                 .state(State.ABOVE_SPECIMEN)
@@ -163,7 +150,6 @@ public class SpecimenTest extends BluLinearOpMode {
                             new BoxtubeRetractCommand(),
                             new ClampGrabCommand(),
                             new WristUprightForwardCommand(),
-                            new WheelStopCommand(),
                             new ArmRetractCommand()
                     ).schedule();
                 })
@@ -177,14 +163,14 @@ public class SpecimenTest extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
-                            new ClampReleaseCommand(),
-                            new WheelReverseCommand(),
-                            new WaitCommand(300),
-                            new BoxtubeRetractCommand(),
-                            new WaitCommand(150),
-                            new ClampGrabCommand(),
-                            new WristUprightForwardCommand(),
-                            new WheelStopCommand(),
+//                            new ClampReleaseCommand(),
+//                            new WheelReverseCommand(),
+//                            new WaitCommand(300),
+//                            new BoxtubeRetractCommand(),
+//                            new WaitCommand(150),
+//                            new ClampGrabCommand(),
+//                            new WristUprightForwardCommand(),
+//                            new WheelStopCommand(),
                             new ArmRetractCommand()
                     ).schedule();
                 })

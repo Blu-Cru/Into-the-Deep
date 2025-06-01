@@ -15,7 +15,6 @@ public class CommandTest extends BluLinearOpMode {
         addPivot();
         addExtension();
         addWrist();
-        addWheel();
         addArm();
         addClaw();
 

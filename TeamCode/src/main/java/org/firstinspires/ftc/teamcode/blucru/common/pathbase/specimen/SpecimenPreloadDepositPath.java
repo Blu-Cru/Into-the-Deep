@@ -6,7 +6,6 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenFrontDunkRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
@@ -32,7 +31,6 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
                         ),
                         new WaitCommand(400),
                         new ClampReleaseCommand(),
-                        new WheelReverseCommand(),
 //                        new SpecimenFrontDunkCommand(),
                         new SpecimenFrontDunkRetractCommand()
                 ))

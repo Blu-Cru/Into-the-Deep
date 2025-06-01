@@ -17,15 +17,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.Extensio
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
@@ -92,10 +87,8 @@ public class Solo extends BluLinearOpMode {
         addExtension();
         addPivot();
         addArm();
-        addWheel();
         addClaw();
         addWrist();
-        addIntakeSwitch();
         addCactus();
         addCVMaster();
         addPusher();
@@ -112,8 +105,8 @@ public class Solo extends BluLinearOpMode {
                 // INTAKE
                 .transition(() -> stickyG1.left_bumper, State.INTAKING_GROUND, () -> {
                     new PivotRetractCommand().schedule();
-                    new ArmDropToGroundCommand().schedule();
-                    new WheelIntakeCommand().schedule();
+//                    new ArmDropToGroundCommand().schedule();
+//                    new WheelIntakeCommand().schedule();
                     new ClampReleaseCommand().schedule();
                     extension.teleExtendIntake(0);
                 })
@@ -148,10 +141,10 @@ public class Solo extends BluLinearOpMode {
                 .loop(() -> {
                     if(stickyG1.right_bumper) {
                         new SequentialCommandGroup(
-                                new ArmPreIntakeCommand(),
-                                new WaitCommand(300),
-                                new ClampReleaseCommand(),
-                                new WheelReverseCommand(),
+//                                new ArmPreIntakeCommand(),
+//                                new WaitCommand(300),
+//                                new ClampReleaseCommand(),
+//                                new WheelReverseCommand(),
                                 new WaitCommand(100),
                                 new EndEffectorRetractCommand()
                         ).schedule();
@@ -161,7 +154,6 @@ public class Solo extends BluLinearOpMode {
                 .state(State.INTAKING_GROUND)
                 .onEnter(() -> {
                     dt.setDrivePower(0.4);
-                    wheel.intake();
                     claw.release();
                 })
                 .transition(() -> stickyG1.a || Robot.justValidSample(), State.RETRACTED, () -> {
@@ -171,8 +163,8 @@ public class Solo extends BluLinearOpMode {
 
                     new SequentialCommandGroup(
                             new ClampGrabCommand(),
-                            new WheelStopCommand(),
-                            new ArmPreIntakeCommand(),
+//                            new WheelStopCommand(),
+//                            new ArmPreIntakeCommand(),
                             new WristUprightForwardCommand(),
                             new WaitCommand(100),
                             new ArmRetractCommand(),
@@ -181,8 +173,8 @@ public class Solo extends BluLinearOpMode {
                 })
                 .transition(() -> !gamepad1.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
                     new ClampGrabCommand().schedule();
-                    new WheelStopCommand().schedule();
-                    new ArmPreIntakeCommand().schedule();
+//                    new WheelStopCommand().schedule();
+//                    new ArmPreIntakeCommand().schedule();
                 })
                 .loop(() -> {
                     if(stickyG1.y) extension.teleExtendIntake(Main.intakeExtendFar);
@@ -191,15 +183,15 @@ public class Solo extends BluLinearOpMode {
                     extension.teleExtendIntakeDelta(gamepad1.right_trigger * 6.0);
                 })
                 .onExit(() -> {
-                    wheel.stop();
+//                    wheel.stop();
                     claw.close();
                 })
 
                 .state(State.EXTENDING_OVER_INTAKE)
                 .onEnter(() -> dt.setDrivePower(0.7))
                 .transition(() -> gamepad1.left_bumper, State.INTAKING_GROUND, () -> {
-                    new ArmDropToGroundCommand().schedule();
-                    new WheelIntakeCommand().schedule();
+//                    new ArmDropToGroundCommand().schedule();
+//                    new WheelIntakeCommand().schedule();
                     new ClampReleaseCommand().schedule();
                 })
                 .transition(() -> stickyG1.a, State.RETRACTED, () -> {
@@ -211,13 +203,13 @@ public class Solo extends BluLinearOpMode {
 
                     extension.teleExtendIntakeDelta(gamepad1.right_trigger * 6);
 
-                    if(gamepad1.right_bumper) {
-                        wheel.reverse();
-                        claw.release();
-                    } else {
-                        wheel.stop();
-                        claw.grab();
-                    }
+//                    if(gamepad1.right_bumper) {
+//                        wheel.reverse();
+//                        claw.release();
+//                    } else {
+//                        wheel.stop();
+//                        claw.grab();
+//                    }
                 })
 
                 .state(State.INTAKING_SPECIMEN)
@@ -240,20 +232,20 @@ public class Solo extends BluLinearOpMode {
                     ).schedule();
                 })
                 .loop(() -> {
-                    if(gamepad1.left_bumper) {
-                        claw.release();
-                        wheel.intake();
-                    } else if(gamepad1.right_bumper) {
-                        claw.release();
-                        wheel.reverse();
-                    } else {
-                        claw.grab();
-                        wheel.stop();
-                    }
+//                    if(gamepad1.left_bumper) {
+//                        claw.release();
+//                        wheel.intake();
+//                    } else if(gamepad1.right_bumper) {
+//                        claw.release();
+//                        wheel.reverse();
+//                    } else {
+//                        claw.grab();
+//                        wheel.stop();
+//                    }
                 })
                 .onExit(() -> {
                     claw.grab();
-                    wheel.stop();
+//                    wheel.stop();
                 })
 
                 .state(State.ABOVE_SPECIMEN_BACK)
@@ -291,20 +283,19 @@ public class Solo extends BluLinearOpMode {
 //                    currentPath = new TeleDriveToRungIntakePath().build().start();
 //                })
                 .loop(() -> {
-                    if(gamepad1.left_bumper) {
-                        claw.release();
-                        wheel.setPower(-0.5);
-                    } else {
-                        claw.grab();
-                        wheel.stop();
-                    }
+//                    if(gamepad1.left_bumper) {
+//                        claw.release();
+//                        wheel.setPower(-0.5);
+//                    } else {
+//                        claw.grab();
+//                        wheel.stop();
+//                    }
 
                     if(stickyG1.y) new SampleBackHighCommand().schedule();
                     else if(stickyG1.b) new SampleBackLowCommand().schedule();
                 })
                 .onExit(() -> {
                     claw.grab();
-                    wheel.stop();
                 })
 
                 .state(State.AUTO_SAMPLE_LIFTING)
@@ -384,7 +375,7 @@ public class Solo extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
-                            new WheelReverseCommand(),
+//                            new WheelReverseCommand(),
                             new ClampReleaseCommand(),
                             new WaitCommand(150),
                             new PivotRetractCommand(),

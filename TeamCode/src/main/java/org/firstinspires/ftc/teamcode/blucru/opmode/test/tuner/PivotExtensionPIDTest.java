@@ -16,6 +16,7 @@ public class PivotExtensionPIDTest extends BluLinearOpMode {
         addPivot();
         addExtension();
         addArm();
+        addTurret();
         pivot.useExtension(extension.getMotor());
         extension.usePivot(pivot.getMotor());
     }

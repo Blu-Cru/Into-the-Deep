@@ -13,8 +13,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.Extensio
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
@@ -48,17 +46,14 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
         addPivot();
         addExtension();
         addArm();
-        addWheel();
         addWrist();
         addClaw();
-        addIntakeSwitch();
         addCVMaster();
         pivot.useExtension(extension.getMotor());
         extension.usePivot(pivot.getMotor());
 
         cycleDepoPath = new PIDPathBuilder().setPower(0.8)
                 .schedule(new SequentialCommandGroup(
-                        new WheelStopCommand(),
                         new ClampGrabCommand(),
                         new BoxtubeSplineCommand(
                                 new Vector2d(20,42),
@@ -90,8 +85,8 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
                 .state(State.CYCLE_INTAKE)
                 .transition(() -> stickyG1.a, State.IDLE)
                 .transition(() -> currentPath.isDone(), State.CYCLE_FAILSAFE, () -> currentPath = new SpecimenCycleIntakeFailsafePath().start())
-                .transition(() -> Robot.getInstance().intakeSwitch.justPressed()
-                        && Robot.getInstance().pivot.getAngle() < 0.6, State.CYCLE_DEPO_PATH, () -> currentPath = cycleDepoPath.start())
+//                .transition(() -> Robot.getInstance().intakeSwitch.justPressed()
+//                        && Robot.getInstance().pivot.getAngle() < 0.6, State.CYCLE_DEPO_PATH, () -> currentPath = cycleDepoPath.start())
                 .loop(() -> {
                     currentPath.run();
 //                    dt.updateAprilTags(cvMaster.tagDetector);
@@ -112,7 +107,6 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
-                            new WheelReverseCommand(),
                             new ClampReleaseCommand(),
                             new WaitCommand(150),
                             new PivotRetractCommand(),
@@ -129,9 +123,9 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
                 })
 
                 .state(State.CYCLE_FAILSAFE)
-                .transition(() -> Robot.getInstance().intakeSwitch.justPressed(), State.CYCLE_DEPO_PATH, () -> {
-                    currentPath = cycleDepoPath.start();
-                })
+//                .transition(() -> Robot.getInstance().intakeSwitch.justPressed(), State.CYCLE_DEPO_PATH, () -> {
+//                    currentPath = cycleDepoPath.start();
+//                })
                 .transition(() -> currentPath.isDone(), State.CYCLE_INTAKE, () -> {
                     currentPath = new SpecimenIntakePath().start();
                 })

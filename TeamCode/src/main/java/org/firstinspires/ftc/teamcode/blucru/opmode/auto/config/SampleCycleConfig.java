@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromVerti
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleDriveToSubIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeAtPointPath;
@@ -98,7 +97,6 @@ public class SampleCycleConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone() || Robot.justValidSample(),
                         State.LIFTING, () -> {
                             new ClampGrabCommand().schedule();
-                            new WheelStopCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
                             currentPath = cycleLiftingPath.start();
@@ -108,7 +106,6 @@ public class SampleCycleConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone() || Robot.justValidSample(),
                         State.LIFTING, () -> {
                             new ClampGrabCommand().schedule();
-                            new WheelStopCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
                             currentPath = cycleLiftingPath.start();
@@ -118,7 +115,6 @@ public class SampleCycleConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone() || Robot.justValidSample(),
                         State.LIFTING, () -> {
                             new ClampGrabCommand().schedule();
-                            new WheelStopCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
                             currentPath = cycleLiftingPath.start();
@@ -149,7 +145,6 @@ public class SampleCycleConfig extends AutoConfig {
                 .onEnter(() -> logTransition(State.INTAKE_SUB))
                 .transition(() -> Robot.justValidSample() && runtime.seconds() < 26.0, State.LIFTING, () -> {
                     Robot.getInstance().cvMaster.disableSampleDetector();
-                    new WheelStopCommand().schedule();
                     new ClampGrabCommand().schedule();
                     new RetractFromVerticalIntakeCommand().schedule();
                     currentPath = new SampleLiftHighFromSubPath().start();
@@ -162,7 +157,6 @@ public class SampleCycleConfig extends AutoConfig {
                     currentPath = new SampleSubIntakeFailPath().start();
                 })
                 .transition(()  -> currentPath.isDone() && runtime.seconds() > 27.0, State.DONE, () -> {
-                    new WheelStopCommand().schedule();
                     new ClampGrabCommand().schedule();
                     new RetractFromVerticalIntakeCommand().schedule();
                 })
@@ -171,7 +165,6 @@ public class SampleCycleConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone() && runtime.seconds() < 28.7 && !Robot.validSample(), State.SCANNING_SUB)
                 .transition(() -> Robot.validSample() && runtime.seconds() < 26.0, State.LIFTING, () -> {
                     Robot.getInstance().cvMaster.disableSampleDetector();
-                    new WheelStopCommand().schedule();
                     new ClampGrabCommand().schedule();
                     new RetractFromVerticalIntakeCommand().schedule();
                     currentPath = new SampleLiftHighFromSubPath().start();

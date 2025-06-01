@@ -9,9 +9,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
@@ -79,9 +77,9 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                                         && Math.abs(Robot.getInstance().getBoxtubePoint3d().y) < 44
                         ),
                         State.SPITTING, () -> {
-                            new ArmPreIntakeCommand().schedule();
-                            new ClampGrabCommand().schedule();
-                            new WheelStopCommand().schedule();
+//                            new ArmPreIntakeCommand().schedule();
+//                            new ClampGrabCommand().schedule();
+//                            new WheelStopCommand().schedule();
                             new ExtensionCommand(4).schedule();
                             currentPath = new SpitPath().build().start();
                         })

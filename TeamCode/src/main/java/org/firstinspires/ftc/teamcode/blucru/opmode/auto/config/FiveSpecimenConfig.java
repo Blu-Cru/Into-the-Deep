@@ -8,9 +8,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.CollectLeftBlockPath;
@@ -64,9 +62,9 @@ public class FiveSpecimenConfig extends AutoConfig {
                             && Math.abs(Robot.getInstance().getBoxtubePoint3d().y) < 44
                         ),
                         State.SPITTING, () -> {
-                            new ArmPreIntakeCommand().schedule();
-                            new ClampGrabCommand().schedule();
-                            new WheelStopCommand().schedule();
+//                            new ArmPreIntakeCommand().schedule();
+//                            new ClampGrabCommand().schedule();
+//                            new WheelStopCommand().schedule();
                             new ExtensionCommand(4).schedule();
                             currentPath = new SpitPath().build().start();
                         })
@@ -118,7 +116,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone() || (Robot.justValidSample() && Robot.getInstance().pivot.getAngle() < 0.35),
                         State.PARKED, () -> {
                             new ClampGrabCommand().schedule();
-                            new WheelStopCommand().schedule();
+//                            new WheelStopCommand().schedule();
                             new ExtensionCommand(14).schedule();
                         })
                 .state(State.PARKED)

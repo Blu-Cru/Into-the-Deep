@@ -6,10 +6,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class CollectLeftBlockPath extends PIDPathBuilder {
@@ -20,12 +17,10 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
                 .schedule(new SequentialCommandGroup(
                         new PivotRetractCommand(),
                         new WaitCommand(200),
-                        new ExtensionCommand(2),
-                        new ArmDropToGroundCommand()
+                        new ExtensionCommand(2)
                 ))
                 .addMappedPoint(29, -31.5, 14,3)
                 .schedule(new SequentialCommandGroup(
-                        new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
                         new WaitCommand(100),
                         new ExtensionMotionProfileCommand(10)

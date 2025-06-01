@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample;
 
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionMotionProfileCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmDropToGroundCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SampleIntakeRightPath extends PIDPathBuilder {
@@ -19,12 +16,10 @@ public class SampleIntakeRightPath extends PIDPathBuilder {
                 .setPower(0.9)
                 .schedule(new SequentialCommandGroup(
                         new WaitCommand(150),
-                        new ArmDropToGroundCommand(),
                         new ExtensionCommand(2)
                 ))
                 .addMappedPoint(-32, -32, 162, 8)
                 .schedule(new SequentialCommandGroup(
-                        new WheelIntakeCommand(),
                         new ClampReleaseCommand(),
                         new ExtensionMotionProfileCommand(8)
                 ))

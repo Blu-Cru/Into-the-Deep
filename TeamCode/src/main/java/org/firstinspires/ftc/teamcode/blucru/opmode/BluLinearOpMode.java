@@ -116,8 +116,9 @@ public abstract class BluLinearOpMode extends LinearOpMode {
 
     public void addDrivetrain() {dt = robot.addDrivetrain();}
     public void addArm() {arm = robot.addArm();}
-    public void addWrist() {turret = robot.addWrist();}
+    public void addWrist() {turret = robot.addTurret();}
     public void addClaw() {claw = robot.addClaw();}
+    public void addTurret() {turret = robot.addTurret();}
     public void addSpinWrist() {spinWrist = robot.addSpinWrist();}
     public void addUpDownWrist() {upDownWrist = robot.addUpDownWrist();}
     public void addPivot() {pivot = robot.addPivot();}

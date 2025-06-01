@@ -74,28 +74,28 @@ public class FiveSampleConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone(), statesAfterDeposit[scoreCount-1],
                         () -> currentPath = pathsAfterDeposit[scoreCount-1].start())
                 .state(State.RIGHT_INTAKE)
-                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                .transition(() -> currentPath.isDone(), // || Robot.getInstance().intakeSwitch.pressed(),
                         State.LIFTING, () -> {
                             new BoxtubeRetractCommand().schedule();
                             new EndEffectorRetractCommand().schedule();
                             currentPath = liftingPath.start();
                         })
                 .state(State.CENTER_INTAKE)
-                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                .transition(() -> currentPath.isDone(), // || Robot.getInstance().intakeSwitch.pressed(),
                         State.LIFTING, () -> {
                             new BoxtubeRetractCommand().schedule();
                             new EndEffectorRetractCommand().schedule();
                             currentPath = liftingPath.start();
                         })
                 .state(State.LEFT_INTAKE)
-                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                .transition(() -> currentPath.isDone(), // || Robot.getInstance().intakeSwitch.pressed(),
                         State.LIFTING, () -> {
                             new BoxtubeRetractCommand().schedule();
                             new EndEffectorRetractCommand().schedule();
                             currentPath = liftingPath.start();
                         })
                 .state(State.PARTNER_INTAKE)
-                .transition(() -> currentPath.isDone() || Robot.getInstance().intakeSwitch.pressed(),
+                .transition(() -> currentPath.isDone(), // || Robot.getInstance().intakeSwitch.pressed(),
                         State.LIFTING, () -> {
                             new BoxtubeRetractCommand().schedule();
                             new EndEffectorRetractCommand().schedule();

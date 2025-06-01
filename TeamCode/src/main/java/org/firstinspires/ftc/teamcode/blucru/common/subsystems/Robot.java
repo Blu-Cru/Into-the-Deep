@@ -183,7 +183,7 @@ public class Robot {
         return arm;
     }
 
-    public Turret addWrist() {
+    public Turret addTurret() {
         turret = new Turret();
         subsystems.add(turret);
         return turret;

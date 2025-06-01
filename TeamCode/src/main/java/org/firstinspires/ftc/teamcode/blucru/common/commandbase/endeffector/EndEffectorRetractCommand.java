@@ -4,7 +4,6 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 
 public class EndEffectorRetractCommand extends SequentialCommandGroup {
@@ -12,7 +11,6 @@ public class EndEffectorRetractCommand extends SequentialCommandGroup {
         super(
                 new ClampGrabCommand(),
                 new ArmRetractCommand(),
-                new WheelStopCommand(),
                 new WristUprightForwardCommand()
         );
     }

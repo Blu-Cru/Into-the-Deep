@@ -10,9 +10,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromVerticalIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleIntakeAtPointPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
@@ -37,7 +35,6 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
         addExtension();
         addPivot();
         addArm();
-        addWheel();
         addClaw();
         addWrist();
         addCactus();
@@ -53,10 +50,10 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
 
                     if(stickyG1.right_bumper) {
                         new SequentialCommandGroup(
-                                new ArmPreIntakeCommand(),
-                                new WaitCommand(300),
-                                new ClampReleaseCommand(),
-                                new WheelReverseCommand(),
+//                                new ArmPreIntakeCommand(),
+//                                new WaitCommand(300),
+//                                new ClampReleaseCommand(),
+//                                new WheelReverseCommand(),
                                 new WaitCommand(100),
                                 new EndEffectorRetractCommand()
                         ).schedule();

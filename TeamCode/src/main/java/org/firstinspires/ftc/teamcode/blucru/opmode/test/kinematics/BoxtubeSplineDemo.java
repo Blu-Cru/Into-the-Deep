@@ -40,7 +40,6 @@ public class BoxtubeSplineDemo extends BluLinearOpMode {
         addWrist();
         addArm();
         addClaw();
-        addWheel();
 
         poses = new Pose2d[] {
             new Pose2d(15, 15, Math.PI/4),

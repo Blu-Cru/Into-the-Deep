@@ -3,11 +3,9 @@ package org.firstinspires.ftc.teamcode.blucru.common.pathbase.tele;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
@@ -30,7 +28,7 @@ public class TeleDriveToAscentPath extends PIDPathBuilder {
                 .addMappedPoint(-48, -30, 45, 10)
                 .setPower(0.85)
                 .addMappedPoint(-40, -12, 0, 8)
-                .schedule(new ArmPreIntakeCommand())
+//                .schedule(new ArmPreIntakeCommand())
                 .addMappedPoint(-26, -12, 0, 5);
     }
 }

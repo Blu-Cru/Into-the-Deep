@@ -5,7 +5,6 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenIntakePath extends PIDPathBuilder {
@@ -19,7 +18,6 @@ public class SpecimenIntakePath extends PIDPathBuilder {
                                 -Math.PI,
                                 0.5
                         ),
-                        new WheelIntakeCommand(),
                         new ClampReleaseCommand()
                 ))
                 .waitMillis(400)

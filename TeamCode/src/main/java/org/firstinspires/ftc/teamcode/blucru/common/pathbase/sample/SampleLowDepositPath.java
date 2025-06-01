@@ -8,9 +8,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndE
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelPowerCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SampleLowDepositPath extends PIDPathBuilder {
@@ -21,7 +18,6 @@ public class SampleLowDepositPath extends PIDPathBuilder {
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClampReleaseCommand(),
-                            new WheelPowerCommand(-0.5),
                             new WaitCommand(200),
                             new ArmGlobalAngleCommand(1.5),
                             new WaitCommand(100),

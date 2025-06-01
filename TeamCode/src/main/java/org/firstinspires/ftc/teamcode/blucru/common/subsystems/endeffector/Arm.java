@@ -19,9 +19,9 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
             VERTICAL_POS = 0.49,
             vMAX = 30.0, aMAX = 40.0,
             MAX_ANGLE = 1.8, MIN_ANGLE = -1.7,
-            RETRACT_ANGLE = 1.7,
-            PRE_INTAKE_ANGLE = 0.15,
-            GROUND_ANGLE = -0.56,
+            RETRACT_ANGLE = 2.67,
+            PRE_INTAKE_ANGLE = 0.0,
+            GROUND_ANGLE = -0.2,
 
             TICKS_PER_RAD = 0.2 / (Math.PI/2);
 
@@ -84,11 +84,11 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void setAngle(double angle) {
-        super.setPosition(VERTICAL_POS + toTicks(Range.clip(angle, MIN_ANGLE, MAX_ANGLE)));
+        super.setPosition(VERTICAL_POS + toTicks(Range.clip(angle - Math.PI/2, MIN_ANGLE, MAX_ANGLE)));
     }
 
     public double getAngle() {
-        return toRad(super.getPosition() - VERTICAL_POS);
+        return toRad(super.getPosition() - VERTICAL_POS) + Math.PI/2;
     }
 
     public void setMotionProfileAngle(double targetRad) {
@@ -96,16 +96,8 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
         profile = new MotionProfile(Range.clip(targetRad, MIN_ANGLE, MAX_ANGLE), getAngle(), vMAX, aMAX).start();
     }
 
-    public void preIntake() {
-        setMotionProfileAngle(PRE_INTAKE_ANGLE);
-    }
-
     public void retract() {
         setMotionProfileAngle(RETRACT_ANGLE);
-    }
-
-    public void dropToGround() {
-        setMotionProfileAngle(GROUND_ANGLE);
     }
 
     private double toTicks(double rad) {

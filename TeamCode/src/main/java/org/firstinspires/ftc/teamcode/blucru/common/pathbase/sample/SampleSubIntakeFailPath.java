@@ -6,9 +6,6 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SampleSubIntakeFailPath extends PIDPathBuilder {
@@ -22,10 +19,8 @@ public class SampleSubIntakeFailPath extends PIDPathBuilder {
                     ).schedule();
                     new SequentialCommandGroup(
                             new WaitCommand(120),
-                            new WheelReverseCommand(),
                             new WaitCommand(100),
-                            new ClampGrabCommand(),
-                            new WheelStopCommand()
+                            new ClampGrabCommand()
                     ).schedule();
                 })
                 .addMappedPoint(-26, -12, 0)

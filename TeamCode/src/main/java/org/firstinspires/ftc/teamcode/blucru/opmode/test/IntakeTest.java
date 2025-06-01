@@ -28,7 +28,6 @@ public class IntakeTest extends BluLinearOpMode {
     public void initialize() {
         addDrivetrain();
         addArm();
-        addWheel();
         addClaw();
         addWrist();
         addPivot();
@@ -54,7 +53,6 @@ public class IntakeTest extends BluLinearOpMode {
                 .transition(() -> stickyG2.left_bumper, State.INTAKING, () -> {
                     robot.setIKPose(intakePose);
                     claw.release();
-                    wheel.intake();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
@@ -69,13 +67,13 @@ public class IntakeTest extends BluLinearOpMode {
                     ).schedule();
                 })
                 .loop(() -> {
-                    if(gamepad2.right_bumper) {
-                        wheel.reverse();
-                        claw.release();
-                    } else {
-                        wheel.stop();
-                        claw.grab();
-                    }
+//                    if(gamepad2.right_bumper) {
+//                        wheel.reverse();
+//                        claw.release();
+//                    } else {
+//                        wheel.stop();
+//                        claw.grab();
+//                    }
 
                     if(stickyG2.dpad_left) {
                         turret.horizontal();
@@ -89,7 +87,6 @@ public class IntakeTest extends BluLinearOpMode {
 
                 .state(State.INTAKING)
                 .onEnter(() -> {
-                    wheel.intake();
                     claw.release();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
@@ -107,7 +104,6 @@ public class IntakeTest extends BluLinearOpMode {
                 .transition(() -> !gamepad2.left_bumper, State.EXTENDING_OVER_INTAKE, () -> {
                     robot.setIKPose(aboveIntakePose);
                     claw.close();
-                    wheel.stop();
                 })
                 .loop(() -> {
                     if(stickyG2.dpad_left) {

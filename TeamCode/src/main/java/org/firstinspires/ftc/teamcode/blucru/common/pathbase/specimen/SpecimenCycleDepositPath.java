@@ -12,8 +12,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRet
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.clamp.ClampReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelStopCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wheel.WheelReverseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenCycleDepositPath extends PIDPathBuilder {
@@ -22,7 +20,6 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
         if(scoreCount == -1) {
             this.setPower(0.9)
                     .schedule(new SequentialCommandGroup(
-                            new WheelStopCommand(),
                             new ClampGrabCommand(),
                             new BoxtubeSplineCommand(
                                     new Vector2d(20, 42),
@@ -40,7 +37,6 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                             new WaitCommand(100),
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(320),
-                            new WheelReverseCommand(),
                             new ClampReleaseCommand(),
                             new WaitCommand(70),
                             new PivotRetractCommand(),
@@ -51,7 +47,6 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
         } else {
             this.setPower(0.9)
                     .schedule(new SequentialCommandGroup(
-                            new WheelStopCommand(),
                             new ClampGrabCommand(),
                             new BoxtubeSplineCommand(
                                     new Vector2d(20, 42),
@@ -66,7 +61,6 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
                     .schedule(new SequentialCommandGroup(
                             new SpecimenDunkSplineCommand(),
                             new WaitCommand(280),
-                            new WheelReverseCommand(),
                             new ClampReleaseCommand(),
                             new WaitCommand(170),
                             new PivotRetractCommand(),

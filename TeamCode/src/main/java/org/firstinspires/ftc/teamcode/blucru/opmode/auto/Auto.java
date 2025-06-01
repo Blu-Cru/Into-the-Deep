@@ -94,12 +94,10 @@ public class Auto extends BluLinearOpMode {
         addExtension();
         addPivot();
         addArm();
-        addWheel();
         addWrist();
         addClaw();
         addCVMaster();
         addCactus();
-        addIntakeSwitch();
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 

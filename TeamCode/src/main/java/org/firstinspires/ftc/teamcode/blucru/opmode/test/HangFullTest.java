@@ -33,7 +33,6 @@ public class HangFullTest extends BluLinearOpMode {
         addWrist();
         addArm();
         addClaw();
-        addWheel();
         addHangMotor();
         addHangServos();
 
