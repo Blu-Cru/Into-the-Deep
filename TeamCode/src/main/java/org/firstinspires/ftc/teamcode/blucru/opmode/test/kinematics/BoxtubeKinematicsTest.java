@@ -8,7 +8,6 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @Config
@@ -37,7 +36,7 @@ public class BoxtubeKinematicsTest extends BluLinearOpMode {
                 .onEnter(() -> {
                     new BoxtubeRetractCommand().schedule();
                     new ArmRetractCommand().schedule();
-                    new WristUprightForwardCommand().schedule();
+//                    new WristUprightForwardCommand().schedule();
                 })
                 .transition(() -> stickyG1.b, State.IVK, () -> {
                     robot.setIKPose(targetPose);

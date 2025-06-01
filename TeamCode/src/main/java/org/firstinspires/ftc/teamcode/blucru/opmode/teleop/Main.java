@@ -12,7 +12,6 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksLowCommand;
@@ -23,7 +22,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangS
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.pusher.PushCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
@@ -39,7 +37,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndE
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.sample.SampleHighDepositPath;
@@ -123,13 +120,13 @@ public class Main extends BluLinearOpMode {
                 .transition(() -> stickyG2.dpad_up, State.EXTENDING_OVER_INTAKE, () -> {
 //                    new ArmPreIntakeCommand().schedule();
                     new PivotRetractCommand().schedule();
-                    new WristUprightForwardCommand().schedule();
+//                    new WristUprightForwardCommand().schedule();
                     extension.teleExtendIntake(intakeExtendFar);
                 })
                 .transition(() -> stickyG2.dpad_right, State.EXTENDING_OVER_INTAKE, () -> {
 //                    new ArmPreIntakeCommand().schedule();
                     new PivotRetractCommand().schedule();
-                    new WristUprightForwardCommand().schedule();
+//                    new WristUprightForwardCommand().schedule();
                     extension.teleExtendIntake(intakeExtendMid);
                 })
                 // LOW
@@ -152,7 +149,7 @@ public class Main extends BluLinearOpMode {
                 // SPECIMEN
                 .transition(() -> stickyG2.dpad_down, State.INTAKING_SPECIMEN, () -> {
                     new BoxtubeCommand(0.435, 0).schedule();
-                    new WristOppositeCommand().schedule();
+//                    new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
                 .transition(() -> stickyG2.x, State.ABOVE_SPECIMEN_BACK, () ->
@@ -467,7 +464,7 @@ public class Main extends BluLinearOpMode {
                             new WaitCommand(200),
                             new FullRetractCommand(),
                             new WaitCommand(400),
-                            new WristHorizontalCommand(),
+//                            new WristHorizontalCommand(),
                             new ExtensionCommand(18)
                     ).schedule();
                 })

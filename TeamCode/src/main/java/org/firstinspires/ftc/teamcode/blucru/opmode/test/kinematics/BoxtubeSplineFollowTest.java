@@ -10,7 +10,6 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @Config
@@ -64,7 +63,7 @@ public class BoxtubeSplineFollowTest extends BluLinearOpMode {
                 .state(State.FOLLOWING_SPLINE)
                 .transition(() -> stickyG1.dpad_down, State.RETRACT, () -> {
                     new BoxtubeRetractCommand().schedule();
-                    new WristUprightForwardCommand().schedule();
+//                    new WristUprightForwardCommand().schedule();
                     new ArmRetractCommand().schedule();
                 })
                 .loop(() -> {

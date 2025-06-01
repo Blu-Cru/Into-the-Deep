@@ -21,9 +21,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.motor.HangMotorHighBarCommand;
@@ -128,7 +125,7 @@ public class Solo extends BluLinearOpMode {
                 // SPECIMEN
                 .transition(() -> stickyG1.x, State.INTAKING_SPECIMEN, () -> {
                     new BoxtubeCommand(0.42, 0).schedule();
-                    new WristOppositeCommand().schedule();
+//                    new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
 
@@ -164,7 +161,7 @@ public class Solo extends BluLinearOpMode {
                             new ClawGrabCommand(),
 //                            new WheelStopCommand(),
 //                            new ArmPreIntakeCommand(),
-                            new WristUprightForwardCommand(),
+//                            new WristUprightForwardCommand(),
                             new WaitCommand(100),
                             new ArmRetractCommand(),
                             new BoxtubeRetractCommand()
@@ -428,7 +425,7 @@ public class Solo extends BluLinearOpMode {
                             new WaitCommand(200),
                             new FullRetractCommand(),
                             new WaitCommand(400),
-                            new WristHorizontalCommand(),
+//                            new WristHorizontalCommand(),
                             new ExtensionCommand(18)
                     ).schedule();
                 })

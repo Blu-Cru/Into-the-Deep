@@ -16,9 +16,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @Disabled
@@ -56,17 +53,17 @@ public class SpecimenTest extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG2.b, State.ABOVE_SPECIMEN, () -> {
                     new BoxtubeCommand(1.4, 5).schedule();
-                    new WristOppositeCommand().schedule();
+//                    new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(2.5).schedule();
                 })
                 .transition(() -> stickyG2.x, State.EXTENDING_TO_WALL, () -> {
                     new BoxtubeCommand(0.3, 5.3).schedule();
-                    new WristHorizontalCommand().schedule();
+//                    new WristHorizontalCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
                 .transition(() -> stickyG2.y, State.EXTENDING_TO_WALL, () -> {
                     new BoxtubeCommand(0.43, 0).schedule();
-                    new WristOppositeCommand().schedule();
+//                    new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
 
@@ -148,7 +145,7 @@ public class SpecimenTest extends BluLinearOpMode {
                             new WaitCommand(150),
                             new BoxtubeRetractCommand(),
                             new ClawGrabCommand(),
-                            new WristUprightForwardCommand(),
+//                            new WristUprightForwardCommand(),
                             new ArmRetractCommand()
                     ).schedule();
                 })

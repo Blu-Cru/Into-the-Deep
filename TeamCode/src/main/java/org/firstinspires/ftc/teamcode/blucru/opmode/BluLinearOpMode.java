@@ -73,6 +73,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
 
             initLoop();
             CommandScheduler.getInstance().run();
+            telemetry.addLine("Initialized");
             telemetry();
             telemetry.update();
         }

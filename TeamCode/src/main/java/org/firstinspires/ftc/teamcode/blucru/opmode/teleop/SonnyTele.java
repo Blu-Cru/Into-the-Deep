@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.FullRetractComma
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.RetractFromBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmSampleScorePositionCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristHorizontalCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.motor.HangMotorHighBarCommand;
@@ -23,7 +22,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.hang.servo.HangS
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristUprightForwardCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.pusher.PushCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackHighLiftCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.sample.SampleBackLowCommand;
@@ -38,7 +36,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.EndE
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawOpenCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.wrist.WristOppositeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.pathbase.specimen.SpecimenCycleIntakeFailsafePath;
@@ -151,7 +148,7 @@ public class SonnyTele extends BluLinearOpMode {
                 // SPECIMEN
                 .transition(() -> stickyG1.x, State.INTAKING_SPECIMEN, () -> {
                     new BoxtubeCommand(0.42, 0).schedule();
-                    new WristOppositeCommand().schedule();
+//                    new WristOppositeCommand().schedule();
                     new ArmGlobalAngleCommand(0).schedule();
                 })
 
@@ -227,7 +224,7 @@ public class SonnyTele extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),
 //                            new WheelStopCommand(),
-                            new WristUprightForwardCommand(),
+//                            new WristUprightForwardCommand(),
                             new WaitCommand(100),
                             new ArmRetractCommand(),
                             new BoxtubeRetractCommand()
@@ -488,7 +485,7 @@ public class SonnyTele extends BluLinearOpMode {
                             new WaitCommand(200),
                             new FullRetractCommand(),
                             new WaitCommand(400),
-                            new WristHorizontalCommand(),
+//                            new WristHorizontalCommand(),
                             new ExtensionCommand(18)
                     ).schedule();
                 })
