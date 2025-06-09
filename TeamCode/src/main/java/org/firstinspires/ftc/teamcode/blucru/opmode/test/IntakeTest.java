@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.BoxtubeR
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.boxtube.PivotCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.commandbase.endeffector.claw.ClawGrabCommand;
@@ -70,13 +71,15 @@ public class IntakeTest extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RETRACTED)
                 .onEnter(() -> dt.setDrivePower(1.0))
-                .transition(() -> stickyG1.left_bumper && pivot.getAngle() < 0.2, State.PREINTAKE, () -> {
+                .transition(() -> (stickyG1.left_bumper || stickyG2.left_bumper) && pivot.getAngle() < 0.2, State.PREINTAKE, () -> {
                     new SequentialCommandGroup(
-                            new ExtensionCommand(8),
                             new TurretCenterCommand(),
-                            new PreIntakeCommand()
+                            new PreIntakeCommand(),
+                            new SpinWristGlobalAngleCommand(0),
+                            new WaitCommand(250),
+                            new ExtensionCommand(12)
                     ).schedule();
-                    setSpinWristGlobalAngle(0);
+                    spinWristGlobalAngle = 0;
                 })
                 .transition(() -> stickyG1.y && extension.getDistance() < 2.0, State.SCORING_BASKET, () -> {
                     new SequentialCommandGroup(
@@ -118,25 +121,27 @@ public class IntakeTest extends BluLinearOpMode {
                     new SpinWristGlobalAngleCommand(spinWristGlobalAngle);
                     dt.setDrivePower(0.45);
                 })
-                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.a || stickyG2.a, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
-                .transition(() -> stickyG1.left_bumper, State.GRABBED_GROUND, () -> {
+                .transition(() -> stickyG1.left_bumper || stickyG2.left_bumper, State.GRABBED_GROUND, () -> {
                     new GrabCommand().schedule();
                 })
 
                 .loop(() -> {
-                    if(gamepad1.right_trigger > 0.1) {
-                        turret.setAngle(-gamepad1.right_trigger);
-                    } else if (gamepad1.left_trigger > 0.1){
-                        turret.setAngle(gamepad1.left_trigger);
+                    double rightInput = Math.max(gamepad1.right_trigger, gamepad2.right_trigger);
+                    double leftInput = Math.max(gamepad1.left_trigger, gamepad2.left_trigger);
+                    if(rightInput > 0.1) {
+                        turret.setAngle(-rightInput);
+                    } else if (leftInput > 0.1){
+                        turret.setAngle(leftInput);
                     } else {
                         turret.center();
                     }
 
-                    if(stickyG1.dpad_up) {
+                    if(stickyG1.dpad_up || stickyG2.dpad_up) {
                         setSpinWristGlobalAngle(0);
-                    } else if (stickyG1.dpad_right) {
+                    } else if (stickyG1.dpad_right || stickyG2.dpad_right) {
                         setSpinWristGlobalAngle(Math.PI/2);
                     }
                 })
@@ -174,24 +179,42 @@ public class IntakeTest extends BluLinearOpMode {
                 .state(State.INTAKING_SPEC)
                 .onEnter(() -> dt.setDrivePower(0.6))
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> new FullRetractCommand().schedule())
-                .transition(() -> stickyG2.left_bumper, State.GRABBED_SPEC, () -> {
-                    new ClawGrabCommand().schedule();
+                .transition(() -> stickyG2.left_bumper || cactus.validSample, State.GRABBED_SPEC, () -> {
+                    new SequentialCommandGroup(
+                            new ClawGrabCommand(),
+                            new WaitCommand(150),
+                            new ExtensionCommand(4),
+                            new UpDownWristAngleCommand(-2.0)
+                    ).schedule();
                 })
 
                 .state(State.GRABBED_SPEC)
                 .transitionTimed(0.3, State.SENSING_SPEC)
                 .state(State.SENSING_SPEC)
+                .transition(() -> cactus.isEmpty(), State.INTAKING_SPEC, () -> {
+                    new SequentialCommandGroup(
+                            new ClawOpenCommand(),
+                            new WaitCommand(20),
+                            new ExtensionRetractCommand(),
+                            new UpDownWristAngleCommand(-1.2)
+                    ).schedule();
+                })
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
-                    new ClawOpenCommand().schedule();
+                    new SequentialCommandGroup(
+                            new ClawOpenCommand(),
+                            new WaitCommand(20),
+                            new ExtensionRetractCommand(),
+                            new UpDownWristAngleCommand(-1.2)
+                    ).schedule();
                 })
                 .transition(() -> cactus.validSample, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(0.63),
                             new ArmMotionProfileCommand(0),
-                            new UpDownWristAngleCommand(0.7),
-                            new SpinWristCenterCommand(),
                             new WaitCommand(250),
                             new ExtensionCommand(10.0),
+                            new UpDownWristAngleCommand(0.7),
+                            new SpinWristCenterCommand(),
                             new WaitCommand(250),
                             new ClawLooseCommand()
                     ).schedule();
