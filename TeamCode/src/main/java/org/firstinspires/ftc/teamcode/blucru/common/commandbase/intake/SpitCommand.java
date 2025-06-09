@@ -12,9 +12,9 @@ public class SpitCommand extends SequentialCommandGroup {
     public SpitCommand() {
         super(
                 new UpDownWristAngleCommand(-2.5),
-                new WaitCommand(250),
+                new WaitCommand(200),
                 new ClawOpenCommand(),
-                new WaitCommand(300),
+                new WaitCommand(150),
                 new ClawLooseCommand(),
                 new UpDownWristRetractCommand()
         );

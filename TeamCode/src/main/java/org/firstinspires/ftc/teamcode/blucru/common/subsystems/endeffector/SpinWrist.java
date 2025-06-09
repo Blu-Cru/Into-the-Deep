@@ -15,7 +15,7 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     static final double
             // 1 tick = range/360 of a full rotation
             TICKS_PER_RAD = 0.28/(Math.PI/2),
-            MAX_ANGLE = Math.PI/2, MIN_ANGLE = -Math.PI;
+            MAX_ANGLE = Math.PI, MIN_ANGLE = -Math.PI/2;
 
     enum State {
         SERVO,
@@ -45,7 +45,8 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     public void write() {
         switch(state) {
             case TURRET_IK:
-                setAngle(Range.clip(globalAngle - Robot.getInstance().turret.getAngle(), MIN_ANGLE, MAX_ANGLE));
+                double angle = Range.clip(globalAngle - Robot.getInstance().turret.getAngle(), MIN_ANGLE, MAX_ANGLE);
+                setPosition(toTicks(normalizeAngle(angle)) + CENTER_POS);
                 break;
             case SERVO:
             default:
@@ -63,7 +64,7 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     public void setAngle(double rad) {
         state = State.SERVO;
         double angle = Range.clip(rad, MIN_ANGLE, MAX_ANGLE);
-        super.setPosition(toTicks(normalizeAngle(angle)) + CENTER_POS);
+        setPosition(toTicks(normalizeAngle(angle)) + CENTER_POS);
     }
 
     double normalizeAngle(double rad) {
