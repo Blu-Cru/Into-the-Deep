@@ -16,14 +16,14 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public static double
             // positive is more retracted
-            VERTICAL_POS = 0.47,
-            vMAX = 10.0, aMAX = 22.0,
+            VERTICAL_POS = 0.53,
+            vMAX = 10.0, aMAX = 22.0, // constraints for angle (rad)
             MAX_ANGLE = 2.8, MIN_ANGLE = -0.45,
-            RETRACT_ANGLE = 2.67,
+            RETRACT_ANGLE = 2.4,
             PRE_INTAKE_ANGLE = 0.0,
             GROUND_ANGLE = -0.2,
 
-            TICKS_PER_RAD = 0.2 / (Math.PI/2);
+            TICKS_PER_RAD = 0.26 / (Math.PI/2);
 
     enum State{
         SERVO,

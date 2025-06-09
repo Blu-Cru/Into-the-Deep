@@ -76,7 +76,7 @@ public class IntakeTest extends BluLinearOpMode {
                             new TurretCenterCommand(),
                             new PreIntakeCommand(),
                             new SpinWristGlobalAngleCommand(0),
-                            new WaitCommand(250),
+                            new WaitCommand(180),
                             new ExtensionCommand(12)
                     ).schedule();
                     spinWristGlobalAngle = 0;
@@ -105,7 +105,7 @@ public class IntakeTest extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new PivotCommand(1.6),
                             new ArmMotionProfileCommand(2.67),
-                            new UpDownWristAngleCommand(-1.2),
+                            new UpDownWristAngleCommand(-1.4),
                             new ClawOpenCommand(),
                             new SpinWristAngleCommand(Math.PI),
                             new TurretCenterCommand()
@@ -117,8 +117,7 @@ public class IntakeTest extends BluLinearOpMode {
 
                 .state(State.PREINTAKE)
                 .onEnter(() -> {
-                    new PreIntakeCommand().schedule();
-                    new SpinWristGlobalAngleCommand(spinWristGlobalAngle);
+                    spinWrist.setTurretGlobalAngle(spinWristGlobalAngle);
                     dt.setDrivePower(0.45);
                 })
                 .transition(() -> stickyG1.a || stickyG2.a, State.RETRACTED, () -> {
@@ -147,12 +146,17 @@ public class IntakeTest extends BluLinearOpMode {
                 })
 
                 .state(State.GRABBED_GROUND)
-                .transitionTimed(0.6, State.SENSING_GROUND)
+                .transitionTimed(0.63, State.SENSING_GROUND)
                 .state(State.SENSING_GROUND)
                 .transition(() -> cactus.validSample, State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
-                .transitionTimed(0.15, State.PREINTAKE)
+                .transition(() -> cactus.isEmpty(), State.PREINTAKE, () -> {
+                    new PreIntakeCommand().schedule();
+                })
+                .transitionTimed(0.15, State.PREINTAKE, () -> {
+                    new PreIntakeCommand().schedule();
+                })
 
                 .state(State.SCORING_BASKET)
                 .onEnter(() -> {
@@ -179,11 +183,11 @@ public class IntakeTest extends BluLinearOpMode {
                 .state(State.INTAKING_SPEC)
                 .onEnter(() -> dt.setDrivePower(0.6))
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> new FullRetractCommand().schedule())
-                .transition(() -> stickyG2.left_bumper || cactus.validSample, State.GRABBED_SPEC, () -> {
+                .transition(() -> (stickyG2.left_bumper || cactus.validSample) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),
-                            new WaitCommand(150),
-                            new ExtensionCommand(4),
+                            new WaitCommand(120),
+                            new PivotCommand(1.15),
                             new UpDownWristAngleCommand(-2.0)
                     ).schedule();
                 })
@@ -194,26 +198,27 @@ public class IntakeTest extends BluLinearOpMode {
                 .transition(() -> cactus.isEmpty(), State.INTAKING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
-                            new WaitCommand(20),
-                            new ExtensionRetractCommand(),
-                            new UpDownWristAngleCommand(-1.2)
+                            new UpDownWristAngleCommand(-1.4),
+                            new WaitCommand(100),
+                            new PivotCommand(1.6)
                     ).schedule();
                 })
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
-                            new WaitCommand(20),
-                            new ExtensionRetractCommand(),
-                            new UpDownWristAngleCommand(-1.2)
+                            new UpDownWristAngleCommand(-1.4),
+                            new WaitCommand(100),
+                            new PivotCommand(1.6)
                     ).schedule();
                 })
                 .transition(() -> cactus.validSample, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(0.63),
+                            new ExtensionCommand(5.0),
                             new ArmMotionProfileCommand(0),
                             new WaitCommand(250),
                             new ExtensionCommand(10.0),
-                            new UpDownWristAngleCommand(0.7),
+                            new UpDownWristAngleCommand(0.5),
                             new SpinWristCenterCommand(),
                             new WaitCommand(250),
                             new ClawLooseCommand()
@@ -228,10 +233,11 @@ public class IntakeTest extends BluLinearOpMode {
                             new WaitCommand(200),
                             new ExtensionRetractCommand(),
                             new ArmMotionProfileCommand(2.67),
-                            new UpDownWristAngleCommand(-1.2),
+                            new UpDownWristAngleCommand(-1.4),
                             new ClawOpenCommand(),
                             new SpinWristAngleCommand(Math.PI),
                             new TurretCenterCommand(),
+                            new WaitCommand(100),
                             new PivotCommand(1.6)
                     ).schedule();
                 })
@@ -263,11 +269,12 @@ public class IntakeTest extends BluLinearOpMode {
 
     public void setSpinWristGlobalAngle(double angle) {
         spinWristGlobalAngle = angle;
-        new SpinWristGlobalAngleCommand(angle).schedule();
+        spinWrist.setTurretGlobalAngle(angle);
     }
 
     @Override
     public void telemetry() {
         telemetry.addData("State", sm.getState());
+        telemetry.addData("Spin wrist angle", spinWristGlobalAngle);
     }
 }
