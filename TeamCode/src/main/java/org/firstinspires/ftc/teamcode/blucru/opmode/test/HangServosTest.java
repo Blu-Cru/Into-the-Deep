@@ -21,11 +21,11 @@ public class HangServosTest extends BluLinearOpMode {
         }
 
         if(stickyG1.a) {
-            hangServos.retract();
+            slideHangServos.retract();
         } else if(stickyG1.b) {
-            hangServos.release();
+            slideHangServos.release();
         } else if(stickyG1.x) {
-            hangServos.hang();
+            slideHangServos.hang();
         }
     }
 }

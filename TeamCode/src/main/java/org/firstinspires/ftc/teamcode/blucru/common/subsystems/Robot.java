@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.SpinW
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Turret;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.UpDownWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangServos;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slides.SlideHangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.ptoservo.PTOServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
@@ -43,7 +43,7 @@ public class Robot {
     public Extension extension;
     public CVMaster cvMaster;
     public Pusher pusher;
-    public HangServos hangServos;
+    public SlideHangServos slideHangServos;
     public HangMotor hangMotor;
     public CactusSensor cactus;
     public PTOServos ptoServos;
@@ -233,10 +233,10 @@ public class Robot {
         return pusher;
     }
 
-    public HangServos addHangServos() {
-        hangServos = new HangServos();
-        subsystems.add(hangServos);
-        return hangServos;
+    public SlideHangServos addHangServos() {
+        slideHangServos = new SlideHangServos();
+        subsystems.add(slideHangServos);
+        return slideHangServos;
     }
 
     public HangMotor addHangMotor() {

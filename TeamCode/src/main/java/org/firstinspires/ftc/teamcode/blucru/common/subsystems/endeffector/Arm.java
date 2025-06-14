@@ -20,8 +20,6 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
             vMAX = 10.0, aMAX = 22.0, // constraints for angle (rad)
             MAX_ANGLE = 2.8, MIN_ANGLE = -0.45,
             RETRACT_ANGLE = 2.4,
-            PRE_INTAKE_ANGLE = 0.0,
-            GROUND_ANGLE = -0.2,
 
             TICKS_PER_RAD = 0.26 / (Math.PI/2);
 

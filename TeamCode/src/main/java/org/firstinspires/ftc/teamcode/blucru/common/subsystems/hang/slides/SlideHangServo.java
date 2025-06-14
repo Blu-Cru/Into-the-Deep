@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang;
+package org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slides;
 
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.BluServo;
 
 @Config
-public abstract class HangServo extends BluServo {
+public abstract class SlideHangServo extends BluServo {
     public static double RETRACT_DELTA = 0.26,
         HANG_DELTA = 0.15,
         RELEASE_DELTA = 0.61,
         MIDWAY_DELTA = 0.26;
-    public HangServo(String name) {
+    public SlideHangServo(String name) {
         super(name);
     }
 

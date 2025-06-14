@@ -8,10 +8,10 @@ public class HangServosHangComamnd extends InstantCommand {
     public HangServosHangComamnd() {
         super(
                 () -> {
-                    Robot.getInstance().hangServos.retract();
+                    Robot.getInstance().slideHangServos.retract();
                 }
         );
 
-        addRequirements(Robot.getInstance().hangServos);
+        addRequirements(Robot.getInstance().slideHangServos);
     }
 }

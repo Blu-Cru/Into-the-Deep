@@ -1,33 +1,32 @@
-package org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang;
+package org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slides;
 
 import com.arcrobotics.ftclib.command.Subsystem;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.blucru.common.hardware.BluHardwareDevice;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HangServos implements Subsystem, BluSubsystem {
+public class SlideHangServos implements Subsystem, BluSubsystem {
     enum State {
         RETRACTED,
         RELEASED,
         HANGING
     }
     State state;
-    List<HangServo> servos;
+    List<SlideHangServo> servos;
 
-    public HangServos() {
+    public SlideHangServos() {
         state = State.RETRACTED;
         servos = new ArrayList<>();
-        servos.add(new LeftHangServo());
-        servos.add(new RightHangServo());
+        servos.add(new LeftSlideHangServo());
+        servos.add(new RightSlideHangServo());
     }
 
     @Override
     public void init() {
-        for (HangServo servo : servos) {
+        for (SlideHangServo servo : servos) {
             servo.init();
             servo.disable();
         }
@@ -35,14 +34,14 @@ public class HangServos implements Subsystem, BluSubsystem {
 
     @Override
     public void read() {
-        for (HangServo servo : servos) {
+        for (SlideHangServo servo : servos) {
             servo.read();
         }
     }
 
     @Override
     public void write() {
-        for (HangServo servo : servos) {
+        for (SlideHangServo servo : servos) {
             servo.write();
         }
     }
@@ -50,13 +49,13 @@ public class HangServos implements Subsystem, BluSubsystem {
     public void retract() {
         state = State.RETRACTED;
 
-        for (HangServo servo : servos) {
+        for (SlideHangServo servo : servos) {
             servo.retract();
         }
     }
 
     public void midway() {
-        for(HangServo servo : servos) {
+        for(SlideHangServo servo : servos) {
             servo.midway();
         }
     }
@@ -64,7 +63,7 @@ public class HangServos implements Subsystem, BluSubsystem {
     public void release() {
         state = State.RELEASED;
 
-        for (HangServo servo : servos) {
+        for (SlideHangServo servo : servos) {
             servo.release();
         }
     }
@@ -72,7 +71,7 @@ public class HangServos implements Subsystem, BluSubsystem {
     public void hang() {
         state = State.HANGING;
 
-        for (HangServo servo : servos) {
+        for (SlideHangServo servo : servos) {
             servo.hang();
         }
     }
@@ -92,7 +91,7 @@ public class HangServos implements Subsystem, BluSubsystem {
 
     @Override
     public void telemetry(Telemetry telemetry) {
-        for (HangServo servo : servos) {
+        for (SlideHangServo servo : servos) {
             servo.telemetry();
         }
     }

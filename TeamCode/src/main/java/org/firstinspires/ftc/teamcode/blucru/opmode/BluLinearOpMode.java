@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.SpinW
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.Turret;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.endeffector.UpDownWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangServos;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slides.SlideHangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.ptoservo.PTOServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
@@ -37,7 +37,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public Pivot pivot;
     public Extension extension;
     public Pusher pusher;
-    public HangServos hangServos;
+    public SlideHangServos slideHangServos;
     public HangMotor hangMotor;
     public CVMaster cvMaster;
     public CactusSensor cactus;
@@ -127,7 +127,8 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public void addExtension() {extension = robot.addExtension();}
     public void addCVMaster() {cvMaster = robot.addCVMaster();}
     public void addPusher() {pusher = robot.addPusher();}
-    public void addHangServos() {hangServos = robot.addHangServos();}
+    public void addHangServos() {
+        slideHangServos = robot.addHangServos();}
     public void addHangMotor() {hangMotor = robot.addHangMotor();}
     public void addCactus() {cactus = robot.addCactus();}
     public void addPTOServos() {ptoServos = robot.addPTOServos();}

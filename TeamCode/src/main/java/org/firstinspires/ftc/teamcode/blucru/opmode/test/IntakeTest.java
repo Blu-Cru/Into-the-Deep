@@ -187,7 +187,7 @@ public class IntakeTest extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),
                             new WaitCommand(120),
-                            new PivotCommand(1.15),
+                            new PivotCommand(1.0),
                             new UpDownWristAngleCommand(-2.0)
                     ).schedule();
                 })
@@ -214,14 +214,17 @@ public class IntakeTest extends BluLinearOpMode {
                 .transition(() -> cactus.validSample, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(0.63),
-                            new ExtensionCommand(5.0),
+                            new ExtensionCommand(4.0),
                             new ArmMotionProfileCommand(0),
-                            new WaitCommand(250),
-                            new ExtensionCommand(10.0),
+                            new WaitCommand(150),
                             new UpDownWristAngleCommand(0.5),
                             new SpinWristCenterCommand(),
-                            new WaitCommand(250),
-                            new ClawLooseCommand()
+                            new WaitCommand(200),
+                            new ExtensionCommand(10.0),
+                            new WaitCommand(200),
+                            new ClawLooseCommand(),
+                            new WaitCommand(150),
+                            new ClawGrabCommand()
                     ).schedule();
                 })
 
@@ -237,7 +240,7 @@ public class IntakeTest extends BluLinearOpMode {
                             new ClawOpenCommand(),
                             new SpinWristAngleCommand(Math.PI),
                             new TurretCenterCommand(),
-                            new WaitCommand(100),
+                            new WaitCommand(250),
                             new PivotCommand(1.6)
                     ).schedule();
                 })

@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 public class HangServosMidwayCommand extends InstantCommand {
     public HangServosMidwayCommand() {
         super(
-                () -> Robot.getInstance().hangServos.midway()
+                () -> Robot.getInstance().slideHangServos.midway()
         );
     }
 }

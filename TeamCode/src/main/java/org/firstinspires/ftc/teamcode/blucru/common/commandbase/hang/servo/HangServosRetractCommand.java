@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
 public class HangServosRetractCommand extends InstantCommand {
     public HangServosRetractCommand() {
-        super(() -> Robot.getInstance().hangServos.retract());
-        addRequirements(Robot.getInstance().hangServos);
+        super(() -> Robot.getInstance().slideHangServos.retract());
+        addRequirements(Robot.getInstance().slideHangServos);
     }
 }

@@ -15,6 +15,10 @@ public class SmoothServo extends BluServo implements BluHardwareDevice {
         this(name, reversed, defaultVmax, defaultAmax);
     }
 
+    public SmoothServo(String name) {
+        this(name, false, defaultVmax, defaultAmax);
+    }
+
     public SmoothServo(String name, boolean reversed, double vMax, double aMax) {
         super(name, reversed);
         this.vMax = vMax;
@@ -52,7 +56,6 @@ public class SmoothServo extends BluServo implements BluHardwareDevice {
 
     public void telemetry() {
         Globals.tele.addData("Target Pos: ", finalPosition);
-        Globals.tele.addData("Current Pos: ", currentPosition);
         super.telemetry();
     }
 }

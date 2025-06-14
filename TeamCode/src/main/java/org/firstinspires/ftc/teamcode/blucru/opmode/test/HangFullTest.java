@@ -66,7 +66,7 @@ public class HangFullTest extends BluLinearOpMode {
 
     @Override
     public void periodic() {
-        if(stickyG1.dpad_down) hangServos.toggle();
+        if(stickyG1.dpad_down) slideHangServos.toggle();
         hangMotor.setManualPower(-gamepad1.left_stick_y);
 
         sm.update();
