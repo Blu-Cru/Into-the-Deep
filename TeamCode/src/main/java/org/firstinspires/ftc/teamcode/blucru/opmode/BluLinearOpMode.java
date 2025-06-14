@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Spin
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Turret;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.UpDownWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slides.SlideHangServos;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slide_hang_servo.SlideHangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.pto_servo.PTOServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.vision.CVMaster;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;

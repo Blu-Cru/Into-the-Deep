@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slides;
+package org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slide_hang_servo;
 
 import com.arcrobotics.ftclib.command.Subsystem;
 

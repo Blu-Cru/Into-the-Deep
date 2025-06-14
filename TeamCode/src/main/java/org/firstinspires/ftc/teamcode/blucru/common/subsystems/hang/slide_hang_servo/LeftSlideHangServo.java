@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slides;
+package org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slide_hang_servo;
 
 public class LeftSlideHangServo extends SlideHangServo {
     public LeftSlideHangServo() {
