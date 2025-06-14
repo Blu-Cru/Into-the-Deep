@@ -6,11 +6,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "test")
-public class PTOServosTest extends BluLinearOpMode {
+public class PTOTest extends BluLinearOpMode {
     @Override
     public void initialize() {
         addPTOServos();
         addDrivetrain();
+        addHangServos();
+        addExtension();
+        addPivot();
+
+        pivot.useExtension(extension.getMotor());
+        extension.usePivot(pivot.getMotor());
 
         dt.fieldCentric = false;
     }
@@ -25,6 +31,14 @@ public class PTOServosTest extends BluLinearOpMode {
             ptoServos.engage();
         }
 
-        dt.drive(new Pose2d(gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x));
+        if(stickyG1.y) {
+            slideHangServos.release();
+        }
+
+        if(stickyG1.a) {
+            slideHangServos.hang();
+        }
+
+        dt.drive(new Pose2d(gamepad1.left_stick_x,0, 0));
     }
 }

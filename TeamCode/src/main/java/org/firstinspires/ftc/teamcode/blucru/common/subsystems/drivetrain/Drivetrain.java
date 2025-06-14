@@ -14,8 +14,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class Drivetrain extends DriveBase implements Subsystem {
-    public static double PATH_HEADING_TOLERANCE = 0.18;
-
     enum State {
         IDLE,
         PID,
