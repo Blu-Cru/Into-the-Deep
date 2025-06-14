@@ -1,0 +1,24 @@
+package org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen;
+
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
+
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionMotionProfileCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
+
+public class CollectCenterBlockPath extends PIDPathBuilder {
+    public CollectCenterBlockPath() {
+        super();
+        this.setPower(0.7)
+                .addMappedPoint(39, -33, 18, 4)
+                .schedule(new SequentialCommandGroup(
+                        new ExtensionCommand(1),
+                        new ClawOpenCommand(),
+                        new WaitCommand(330),
+                        new ExtensionMotionProfileCommand(10)
+                ))
+                .waitMillis(1300);
+    }
+}

@@ -1,0 +1,26 @@
+package org.firstinspires.ftc.teamcode.blucru.common.path_base.tele;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.spline.BoxtubeSplineCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
+
+public class TeleSpecimenDepoPath extends PIDPathBuilder {
+    public TeleSpecimenDepoPath() {
+        super();
+        this.setPower(0.8)
+                .schedule(new SequentialCommandGroup(
+                        new ClawGrabCommand(),
+                        new BoxtubeSplineCommand(
+                                new Vector2d(20,42),
+                                new Pose2d(-8.6, 29.3, Math.PI),
+                                0,
+                                0.95
+                        )
+                ))
+                .addMappedPoint(0, -40, 270, 5);
+    }
+}
