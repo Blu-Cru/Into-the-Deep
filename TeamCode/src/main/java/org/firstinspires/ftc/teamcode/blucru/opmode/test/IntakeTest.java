@@ -101,15 +101,15 @@ public class IntakeTest extends BluLinearOpMode {
                 .transition(() -> stickyG2.x, State.INTAKING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(1.6),
-                            new ArmMotionProfileCommand(2.67),
-                            new UpDownWristAngleCommand(-1.4),
+                            new ArmMotionProfileCommand(2.8),
+                            new UpDownWristAngleCommand(-1.6),
                             new ClawOpenCommand(),
                             new SpinWristAngleCommand(Math.PI),
                             new TurretCenterCommand()
                     ).schedule();
                 })
                 .loop(() -> {
-                    if(stickyG1.right_bumper) new SpitCommand().schedule();
+                    if(stickyG1.right_bumper || stickyG2.right_bumper) new SpitCommand().schedule();
                 })
 
                 .state(State.PREINTAKE)
@@ -195,7 +195,7 @@ public class IntakeTest extends BluLinearOpMode {
                 .transition(() -> cactus.isEmpty(), State.INTAKING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
-                            new UpDownWristAngleCommand(-1.4),
+                            new UpDownWristAngleCommand(-1.6),
                             new WaitCommand(100),
                             new PivotCommand(1.6)
                     ).schedule();
@@ -203,7 +203,7 @@ public class IntakeTest extends BluLinearOpMode {
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
-                            new UpDownWristAngleCommand(-1.4),
+                            new UpDownWristAngleCommand(-1.6),
                             new WaitCommand(100),
                             new PivotCommand(1.6)
                     ).schedule();
@@ -232,8 +232,8 @@ public class IntakeTest extends BluLinearOpMode {
                             new ClawOpenCommand(),
                             new WaitCommand(200),
                             new ExtensionRetractCommand(),
-                            new ArmMotionProfileCommand(2.67),
-                            new UpDownWristAngleCommand(-1.4),
+                            new ArmMotionProfileCommand(2.8),
+                            new UpDownWristAngleCommand(-1.6),
                             new ClawOpenCommand(),
                             new SpinWristAngleCommand(Math.PI),
                             new TurretCenterCommand(),
