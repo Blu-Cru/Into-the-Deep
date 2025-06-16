@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "test")
@@ -74,7 +75,7 @@ public class IntakeTest extends BluLinearOpMode {
                             new PreIntakeCommand(),
                             new SpinWristGlobalAngleCommand(0),
                             new WaitCommand(180),
-                            new ExtensionCommand(12)
+                            new ExtensionCommand(15)
                     ).schedule();
                     spinWristGlobalAngle = 0;
                 })
@@ -86,27 +87,9 @@ public class IntakeTest extends BluLinearOpMode {
                             new SpinWristAngleCommand(Math.PI),
                             new TurretCenterCommand()
                     ).schedule();
-//                    new SequentialCommandGroup(
-//                            new ClawGrabCommand(),
-//                            new SpinWristCenterCommand(),
-//                            new ArmMotionProfileCommand(Math.PI/2),
-//                            new BoxtubeCommand(Math.PI/2, 10.0),
-//                            new WaitCommand(500),
-//                            new TurretBackwardsCommand(),
-//                            new WaitCommand(500),
-//                            new ArmMotionProfileCommand(2.8),
-//                            new UpDownWristAngleCommand(-2.6)
-//                    ).schedule();
                 })
                 .transition(() -> stickyG2.x, State.INTAKING_SPEC, () -> {
-                    new SequentialCommandGroup(
-                            new PivotCommand(1.6),
-                            new ArmMotionProfileCommand(2.8),
-                            new UpDownWristAngleCommand(-1.6),
-                            new ClawOpenCommand(),
-                            new SpinWristAngleCommand(Math.PI),
-                            new TurretCenterCommand()
-                    ).schedule();
+                    new SpecimenIntakeCommand().schedule();
                 })
                 .loop(() -> {
                     if(stickyG1.right_bumper || stickyG2.right_bumper) new SpitCommand().schedule();
@@ -193,20 +176,10 @@ public class IntakeTest extends BluLinearOpMode {
                 .transitionTimed(0.3, State.SENSING_SPEC)
                 .state(State.SENSING_SPEC)
                 .transition(() -> cactus.isEmpty(), State.INTAKING_SPEC, () -> {
-                    new SequentialCommandGroup(
-                            new ClawOpenCommand(),
-                            new UpDownWristAngleCommand(-1.6),
-                            new WaitCommand(100),
-                            new PivotCommand(1.6)
-                    ).schedule();
+                    new SpecimenIntakeCommand().schedule();
                 })
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
-                    new SequentialCommandGroup(
-                            new ClawOpenCommand(),
-                            new UpDownWristAngleCommand(-1.6),
-                            new WaitCommand(100),
-                            new PivotCommand(1.6)
-                    ).schedule();
+                    new SpecimenIntakeCommand().schedule();
                 })
                 .transition(() -> cactus.validSample, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
@@ -230,15 +203,11 @@ public class IntakeTest extends BluLinearOpMode {
                 .transition(() -> stickyG2.left_bumper, State.INTAKING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
-                            new WaitCommand(200),
+                            new WaitCommand(170),
                             new ExtensionRetractCommand(),
                             new ArmMotionProfileCommand(2.8),
-                            new UpDownWristAngleCommand(-1.6),
-                            new ClawOpenCommand(),
-                            new SpinWristAngleCommand(Math.PI),
-                            new TurretCenterCommand(),
-                            new WaitCommand(250),
-                            new PivotCommand(1.6)
+                            new WaitCommand(100),
+                            new SpecimenIntakeCommand()
                     ).schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {
