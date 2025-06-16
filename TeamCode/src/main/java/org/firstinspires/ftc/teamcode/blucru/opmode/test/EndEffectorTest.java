@@ -4,7 +4,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmMotionProfileCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawLooseCommand;
@@ -58,7 +58,7 @@ public class EndEffectorTest extends BluLinearOpMode {
 
     public void preIntake() {
         new SequentialCommandGroup(
-                new ArmMotionProfileCommand(0),
+                new ArmCommand(0),
                 new SpinWristCenterCommand(),
                 new TurretCenterCommand(),
                 new UpDownWristAngleCommand(-Math.PI/2),
@@ -69,12 +69,12 @@ public class EndEffectorTest extends BluLinearOpMode {
 
     public void grab() {
         new SequentialCommandGroup(
-                new ArmMotionProfileCommand(-0.45),
+                new ArmCommand(-0.45),
                 new UpDownWristAngleCommand(-Math.PI/2 + 0.45),
                 new WaitCommand(200),
                 new ClawGrabCommand(),
                 new WaitCommand(120),
-                new ArmMotionProfileCommand(0),
+                new ArmCommand(0),
                 new UpDownWristAngleCommand(-Math.PI/2)
         ).schedule();
     }

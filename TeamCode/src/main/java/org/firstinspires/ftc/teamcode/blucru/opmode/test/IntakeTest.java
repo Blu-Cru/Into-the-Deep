@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.Boxtube
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmMotionProfileCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawLooseCommand;
@@ -81,7 +81,7 @@ public class IntakeTest extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG1.y && extension.getDistance() < 2.0, State.SCORING_BASKET, () -> {
                     new SequentialCommandGroup(
-                            new ArmMotionProfileCommand(0.2),
+                            new ArmCommand(0.2),
                             new BoxtubeCommand(Math.PI/2, 24.0),
                             new UpDownWristAngleCommand(1.5),
                             new SpinWristAngleCommand(Math.PI),
@@ -145,7 +145,7 @@ public class IntakeTest extends BluLinearOpMode {
                 .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
-                            new ArmMotionProfileCommand(0),
+                            new ArmCommand(0),
                             new WaitCommand(50),
                             new UpDownWristAngleCommand(-1),
                             new WaitCommand(100),
@@ -185,7 +185,7 @@ public class IntakeTest extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new PivotCommand(0.63),
                             new ExtensionCommand(4.0),
-                            new ArmMotionProfileCommand(0),
+                            new ArmCommand(0),
                             new WaitCommand(150),
                             new UpDownWristAngleCommand(0.5),
                             new SpinWristCenterCommand(),
@@ -205,7 +205,7 @@ public class IntakeTest extends BluLinearOpMode {
                             new ClawOpenCommand(),
                             new WaitCommand(170),
                             new ExtensionRetractCommand(),
-                            new ArmMotionProfileCommand(2.8),
+                            new ArmCommand(2.8),
                             new WaitCommand(100),
                             new SpecimenIntakeCommand()
                     ).schedule();

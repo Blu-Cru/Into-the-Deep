@@ -4,9 +4,13 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 
-public class ArmAngleCommand extends InstantCommand {
-    public ArmAngleCommand(double angle) {
-        super(() -> Robot.getInstance().arm.setAngle(angle));
+public class ArmCommand extends InstantCommand {
+    public ArmCommand(double angle) {
+        super(
+                () -> {
+                    Robot.getInstance().arm.setMotionProfileAngle(angle);
+                }
+        );
 
         addRequirements(Robot.getInstance().arm);
     }

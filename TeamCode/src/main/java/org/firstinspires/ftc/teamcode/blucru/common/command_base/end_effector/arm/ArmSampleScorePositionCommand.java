@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm;
 
-public class ArmSampleScorePositionCommand extends ArmMotionProfileCommand{
+public class ArmSampleScorePositionCommand extends ArmCommand {
     public ArmSampleScorePositionCommand() {
         super(1.1);
     }
