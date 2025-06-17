@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up
 public class PreIntakeCommand extends SequentialCommandGroup {
     public PreIntakeCommand() {
         super(
-                new ArmCommand(-0.05),
+                new ArmCommand(0.05),
                 new UpDownWristAngleCommand(-Math.PI/2 + 0.05),
                 new WaitCommand(170),
                 new ClawOpenCommand()

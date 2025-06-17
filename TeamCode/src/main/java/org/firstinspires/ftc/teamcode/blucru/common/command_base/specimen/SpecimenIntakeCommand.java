@@ -14,7 +14,7 @@ public class SpecimenIntakeCommand extends SequentialCommandGroup {
     public SpecimenIntakeCommand() {
         super(
                 new ArmCommand(2.8),
-                new UpDownWristAngleCommand(1.5),
+                new UpDownWristAngleCommand(-1.5),
                 new ClawOpenCommand(),
                 new SpinWristAngleCommand(Math.PI),
                 new TurretCenterCommand(),

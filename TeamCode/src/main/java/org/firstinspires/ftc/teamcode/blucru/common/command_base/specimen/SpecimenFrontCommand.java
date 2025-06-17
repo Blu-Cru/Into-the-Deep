@@ -1,16 +1,22 @@
 package org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmGlobalAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristCenterCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 
 public class SpecimenFrontCommand extends SequentialCommandGroup {
     public SpecimenFrontCommand() {
         super(
-//                new WristOppositeCommand(),
-                new BoxtubeCommand(1.35, 8.5),
-                new ArmGlobalAngleCommand(-0.3)
+                new ArmCommand(0.0),
+                new WaitCommand(150),
+                new UpDownWristAngleCommand(0.5),
+                new SpinWristCenterCommand(),
+                new BoxtubeCommand(0.63, 10.0)
         );
     }
 }

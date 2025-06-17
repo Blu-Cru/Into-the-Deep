@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.blucru.opmode.test;
+package org.firstinspires.ftc.teamcode.blucru.opmode.teleop;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -23,13 +23,14 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "2")
 public class Solo extends BluLinearOpMode {
     enum State{
-        RETRACTED,
+        HOME,
         PREINTAKE,
         INTAKING_SPEC,
         SCORING_SPEC,
@@ -64,7 +65,7 @@ public class Solo extends BluLinearOpMode {
         dt.setDrivePower(0.7);
 
         sm = new StateMachineBuilder()
-                .state(State.RETRACTED)
+                .state(State.HOME)
                 .onEnter(() -> dt.setDrivePower(1.0))
                 .transition(() -> (stickyG1.left_bumper || stickyG2.left_bumper) && pivot.getAngle() < 0.2, State.PREINTAKE, () -> {
                     new SequentialCommandGroup(
@@ -97,7 +98,7 @@ public class Solo extends BluLinearOpMode {
                     spinWrist.setTurretGlobalAngle(spinWristGlobalAngle);
                     dt.setDrivePower(0.45);
                 })
-                .transition(() -> stickyG1.a || stickyG2.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.a || stickyG2.a, State.HOME, () -> {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> stickyG1.left_bumper || stickyG2.left_bumper, State.GRABBED_GROUND, () -> {
@@ -125,7 +126,7 @@ public class Solo extends BluLinearOpMode {
                 .state(State.GRABBED_GROUND)
                 .transitionTimed(0.63, State.SENSING_GROUND)
                 .state(State.SENSING_GROUND)
-                .transition(() -> cactus.validSample, State.RETRACTED, () -> {
+                .transition(() -> cactus.validSample, State.HOME, () -> {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> cactus.isEmpty(), State.PREINTAKE, () -> {
@@ -139,7 +140,7 @@ public class Solo extends BluLinearOpMode {
                 .onEnter(() -> {
                     dt.setDrivePower(0.55);
                 })
-                .transition(() -> stickyG1.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG1.a, State.HOME, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
                             new ArmCommand(0),
@@ -154,7 +155,7 @@ public class Solo extends BluLinearOpMode {
 
                 .state(State.INTAKING_SPEC)
                 .onEnter(() -> dt.setDrivePower(0.6))
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> new FullRetractCommand().schedule())
+                .transition(() -> stickyG2.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .transition(() -> (stickyG2.left_bumper || cactus.validSample) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),
@@ -167,22 +168,14 @@ public class Solo extends BluLinearOpMode {
                 .state(State.GRABBED_SPEC)
                 .transitionTimed(0.3, State.SENSING_SPEC)
                 .state(State.SENSING_SPEC)
-                .transition(() -> cactus.isEmpty(), State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeCommand().schedule();
-                })
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
                     new SpecimenIntakeCommand().schedule();
                 })
-                .transition(() -> cactus.validSample, State.SCORING_SPEC, () -> {
+                .transition(() -> cactus.validSample || gamepad2.left_bumper, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(0.63),
                             new ExtensionCommand(4.0),
-                            new ArmCommand(0),
-                            new WaitCommand(150),
-                            new UpDownWristAngleCommand(0.5),
-                            new SpinWristCenterCommand(),
-                            new WaitCommand(200),
-                            new ExtensionCommand(10.0),
+                            new SpecimenFrontCommand(),
                             new WaitCommand(200),
                             new ClawLooseCommand(),
                             new WaitCommand(150),
@@ -197,12 +190,10 @@ public class Solo extends BluLinearOpMode {
                             new ClawOpenCommand(),
                             new WaitCommand(170),
                             new ExtensionRetractCommand(),
-                            new ArmCommand(2.8),
-                            new WaitCommand(100),
                             new SpecimenIntakeCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG2.a, State.RETRACTED, () -> {
+                .transition(() -> stickyG2.a, State.HOME, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
                             new WaitCommand(200),
@@ -212,7 +203,7 @@ public class Solo extends BluLinearOpMode {
 
                 .build();
 
-        sm.setState(State.RETRACTED);
+        sm.setState(State.HOME);
         sm.start();
     }
 
