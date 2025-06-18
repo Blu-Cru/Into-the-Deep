@@ -25,16 +25,6 @@ public class AprilTagPoseGetter {
     }};
     public static double MAX_UPDATE_DISTANCE = 72; // maximum update distance
 
-    public static Pose2d getRobotPose(AprilTagDetection detection) {
-        Vector2d robotToTag = new Vector2d(detection.ftcPose.y, -detection.ftcPose.x).rotated(CAM_POS.getHeading()).plus(CAM_POS.vec());
-//        Vector2d robotToTag = getRobotToTagVector(detection.ftcPose.x, detection.ftcPose.y);
-        Vector2d tagToRobot = robotToTag.rotated(-Math.toRadians(detection.ftcPose.yaw));
-//        getTagToRobotVector(robotToTag, Math.toRadians(detection.ftcPose.yaw));
-        Pose2d tagPose = TAGS.get(detection.id);
-
-        return new Pose2d(tagPose.vec().plus(tagToRobot), tagPose.getHeading() - Math.toRadians(detection.ftcPose.yaw));
-    }
-
     public static Pose2d getRobotPoseWithHeading(AprilTagDetection detection, double heading) {
         Vector2d robotToTag = new Vector2d(detection.ftcPose.y, -detection.ftcPose.x).rotated(CAM_POS.getHeading()).plus(CAM_POS.vec());
 //        Vector2d robotToTag = getRobotToTagVector(detection.ftcPose.x, detection.ftcPose.y);
@@ -42,30 +32,6 @@ public class AprilTagPoseGetter {
         Pose2d tagPose = TAGS.get(detection.id);
 
         return new Pose2d(tagPose.vec().plus(globalTagToRobot), heading);
-    }
-
-    // update without robot heading (not good)
-    public static Pose2d getRobotPoseAtTimeOfFrame(List<AprilTagDetection> detections) {
-        if(detections.size() == 0) {
-            throw new NullPointerException("No tags found");
-        } else {
-            AprilTagDetection closestDetection = detections.get(0);
-            double closestDistance = Math.hypot(closestDetection.ftcPose.x, closestDetection.ftcPose.y);
-
-            for (AprilTagDetection detection : detections) {
-                double distance = Math.hypot(detection.ftcPose.x, detection.ftcPose.y);
-                if(distance < closestDistance) {
-                    closestDetection = detection;
-                    closestDistance = distance;
-                }
-            }
-
-            if(closestDistance > MAX_UPDATE_DISTANCE) {
-                throw new IllegalStateException("Too far away to update tags");
-            }
-
-            return getRobotPose(closestDetection);
-        }
     }
 
     // update with robot heading (good)
@@ -94,6 +60,40 @@ public class AprilTagPoseGetter {
 
             Log.i("TagPoseGetter", "got pose: " + poseWithHeading + " using tag # " + closestDetection.id);
             return poseWithHeading;
+        }
+    }
+
+    public static Pose2d getRobotPose(AprilTagDetection detection) {
+        Vector2d robotToTag = new Vector2d(detection.ftcPose.y, -detection.ftcPose.x).rotated(CAM_POS.getHeading()).plus(CAM_POS.vec());
+//        Vector2d robotToTag = getRobotToTagVector(detection.ftcPose.x, detection.ftcPose.y);
+        Vector2d tagToRobot = robotToTag.rotated(-Math.toRadians(detection.ftcPose.yaw));
+//        getTagToRobotVector(robotToTag, Math.toRadians(detection.ftcPose.yaw));
+        Pose2d tagPose = TAGS.get(detection.id);
+
+        return new Pose2d(tagPose.vec().plus(tagToRobot), tagPose.getHeading() - Math.toRadians(detection.ftcPose.yaw));
+    }
+
+    // update without robot heading (not good)
+    public static Pose2d getRobotPoseAtTimeOfFrame(List<AprilTagDetection> detections) {
+        if(detections.size() == 0) {
+            throw new NullPointerException("No tags found");
+        } else {
+            AprilTagDetection closestDetection = detections.get(0);
+            double closestDistance = Math.hypot(closestDetection.ftcPose.x, closestDetection.ftcPose.y);
+
+            for (AprilTagDetection detection : detections) {
+                double distance = Math.hypot(detection.ftcPose.x, detection.ftcPose.y);
+                if(distance < closestDistance) {
+                    closestDetection = detection;
+                    closestDistance = distance;
+                }
+            }
+
+            if(closestDistance > MAX_UPDATE_DISTANCE) {
+                throw new IllegalStateException("Too far away to update tags");
+            }
+
+            return getRobotPose(closestDetection);
         }
     }
 
