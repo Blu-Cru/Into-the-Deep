@@ -13,7 +13,7 @@ import java.util.List;
 
 @Config
 public class AprilTagPoseGetter {
-    public static double CAM_X = 0.0, CAM_Y = 7.074, CAM_HEADING = Math.toRadians(90); // position of the camera relative to the center of the robot in inches
+    public static double CAM_X = 0.0, CAM_Y = -7.074, CAM_HEADING = Math.toRadians(-90.0); // position of the camera relative to the center of the robot in inches
     static Pose2d CAM_POS = new Pose2d(CAM_X, CAM_Y, CAM_HEADING); // position of the camera relative to the center of the robot in inches
     static HashMap<Integer, Pose2d> TAGS = new HashMap<Integer, Pose2d>() {{
         put(11, new Pose2d(-72, 48, 0)); // tag 11
@@ -25,31 +25,19 @@ public class AprilTagPoseGetter {
     }};
     public static double MAX_UPDATE_DISTANCE = 72; // maximum update distance
 
-    public static Vector2d getRobotToTagVector(double detectionX, double detectionY) {
-        Vector2d camToTag = new Vector2d(detectionY, -detectionX);
-
-        return camToTag.rotated(CAM_POS.getHeading()).plus(CAM_POS.vec());
-
-//        //
-//        double x = -detectionY + CAMERA_POS.getX();
-//        double y = detectionX + CAMERA_POS.getY();
-//        return new Vector2d(x, y);
-    }
-
-    public static Vector2d getTagToRobotVector(Vector2d robotToTag, double detectionYawRad) {
-        return robotToTag.rotated(-detectionYawRad);
-    }
-
     public static Pose2d getRobotPose(AprilTagDetection detection) {
-        Vector2d robotToTag = getRobotToTagVector(detection.ftcPose.x, detection.ftcPose.y);
-        Vector2d tagToRobot = getTagToRobotVector(robotToTag, Math.toRadians(detection.ftcPose.yaw));
+        Vector2d robotToTag = new Vector2d(detection.ftcPose.y, -detection.ftcPose.x).rotated(CAM_POS.getHeading()).plus(CAM_POS.vec());
+//        Vector2d robotToTag = getRobotToTagVector(detection.ftcPose.x, detection.ftcPose.y);
+        Vector2d tagToRobot = robotToTag.rotated(-Math.toRadians(detection.ftcPose.yaw));
+//        getTagToRobotVector(robotToTag, Math.toRadians(detection.ftcPose.yaw));
         Pose2d tagPose = TAGS.get(detection.id);
 
         return new Pose2d(tagPose.vec().plus(tagToRobot), tagPose.getHeading() - Math.toRadians(detection.ftcPose.yaw));
     }
 
     public static Pose2d getRobotPoseWithHeading(AprilTagDetection detection, double heading) {
-        Vector2d robotToTag = getRobotToTagVector(detection.ftcPose.x, detection.ftcPose.y);
+        Vector2d robotToTag = new Vector2d(detection.ftcPose.y, -detection.ftcPose.x).rotated(CAM_POS.getHeading()).plus(CAM_POS.vec());
+//        Vector2d robotToTag = getRobotToTagVector(detection.ftcPose.x, detection.ftcPose.y);
         Vector2d globalTagToRobot = robotToTag.rotated(heading).unaryMinus();
         Pose2d tagPose = TAGS.get(detection.id);
 
@@ -108,6 +96,21 @@ public class AprilTagPoseGetter {
             return poseWithHeading;
         }
     }
+
+//    public static Vector2d getRobotToTagVector(double detectionX, double detectionY) {
+//        Vector2d camToTag = new Vector2d(detectionY, -detectionX);
+//
+//        return camToTag.rotated(CAM_POS.getHeading()).plus(CAM_POS.vec());
+//
+////        //
+////        double x = -detectionY + CAMERA_POS.getX();
+////        double y = detectionX + CAMERA_POS.getY();
+////        return new Vector2d(x, y);
+//    }
+
+//    public static Vector2d getTagToRobotVector(Vector2d robotToTag, double detectionYawRad) {
+//        return robotToTag.rotated(-detectionYawRad);
+//    }
 
     public static void updateCamPose() {
         CAM_POS = new Pose2d(CAM_X, CAM_Y, CAM_HEADING);
