@@ -176,9 +176,9 @@ public class Solo extends BluLinearOpMode {
                             new PivotCommand(0.63),
                             new ExtensionCommand(4.0),
                             new SpecimenFrontCommand(),
-                            new WaitCommand(200),
+                            new WaitCommand(100),
                             new ClawLooseCommand(),
-                            new WaitCommand(150),
+                            new WaitCommand(100),
                             new ClawGrabCommand()
                     ).schedule();
                 })
