@@ -33,7 +33,7 @@ public class BluEncoder extends DcMotorImplEx implements BluHardwareDevice {
     }
 
     public void init() {
-        resetEncoder();
+        reset();
         super.setPower(0);
         offsetTicks = 0;
         lastVelTime = System.currentTimeMillis();
@@ -50,7 +50,7 @@ public class BluEncoder extends DcMotorImplEx implements BluHardwareDevice {
 
     }
 
-    public void resetEncoder() {
+    public void reset() {
         setMode(RunMode.STOP_AND_RESET_ENCODER);
         setMode(RunMode.RUN_WITHOUT_ENCODER);
         offsetTicks = 0;
