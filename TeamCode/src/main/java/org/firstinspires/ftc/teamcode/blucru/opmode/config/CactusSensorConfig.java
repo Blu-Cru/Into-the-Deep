@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 
 
-@TeleOp(group = "test")
+@TeleOp(group = "z")
 public class CactusSensorConfig extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -20,9 +20,10 @@ public class CactusSensorConfig extends LinearOpMode {
         only pin1 --> red
         neither   --> no object
          */
-        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 180 / 360.0 * 255, 250 / 360.0 * 255); // blue
-        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 55 / 360.0 * 255, 80 / 360.0 * 255); // yellow
-        crf.setPin0DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 20); // 20mm or closer requirement
+        crf.setPin0Analog(ColorRangefinder.AnalogMode.HSV);
+//        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 180 / 360.0 * 255, 250 / 360.0 * 255); // blue
+//        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 55 / 360.0 * 255, 80 / 360.0 * 255); // yellow
+//        crf.setPin0DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 20); // 20mm or closer requirement
 
         crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 140 / 360.0 * 255, 210 / 360.0 * 255); // inverted red
         crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 235 / 360.0 * 255, 260 / 360.0 * 255); // inverted yellow
@@ -38,6 +39,19 @@ public class CactusSensorConfig extends LinearOpMode {
 /**
  * Helper class for configuring the Brushland Labs Color Rangefinder.
  * Online documentation: <a href="https://docs.brushlandlabs.com">...</a>
+ *
+ * Reset Sequence:
+ *
+ * Initialize configuration opmode. (with sensor unplugged)
+ * Stop configuration opmode. (the warning "failed to communicate with I2C device" appears)
+ * Plug in the sensor. (warning goes away, sensor led blinks)
+ *
+ * To write the configuration to the sensor, plug in the sensor to I2C
+ * and configure it as a "Rev Color Sensor V3" with the name "Color".
+ * After activating the configuration, init the opmode, and the sensor's
+ * LED should blink twice to indicate success. At this point you can
+ * unplug the sensor and plug it in to the digital or analog port based
+ * on your configuration.
  */
 class ColorRangefinder {
     public final RevColorSensorV3 emulator;
