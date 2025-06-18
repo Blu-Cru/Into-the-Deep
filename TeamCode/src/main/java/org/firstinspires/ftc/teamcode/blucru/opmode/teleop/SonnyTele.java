@@ -46,7 +46,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveB
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
-@TeleOp(name = "Sonny", group = "2")
+@TeleOp(name = "Sonny", group = "3")
 public class SonnyTele extends BluLinearOpMode {
     enum State {
         RETRACTED,

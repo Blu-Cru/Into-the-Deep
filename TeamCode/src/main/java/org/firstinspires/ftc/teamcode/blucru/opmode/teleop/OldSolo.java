@@ -45,7 +45,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveB
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
-@TeleOp(name = "Old Solo", group = "2")
+@TeleOp(name = "Old Solo", group = "3")
 public class OldSolo extends BluLinearOpMode {
     enum State {
         RETRACTED,
