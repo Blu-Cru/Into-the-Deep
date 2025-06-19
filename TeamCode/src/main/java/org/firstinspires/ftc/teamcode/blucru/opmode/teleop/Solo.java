@@ -8,6 +8,7 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.RetractFromBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionRetractCommand;
@@ -81,11 +82,10 @@ public class Solo extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new TurretCenterCommand(),
                             new PreIntakeCommand(),
-                            new SpinWristGlobalAngleCommand(0),
                             new WaitCommand(140),
                             new ExtensionCommand(15)
                     ).schedule();
-                    orientation = SampleOrientation.VERTICAL;
+                    orientation = spinWrist.setGlobalAngle(SampleOrientation.VERTICAL);
                 })
                 .transition(() -> stickyG1.y && extension.getDistance() < 2.0, State.SCORING_BASKET, () -> {
                     new SequentialCommandGroup(
@@ -152,16 +152,7 @@ public class Solo extends BluLinearOpMode {
                     dt.setDrivePower(0.55);
                 })
                 .transition(() -> stickyG1.a, State.HOME, () -> {
-                    new SequentialCommandGroup(
-                            new ClawOpenCommand(),
-                            new ArmCommand(0),
-                            new WaitCommand(50),
-                            new UpDownWristAngleCommand(-1),
-                            new WaitCommand(100),
-                            new UpDownWristAngleCommand(-1),
-                            new WaitCommand(150),
-                            new FullRetractCommand()
-                    ).schedule();
+                    new RetractFromBasketCommand().schedule();
                 })
 
                 .state(State.INTAKING_SPEC)
@@ -173,9 +164,9 @@ public class Solo extends BluLinearOpMode {
                             new WaitCommand(140),
                             new ConditionalCommand(
                                     new SequentialCommandGroup(
-                                            new ExtensionCommand(4.0),
-                                            new WaitCommand(120),
-                                            new PivotCommand(1.3)
+                                            new ExtensionCommand(7.0),
+                                            new WaitCommand(90),
+                                            new UpDownWristAngleCommand(-1.0)
                                     ),
                                     new SequentialCommandGroup(
                                             new PivotCommand(1.0),
@@ -199,7 +190,7 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> cactus.validSample || gamepad2.left_bumper, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(0.63),
-                            new ExtensionCommand(4.0),
+                            new ExtensionCommand(2),
                             new ConditionalCommand(
                                     new SpecimenFrontClipCommand(),
                                     new SpecimenFrontFlatCommand(),
@@ -231,7 +222,7 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .state(State.MANUAL_RESET)
-                .transition(() -> stickyG1.left_bumper || stickyG2.left_bumper, Duo.State.RETRACTED, () -> {
+                .transition(() -> stickyG1.left_bumper || stickyG2.left_bumper, State.HOME, () -> {
                     gamepad1.rumble(150);
                     gamepad2.rumble(150);
                 })

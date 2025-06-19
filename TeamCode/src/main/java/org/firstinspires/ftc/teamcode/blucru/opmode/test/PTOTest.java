@@ -10,7 +10,7 @@ public class PTOTest extends BluLinearOpMode {
     @Override
     public void initialize() {
         addPTOServos();
-        addDrivetrain();
+        addPTODrivetrain();
         addHangServos();
         addExtension();
         addPivot();
@@ -18,7 +18,7 @@ public class PTOTest extends BluLinearOpMode {
         pivot.useExtension(extension.getMotor());
         extension.usePivot(pivot.getMotor());
 
-        dt.fieldCentric = false;
+        ptoDt.fieldCentric = false;
     }
 
     @Override
@@ -39,6 +39,6 @@ public class PTOTest extends BluLinearOpMode {
             slideHangServos.hang();
         }
 
-        dt.drive(new Pose2d(gamepad1.left_stick_x,0, 0));
+        ptoDt.drive(new Pose2d(gamepad1.left_stick_x,0, 0));
     }
 }

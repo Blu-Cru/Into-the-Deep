@@ -60,7 +60,7 @@ public class CVMaster implements BluSubsystem {
         this.sampleDetector = new SampleDetectionProcessor();
 
         atagPortal = new VisionPortal.Builder()
-                .setCamera(Globals.hwMap.get(WebcamName.class, "webcam"))
+                .setCamera(Globals.hwMap.get(WebcamName.class, "tag cam"))
                 .setCameraResolution(new Size(1280, 720))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(tagDetector)

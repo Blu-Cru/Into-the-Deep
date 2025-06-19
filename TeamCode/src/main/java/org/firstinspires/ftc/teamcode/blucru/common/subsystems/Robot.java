@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematic
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeSpline;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.pose.BoxtubeIKPose;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.PTODrivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.SpecCactusSensor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Claw;
@@ -34,6 +35,7 @@ public class Robot {
 
     // all subsystems
     public Drivetrain dt;
+    public PTODrivetrain ptoDt;
     public Arm arm;
     public Turret turret;
     public Claw claw;
@@ -255,6 +257,12 @@ public class Robot {
         ptoServos = new PTOServos();
         subsystems.add(ptoServos);
         return ptoServos;
+    }
+
+    public PTODrivetrain addPTODrivetrain() {
+        ptoDt = new PTODrivetrain();
+        subsystems.add(ptoDt);
+        return ptoDt;
     }
 
     public boolean splineDone() {

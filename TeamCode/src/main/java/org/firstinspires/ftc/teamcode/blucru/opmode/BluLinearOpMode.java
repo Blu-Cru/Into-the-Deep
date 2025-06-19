@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Pusher;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Extension;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.PTODrivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.SpecCactusSensor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Claw;
@@ -29,6 +30,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 public abstract class BluLinearOpMode extends LinearOpMode {
     public Robot robot;
     public Drivetrain dt;
+    public PTODrivetrain ptoDt;
     public Arm arm;
     public Turret turret;
     public Claw claw;
@@ -118,6 +120,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public void end() {}
 
     public void addDrivetrain() {dt = robot.addDrivetrain();}
+    public void addPTODrivetrain() {dt = robot.addPTODrivetrain();}
     public void addArm() {arm = robot.addArm();}
     public void addClaw() {claw = robot.addClaw();}
     public void addTurret() {turret = robot.addTurret();}
@@ -127,8 +130,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public void addExtension() {extension = robot.addExtension();}
     public void addCVMaster() {cvMaster = robot.addCVMaster();}
     public void addPusher() {pusher = robot.addPusher();}
-    public void addHangServos() {
-        slideHangServos = robot.addHangServos();}
+    public void addHangServos() {slideHangServos = robot.addHangServos();}
     public void addHangMotor() {hangMotor = robot.addHangMotor();}
     public void addCactus() {cactus = robot.addCactus();}
     public void addPTOServos() {ptoServos = robot.addPTOServos();}

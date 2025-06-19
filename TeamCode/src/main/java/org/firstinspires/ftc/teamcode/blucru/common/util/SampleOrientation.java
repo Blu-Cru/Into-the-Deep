@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.blucru.common.util;
 
 public enum SampleOrientation {
     VERTICAL(Math.PI/2.0),
-    HORIZONTAL(0.0),
     POSITIVE_45(Math.PI/4.0),
+    HORIZONTAL(0.0),
     NEGATIVE_45(-Math.PI/4.0);
 
     static SampleOrientation[] ORIENTATIONS = values();

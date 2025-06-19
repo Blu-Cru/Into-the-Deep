@@ -46,7 +46,7 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     public void write() {
         switch(state) {
             case IK:
-                double angle = globalAngle - Robot.getInstance().turret.getAngle() - Robot.getInstance().dt.heading;
+                double angle = globalAngle - Robot.getInstance().turret.getAngle() + Robot.getInstance().dt.heading;
                 setPosition(toTicks(normalizeAngle(angle)) + CENTER_POS);
                 break;
             case SERVO:

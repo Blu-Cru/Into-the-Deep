@@ -29,8 +29,10 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
     public PTODrivetrain() {
         super();
 
-        leftEncoder = new BluEncoder("");
-        rightEncoder = new BluEncoder("");
+        // left is control 0?
+        // right is expansion 3
+        leftEncoder = new BluEncoder("extension2");
+        rightEncoder = new BluEncoder("br");
 
         leftPID = new PIDController(kP_LEFT, kI_LEFT, kD_LEFT);
         rightPID = new PIDController(kP_RIGHT, kI_RIGHT, kD_RIGHT);

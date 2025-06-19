@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up
 public class SpecimenIntakeBackClipCommand extends SequentialCommandGroup {
     public SpecimenIntakeBackClipCommand () {
         super(
-                new ExtensionCommand(1.3),
                 new ArmCommand(2.65),
                 new UpDownWristAngleCommand(-0.40),
                 new ClawOpenCommand(),
