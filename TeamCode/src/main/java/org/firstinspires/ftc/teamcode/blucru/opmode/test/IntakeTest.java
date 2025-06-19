@@ -26,7 +26,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontFlatCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "test")
@@ -89,7 +90,7 @@ public class IntakeTest extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> stickyG2.x, State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeBackFlatCommand().schedule();
+                    new SpecimenIntakeBackClipCommand().schedule();
                 })
                 .loop(() -> {
                     if(stickyG1.right_bumper || stickyG2.right_bumper) new SpitCommand().schedule();
@@ -176,25 +177,16 @@ public class IntakeTest extends BluLinearOpMode {
                 .transitionTimed(0.3, State.SENSING_SPEC)
                 .state(State.SENSING_SPEC)
                 .transition(() -> cactus.isEmpty(), State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeBackFlatCommand().schedule();
+                    new SpecimenIntakeBackClipCommand().schedule();
                 })
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeBackFlatCommand().schedule();
+                    new SpecimenIntakeBackClipCommand().schedule();
                 })
                 .transition(() -> cactus.validSample, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(0.63),
-                            new ExtensionCommand(4.0),
-                            new ArmCommand(0),
-                            new WaitCommand(150),
-                            new UpDownWristAngleCommand(0.5),
-                            new SpinWristCenterCommand(),
-                            new WaitCommand(200),
-                            new ExtensionCommand(10.0),
-                            new WaitCommand(200),
-                            new ClawLooseCommand(),
-                            new WaitCommand(150),
-                            new ClawGrabCommand()
+                            new ExtensionCommand(3.0),
+                            new SpecimenFrontFlatCommand()
                     ).schedule();
                 })
 
@@ -207,7 +199,7 @@ public class IntakeTest extends BluLinearOpMode {
                             new ExtensionRetractCommand(),
                             new ArmCommand(2.8),
                             new WaitCommand(100),
-                            new SpecimenIntakeBackFlatCommand()
+                            new SpecimenIntakeBackClipCommand()
                     ).schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {

@@ -5,12 +5,11 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristCenterCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 
-public class SpecimenFrontCommand extends SequentialCommandGroup {
-    public SpecimenFrontCommand() {
+public class SpecimenFrontFlatCommand extends SequentialCommandGroup {
+    public SpecimenFrontFlatCommand() {
         super(
                 new ArmCommand(0.0),
                 new WaitCommand(150),

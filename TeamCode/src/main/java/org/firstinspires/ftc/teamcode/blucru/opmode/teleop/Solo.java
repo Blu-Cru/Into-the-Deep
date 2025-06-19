@@ -22,8 +22,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontFlatCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "2")
@@ -86,7 +87,7 @@ public class Solo extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> stickyG2.x, State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeBackFlatCommand().schedule();
+                    new SpecimenIntakeBackClipCommand().schedule();
                 })
                 .loop(() -> {
                     if(stickyG1.right_bumper || stickyG2.right_bumper) new SpitCommand().schedule();
@@ -168,17 +169,13 @@ public class Solo extends BluLinearOpMode {
                 .transitionTimed(0.3, State.SENSING_SPEC)
                 .state(State.SENSING_SPEC)
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeBackFlatCommand().schedule();
+                    new SpecimenIntakeBackClipCommand().schedule();
                 })
                 .transition(() -> cactus.validSample || gamepad2.left_bumper, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(0.63),
                             new ExtensionCommand(4.0),
-                            new SpecimenFrontCommand(),
-                            new WaitCommand(100),
-                            new ClawLooseCommand(),
-                            new WaitCommand(100),
-                            new ClawGrabCommand()
+                            new SpecimenFrontClipCommand()
                     ).schedule();
                 })
 
@@ -189,7 +186,7 @@ public class Solo extends BluLinearOpMode {
                             new ClawOpenCommand(),
                             new WaitCommand(170),
                             new ExtensionRetractCommand(),
-                            new SpecimenIntakeBackFlatCommand()
+                            new SpecimenIntakeBackClipCommand()
                     ).schedule();
                 })
                 .transition(() -> stickyG2.a, State.HOME, () -> {
