@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Extension
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.CactusSensor;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.SpecCactusSensor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Claw;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.SpinWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Turret;
@@ -40,7 +40,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public SlideHangServos slideHangServos;
     public HangMotor hangMotor;
     public CVMaster cvMaster;
-    public CactusSensor cactus;
+    public SpecCactusSensor cactus;
     public PTOServos ptoServos;
 
     public StickyGamepad stickyG1, stickyG2;

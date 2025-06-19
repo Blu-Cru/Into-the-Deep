@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.sp
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretCenterCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 
-public class SpecimenIntakeCommand extends SequentialCommandGroup {
-    public SpecimenIntakeCommand() {
+public class SpecimenIntakeBackFlatCommand extends SequentialCommandGroup {
+    public SpecimenIntakeBackFlatCommand() {
         super(
                 new ArmCommand(2.8),
                 new UpDownWristAngleCommand(-1.5),

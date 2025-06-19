@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "test")
@@ -89,7 +89,7 @@ public class IntakeTest extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> stickyG2.x, State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeCommand().schedule();
+                    new SpecimenIntakeBackFlatCommand().schedule();
                 })
                 .loop(() -> {
                     if(stickyG1.right_bumper || stickyG2.right_bumper) new SpitCommand().schedule();
@@ -176,10 +176,10 @@ public class IntakeTest extends BluLinearOpMode {
                 .transitionTimed(0.3, State.SENSING_SPEC)
                 .state(State.SENSING_SPEC)
                 .transition(() -> cactus.isEmpty(), State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeCommand().schedule();
+                    new SpecimenIntakeBackFlatCommand().schedule();
                 })
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeCommand().schedule();
+                    new SpecimenIntakeBackFlatCommand().schedule();
                 })
                 .transition(() -> cactus.validSample, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
@@ -207,7 +207,7 @@ public class IntakeTest extends BluLinearOpMode {
                             new ExtensionRetractCommand(),
                             new ArmCommand(2.8),
                             new WaitCommand(100),
-                            new SpecimenIntakeCommand()
+                            new SpecimenIntakeBackFlatCommand()
                     ).schedule();
                 })
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> {

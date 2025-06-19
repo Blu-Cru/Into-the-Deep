@@ -20,13 +20,20 @@ public class CactusSensorConfig extends LinearOpMode {
         only pin1 --> red
         neither   --> no object
          */
-        crf.setPin0Analog(ColorRangefinder.AnalogMode.HSV);
-//        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 180 / 360.0 * 255, 250 / 360.0 * 255); // blue
-//        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 55 / 360.0 * 255, 80 / 360.0 * 255); // yellow
-//        crf.setPin0DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 20); // 20mm or closer requirement
+
+        // hue around 109 for black
+        /*
+        To get black specimen, i'm treating black the same as yellow
+         */
+//        crf.setPin0Analog(ColorRangefinder.AnalogMode.HSV);
+        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 180 / 360.0 * 255, 250 / 360.0 * 255); // blue
+        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 55 / 360.0 * 255, 80 / 360.0 * 255); // yellow
+        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 95 / 360.0 * 255, 124 / 360.0 * 255);
+        crf.setPin0DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 20); // 20mm or closer requirement
 
         crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 140 / 360.0 * 255, 210 / 360.0 * 255); // inverted red
         crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 235 / 360.0 * 255, 260 / 360.0 * 255); // inverted yellow
+        crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 275 / 360.0 * 255, 304 / 360.0 * 255);
         crf.setPin1DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 20); // 20mm or closer requirement
         crf.setPin1InvertHue(); // invert hue values
 
