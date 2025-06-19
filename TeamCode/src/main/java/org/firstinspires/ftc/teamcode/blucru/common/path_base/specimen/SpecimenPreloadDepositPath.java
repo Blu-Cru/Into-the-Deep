@@ -12,7 +12,7 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
     public SpecimenPreloadDepositPath() {
         super();
         this.setPower(0.8)
-                .callback(() -> new SpecimenFrontClipCommand(0).schedule())
+                .callback(() -> new SpecimenFrontClipCommand().schedule())
                 .addMappedPoint(7, -50, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
@@ -21,6 +21,6 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
                             new FullRetractCommand()
                     ).schedule();
                 })
-                .waitMillis(550);
+                .waitMillis(150);
     }
 }

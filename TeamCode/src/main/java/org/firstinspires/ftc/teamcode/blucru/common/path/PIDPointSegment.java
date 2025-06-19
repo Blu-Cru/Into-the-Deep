@@ -31,7 +31,7 @@ public class PIDPointSegment implements PathSegment{
                 Robot.getInstance().dt.vel.vec().norm() < 4.0;
 
         return Robot.getInstance().dt.inRange(translationTolerance,
-                translationTolerance * 0.1)
+                translationTolerance * 0.07)
                 && velSatisfied;
     }
 
