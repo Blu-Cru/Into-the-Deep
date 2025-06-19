@@ -164,9 +164,19 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> (stickyG2.left_bumper || cactus.validSample) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),
-                            new WaitCommand(120),
-                            new PivotCommand(1.0),
-                            new UpDownWristAngleCommand(-2.0)
+                            new WaitCommand(140),
+                            new ConditionalCommand(
+                                    new SequentialCommandGroup(
+                                            new ExtensionCommand(5),
+                                            new WaitCommand(120),
+                                            new PivotCommand(1.3)
+                                    ),
+                                    new SequentialCommandGroup(
+                                            new PivotCommand(1.0),
+                                            new UpDownWristAngleCommand(-2.0)
+                                    ),
+                                    () -> grabByClip
+                            )
                     ).schedule();
                 })
 

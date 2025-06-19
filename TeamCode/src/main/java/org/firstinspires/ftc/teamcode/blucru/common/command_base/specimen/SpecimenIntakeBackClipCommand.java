@@ -15,10 +15,10 @@ public class SpecimenIntakeBackClipCommand extends SequentialCommandGroup {
     public SpecimenIntakeBackClipCommand () {
         super(
                 new ExtensionCommand(1.3),
-                new ArmCommand(2.60),
+                new ArmCommand(2.65),
                 new UpDownWristAngleCommand(-0.40),
                 new ClawOpenCommand(),
-                new SpinWristAngleCommand(Math.PI),
+                new SpinWristAngleCommand(0.0),
                 new TurretCenterCommand(),
                 new WaitCommand(150),
                 new BoxtubeCommand(1.6, 2.9)
