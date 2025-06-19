@@ -33,6 +33,7 @@ public class FiveSpecimenConfig extends AutoConfig {
         COLLECTING_BLOCKS,
         SPITTING,
         INTAKING_CYCLE,
+        CONFIRMING_INTAKE,
         DEPOSIT_CYCLE,
         PARK_INTAKING,
         PARKED,

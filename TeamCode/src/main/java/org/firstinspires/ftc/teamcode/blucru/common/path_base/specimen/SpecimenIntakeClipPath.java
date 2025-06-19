@@ -12,7 +12,7 @@ public class SpecimenIntakeClipPath extends PIDPathBuilder {
                 })
                 .addMappedPoint(29, -54, 90, 5)
                 .setPower(0.25)
-                .addMappedPoint(36, -65, 90)
+                .addMappedPoint(36, -62, 90)
                 .waitMillis(150);
     }
 }

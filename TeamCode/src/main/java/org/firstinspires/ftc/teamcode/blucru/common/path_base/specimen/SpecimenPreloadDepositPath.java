@@ -13,7 +13,7 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
         super();
         this.setPower(0.8)
                 .callback(() -> new SpecimenFrontClipCommand(0).schedule())
-                .addMappedPoint(7, -48, 90)
+                .addMappedPoint(7, -50, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),

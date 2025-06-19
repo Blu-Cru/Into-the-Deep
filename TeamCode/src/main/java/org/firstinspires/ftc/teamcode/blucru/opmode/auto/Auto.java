@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractComm
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmGlobalAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
@@ -51,7 +52,8 @@ public class Auto extends BluLinearOpMode {
                 telemetry.addLine("Config Built!!!! good job you deserve a pat on the back");
                 telemetry.update();
 
-                new ArmCommand(Math.PI/2.0).schedule();
+                new PivotCommand(0.7).schedule();
+                new SpinWristAngleCommand(Math.PI);
                 ptoServos.disengage();
             })
             .state(State.INITIALIZED)
