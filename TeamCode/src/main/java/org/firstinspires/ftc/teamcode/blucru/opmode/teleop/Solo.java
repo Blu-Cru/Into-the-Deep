@@ -166,7 +166,7 @@ public class Solo extends BluLinearOpMode {
                                     new SequentialCommandGroup(
                                             new ExtensionCommand(7.0),
                                             new WaitCommand(90),
-                                            new UpDownWristAngleCommand(-1.0)
+                                            new UpDownWristAngleCommand(-1.6)
                                     ),
                                     new SequentialCommandGroup(
                                             new PivotCommand(1.0),
@@ -189,7 +189,6 @@ public class Solo extends BluLinearOpMode {
                 })
                 .transition(() -> cactus.validSample || gamepad2.left_bumper, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
-                            new PivotCommand(0.63),
                             new ExtensionCommand(2),
                             new ConditionalCommand(
                                     new SpecimenFrontClipCommand(),

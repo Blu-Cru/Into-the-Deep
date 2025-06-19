@@ -12,37 +12,26 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotRe
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
-public class SpecimenCycleDepositPath extends PIDPathBuilder {
-    public SpecimenCycleDepositPath(int scoreCount) {
+public class SpecimenDepositPath extends PIDPathBuilder {
+    public SpecimenDepositPath(int scoreCount) {
         super();
         if(scoreCount == -1) {
             this.setPower(0.9)
-                    .schedule(new SequentialCommandGroup(
-                            new ClawGrabCommand(),
-                            new BoxtubeSplineCommand(
-                                    new Vector2d(20, 42),
-                                    new Pose2d(-8.6, 28.5, Math.PI),
-                                    0,
-                                    0.95
-                            )
-                    ))
-                    .addMappedPoint(-10, -45, 270, 30)
-                    .setPower(0.7)
-                    .addMappedPoint(7, -34, 270, 5)
-                    .setPower(0.5)
-                    .addMappedPoint(3.5, -33.5, 270, 3)
-                    .schedule(new SequentialCommandGroup(
-                            new WaitCommand(100),
-                            new SpecimenDunkSplineCommand(),
-                            new WaitCommand(320),
-                            new ClawOpenCommand(),
-                            new WaitCommand(70),
-                            new PivotRetractCommand(),
-                            new ExtensionRetractCommand(),
-                            new EndEffectorRetractCommand()
-                    ))
+                    .callback(() -> {
+                        new SpecimenFrontClipCommand().schedule();
+                    })
+                    .addMappedPoint(14, -44, 120)
+                    .callback(() -> {
+                        new SequentialCommandGroup(
+                                new ClawOpenCommand(),
+                                new WaitCommand(200),
+                                new SpecimenIntakeBackClipCommand()
+                        ).schedule();
+                    })
                     .waitMillis(270);
         } else {
             this.setPower(0.9)
@@ -71,7 +60,7 @@ public class SpecimenCycleDepositPath extends PIDPathBuilder {
         }
     }
 
-    public SpecimenCycleDepositPath() {
+    public SpecimenDepositPath() {
         this(-1);
     }
 }

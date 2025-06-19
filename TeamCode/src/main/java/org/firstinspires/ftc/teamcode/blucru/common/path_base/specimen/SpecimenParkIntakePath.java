@@ -6,7 +6,9 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionMotionProfileCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenParkIntakePath extends PIDPathBuilder {
@@ -17,14 +19,9 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
                 .addMappedPoint(24, -48, -45, 6)
                 .callback(() ->
                         new SequentialCommandGroup(
-                            new BoxtubeCommand(0, 8),
-                            new ClawOpenCommand(),
-                            new WaitCommand(300),
-                            new ExtensionMotionProfileCommand(14),
-                            new WaitCommand(1000),
-                            new ExtensionCommand(6),
-                            new WaitCommand(300),
-                            new ExtensionMotionProfileCommand(14)
+                                new PreIntakeCommand(),
+                                new WaitCommand(150),
+                                new ExtensionCommand(10)
                         ).schedule()
                 )
                 .waitMillis(4000);

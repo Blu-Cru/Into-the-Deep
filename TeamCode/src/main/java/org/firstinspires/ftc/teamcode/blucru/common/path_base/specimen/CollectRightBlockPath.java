@@ -6,19 +6,28 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretMotionProfileCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class CollectRightBlockPath extends PIDPathBuilder {
     public CollectRightBlockPath() {
         super();
-        this.setPower(0.7)
-                .addMappedPoint(49, -33, 18, 4)
-                .schedule(new SequentialCommandGroup(
-                        new ExtensionCommand(3),
-                        new ClawOpenCommand(),
-                        new WaitCommand(400),
-                        new ExtensionMotionProfileCommand(10)
-                ))
+        this.setPower(0.85)
+                .callback(() -> {
+                    new PreIntakeCommand().schedule();
+                    new TurretMotionProfileCommand(1.0).schedule();
+                    new ExtensionCommand(7).schedule();
+                })
+                .addMappedPoint(49, -40, 14, 4)
+                .callback(() -> {
+                    new SequentialCommandGroup(
+                            new PreIntakeCommand(),
+                            new WaitCommand(150),
+                            new ExtensionCommand(5),
+                            new TurretMotionProfileCommand(1.0)
+                    ).schedule();
+                })
                 .waitMillis(1300);
     }
 }

@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.Specim
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenCycleIntakeFailsafePath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakePath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakeClipPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.tele.TeleSpecimenDepoPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
@@ -110,7 +110,7 @@ public class WorldsSolo extends BluLinearOpMode {
                 // SPECIMEN
                 .transition(() -> stickyG1.b && cvMaster.seesSpecimenTag(), State.AUTO_SPEC_INTAKE, () -> {
                     dt.updateAprilTags();
-                    currentPath = new SpecimenIntakePath().start();
+                    currentPath = new SpecimenIntakeClipPath().start();
                 })
                 .transition(() -> stickyG1.y, State.SCORING_BASKET, () -> {
                     new SampleBackHighCommand().schedule();
@@ -383,7 +383,7 @@ public class WorldsSolo extends BluLinearOpMode {
 
                 .state(State.AUTO_SPEC_SCORING)
                 .transitionTimed(0.2, State.AUTO_SPEC_INTAKE, () -> {
-                    currentPath = new SpecimenIntakePath().start();
+                    currentPath = new SpecimenIntakeClipPath().start();
                 })
 
                 .state(State.AUTO_SPEC_INTAKE_FAIL)
@@ -394,7 +394,7 @@ public class WorldsSolo extends BluLinearOpMode {
                     currentPath = new TeleSpecimenDepoPath().start();
                 })
                 .transition(() -> currentPath.isDone() || stickyG1.b, State.AUTO_SPEC_INTAKE, () -> {
-                    currentPath = new SpecimenIntakePath().start();
+                    currentPath = new SpecimenIntakeClipPath().start();
                 })
 
                 .state(State.HANG_RELEASE) // 1st stage released, hook is up, not touching bar

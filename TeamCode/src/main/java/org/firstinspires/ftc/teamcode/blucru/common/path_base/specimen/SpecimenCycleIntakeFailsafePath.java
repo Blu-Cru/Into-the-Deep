@@ -6,24 +6,17 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenCycleIntakeFailsafePath extends PIDPathBuilder {
     public SpecimenCycleIntakeFailsafePath() {
         super();
         this.setPower(0.5)
-                .schedule(
-                        new SequentialCommandGroup(
-                                new BoxtubeSplineCommand(
-                                        new Pose2d(11, 12, 1),
-                                        -Math.PI,
-                                        0.4
-                                ),
-                                new WaitCommand(250),
-                                new ClawGrabCommand()
-                        )
-                )
-                .addMappedPoint(25, -48.5, -60)
+                .callback(() -> {
+                    new SpecimenIntakeBackClipCommand().schedule();
+                })
+                .addMappedPoint(25, -52.5, 100)
                 .waitMillis(400);
     }
 }

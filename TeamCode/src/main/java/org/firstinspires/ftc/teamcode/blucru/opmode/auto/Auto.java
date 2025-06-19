@@ -8,6 +8,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
@@ -39,7 +40,7 @@ public class Auto extends BluLinearOpMode {
                     State.INITIALIZED, () -> {
                 gamepad1.rumble(200);
                 gamepad2.rumble(200);
-                cvMaster.detectTag();
+//                cvMaster.detectTag();
                 telemetry.update();
 
                 telemetry.addLine("Building Paths . . .");
@@ -50,20 +51,15 @@ public class Auto extends BluLinearOpMode {
                 telemetry.addLine("Config Built!!!! good job you deserve a pat on the back");
                 telemetry.update();
 
-                // initialize pivot position
-                new SequentialCommandGroup(
-                        new PivotCommand(1.1),
-                        new WaitCommand(400),
-//                        new WristOppositeCommand(),
-                        new ArmGlobalAngleCommand(-1.3)
-                ).schedule();
+                new ArmCommand(Math.PI/2.0).schedule();
+                ptoServos.disengage();
             })
             .state(State.INITIALIZED)
             .loop(() -> {
                 configTelemetry();
 
                 telemetry.addLine("CONFIG DONE, LEFT JOYSTICK BUTTON TO CONFIG");
-                cvMaster.telemetry(telemetry);
+//                cvMaster.telemetry(telemetry);
             })
             .transition(() -> stickyG1.left_stick_button || stickyG2.left_stick_button,
                     State.CONFIG, () -> {
@@ -90,12 +86,17 @@ public class Auto extends BluLinearOpMode {
     @Override
     public void initialize() {
         addDrivetrain();
-        addExtension();
-        addPivot();
         addArm();
+        addTurret();
+        addUpDownWrist();
+        addSpinWrist();
         addClaw();
-        addCVMaster();
+        addPivot();
+        addExtension();
         addCactus();
+        addPusher();
+        addPTOServos();
+
         extension.usePivot(pivot.getMotor());
         pivot.useExtension(extension.getMotor());
 
