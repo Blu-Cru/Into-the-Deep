@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.teleop;
 
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,7 +14,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.Extensi
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawLooseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristGlobalAngleCommand;
@@ -25,6 +25,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitComm
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "2")
@@ -43,7 +45,8 @@ public class Solo extends BluLinearOpMode {
     }
 
     StateMachine sm;
-    double spinWristGlobalAngle = 0;
+    SampleOrientation orientation = SampleOrientation.VERTICAL;
+    boolean grabByClip;
 
     @Override
     public void initialize() {
@@ -63,6 +66,7 @@ public class Solo extends BluLinearOpMode {
         extension.usePivot(pivot.getMotor());
 
         dt.setDrivePower(0.7);
+        grabByClip = true;
 
         sm = new StateMachineBuilder()
                 .state(State.HOME)
@@ -75,7 +79,7 @@ public class Solo extends BluLinearOpMode {
                             new WaitCommand(180),
                             new ExtensionCommand(15)
                     ).schedule();
-                    spinWristGlobalAngle = 0;
+                    orientation = SampleOrientation.VERTICAL;
                 })
                 .transition(() -> stickyG1.y && extension.getDistance() < 2.0, State.SCORING_BASKET, () -> {
                     new SequentialCommandGroup(
@@ -87,7 +91,11 @@ public class Solo extends BluLinearOpMode {
                     ).schedule();
                 })
                 .transition(() -> stickyG2.x, State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeBackClipCommand().schedule();
+                    if (grabByClip) {
+                        new SpecimenIntakeBackClipCommand().schedule();
+                    } else {
+                        new SpecimenIntakeBackFlatCommand().schedule();
+                    }
                 })
                 .loop(() -> {
                     if(stickyG1.right_bumper || stickyG2.right_bumper) new SpitCommand().schedule();
@@ -95,7 +103,7 @@ public class Solo extends BluLinearOpMode {
 
                 .state(State.PREINTAKE)
                 .onEnter(() -> {
-                    spinWrist.setTurretGlobalAngle(spinWristGlobalAngle);
+                    spinWrist.setTurretGlobalAngle(orientation.angle());
                     dt.setDrivePower(0.45);
                 })
                 .transition(() -> stickyG1.a || stickyG2.a, State.HOME, () -> {
@@ -106,21 +114,18 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .loop(() -> {
-                    double rightInput = Math.max(gamepad1.right_trigger, gamepad2.right_trigger);
-                    double leftInput = Math.max(gamepad1.left_trigger, gamepad2.left_trigger);
-                    if(rightInput > 0.1) {
-                        turret.setAngle(-rightInput);
-                    } else if (leftInput > 0.1){
-                        turret.setAngle(leftInput);
-                    } else {
-                        turret.center();
-                    }
+                    if (stickyG1.left_trigger)
+                        turret.setMotionProfileAngle(-1.0);
+                    if (stickyG2.left_trigger)
+                        turret.setMotionProfileAngle(1.0);
 
-                    if(stickyG1.dpad_up || stickyG2.dpad_up) {
-                        setSpinWristGlobalAngle(0);
-                    } else if (stickyG1.dpad_right || stickyG2.dpad_right) {
-                        setSpinWristGlobalAngle(Math.PI/2);
-                    }
+                    if (stickyG1.left_trigger_released || stickyG2.left_trigger_released)
+                        turret.center();
+
+                    if(stickyG1.right_bumper || stickyG2.right_bumper)
+                        orientation = spinWrist.setGlobalAngle(orientation.next());
+                    if (stickyG1.dpad_down || stickyG2.dpad_down)
+                        orientation = spinWrist.setGlobalAngle(orientation.prev());
                 })
 
                 .state(State.GRABBED_GROUND)
@@ -169,13 +174,21 @@ public class Solo extends BluLinearOpMode {
                 .transitionTimed(0.3, State.SENSING_SPEC)
                 .state(State.SENSING_SPEC)
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
-                    new SpecimenIntakeBackClipCommand().schedule();
+                    if(grabByClip) {
+                        new SpecimenIntakeBackClipCommand().schedule();
+                    } else {
+                        new SpecimenIntakeBackFlatCommand().schedule();
+                    }
                 })
                 .transition(() -> cactus.validSample || gamepad2.left_bumper, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(0.63),
                             new ExtensionCommand(4.0),
-                            new SpecimenFrontClipCommand()
+                            new ConditionalCommand(
+                                    new SpecimenFrontClipCommand(),
+                                    new SpecimenFrontFlatCommand(),
+                                    () -> grabByClip
+                            )
                     ).schedule();
                 })
 
@@ -186,7 +199,11 @@ public class Solo extends BluLinearOpMode {
                             new ClawOpenCommand(),
                             new WaitCommand(170),
                             new ExtensionRetractCommand(),
-                            new SpecimenIntakeBackClipCommand()
+                            new ConditionalCommand(
+                                    new SpecimenIntakeBackClipCommand(),
+                                    new SpecimenIntakeBackFlatCommand(),
+                                    () -> grabByClip
+                            )
                     ).schedule();
                 })
                 .transition(() -> stickyG2.a, State.HOME, () -> {
@@ -215,14 +232,9 @@ public class Solo extends BluLinearOpMode {
         sm.update();
     }
 
-    public void setSpinWristGlobalAngle(double angle) {
-        spinWristGlobalAngle = angle;
-        spinWrist.setTurretGlobalAngle(angle);
-    }
-
     @Override
     public void telemetry() {
         telemetry.addData("State", sm.getState());
-        telemetry.addData("Spin wrist angle", spinWristGlobalAngle);
+        telemetry.addData("Spin wrist angle", orientation);
     }
 }

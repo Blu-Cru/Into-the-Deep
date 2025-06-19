@@ -12,6 +12,7 @@ public class StickyGamepad {
     public boolean left_stick_button, right_stick_button;
     public boolean back, share;
     public boolean left_trigger, right_trigger;
+    public boolean left_trigger_released, right_trigger_released;
 
     private boolean dpad_up_down, dpad_down_down, dpad_left_down, dpad_right_down;
     private boolean a_down, b_down, x_down, y_down;
@@ -194,20 +195,20 @@ public class StickyGamepad {
         }
 
         if(gamepad.right_trigger > 0.1) {
-            if(lastRT > 0.1) {
-                right_trigger = false;
-            } else {
-                right_trigger = true;
-            }
+            if(lastRT > 0.1) right_trigger = false;
+            else right_trigger = true;
+        } else {
+            if(lastRT > 0.1) right_trigger_released = true;
+            else right_trigger_released = false;
         }
         lastRT = gamepad.right_trigger;
 
         if(gamepad.left_trigger > 0.1) {
-            if(lastLT > 0.1) {
-                left_trigger = false;
-            } else {
-                left_trigger = true;
-            }
+            if(lastLT > 0.1) left_trigger = false;
+            else left_trigger = true;
+        } else {
+            if(lastLT > 0.1) left_trigger_released = true;
+            else left_trigger_released = false;
         }
         lastLT = gamepad.left_trigger;
     }

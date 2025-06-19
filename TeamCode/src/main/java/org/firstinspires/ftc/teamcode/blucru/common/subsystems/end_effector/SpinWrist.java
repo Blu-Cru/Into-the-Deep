@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.BluServo;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 
 public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     public static double
@@ -19,7 +20,7 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
 
     enum State {
         SERVO,
-        TURRET_IK
+        IK
     }
 
     State state;
@@ -44,8 +45,8 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     @Override
     public void write() {
         switch(state) {
-            case TURRET_IK:
-                double angle = Range.clip(globalAngle - Robot.getInstance().turret.getAngle(), MIN_ANGLE, MAX_ANGLE);
+            case IK:
+                double angle = globalAngle - Robot.getInstance().turret.getAngle() - Robot.getInstance().dt.heading;
                 setPosition(toTicks(normalizeAngle(angle)) + CENTER_POS);
                 break;
             case SERVO:
@@ -80,8 +81,14 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void setTurretGlobalAngle(double globalAngle) {
-        state = State.TURRET_IK;
+        state = State.IK;
         this.globalAngle = globalAngle;
+    }
+
+    public SampleOrientation setGlobalAngle(SampleOrientation orientation){
+        state = State.IK;
+        this.globalAngle = orientation.angle();
+        return orientation;
     }
 
     @Override
