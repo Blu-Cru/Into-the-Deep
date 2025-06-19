@@ -42,6 +42,8 @@ public class Solo extends BluLinearOpMode {
         SENSING_GROUND,
         GRABBED_SPEC,
         SENSING_SPEC,
+
+        MANUAL_RESET
     }
 
     StateMachine sm;
@@ -71,12 +73,16 @@ public class Solo extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.HOME)
                 .onEnter(() -> dt.setDrivePower(1.0))
+                .transition(() -> stickyG1.share || stickyG2.share, State.MANUAL_RESET, () -> {
+                    gamepad1.rumble(350);
+                    gamepad2.rumble(350);
+                })
                 .transition(() -> (stickyG1.left_bumper || stickyG2.left_bumper) && pivot.getAngle() < 0.2, State.PREINTAKE, () -> {
                     new SequentialCommandGroup(
                             new TurretCenterCommand(),
                             new PreIntakeCommand(),
                             new SpinWristGlobalAngleCommand(0),
-                            new WaitCommand(180),
+                            new WaitCommand(140),
                             new ExtensionCommand(15)
                     ).schedule();
                     orientation = SampleOrientation.VERTICAL;
@@ -90,7 +96,7 @@ public class Solo extends BluLinearOpMode {
                             new TurretCenterCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG2.x, State.INTAKING_SPEC, () -> {
+                .transition(() -> stickyG2.x && extension.getDistance() < 2.0, State.INTAKING_SPEC, () -> {
                     if (grabByClip) {
                         new SpecimenIntakeBackClipCommand().schedule();
                     } else {
@@ -159,7 +165,7 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .state(State.INTAKING_SPEC)
-                .onEnter(() -> dt.setDrivePower(0.6))
+                .onEnter(() -> dt.setDrivePower(0.7))
                 .transition(() -> stickyG2.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .transition(() -> (stickyG2.left_bumper || cactus.validSample) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
                     new SequentialCommandGroup(
@@ -167,7 +173,7 @@ public class Solo extends BluLinearOpMode {
                             new WaitCommand(140),
                             new ConditionalCommand(
                                     new SequentialCommandGroup(
-                                            new ExtensionCommand(5),
+                                            new ExtensionCommand(4.0),
                                             new WaitCommand(120),
                                             new PivotCommand(1.3)
                                     ),
@@ -224,6 +230,34 @@ public class Solo extends BluLinearOpMode {
                     ).schedule();
                 })
 
+                .state(State.MANUAL_RESET)
+                .transition(() -> stickyG1.left_bumper || stickyG2.left_bumper, Duo.State.RETRACTED, () -> {
+                    gamepad1.rumble(150);
+                    gamepad2.rumble(150);
+                })
+                .loop(() -> {
+                    double extensionPower;
+                    double pivotPower;
+                    if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad2.left_stick_y))
+                        pivotPower = -gamepad1.left_stick_y;
+                    else
+                        pivotPower = -gamepad2.left_stick_y;
+
+                    if (Math.abs(gamepad1.right_stick_y) > Math.abs(gamepad2.right_stick_y))
+                        extensionPower = -gamepad1.right_stick_y;
+                    else
+                        extensionPower = -gamepad2.right_stick_y;
+
+                    extension.setManualPower(extensionPower);
+                    pivot.setManualPower(pivotPower);
+                })
+                .onExit(() -> {
+                    extension.resetEncoder();
+                    pivot.resetEncoder();
+
+                    extension.pidTo(0);
+                    pivot.pidTo(0);
+                })
                 .build();
 
         sm.setState(State.HOME);

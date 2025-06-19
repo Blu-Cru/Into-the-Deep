@@ -46,7 +46,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(name = "Old Solo", group = "3")
-public class OldSolo extends BluLinearOpMode {
+public class WorldsSolo extends BluLinearOpMode {
     enum State {
         RETRACTED,
         EXTENDING_OVER_INTAKE,
@@ -173,8 +173,8 @@ public class OldSolo extends BluLinearOpMode {
 //                    new ArmPreIntakeCommand().schedule();
                 })
                 .loop(() -> {
-                    if(stickyG1.y) extension.teleExtendIntake(Main.intakeExtendFar);
-                    if(stickyG1.b) extension.teleExtendIntake(Main.intakeExtendMid);
+                    if(stickyG1.y) extension.teleExtendIntake(Duo.intakeExtendFar);
+                    if(stickyG1.b) extension.teleExtendIntake(Duo.intakeExtendMid);
 
                     extension.teleExtendIntakeDelta(gamepad1.right_trigger * 6.0);
                 })
@@ -194,8 +194,8 @@ public class OldSolo extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .loop(() -> {
-                    if(stickyG1.y) extension.teleExtendIntake(Main.intakeExtendFar);
-                    if(stickyG1.b) extension.teleExtendIntake(Main.intakeExtendMid);
+                    if(stickyG1.y) extension.teleExtendIntake(Duo.intakeExtendFar);
+                    if(stickyG1.b) extension.teleExtendIntake(Duo.intakeExtendMid);
 
                     extension.teleExtendIntakeDelta(gamepad1.right_trigger * 6);
 

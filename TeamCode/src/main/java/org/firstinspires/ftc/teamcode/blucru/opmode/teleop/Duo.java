@@ -50,7 +50,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(name = "Main", group = "1")
-public class Main extends BluLinearOpMode {
+public class Duo extends BluLinearOpMode {
     enum State {
         RETRACTED,
         EXTENDING_OVER_INTAKE,
