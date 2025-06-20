@@ -152,7 +152,11 @@ public class Solo extends BluLinearOpMode {
                     dt.setDrivePower(0.55);
                 })
                 .transition(() -> stickyG1.a, State.HOME, () -> {
-                    new RetractFromBasketCommand().schedule();
+                    new SequentialCommandGroup(
+                            new ClawOpenCommand(),
+                            new WaitCommand(150),
+                            new RetractFromBasketCommand()
+                    ).schedule();
                 })
 
                 .state(State.INTAKING_SPEC)

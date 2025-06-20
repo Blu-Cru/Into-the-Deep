@@ -54,6 +54,7 @@ public class Auto extends BluLinearOpMode {
 
                 new PivotCommand(0.7).schedule();
                 new SpinWristAngleCommand(Math.PI).schedule();
+                new ArmCommand(2.3).schedule();
                 ptoServos.disengage();
             })
             .state(State.INITIALIZED)

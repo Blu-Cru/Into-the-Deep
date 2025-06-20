@@ -20,19 +20,19 @@ public class CollectRightBlockPath extends PIDPathBuilder {
                 .callback(() -> {
                     new TurretMotionProfileCommand(1.0).schedule();
                 })
-                .addMappedPoint(49, -40, 14, 8)
+                .addMappedPoint(49, -40, 30, 10)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new PreIntakeCommand(),
+                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new WaitCommand(150),
-                            new ExtensionCommand(7),
-                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL)
+                            new ExtensionCommand(10)
                     ).schedule();
                 })
                 .addMappedPoint(49, -40, 14)
                 .callback(() -> {
                     new GrabCommand().schedule();
                 })
-                .waitMillis(150);
+                .waitMillis(250);
     }
 }

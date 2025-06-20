@@ -26,13 +26,13 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
                             new WaitCommand(150),
                             new ExtensionCommand(11),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
-                            new TurretMotionProfileCommand(0.6)
+                            new TurretMotionProfileCommand(1.1)
                     ).schedule();
                 })
                 .addMappedPoint(29, -44.5, 30)
                 .callback(() -> {
                     new GrabCommand().schedule();
                 })
-                .waitMillis(150);
+                .waitMillis(250);
     }
 }
