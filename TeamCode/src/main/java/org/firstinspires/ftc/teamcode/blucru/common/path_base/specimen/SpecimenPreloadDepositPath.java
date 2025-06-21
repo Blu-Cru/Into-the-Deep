@@ -4,26 +4,40 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenPreloadDepositPath extends PIDPathBuilder {
     public SpecimenPreloadDepositPath() {
         super();
-        this.setPower(0.8)
+        this.setPower(0.55)
                 .callback(() -> {
+//                    new SequentialCommandGroup(
+//                            new PivotCommand(0.67),
+//                            new ArmCommand(0.0),
+//                            new UpDownWristAngleCommand(-0.1),
+//                            new SpinWristAngleCommand(Math.PI),
+//                            new PivotCommand(0.67),
+//                            new ExtensionCommand(10.5)
+//                    ).schedule();
                     new SpecimenFrontClipCommand(0).schedule();
                 })
-                .addMappedPoint(7, -47, 90)
+                .addMappedPoint(7, -59, 90)
+//                .waitMillis(100)
+                .addMappedPoint(7, -45, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
                             new WaitCommand(50),
                             new FullRetractCommand()
                     ).schedule();
-                })
-                .waitMillis(150);
+                });
     }
 }

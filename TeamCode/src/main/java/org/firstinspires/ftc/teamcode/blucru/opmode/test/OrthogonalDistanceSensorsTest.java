@@ -12,6 +12,7 @@ public class OrthogonalDistanceSensorsTest extends BluLinearOpMode {
     public void initialize(){
         addOrthogonalDistanceSensors();
         addDrivetrain();
+        orthogonalDistanceSensors.reading = true;
     }
 
     public void periodic(){

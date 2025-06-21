@@ -22,9 +22,12 @@ public class SpecimenDepositPath extends PIDPathBuilder {
 //        if(scoreCount == -1) {
             this.setPower(0.9)
                     .callback(() -> {
-                        new SpecimenFrontClipCommand().schedule();
+                        new SequentialCommandGroup(
+                                new WaitCommand(50),
+                                new SpecimenFrontClipCommand()
+                        ).schedule();
                     })
-                    .addMappedPoint(14, -44, 120)
+                    .addMappedPoint(14, -42.5, 110)
                     .callback(() -> {
                         new ClawOpenCommand().schedule();
                     });

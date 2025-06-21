@@ -61,6 +61,6 @@ public class AprilTagTest extends BluLinearOpMode {
     }
 
     public void telemetry() {
-        telemetry.addData("state:", state);
+        telemetry.addData("state", state);
     }
 }

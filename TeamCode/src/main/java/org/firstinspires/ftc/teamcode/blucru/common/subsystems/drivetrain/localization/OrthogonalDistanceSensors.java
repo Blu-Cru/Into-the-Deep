@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 
 public class OrthogonalDistanceSensors implements BluSubsystem, Subsystem {
     Rev2mDistanceSensor leftSensor, rightSensor;
-    boolean reading;
+    public boolean reading;
     double leftDistance, rightDistance;
 
     @Override

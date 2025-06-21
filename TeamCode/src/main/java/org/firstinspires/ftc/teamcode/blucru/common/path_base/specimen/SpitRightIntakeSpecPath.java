@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.En
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretMotionProfileCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
@@ -19,12 +20,13 @@ public class SpitRightIntakeSpecPath extends PIDPathBuilder {
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new EndEffectorRetractCommand(),
-                            new BoxtubeCommand(Math.PI/2, 4),
-                            new WaitCommand(500),
-                            new TurretMotionProfileCommand(-0.5)
+                            new BoxtubeCommand(1.0, 0),
+                            new WaitCommand(350),
+                            new TurretMotionProfileCommand(1.0),
+                            new UpDownWristAngleCommand(0.5)
                     ).schedule();
                 })
-                .addMappedPoint(39, -54, 90, 5)
+                .addMappedPoint(39, -54, 90, 2)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
@@ -32,6 +34,7 @@ public class SpitRightIntakeSpecPath extends PIDPathBuilder {
                             new SpecimenIntakeBackClipCommand()
                     ).schedule();
                 })
+                .waitMillis(150)
                 .setPower(0.25)
                 .addMappedPoint(36, -62, 90, 2)
                 .callback(() -> {
