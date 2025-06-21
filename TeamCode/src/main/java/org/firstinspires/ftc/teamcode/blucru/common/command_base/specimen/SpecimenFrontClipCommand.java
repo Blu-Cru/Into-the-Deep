@@ -15,9 +15,9 @@ public class SpecimenFrontClipCommand extends SequentialCommandGroup {
                 new PivotCommand(0.67),
                 new ArmCommand(0.0),
                 new WaitCommand(waitMillis),
-                new UpDownWristAngleCommand(0.05),
+                new UpDownWristAngleCommand(-0.1),
                 new SpinWristAngleCommand(Math.PI),
-                new BoxtubeCommand(0.67, 11.0)
+                new BoxtubeCommand(0.67, 10.5)
         );
     }
 

@@ -23,10 +23,10 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
                     new SequentialCommandGroup(
                             new PivotRetractCommand(),
                             new PreIntakeCommand(),
-                            new TurretMotionProfileCommand(1.0),
-                            new WaitCommand(150),
+                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new ExtensionCommand(11),
-                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL)
+                            new WaitCommand(80),
+                            new TurretMotionProfileCommand(1.0)
                     ).schedule();
                 })
                 .addMappedPoint(29, -44.5, 30)

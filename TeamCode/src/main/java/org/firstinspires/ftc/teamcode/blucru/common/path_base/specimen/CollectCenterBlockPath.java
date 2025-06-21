@@ -20,16 +20,16 @@ public class CollectCenterBlockPath extends PIDPathBuilder {
                 .callback(() -> {
                     new TurretMotionProfileCommand(1.4).schedule();
                 })
-                .addMappedPoint(39, -40, 30, 13)
+                .addMappedPoint(39, -40, 10, 13)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new PreIntakeCommand(),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new WaitCommand(150),
-                            new ExtensionCommand(13)
+                            new ExtensionCommand(12)
                     ).schedule();
                 })
-                .addMappedPoint(39, -40, 30)
+                .addMappedPoint(39, -40, 10)
                 .callback(() -> {
                     new GrabCommand().schedule();
                 })
