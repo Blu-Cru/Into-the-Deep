@@ -52,9 +52,8 @@ public class Auto extends BluLinearOpMode {
                 telemetry.addLine("Config Built!!!! good job you deserve a pat on the back");
                 telemetry.update();
 
-                new PivotCommand(0.7).schedule();
+                new ArmCommand(Math.PI/2).schedule();
                 new SpinWristAngleCommand(Math.PI).schedule();
-                new ArmCommand(2.3).schedule();
                 ptoServos.disengage();
             })
             .state(State.INITIALIZED)

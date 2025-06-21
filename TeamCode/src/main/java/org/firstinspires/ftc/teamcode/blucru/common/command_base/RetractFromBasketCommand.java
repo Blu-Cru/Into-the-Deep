@@ -18,7 +18,7 @@ public class RetractFromBasketCommand extends SequentialCommandGroup {
     public RetractFromBasketCommand() {
         super(
                 new ArmGlobalAngleCommand(1.5),
-                new WaitCommand(100),
+                new WaitCommand(300),
                 new BoxtubeRetractCommand(),
                 new ClawLooseCommand(),
                 new SpinWristCenterCommand(),

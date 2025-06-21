@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.sample.SampleBackHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
@@ -88,13 +89,7 @@ public class Solo extends BluLinearOpMode {
                     orientation = spinWrist.setGlobalAngle(SampleOrientation.VERTICAL);
                 })
                 .transition(() -> stickyG1.y && extension.getDistance() < 2.0, State.SCORING_BASKET, () -> {
-                    new SequentialCommandGroup(
-                            new ArmCommand(0.2),
-                            new BoxtubeCommand(Math.PI/2, 24.0),
-                            new UpDownWristAngleCommand(1.5),
-                            new SpinWristAngleCommand(Math.PI),
-                            new TurretCenterCommand()
-                    ).schedule();
+                    new SampleBackHighCommand().schedule();
                 })
                 .transition(() -> stickyG2.x && extension.getDistance() < 2.0, State.INTAKING_SPEC, () -> {
                     if (grabByClip) {
@@ -154,7 +149,6 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> stickyG1.a, State.HOME, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
-                            new WaitCommand(150),
                             new RetractFromBasketCommand()
                     ).schedule();
                 })
@@ -167,11 +161,13 @@ public class Solo extends BluLinearOpMode {
                             new ClawGrabCommand(),
                             new WaitCommand(140),
                             new ConditionalCommand(
+                                    // raise spec off wall
                                     new SequentialCommandGroup(
                                             new ExtensionCommand(7.0),
                                             new WaitCommand(90),
                                             new UpDownWristAngleCommand(-1.6)
                                     ),
+                                    // tilt spec off wall
                                     new SequentialCommandGroup(
                                             new PivotCommand(1.0),
                                             new UpDownWristAngleCommand(-2.0)
