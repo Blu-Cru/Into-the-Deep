@@ -15,10 +15,13 @@ public class OrthogonalDistanceSensorsTest extends BluLinearOpMode {
     }
 
     public void periodic(){
-        orthogonalDistanceSensors.read();
         Pose2d pos = orthogonalDistanceSensors.getPos(dt.heading);
-        telemetry.addData("X Pos:", pos.getX());
-        telemetry.addData("Y Pos:", pos.getY());
-        telemetry.addData("Heading", pos.getHeading());
+        if (stickyG1.a){
+            dt.setHeading(Math.PI/2);
+        }
+        telemetry(pos);
+    }
+    public void telemetry(Pose2d pose){
+        telemetry.addData("Pos", pose);
     }
 }
