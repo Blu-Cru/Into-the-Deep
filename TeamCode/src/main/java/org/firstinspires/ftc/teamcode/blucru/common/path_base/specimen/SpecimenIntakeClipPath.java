@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 public class SpecimenIntakeClipPath extends PIDPathBuilder {
     public SpecimenIntakeClipPath(double tolerance) {
         super();
-        this.setPower(0.7)
+        this.setPower(0.9)
                 .callback(() -> {
                     new SpecimenIntakeBackClipCommand().schedule();
                 })

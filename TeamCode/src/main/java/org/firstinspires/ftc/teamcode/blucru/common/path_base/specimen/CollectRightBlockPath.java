@@ -16,20 +16,18 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 public class CollectRightBlockPath extends PIDPathBuilder {
     public CollectRightBlockPath() {
         super();
-        this.setPower(0.85)
+        this.setPower(0.9)
                 .callback(() -> {
-                    new TurretMotionProfileCommand(1.0).schedule();
+                    new TurretMotionProfileCommand(0.0).schedule();
                 })
-                .addMappedPoint(49, -40, 30, 10)
+                .addMappedPoint(44, -40, 30, 12)
                 .callback(() -> {
                     new SequentialCommandGroup(
-                            new PreIntakeCommand(),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
-                            new WaitCommand(150),
                             new ExtensionCommand(10)
                     ).schedule();
                 })
-                .addMappedPoint(49, -40, 14)
+                .addMappedPoint(44, -40, 30)
                 .callback(() -> {
                     new GrabCommand().schedule();
                 })

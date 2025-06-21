@@ -12,7 +12,7 @@ public class PreIntakeCommand extends SequentialCommandGroup {
         super(
                 new ArmCommand(0.05),
                 new UpDownWristAngleCommand(-Math.PI/2 + 0.05),
-                new WaitCommand(170),
+                new WaitCommand(220),
                 new ClawOpenCommand()
         );
     }

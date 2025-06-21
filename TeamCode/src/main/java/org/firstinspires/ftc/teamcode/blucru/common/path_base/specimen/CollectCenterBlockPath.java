@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 public class CollectCenterBlockPath extends PIDPathBuilder {
     public CollectCenterBlockPath() {
         super();
-        this.setPower(0.85)
+        this.setPower(0.9)
                 .callback(() -> {
                     new TurretMotionProfileCommand(1.4).schedule();
                 })

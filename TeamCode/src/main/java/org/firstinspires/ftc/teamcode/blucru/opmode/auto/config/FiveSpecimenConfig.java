@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenI
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenParkIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenPreloadDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpitPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpitRightIntakeSpecPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
@@ -57,34 +58,24 @@ public class FiveSpecimenConfig extends AutoConfig {
                     currentPath = new CollectLeftBlockPath().build().start();
                 })
                 .state(State.COLLECTING_BLOCKS)
-                .transition(() -> currentPath.isDone() || (
-                            Robot.validSample()
-                            && Robot.getInstance().pivot.getAngle() < 0.4
-                            && Math.abs(Robot.getInstance().getBoxtubePoint3d().y) < 44
-                        ),
-                        State.SPITTING, () -> {
-//                            new ArmPreIntakeCommand().schedule();
-//                            new ClampGrabCommand().schedule();
-//                            new WheelStopCommand().schedule();
-                            currentPath = new SpitPath().build().start();
-                        })
-                .state(State.SPITTING)
-                .transition(() -> currentPath.isDone() && spitCount < 2, State.COLLECTING_BLOCKS, () -> {
+                .transition(() -> currentPath.isDone() && spitCount < 2, State.SPITTING, () -> {
                     spitCount++;
-                    currentPath = collectPaths[spitCount].start();
+                    currentPath = new SpitPath().build().start();
                 })
                 .transition(() -> currentPath.isDone() && spitCount >= 2, State.INTAKING_CYCLE, () -> {
-                    currentPath = new SpecimenIntakeClipPath(2).build().start();
+                    currentPath = new SpitRightIntakeSpecPath().build().start();
                 })
-
+                .state(State.SPITTING)
+                .transition(() -> currentPath.isDone(), State.COLLECTING_BLOCKS, () -> {
+                    currentPath = collectPaths[spitCount].start();
+                })
                 .state(State.INTAKING_CYCLE)
-                .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount >= 1)
-                                || (Robot.justValidSample()
-                                && Robot.getInstance().extension.getDistance() < 8.0),
+                .transition(() -> (currentPath.isDone() && Robot.getInstance().extension.getDistance() < 8.0 &&
+                        (Robot.validSample() || thisCycleIntakeFailCount >= 1)),
                         State.DEPOSIT_CYCLE, () -> {
                             currentPath = new SpecimenDepositPath(-1).start();
-                        })
-                .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount < 1), State.INTAKE_FAILSAFE_CYCLE, () -> {
+                })
+                .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount < 1 && !Robot.validSample()), State.INTAKE_FAILSAFE_CYCLE, () -> {
                     currentPath = new SpecimenCycleIntakeFailsafePath().build().start();
                     thisCycleIntakeFailCount++;
                 })
@@ -98,13 +89,11 @@ public class FiveSpecimenConfig extends AutoConfig {
                 })
 
                 .state(State.DEPOSIT_CYCLE)
-                .transition(() -> currentPath.isDone() && scoreCount < 4 && runtime.seconds() < 25,
-                        State.INTAKING_CYCLE,
-                        () -> {
-                            thisCycleIntakeFailCount = 0;
-                            scoreCount++;
-                            currentPath = new SpecimenIntakeClipPath().build().start();
-                        })
+                .transition(() -> currentPath.isDone() && scoreCount < 4 && runtime.seconds() < 25, State.INTAKING_CYCLE, () -> {
+                    thisCycleIntakeFailCount = 0;
+                    scoreCount++;
+                    currentPath = new SpecimenIntakeClipPath().build().start();
+                })
                 .transition(() -> currentPath.isDone() && !(scoreCount < 4 && runtime.seconds() < 25), State.PARK_INTAKING, () -> {
                     Log.i("Five Specimen Config", "parking, time = " + runtime.seconds());
                     currentPath = new SpecimenParkIntakePath().build().start();
@@ -112,12 +101,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                 .onExit(() -> thisCycleIntakeFailCount = 0)
 
                 .state(State.PARK_INTAKING)
-                .transition(() -> currentPath.isDone() || (Robot.justValidSample() && Robot.getInstance().pivot.getAngle() < 0.35),
-                        State.PARKED, () -> {
-                            new ClawGrabCommand().schedule();
-//                            new WheelStopCommand().schedule();
-                            new ExtensionCommand(14).schedule();
-                        })
+                .transition(() -> currentPath.isDone(), State.PARKED)
                 .state(State.PARKED)
                 .build();
     }

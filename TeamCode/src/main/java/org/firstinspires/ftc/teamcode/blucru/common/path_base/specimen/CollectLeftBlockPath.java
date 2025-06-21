@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 public class CollectLeftBlockPath extends PIDPathBuilder {
     public CollectLeftBlockPath() {
         super();
-        this.setPower(0.8)
+        this.setPower(0.9)
                 .addMappedPoint(29, -44.5, 30,17)
                 .callback(() -> {
                     new SequentialCommandGroup(

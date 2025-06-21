@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 public class SpecimenParkIntakePath extends PIDPathBuilder {
     public SpecimenParkIntakePath() {
         super();
-        this.setPower(0.4)
+        this.setPower(0.8)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
@@ -25,7 +25,7 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
                     ).schedule();
                 })
 //                .schedule(new BoxtubeRetractCommand())
-                .addMappedPoint(24, -48, -45, 6)
+                .addMappedPoint(12, -60, 0, 15)
                 .callback(() ->
                         new SequentialCommandGroup(
                                 new PreIntakeCommand(),
@@ -35,6 +35,6 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
                                 new GrabCommand()
                         ).schedule()
                 )
-                .waitMillis(4000);
+                .waitMillis(1000);
     }
 }

@@ -12,11 +12,11 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 public class SpecimenCycleIntakeFailsafePath extends PIDPathBuilder {
     public SpecimenCycleIntakeFailsafePath() {
         super();
-        this.setPower(0.5)
+        this.setPower(0.9)
                 .callback(() -> {
                     new SpecimenIntakeBackClipCommand().schedule();
                 })
-                .addMappedPoint(25, -52.5, 100)
-                .waitMillis(400);
+                .addMappedPoint(25, -52.5, 110)
+                .waitMillis(250);
     }
 }
