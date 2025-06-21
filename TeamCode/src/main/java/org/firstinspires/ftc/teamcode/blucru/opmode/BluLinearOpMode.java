@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Extension
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.Pivot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.PTODrivetrain;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.localization.OrthogonalDistanceSensors;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.SpecCactusSensor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Claw;
@@ -44,6 +45,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public CVMaster cvMaster;
     public SpecCactusSensor cactus;
     public PTOServos ptoServos;
+    public OrthogonalDistanceSensors orthogonalDistanceSensors;
 
     public StickyGamepad stickyG1, stickyG2;
 
@@ -134,6 +136,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public void addHangMotor() {hangMotor = robot.addHangMotor();}
     public void addCactus() {cactus = robot.addCactus();}
     public void addPTOServos() {ptoServos = robot.addPTOServos();}
+    public void addOrthogonalDistanceSensors(){ orthogonalDistanceSensors = robot.addOrthogonalDistanceSensors();}
 
     // enable the FTC Dashboard telemetry and field overlay
     public void enableFTCDashboard() {

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.localization;
 
+import android.util.Log;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.Subsystem;
@@ -30,6 +32,15 @@ public class OrthogonalDistanceSensors implements BluSubsystem, Subsystem {
     @Override
     public void write() {
 
+    }
+
+    public Pose2d getPos(double robotHeading){
+        try{
+            return OrthogonalDistanceSensorsPoseEstimation.getRobotPose(leftDistance, rightDistance, robotHeading);
+        } catch (Exception e) {
+            Log.e("OrthogonalDistanceSensors", "Either reading same wall or robot out of bounds");
+        }
+        return new Pose2d();
     }
 
     @Override
