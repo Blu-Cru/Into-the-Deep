@@ -12,17 +12,21 @@ public class OrthogonalDistanceSensorsTest extends BluLinearOpMode {
     public void initialize(){
         addOrthogonalDistanceSensors();
         addDrivetrain();
+    }
+
+    @Override
+    public void onStart() {
         orthogonalDistanceSensors.reading = true;
     }
 
     public void periodic(){
-        Pose2d pos = orthogonalDistanceSensors.getPos(dt.heading);
         if (stickyG1.a){
             dt.setHeading(Math.PI/2);
         }
-        telemetry(pos);
     }
-    public void telemetry(Pose2d pose){
-        telemetry.addData("Pos", pose);
+
+    @Override
+    public void telemetry() {
+        telemetry.addData("Estimated pose", orthogonalDistanceSensors.getPos(dt.heading));
     }
 }

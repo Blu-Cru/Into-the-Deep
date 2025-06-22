@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.ServoControllerEx;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @Config
-@TeleOp(name = "Servo test", group = "hardware test")
+@TeleOp(group = "hardware test")
 public class ServoTest extends LinearOpMode {
     public static double position = 0.5;
     public static String name = "wrist";
