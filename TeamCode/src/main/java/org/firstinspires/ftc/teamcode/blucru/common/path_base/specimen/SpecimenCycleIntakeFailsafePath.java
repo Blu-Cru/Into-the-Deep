@@ -10,13 +10,16 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.Specim
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenCycleIntakeFailsafePath extends PIDPathBuilder {
-    public SpecimenCycleIntakeFailsafePath() {
+    public SpecimenCycleIntakeFailsafePath(int scoreCount) {
         super();
         this.setPower(0.9)
                 .callback(() -> {
                     new SpecimenIntakeBackClipCommand().schedule();
                 })
-                .addMappedPoint(25, -52.5, 110)
-                .waitMillis(250);
+                .addMappedPoint(25, -52.5, 110);
+
+        if (scoreCount < 4) {
+            this.waitMillis(250);
+        }
     }
 }

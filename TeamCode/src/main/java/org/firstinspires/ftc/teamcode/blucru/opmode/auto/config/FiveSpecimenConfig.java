@@ -76,7 +76,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                             currentPath = new SpecimenDepositPath(-1).start();
                 })
                 .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount < 1 && !Robot.validSample()), State.INTAKE_FAILSAFE_CYCLE, () -> {
-                    currentPath = new SpecimenCycleIntakeFailsafePath().build().start();
+                    currentPath = new SpecimenCycleIntakeFailsafePath(scoreCount).build().start();
                     thisCycleIntakeFailCount++;
                 })
 

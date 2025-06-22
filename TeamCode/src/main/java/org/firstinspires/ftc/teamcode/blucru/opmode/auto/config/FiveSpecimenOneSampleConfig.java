@@ -100,7 +100,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                             currentPath = new SpecimenDepositPath().build().start();
                         })
                 .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount < 1), State.INTAKE_FAILSAFE_CYCLE, () -> {
-                    currentPath = new SpecimenCycleIntakeFailsafePath().build().start();
+                    currentPath = new SpecimenCycleIntakeFailsafePath(scoreCount).build().start();
                     thisCycleIntakeFailCount++;
                 })
 
@@ -113,13 +113,11 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 })
 
                 .state(State.DEPOSIT_CYCLE)
-                .transition(() -> currentPath.isDone() && scoreCount < 4 && runtime.seconds() < 25,
-                        State.INTAKING_CYCLE,
-                        () -> {
-                            thisCycleIntakeFailCount = 0;
-                            scoreCount++;
-                            currentPath = new SpecimenIntakeClipPath().build().start();
-                        })
+                .transition(() -> currentPath.isDone() && scoreCount < 4 && runtime.seconds() < 25, State.INTAKING_CYCLE, () -> {
+                    thisCycleIntakeFailCount = 0;
+                    scoreCount++;
+                    currentPath = new SpecimenIntakeClipPath().build().start();
+                })
                 .transition(() -> currentPath.isDone() && !(scoreCount < 4 && runtime.seconds() < 25), State.INTAKING_YELLOW, () -> {
                     Log.i("Five Specimen Config", "parking, time = " + runtime.seconds());
                     currentPath = new SpecimenParkIntakePath().build().start();

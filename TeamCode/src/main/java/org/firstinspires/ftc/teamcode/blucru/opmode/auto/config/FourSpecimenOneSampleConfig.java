@@ -100,7 +100,7 @@ public class FourSpecimenOneSampleConfig extends AutoConfig {
                             currentPath = new SpecimenDepositPath().build().start();
                         })
                 .transition(() -> (currentPath.isDone() && thisCycleIntakeFailCount < 1), State.INTAKE_FAILSAFE_CYCLE, () -> {
-                    currentPath = new SpecimenCycleIntakeFailsafePath().build().start();
+                    currentPath = new SpecimenCycleIntakeFailsafePath(scoreCount).build().start();
                     thisCycleIntakeFailCount++;
                 })
 

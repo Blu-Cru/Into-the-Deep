@@ -26,7 +26,7 @@ public class CollectCenterBlockPath extends PIDPathBuilder {
                             new PreIntakeCommand(),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new WaitCommand(150),
-                            new ExtensionCommand(13)
+                            new ExtensionCommand(13.5)
                     ).schedule();
                 })
                 .addMappedPoint(39, -40, 30)

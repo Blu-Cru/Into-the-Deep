@@ -408,7 +408,7 @@ public class SonnyTele extends BluLinearOpMode {
                     new FullRetractCommand().schedule();
                 })
                 .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE_FAIL, () -> {
-                    currentPath = new SpecimenCycleIntakeFailsafePath().start();
+                    currentPath = new SpecimenCycleIntakeFailsafePath(0).start();
                 })
                 .transition(() -> Robot.justValidSample() && pivot.getAngle() < 0.5, State.AUTO_SPEC_DEPO_PATH, () -> {
                     currentPath = new TeleSpecimenDepoPath().start();

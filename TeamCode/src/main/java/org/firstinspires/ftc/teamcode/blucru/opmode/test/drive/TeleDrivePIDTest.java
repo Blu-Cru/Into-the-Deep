@@ -82,7 +82,7 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
 
                 .state(State.CYCLE_INTAKE)
                 .transition(() -> stickyG1.a, State.IDLE)
-                .transition(() -> currentPath.isDone(), State.CYCLE_FAILSAFE, () -> currentPath = new SpecimenCycleIntakeFailsafePath().start())
+                .transition(() -> currentPath.isDone(), State.CYCLE_FAILSAFE, () -> currentPath = new SpecimenCycleIntakeFailsafePath(0).start())
 //                .transition(() -> Robot.getInstance().intakeSwitch.justPressed()
 //                        && Robot.getInstance().pivot.getAngle() < 0.6, State.CYCLE_DEPO_PATH, () -> currentPath = cycleDepoPath.start())
                 .loop(() -> {
