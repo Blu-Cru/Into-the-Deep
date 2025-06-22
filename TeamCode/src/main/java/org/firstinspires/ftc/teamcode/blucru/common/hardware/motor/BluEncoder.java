@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class BluEncoder extends DcMotorImplEx implements BluHardwareDevice {
     String name;
+    double multiplier = 1;
     double encoderTicks = 0, vel = 0;
     double offsetTicks = 0;
     double lastVelTime, lastPos;

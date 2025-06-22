@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.test;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "test")
@@ -12,6 +15,12 @@ public class PTOTest extends BluLinearOpMode {
         addPTOServos();
         addPTODrivetrain();
         addHangServos();
+        addClapServos();
+        addArm();
+        addClaw();
+        addUpDownWrist();
+        addSpinWrist();
+        addTurret();
         addExtension();
         addPivot();
 
@@ -31,12 +40,20 @@ public class PTOTest extends BluLinearOpMode {
             ptoServos.engage();
         }
 
-        if(stickyG1.y) {
+        if(stickyG1.dpad_left) {
             slideHangServos.release();
         }
 
-        if(stickyG1.a) {
+        if(stickyG1.dpad_right) {
             slideHangServos.hang();
+        }
+
+        if(stickyG1.b) {
+            new GetHooksCommand().schedule();
+        }
+
+        if(stickyG1.a) {
+            new FullRetractCommand().schedule();
         }
 
         ptoDt.drive(new Pose2d(gamepad1.left_stick_x,0, 0));

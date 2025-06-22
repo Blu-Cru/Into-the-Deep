@@ -8,28 +8,63 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 @Config
 @TeleOp(group = "test")
 public class HangPIDTuner extends BluLinearOpMode {
-    public static double targetTicks = 0;
+    public static double targetInches = 0;
+    boolean hanging = false;
 
     @Override
     public void initialize() {
         enableFTCDashboard();
-        addHangMotor();
-        addArm();
+        addPTODrivetrain();
+        addPTOServos();
+        addHangServos();
+        addExtension();
+        addPivot();
+
+        pivot.useExtension(extension.getMotor());
+        extension.usePivot(pivot.getMotor());
+    }
+
+    @Override
+    public void onStart() {
+        slideHangServos.release();
+        pivot.pidTo(0.75);
+        extension.pidTo(0);
     }
 
     @Override
     public void periodic() {
-        hangMotor.updatePID();
+        ptoDt.updatePID();
 
-        if(!(gamepad1.right_trigger > 0.2)) {
-            hangMotor.idle();
-        } else if(gamepad1.a) {
-            hangMotor.pidTo(targetTicks);
+        if(hanging) {
+            if(stickyG1.y) {
+                hanging = false;
+                slideHangServos.release();
+                ptoServos.disengage();
+            }
+
+            if(!(gamepad1.right_trigger > 0.2)) {
+                ptoDt.stopPID();
+            } else if(gamepad1.a) {
+                ptoDt.pidTo(targetInches);
+            }
+        } else {
+            if (stickyG1.y) {
+                hanging = true;
+                slideHangServos.hang();
+                ptoServos.engage();
+            }
+
+            ptoDt.teleOpDrive(gamepad1);
+
+            if(stickyG1.right_stick_button) {
+                ptoDt.setHeading(Math.PI/2);
+            }
         }
+
     }
 
     @Override
     public void telemetry() {
-        telemetry.addData("Target ticks", targetTicks);
+        telemetry.addData("Target Inches", targetInches);
     }
 }
