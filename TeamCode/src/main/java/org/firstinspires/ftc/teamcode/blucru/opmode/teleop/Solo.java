@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.teleop;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -119,7 +120,6 @@ public class Solo extends BluLinearOpMode {
                         turret.setMotionProfileAngle(-1.0);
                     if (stickyG2.left_trigger)
                         turret.setMotionProfileAngle(1.0);
-
                     if (stickyG1.left_trigger_released || stickyG2.left_trigger_released)
                         turret.center();
 
@@ -149,6 +149,7 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> stickyG1.a, State.HOME, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
+                            new WaitCommand(80),
                             new RetractFromBasketCommand()
                     ).schedule();
                 })
@@ -250,14 +251,21 @@ public class Solo extends BluLinearOpMode {
                 })
                 .build();
 
-        sm.setState(State.HOME);
+        sm.setState(State.MANUAL_RESET);
         sm.start();
     }
 
     @Override
     public void periodic() {
-        if (gamepad1.getGamepadId() == -1) dt.teleOpDrive(gamepad2);
-        else dt.teleOpDrive(gamepad1);
+        switch (Enum.valueOf(State.class, sm.getStateString())) {
+            case MANUAL_RESET:
+                dt.drive(new Pose2d(0, 0, 0));
+                break;
+            default:
+                if (gamepad1.getGamepadId() == -1) dt.teleOpDrive(gamepad2);
+                else dt.teleOpDrive(gamepad1);
+                break;
+        }
 
         if(gamepad1.right_stick_button || gamepad2.right_stick_button) {
             dt.setHeading(Math.PI/2);
