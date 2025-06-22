@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
@@ -13,15 +14,17 @@ public class SpecimenFrontClipCommand extends SequentialCommandGroup {
     public SpecimenFrontClipCommand(int waitMillis) {
         super(
                 new PivotCommand(0.67),
-                new ArmCommand(0.0),
+                new ArmCommand(-0.1),
+                new WaitCommand(130),
+                new ExtensionCommand(4.0),
                 new WaitCommand(waitMillis),
-                new UpDownWristAngleCommand(0.05),
+                new UpDownWristAngleCommand(-0.1),
                 new SpinWristAngleCommand(Math.PI),
-                new BoxtubeCommand(0.67, 11.0)
+                new BoxtubeCommand(0.71, 11)
         );
     }
 
     public SpecimenFrontClipCommand() {
-        this(250);
+        this(120);
     }
 }

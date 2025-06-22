@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.Extensi
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
@@ -30,7 +31,8 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
                         new SequentialCommandGroup(
                                 new PreIntakeCommand(),
                                 new WaitCommand(150),
-                                new ExtensionCommand(10),
+                                new ExtensionCommand(13),
+                                new TurretMotionProfileCommand(-0.6),
                                 new WaitCommand(400),
                                 new GrabCommand()
                         ).schedule()

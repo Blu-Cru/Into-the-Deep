@@ -20,11 +20,14 @@ public class SpecimenDepositPath extends PIDPathBuilder {
     public SpecimenDepositPath(int scoreCount) {
         super();
 //        if(scoreCount == -1) {
-            this.setPower(0.9)
+            this.setPower(0.7)
                     .callback(() -> {
-                        new SpecimenFrontClipCommand().schedule();
+                        new SequentialCommandGroup(
+                                new WaitCommand(50),
+                                new SpecimenFrontClipCommand()
+                        ).schedule();
                     })
-                    .addMappedPoint(14, -44, 120)
+                    .addMappedPoint(14, -43.5, 110)
                     .callback(() -> {
                         new ClawOpenCommand().schedule();
                     });

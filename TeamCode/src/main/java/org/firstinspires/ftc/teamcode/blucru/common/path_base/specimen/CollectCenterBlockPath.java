@@ -18,21 +18,27 @@ public class CollectCenterBlockPath extends PIDPathBuilder {
         super();
         this.setPower(0.9)
                 .callback(() -> {
-                    new TurretMotionProfileCommand(1.4).schedule();
-                })
-                .addMappedPoint(39, -40, 30, 13)
-                .callback(() -> {
                     new SequentialCommandGroup(
                             new PreIntakeCommand(),
-                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
-                            new WaitCommand(150),
-                            new ExtensionCommand(13.5)
+                            new TurretMotionProfileCommand(1.2),
+                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL)
                     ).schedule();
                 })
-                .addMappedPoint(39, -40, 30)
+                .addMappedPoint(39, -39, 17, 13)
                 .callback(() -> {
-                    new GrabCommand().schedule();
+                    new SequentialCommandGroup(
+                            new WaitCommand(150),
+                            new ExtensionCommand(9.5)
+                    ).schedule();
                 })
-                .waitMillis(250);
+                .addMappedPoint(39, -39, 17)
+                .callback(() -> {
+                    new SequentialCommandGroup(
+                            new GrabCommand(),
+                            new WaitCommand(360),
+                            new TurretMotionProfileCommand(-1.0)
+                    ).schedule();
+                })
+                .waitMillis(400);
     }
 }
