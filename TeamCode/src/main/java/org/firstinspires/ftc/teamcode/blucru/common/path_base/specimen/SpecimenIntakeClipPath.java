@@ -22,6 +22,7 @@ public class SpecimenIntakeClipPath extends PIDPathBuilder {
                 .addMappedPoint(36, -63, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
+                            new ExtensionCommand(2.6),
                             new ClawGrabCommand(),
                             new WaitCommand(140),
                             new ExtensionCommand(7.0)

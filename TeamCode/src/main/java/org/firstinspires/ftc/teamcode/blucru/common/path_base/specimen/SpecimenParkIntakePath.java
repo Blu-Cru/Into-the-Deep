@@ -31,7 +31,7 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
                         new SequentialCommandGroup(
                                 new PreIntakeCommand(),
                                 new WaitCommand(150),
-                                new ExtensionCommand(10),
+                                new ExtensionCommand(13),
                                 new TurretMotionProfileCommand(-0.6),
                                 new WaitCommand(400),
                                 new GrabCommand()

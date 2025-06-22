@@ -13,10 +13,10 @@ public class SpecimenCycleIntakeFailsafePath extends PIDPathBuilder {
     public SpecimenCycleIntakeFailsafePath() {
         super();
         this.setPower(0.9)
+                .addMappedPoint(25, -52.5, 110)
                 .callback(() -> {
                     new SpecimenIntakeBackClipCommand().schedule();
                 })
-                .addMappedPoint(25, -52.5, 110)
-                .waitMillis(250);
+                .waitMillis(150);
     }
 }

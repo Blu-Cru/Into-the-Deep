@@ -14,13 +14,13 @@ public class SpecimenFrontClipCommand extends SequentialCommandGroup {
     public SpecimenFrontClipCommand(int waitMillis) {
         super(
                 new PivotCommand(0.67),
-                new ArmCommand(0.0),
+                new ArmCommand(-0.1),
                 new WaitCommand(130),
                 new ExtensionCommand(4.0),
                 new WaitCommand(waitMillis),
                 new UpDownWristAngleCommand(-0.1),
                 new SpinWristAngleCommand(Math.PI),
-                new BoxtubeCommand(0.67, 10.5)
+                new BoxtubeCommand(0.71, 11)
         );
     }
 

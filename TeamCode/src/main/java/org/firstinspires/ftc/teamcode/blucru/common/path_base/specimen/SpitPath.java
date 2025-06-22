@@ -26,7 +26,7 @@ public class SpitPath extends PIDPathBuilder {
                             new TurretMotionProfileCommand(-1.0)
                     ).schedule();
                 })
-                .addMappedPoint(38, -50, -30, 7)
+                .addMappedPoint(38, -50, -20, 7)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ExtensionCommand(7),
