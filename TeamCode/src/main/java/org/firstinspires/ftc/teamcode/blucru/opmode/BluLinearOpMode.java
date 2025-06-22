@@ -16,8 +16,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivet
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.PTODrivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.localization.OrthogonalDistanceSensors;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.SpecCactusSensor;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.CactusSensor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Claw;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.DualCactusSensor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.SpinWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Turret;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.UpDownWrist;
@@ -43,7 +44,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public SlideHangServos slideHangServos;
     public HangMotor hangMotor;
     public CVMaster cvMaster;
-    public SpecCactusSensor cactus;
+    public DualCactusSensor cactus;
     public PTOServos ptoServos;
     public OrthogonalDistanceSensors orthogonalDistanceSensors;
 

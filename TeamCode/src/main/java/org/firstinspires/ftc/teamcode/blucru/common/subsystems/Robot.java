@@ -15,8 +15,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.Drivet
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.PTODrivetrain;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.localization.OrthogonalDistanceSensors;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.SpecCactusSensor;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.CactusSensor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Claw;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.DualCactusSensor;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.SpinWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Turret;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.UpDownWrist;
@@ -48,7 +49,7 @@ public class Robot {
     public Pusher pusher;
     public SlideHangServos slideHangServos;
     public HangMotor hangMotor;
-    public SpecCactusSensor cactus;
+    public DualCactusSensor cactus;
     public PTOServos ptoServos;
     public OrthogonalDistanceSensors orthogonalDistanceSensors;
 
@@ -112,19 +113,12 @@ public class Robot {
     }
 
     public static boolean validSample() {
-        return getInstance().cactus.validSample;
+        return getInstance().cactus.validSample();
     }
 
-    public static boolean validSpecimen() {
-        return getInstance().cactus.validSpecimen;
-    }
 
     public static boolean justValidSample() {
-        return getInstance().cactus.justValidSample;
-    }
-
-    public static boolean justValidSpecimen() {
-        return getInstance().cactus.justValidSpecimen;
+        return getInstance().cactus.justValidSample();
     }
 
     public void followBoxtubeSpline(BoxtubeSpline spline) {
@@ -249,8 +243,8 @@ public class Robot {
         return hangMotor;
     }
 
-    public SpecCactusSensor addCactus() {
-        cactus = new SpecCactusSensor();
+    public DualCactusSensor addCactus() {
+        cactus = new DualCactusSensor();
         subsystems.add(cactus);
         return cactus;
     }
