@@ -10,11 +10,17 @@ import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class OrthogonalDistanceSensors implements BluSubsystem, Subsystem {
     Rev2mDistanceSensor leftSensor, rightSensor;
     public boolean reading;
     double leftDistance, rightDistance;
+
+    public OrthogonalDistanceSensors() {
+        leftSensor = Globals.hwMap.get(Rev2mDistanceSensor.class, "distleft");
+        rightSensor = Globals.hwMap.get(Rev2mDistanceSensor.class, "distright");
+    }
 
     @Override
     public void init() {
