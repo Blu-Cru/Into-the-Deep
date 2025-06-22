@@ -6,8 +6,8 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.spline.BoxtubeSplineCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosMidwayCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosMidwayCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosReleaseCommand;
 
 public class GetHooksHighCommand extends SequentialCommandGroup {
     public GetHooksHighCommand() {

@@ -20,7 +20,7 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
             vMAX = 300.0,
             aMAX = 600.0; // constraints for velocity and acceleration (ticks/s and ticks/s^2)
 
-    boolean isPID;
+    boolean isPtoPID;
     BluEncoder leftEncoder, rightEncoder;
     PIDController leftPID, rightPID;
     MotionProfile profile;
@@ -43,7 +43,7 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
     public void init() {
         super.init();
 
-        isPID = false;
+        isPtoPID = false;
 
         leftEncoder.reset();
         rightEncoder.reset();
@@ -59,7 +59,7 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
 
     @Override
     public void write() {
-        if(isPID) {
+        if(isPtoPID) {
 
         } else {
             super.write();
@@ -68,11 +68,11 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
 
     @Override
     public void telemetry(Telemetry telemetry) {
-        telemetry.addData("PTO Drivetrain Is PID", isPID);
+        super.telemetry(telemetry);
+        telemetry.addData("PTO Drivetrain Is PID", isPtoPID);
         telemetry.addData("leftPID setpoint", leftPID.getSetPoint());
         telemetry.addData("rightPID setpoint", rightPID.getSetPoint());
         telemetry.addData("Left Hang Encoder", leftPos);
         telemetry.addData("Right Hang Encoder", rightPos);
-        super.telemetry(telemetry);
     }
 }

@@ -24,9 +24,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.cl
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.motor.HangMotorHighBarCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosHangComamnd;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosHangComamnd;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.pusher.PushCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.sample.SampleBackHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.sample.SampleBackLowCommand;

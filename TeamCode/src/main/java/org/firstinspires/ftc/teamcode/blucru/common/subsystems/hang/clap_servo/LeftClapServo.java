@@ -12,6 +12,6 @@ public class LeftClapServo extends ClapServo {
 
     @Override
     public void retract() {
-        setPosition(getCenterPosition() + RETRACT_DELTA);
+        setPosition(getCenterPosition() - RETRACT_DELTA);
     }
 }

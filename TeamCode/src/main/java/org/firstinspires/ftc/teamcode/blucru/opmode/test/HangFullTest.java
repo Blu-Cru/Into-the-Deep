@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractComm
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.BoxtubeRetractHang3Command;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosHangComamnd;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosHangComamnd;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "test")

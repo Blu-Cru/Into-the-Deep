@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Spin
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Turret;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.UpDownWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.clap_servo.ClapServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slide_hang_servo.SlideHangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.pto_servo.PTOServos;
 import org.firstinspires.ftc.teamcode.blucru.common.vision.CVMaster;
@@ -50,6 +51,7 @@ public class Robot {
     public HangMotor hangMotor;
     public SpecCactusSensor cactus;
     public PTOServos ptoServos;
+    public ClapServos clapServos;
     public OrthogonalDistanceSensors orthogonalDistanceSensors;
 
     // list of all subsystems
@@ -259,6 +261,12 @@ public class Robot {
         ptoServos = new PTOServos();
         subsystems.add(ptoServos);
         return ptoServos;
+    }
+
+    public ClapServos addClapServos() {
+        clapServos = new ClapServos();
+        subsystems.add(clapServos);
+        return clapServos;
     }
 
     public PTODrivetrain addPTODrivetrain() {
