@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmBackHardStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
@@ -14,8 +15,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up
 public class SpecimenIntakeBackClipCommand extends SequentialCommandGroup {
     public SpecimenIntakeBackClipCommand () {
         super(
-                new ArmCommand(2.65),
-                new UpDownWristAngleCommand(-0.40),
+                new ArmBackHardStopCommand(),
+                new UpDownWristAngleCommand(-0.50),
                 new ClawOpenCommand(),
                 new SpinWristAngleCommand(0.0),
                 new TurretCenterCommand(),

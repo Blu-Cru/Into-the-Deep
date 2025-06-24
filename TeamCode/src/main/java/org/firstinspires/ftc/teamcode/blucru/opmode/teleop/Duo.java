@@ -12,13 +12,13 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.RetractFromBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksHighCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.HooksHighBarReadyCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.BoxtubeHooksTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.motor.HangMotorHighBarCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosHangComamnd;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosHangComamnd;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmRetractCommand;
@@ -157,7 +157,7 @@ public class Duo extends BluLinearOpMode {
 
                 // HANG
                 .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
-                    new GetHooksHighCommand().schedule();
+                    new HooksHighBarReadyCommand().schedule();
                 })
                 .transition(() -> stickyG1.dpad_left, State.HANG_HOOKS_ON_LOW, () -> {
                     new GetHooksLowCommand().schedule();

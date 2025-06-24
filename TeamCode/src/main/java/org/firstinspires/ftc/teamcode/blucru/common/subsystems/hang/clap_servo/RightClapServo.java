@@ -7,11 +7,11 @@ public class RightClapServo extends ClapServo {
 
     @Override
     double getCenterPosition() {
-        return 0.48;
+        return 0.45;
     }
 
     @Override
     public void retract() {
-        setPosition(getCenterPosition() - RETRACT_DELTA);
+        setPosition(getCenterPosition() + RETRACT_DELTA);
     }
 }

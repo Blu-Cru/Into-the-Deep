@@ -4,14 +4,8 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipUnderneathCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenPreloadDepositPath extends PIDPathBuilder {
@@ -27,7 +21,7 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
 //                            new PivotCommand(0.67),
 //                            new ExtensionCommand(10.5)
 //                    ).schedule();
-                    new SpecimenFrontClipCommand(0).schedule();
+                    new SpecimenFrontClipUnderneathCommand(0).schedule();
                 })
                 .addMappedPoint(7, -59, 90)
 //                .waitMillis(100)

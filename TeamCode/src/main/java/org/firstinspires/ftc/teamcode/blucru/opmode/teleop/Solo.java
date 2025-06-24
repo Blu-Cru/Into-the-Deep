@@ -10,22 +10,18 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.RetractFromBasketCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretCenterCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.sample.SampleBackHighCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipUnderneathCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatCommand;
@@ -116,11 +112,12 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .loop(() -> {
-                    if (stickyG1.left_trigger)
-                        turret.setMotionProfileAngle(-1.0);
-                    if (stickyG2.left_trigger)
+                    if (stickyG1.left_trigger || stickyG2.left_trigger)
                         turret.setMotionProfileAngle(1.0);
-                    if (stickyG1.left_trigger_released || stickyG2.left_trigger_released)
+                    if (stickyG1.right_trigger || stickyG2.right_trigger)
+                        turret.setMotionProfileAngle(-1.0);
+                    if (stickyG1.left_trigger_released || stickyG2.left_trigger_released
+                        || stickyG1.right_trigger_released || stickyG2.right_trigger_released)
                         turret.center();
 
                     if(stickyG1.right_bumper || stickyG2.right_bumper)
@@ -192,7 +189,7 @@ public class Solo extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new ExtensionCommand(2),
                             new ConditionalCommand(
-                                    new SpecimenFrontClipCommand(),
+                                    new SpecimenFrontClipUnderneathCommand(),
                                     new SpecimenFrontFlatCommand(),
                                     () -> grabByClip
                             )

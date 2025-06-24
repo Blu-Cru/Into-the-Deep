@@ -5,15 +5,16 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmBackHardStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmRetractCommand;
 
 public class BoxtubeRetractFromTopBarCommand extends SequentialCommandGroup {
     public BoxtubeRetractFromTopBarCommand() {
         super(
                 new ExtensionRetractCommand(),
-                new ArmRetractCommand(),
+                new ArmBackHardStopCommand(),
                 new WaitCommand(600),
-                new PivotCommand(0.5)
+                new PivotCommand(0.8)
         );
     }
 }

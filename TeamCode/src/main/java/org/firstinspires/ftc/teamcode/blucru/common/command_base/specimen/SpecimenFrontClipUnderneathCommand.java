@@ -6,25 +6,33 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmBottomHardStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 
-public class SpecimenFrontClipCommand extends SequentialCommandGroup {
-    public SpecimenFrontClipCommand(int waitMillis) {
+public class SpecimenFrontClipUnderneathCommand extends SequentialCommandGroup {
+    /*
+    Underneath: 9.5, 0.81
+    Above: 12.63, 0.73
+
+    underneath: 11.8, 0.72
+    above: 12.5, 0.746
+     */
+    public SpecimenFrontClipUnderneathCommand(int waitMillis) {
         super(
-                new PivotCommand(0.67),
-                new ArmCommand(-0.1),
+                new PivotCommand(1.0),
+                new ArmBottomHardStopCommand(),
                 new WaitCommand(130),
                 new ExtensionCommand(4.0),
                 new WaitCommand(waitMillis),
-                new UpDownWristAngleCommand(-0.1),
+                new UpDownWristAngleCommand(0.0),
                 new SpinWristAngleCommand(Math.PI),
-                new BoxtubeCommand(0.71, 11)
+                new BoxtubeCommand(0.81, 10.5)
         );
     }
 
-    public SpecimenFrontClipCommand() {
+    public SpecimenFrontClipUnderneathCommand() {
         this(120);
     }
 }

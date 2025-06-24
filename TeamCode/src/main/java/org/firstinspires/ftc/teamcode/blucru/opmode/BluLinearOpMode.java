@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Spin
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Turret;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.UpDownWrist;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.HangMotor;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.clap_servo.ClapServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.slide_hang_servo.SlideHangServos;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.pto_servo.PTOServos;
 import org.firstinspires.ftc.teamcode.blucru.common.vision.CVMaster;
@@ -46,6 +47,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public CVMaster cvMaster;
     public DualCactusSensor cactus;
     public PTOServos ptoServos;
+    public ClapServos clapServos;
     public OrthogonalDistanceSensors orthogonalDistanceSensors;
 
     public StickyGamepad stickyG1, stickyG2;
@@ -123,7 +125,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public void end() {}
 
     public void addDrivetrain() {dt = robot.addDrivetrain();}
-    public void addPTODrivetrain() {dt = robot.addPTODrivetrain();}
+    public void addPTODrivetrain() {ptoDt = robot.addPTODrivetrain();}
     public void addArm() {arm = robot.addArm();}
     public void addClaw() {claw = robot.addClaw();}
     public void addTurret() {turret = robot.addTurret();}
@@ -137,6 +139,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public void addHangMotor() {hangMotor = robot.addHangMotor();}
     public void addCactus() {cactus = robot.addCactus();}
     public void addPTOServos() {ptoServos = robot.addPTOServos();}
+    public void addClapServos() {clapServos = robot.addClapServos();}
     public void addOrthogonalDistanceSensors(){ orthogonalDistanceSensors = robot.addOrthogonalDistanceSensors();}
 
     // enable the FTC Dashboard telemetry and field overlay
@@ -146,10 +149,13 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     }
 
     private double calculateAvgLoopTime() {
+        // adds up time since last loop
         loopTimeSum += Globals.runtime.milliseconds() - lastTime;
+        // time of last loop
         lastTime = Globals.runtime.milliseconds();
         loopTimeCount++;
 
+        // once 5 loops have passed, reset, calculate average
         if(loopTimeCount > 5) {
             loopTimeAvg = loopTimeSum / loopTimeCount;
             loopTimeSum = 0;

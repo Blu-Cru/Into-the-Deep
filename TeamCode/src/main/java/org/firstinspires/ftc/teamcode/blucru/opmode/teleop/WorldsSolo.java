@@ -22,11 +22,11 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.ar
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.BoxtubeHooksTopBarCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksHighCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.HooksHighBarReadyCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.motor.HangMotorHighBarCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosHangComamnd;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosReleaseCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.HangServosRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosHangComamnd;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosReleaseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.pusher.PushCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.sample.SampleBackHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.sample.SampleBackLowCommand;
@@ -131,7 +131,7 @@ public class WorldsSolo extends BluLinearOpMode {
 
                 // HANG
                 .transition(() -> stickyG1.dpad_down, State.HANG_RELEASE, () -> {
-                    new GetHooksHighCommand().schedule();
+                    new HooksHighBarReadyCommand().schedule();
                 })
 
                 .loop(() -> {

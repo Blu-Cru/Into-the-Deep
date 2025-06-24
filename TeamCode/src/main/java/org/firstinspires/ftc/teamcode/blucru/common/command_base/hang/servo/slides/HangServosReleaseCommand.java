@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo;
+package org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 
