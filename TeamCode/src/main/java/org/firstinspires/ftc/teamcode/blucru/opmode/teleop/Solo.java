@@ -137,10 +137,10 @@ public class Solo extends BluLinearOpMode {
                 .state(State.GRABBED_GROUND)
                 .transitionTimed(0.63, State.SENSING_GROUND)
                 .state(State.SENSING_GROUND)
-                .transition(() -> cactus.validSample, State.HOME, () -> {
+                .transition(() -> cactus.validSample(), State.HOME, () -> {
                     new FullRetractCommand().schedule();
                 })
-                .transition(() -> cactus.isEmpty(), State.PREINTAKE, () -> {
+                .transition(() -> cactus.empty(), State.PREINTAKE, () -> {
                     new PreIntakeCommand().schedule();
                 })
                 .transitionTimed(0.15, State.PREINTAKE, () -> {
@@ -162,7 +162,7 @@ public class Solo extends BluLinearOpMode {
                 .state(State.INTAKING_SPEC)
                 .onEnter(() -> dt.setDrivePower(0.7))
                 .transition(() -> stickyG2.a, State.HOME, () -> new FullRetractCommand().schedule())
-                .transition(() -> (stickyG2.left_bumper || cactus.validSample) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
+                .transition(() -> (stickyG2.left_bumper || cactus.validSample()) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),
                             new WaitCommand(140),
@@ -193,7 +193,7 @@ public class Solo extends BluLinearOpMode {
                         new SpecimenIntakeBackFlatCommand().schedule();
                     }
                 })
-                .transition(() -> cactus.validSample || gamepad2.left_bumper, State.SCORING_SPEC, () -> {
+                .transition(() -> cactus.validSample() || gamepad2.left_bumper, State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ExtensionCommand(2),
                             new ConditionalCommand(

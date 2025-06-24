@@ -257,7 +257,7 @@ public class Duo extends BluLinearOpMode {
                             new EndEffectorRetractCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG2.x || Robot.validSpecimen(), State.ABOVE_SPECIMEN_BACK, () -> {
+                .transition(() -> stickyG2.x || Robot.validSample(), State.ABOVE_SPECIMEN_BACK, () -> {
                     new BoxtubeSplineCommand(
                             new Vector2d(20,42),
                             new Pose2d(-8.6, 31, Math.PI),
@@ -265,7 +265,7 @@ public class Duo extends BluLinearOpMode {
                             0.75
                     ).schedule();
 
-                    if(Robot.validSpecimen()) {
+                    if(Robot.validSample()) {
                         gamepad1.rumble(200);
                         gamepad2.rumble(200);
                     }

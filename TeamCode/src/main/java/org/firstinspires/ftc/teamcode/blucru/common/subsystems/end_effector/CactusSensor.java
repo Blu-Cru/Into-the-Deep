@@ -10,15 +10,15 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Sample;
 
-public class SpecCactusSensor implements BluSubsystem {
+public class CactusSensor implements BluSubsystem {
     DigitalChannel channel0, channel1;
     boolean pin0, pin1;
     public boolean validSample, validSpecimen, justValidSample, justValidSpecimen;
     boolean lastValidSample, lastValidSpecimen;
 
-    public SpecCactusSensor() {
-        channel0 = Globals.hwMap.get(DigitalChannel.class, "spec cactus0");
-        channel1 = Globals.hwMap.get(DigitalChannel.class, "spec cactus1");
+    public CactusSensor(String config0, String config1) {
+        channel0 = Globals.hwMap.get(DigitalChannel.class, config0);
+        channel1 = Globals.hwMap.get(DigitalChannel.class, config1);
     }
 
     @Override
@@ -76,5 +76,9 @@ public class SpecCactusSensor implements BluSubsystem {
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Cactus Sensor", getState());
+    }
+
+    public void telemetry(String tag, Telemetry telemetry) {
+        telemetry.addData(tag + "Cactus Sensor", getState());
     }
 }

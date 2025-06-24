@@ -356,7 +356,7 @@ public class SonnyTele extends BluLinearOpMode {
                             new EndEffectorRetractCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG1.x || Robot.justValidSpecimen(), State.ABOVE_SPECIMEN_BACK, () -> {
+                .transition(() -> stickyG1.x || Robot.justValidSample(), State.ABOVE_SPECIMEN_BACK, () -> {
                     new BoxtubeSplineCommand(
                             new Vector2d(20,42),
                             new Pose2d(-8.6, 30, Math.PI),
