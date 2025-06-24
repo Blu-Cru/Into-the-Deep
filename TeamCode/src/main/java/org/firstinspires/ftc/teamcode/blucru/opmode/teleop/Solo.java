@@ -112,11 +112,12 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .loop(() -> {
-                    if (stickyG1.left_trigger)
-                        turret.setMotionProfileAngle(-1.0);
-                    if (stickyG2.left_trigger)
+                    if (stickyG1.left_trigger || stickyG2.left_trigger)
                         turret.setMotionProfileAngle(1.0);
-                    if (stickyG1.left_trigger_released || stickyG2.left_trigger_released)
+                    if (stickyG1.right_trigger || stickyG2.right_trigger)
+                        turret.setMotionProfileAngle(-1.0);
+                    if (stickyG1.left_trigger_released || stickyG2.left_trigger_released
+                        || stickyG1.right_trigger_released || stickyG2.right_trigger_released)
                         turret.center();
 
                     if(stickyG1.right_bumper || stickyG2.right_bumper)
