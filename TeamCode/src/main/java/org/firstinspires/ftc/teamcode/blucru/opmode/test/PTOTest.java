@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksHighCommand;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "test")

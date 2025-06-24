@@ -16,8 +16,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.clap
 public class GetHooksCommand extends SequentialCommandGroup {
     public GetHooksCommand () {
         super(
-                // pivot 1.3
-                // extension 10.8
                 new ArmBackHardStopCommand(),
                 new UpDownWristAngleCommand(-1.2),
                 new SpinWristAngleCommand(Math.PI),
@@ -29,7 +27,7 @@ public class GetHooksCommand extends SequentialCommandGroup {
                 new WaitCommand(200),
                 new ClawGrabCommand(),
 //                new WaitCommand(50),
-                new ArmCommand(Math.PI/2),
+                new ArmCommand(1.7),
                 new WaitCommand(200),
                 new ClapRetractCommand()
         );
