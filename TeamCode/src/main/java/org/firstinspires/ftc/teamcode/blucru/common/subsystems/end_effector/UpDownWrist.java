@@ -40,7 +40,7 @@ public class UpDownWrist extends SmoothServo implements BluSubsystem, Subsystem 
     }
 
     public void retract() {
-        setAngle(-0.7);
+        setAngle(-1.0);
     }
 
     public double toTicks(double rad) {
