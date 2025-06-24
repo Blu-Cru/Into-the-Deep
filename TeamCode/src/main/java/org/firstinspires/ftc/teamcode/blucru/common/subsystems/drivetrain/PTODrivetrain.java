@@ -17,16 +17,23 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
     public static double
             kP = 0.4, kI = 0.0, kD = 0.0,
 
+            // negative inches is pulling the robot up more
             TICKS_PER_INCH = 8192.0 / 3.958,
 
-            vMAX = 300.0,
-            aMAX = 600.0; // constraints for velocity and acceleration (ticks/s and ticks/s^2)
+            vMAX = 6.0,
+            aMAX = 12.0; // constraints for velocity and acceleration (ticks/s and ticks/s^2)
 
-    boolean isPtoPID;
+    enum State {
+        PTO_PID,
+        PTO_MOTION_PROFILE,
+        IDLE
+    }
+
     BluEncoder leftEncoder, rightEncoder;
     PIDController leftPID, rightPID;
     MotionProfile profile;
     double leftPos, rightPos;
+    State state;
 
     public PTODrivetrain() {
         super();
@@ -38,14 +45,14 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
 
         leftPID = new PIDController(kP, kI, kD);
         rightPID = new PIDController(kP, kI, kD);
-        profile = new MotionProfile(0, 0, 0, 0);
+        profile = new MotionProfile(0, 0, 0, 0).start();
     }
 
     @Override
     public void init() {
         super.init();
 
-        isPtoPID = false;
+        state = State.IDLE;
 
         leftEncoder.reset();
         rightEncoder.reset();
@@ -63,17 +70,32 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
 
     @Override
     public void write() {
-        if(isPtoPID) {
-            double leftPower = leftPID.calculate(leftPos);
-            double rightPower = rightPID.calculate(rightPos);
-            setLeftPower(leftPower);
-            setRightPower(rightPower);
+        double leftPower, rightPower;
+        switch (state) {
+            case PTO_PID:
+                leftPower = leftPID.calculate(leftPos);
+                rightPower = rightPID.calculate(rightPos);
+                setLeftPower(leftPower);
+                setRightPower(rightPower);
+                break;
+            case PTO_MOTION_PROFILE:
+                leftPower = leftPID.calculate(profile.getInstantTargetPosition());
+                rightPower = rightPID.calculate(profile.getInstantTargetPosition());
+                setLeftPower(leftPower);
+                setRightPower(rightPower);
+                break;
+            case IDLE:
+                break;
         }
         super.write();
     }
 
+    public void setMotionProfileInches (double inches) {
+        state = State.PTO_MOTION_PROFILE;
+        profile = new MotionProfile(inches, (leftPos + rightPos) / 2.0, vMAX, aMAX).start();
+    }
+
     public void setLeftPower(double power) {
-        // up is hanging more
         bl.setPower(-power);
         fl.setPower(-power);
     }
@@ -84,7 +106,7 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
     }
 
     public void stopPID() {
-        isPtoPID = false;
+        state = State.IDLE;
         drive(new Pose2d(0,0,0));
     }
 
@@ -97,13 +119,13 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
     public void pidTo(double pos) {
         leftPID.setSetPoint(pos);
         rightPID.setSetPoint(pos);
-        isPtoPID = true;
+        state = State.PTO_PID;
     }
 
     @Override
     public void telemetry(Telemetry telemetry) {
         super.telemetry(telemetry);
-        telemetry.addData("PTO Drivetrain Is PID", isPtoPID);
+        telemetry.addData("PTO Drivetrain state", state);
         telemetry.addData("leftPID setpoint", leftPID.getSetPoint());
         telemetry.addData("rightPID setpoint", rightPID.getSetPoint());
         telemetry.addData("Left Hang Encoder", leftPos);

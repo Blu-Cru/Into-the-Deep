@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.BoxtubeRet
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.HooksHighBarReadyCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.HooksOnHighBarCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.PTOHangCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.pto.PTOEngageCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosHangComamnd;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosReleaseCommand;
@@ -77,14 +78,14 @@ public class HangFullTest extends BluLinearOpMode {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
                             new WaitCommand(200),
+                            new PTOHangCommand(),
                             new ArmRetractCommand(),
                             new WaitCommand(200),
                             new BoxtubeRetractFromTopBarCommand()
-                            // hang pull up
                     ).schedule();
                 })
                 .transition(() -> stickyG1.b, State.RETRACT, () -> {
-                    new BoxtubeRetractHang3Command().schedule();
+                    new BoxtubeRetractFromTopBarCommand().schedule();
                 })
                 .build();
 
