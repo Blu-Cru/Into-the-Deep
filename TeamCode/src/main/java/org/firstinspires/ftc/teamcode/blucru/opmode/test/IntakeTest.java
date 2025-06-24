@@ -129,10 +129,10 @@ public class IntakeTest extends BluLinearOpMode {
                 .state(State.GRABBED_GROUND)
                 .transitionTimed(0.63, State.SENSING_GROUND)
                 .state(State.SENSING_GROUND)
-                .transition(() -> cactus.validSample, State.RETRACTED, () -> {
+                .transition(() -> cactus.validSample(), State.RETRACTED, () -> {
                     new FullRetractCommand().schedule();
                 })
-                .transition(() -> cactus.isEmpty(), State.PREINTAKE, () -> {
+                .transition(() -> cactus.empty(), State.PREINTAKE, () -> {
                     new PreIntakeCommand().schedule();
                 })
                 .transitionTimed(0.15, State.PREINTAKE, () -> {
@@ -164,7 +164,7 @@ public class IntakeTest extends BluLinearOpMode {
                 .state(State.INTAKING_SPEC)
                 .onEnter(() -> dt.setDrivePower(0.6))
                 .transition(() -> stickyG2.a, State.RETRACTED, () -> new FullRetractCommand().schedule())
-                .transition(() -> (stickyG2.left_bumper || cactus.validSample) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
+                .transition(() -> (stickyG2.left_bumper || cactus.validSample()) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),
                             new WaitCommand(120),
@@ -176,13 +176,13 @@ public class IntakeTest extends BluLinearOpMode {
                 .state(State.GRABBED_SPEC)
                 .transitionTimed(0.3, State.SENSING_SPEC)
                 .state(State.SENSING_SPEC)
-                .transition(() -> cactus.isEmpty(), State.INTAKING_SPEC, () -> {
+                .transition(() -> cactus.empty(), State.INTAKING_SPEC, () -> {
                     new SpecimenIntakeBackClipCommand().schedule();
                 })
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
                     new SpecimenIntakeBackClipCommand().schedule();
                 })
-                .transition(() -> cactus.validSample, State.SCORING_SPEC, () -> {
+                .transition(() -> cactus.validSample(), State.SCORING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new PivotCommand(0.63),
                             new ExtensionCommand(3.0),

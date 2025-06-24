@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Sample;
 
 public class DualCactusSensor implements BluSubsystem {
     CactusSensor c1, c2;
@@ -50,7 +51,9 @@ public class DualCactusSensor implements BluSubsystem {
 
     @Override
     public void telemetry(Telemetry telemetry) {
-        c1.telemetry(telemetry);
-        c2.telemetry(telemetry);
+        telemetry.addData("Cactus Valid Sample", validSample());
+        telemetry.addData("Cactus Empty", empty());
+        c1.telemetry("c1", telemetry);
+        c2.telemetry("c2", telemetry);
     }
 }

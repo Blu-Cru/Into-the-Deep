@@ -77,4 +77,8 @@ public class CactusSensor implements BluSubsystem {
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Cactus Sensor", getState());
     }
+
+    public void telemetry(String tag, Telemetry telemetry) {
+        telemetry.addData(tag + "Cactus Sensor", getState());
+    }
 }

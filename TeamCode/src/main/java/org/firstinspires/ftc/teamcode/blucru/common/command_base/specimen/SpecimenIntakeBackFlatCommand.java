@@ -15,11 +15,12 @@ public class SpecimenIntakeBackFlatCommand extends SequentialCommandGroup {
         super(
                 new ArmCommand(2.8),
                 new UpDownWristAngleCommand(-1.5),
-                new ClawOpenCommand(),
                 new SpinWristAngleCommand(Math.PI),
                 new TurretCenterCommand(),
                 new WaitCommand(150),
-                new BoxtubeCommand(1.6, 0)
+                new BoxtubeCommand(1.6, 0),
+                new WaitCommand(200),
+                new ClawOpenCommand()
         );
     }
 }
