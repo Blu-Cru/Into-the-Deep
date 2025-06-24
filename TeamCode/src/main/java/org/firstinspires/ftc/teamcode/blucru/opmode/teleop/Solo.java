@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.RetractFromBask
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretCenterCommand;
@@ -25,6 +26,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.Specim
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatSpitCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -67,7 +71,7 @@ public class Solo extends BluLinearOpMode {
         extension.usePivot(pivot.getMotor());
 
         dt.setDrivePower(0.7);
-        grabByClip = true;
+        grabByClip = false;
 
         sm = new StateMachineBuilder()
                 .state(State.HOME)
@@ -92,7 +96,11 @@ public class Solo extends BluLinearOpMode {
                     if (grabByClip) {
                         new SpecimenIntakeBackClipCommand().schedule();
                     } else {
-                        new SpecimenIntakeBackFlatCommand().schedule();
+                        if (Robot.validSample()) {
+                            new SpecimenIntakeBackFlatSpitCommand().schedule();
+                        } else {
+                            new SpecimenIntakeBackFlatCommand().schedule();
+                        }
                     }
                 })
                 .loop(() -> {
@@ -201,8 +209,8 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> stickyG2.left_bumper, State.INTAKING_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
-                            new WaitCommand(170),
-                            new ExtensionRetractCommand(),
+                            new ArmCommand(0.2),
+                            new WaitCommand(130),
                             new ConditionalCommand(
                                     new SpecimenIntakeBackClipCommand(),
                                     new SpecimenIntakeBackFlatCommand(),
@@ -213,7 +221,8 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> stickyG2.a, State.HOME, () -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
-                            new WaitCommand(200),
+                            new ArmCommand(0.2),
+                            new WaitCommand(130),
                             new FullRetractCommand()
                     ).schedule();
                 })

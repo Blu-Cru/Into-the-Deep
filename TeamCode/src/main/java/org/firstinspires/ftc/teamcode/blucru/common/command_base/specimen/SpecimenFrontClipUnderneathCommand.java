@@ -21,18 +21,18 @@ public class SpecimenFrontClipUnderneathCommand extends SequentialCommandGroup {
      */
     public SpecimenFrontClipUnderneathCommand(int waitMillis) {
         super(
-                new PivotCommand(1.0),
                 new ArmBottomHardStopCommand(),
                 new WaitCommand(130),
+                new PivotCommand(1.0),
                 new ExtensionCommand(4.0),
                 new WaitCommand(waitMillis),
-                new UpDownWristAngleCommand(0.0),
+                new UpDownWristAngleCommand(0.05),
                 new SpinWristAngleCommand(Math.PI),
-                new BoxtubeCommand(0.81, 10.5)
+                new BoxtubeCommand(0.82, 10.5)
         );
     }
 
     public SpecimenFrontClipUnderneathCommand() {
-        this(120);
+        this(200);
     }
 }

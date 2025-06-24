@@ -17,7 +17,7 @@ public class Arm extends BluServo implements BluSubsystem, Subsystem {
     public static double
             // positive is more retracted
             VERTICAL_POS = 0.51,
-            vMAX = 10.0, aMAX = 22.0, // constraints for angle (rad)
+            vMAX = 14.0, aMAX = 29.0, // constraints for angle (rad)
             MAX_ANGLE = 2.7, MIN_ANGLE = -0.6,
             RETRACT_ANGLE = 2.4,
 
