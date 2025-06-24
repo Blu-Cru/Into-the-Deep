@@ -98,6 +98,7 @@ public class OrthogonalDistanceSensors implements BluSubsystem, Subsystem {
                     quadrant = i;
                     break;
                 }
+                quadrant = 3;
             }
 
             double[] coords = quadrantToCorner[quadrant];
@@ -114,10 +115,10 @@ public class OrthogonalDistanceSensors implements BluSubsystem, Subsystem {
                 yVal = fieldCentricdL.getY();
             }
 
-            double poseXVal = coords[0] + xVal;
-            double poseYVal = coords[1] + yVal;
+            double poseXVal = coords[0] - xVal;
+            double poseYVal = coords[1] - yVal;
 
-            if (Math.abs(poseXVal) <= inFieldBoundValue && Math.abs(poseYVal) <= inFieldBoundValue){
+            if (Math.abs(poseXVal) > inFieldBoundValue && Math.abs(poseYVal) > inFieldBoundValue){
                 throw new Exception("Robot position out of the field");
             }
             return new Pose2d(poseXVal, poseYVal, robotHeading);
