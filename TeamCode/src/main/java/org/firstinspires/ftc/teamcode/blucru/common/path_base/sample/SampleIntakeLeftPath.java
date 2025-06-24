@@ -7,24 +7,31 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.Extensi
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SampleIntakeLeftPath extends PIDPathBuilder {
     public SampleIntakeLeftPath() {
         super();
         this.setPower(0.7)
-                .addMappedPoint(-62, -46, 120, 4)
-                .schedule(new SequentialCommandGroup(
-                        new WaitCommand(150),
-                        new PivotRetractCommand(),
-                        new WaitCommand(300),
-                        new ExtensionCommand(2)
-                ))
-                .schedule(new SequentialCommandGroup(
-                        new WaitCommand(70),
-                        new ClawOpenCommand(),
-                        new ExtensionMotionProfileCommand(8)
-                ))
-                .waitMillis(4000);
+                .addMappedPoint(-61, -45, 100, 4)
+                .schedule(
+                        new SequentialCommandGroup(
+                                new WaitCommand(150),
+                                new PivotRetractCommand(),
+                                new WaitCommand(300),
+                                new ClawOpenCommand(),
+                                new TurretAngleCommand(0.3),
+                                new ExtensionMotionProfileCommand(8),
+                                new WaitCommand(700),
+                                new PreIntakeCommand(),
+                                new WaitCommand(200),
+                                new GrabCommand(),
+                                new WaitCommand(300)
+                        )
+                ).waitMillis(4000);
     }
 }
