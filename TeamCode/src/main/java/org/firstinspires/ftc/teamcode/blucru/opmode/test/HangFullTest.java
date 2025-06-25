@@ -38,6 +38,7 @@ public class HangFullTest extends BluLinearOpMode {
         addPTODrivetrain();
         addHangServos();
         addPTOServos();
+        addClapServos();
         addPivot();
         addExtension();
         addArm();
@@ -59,6 +60,7 @@ public class HangFullTest extends BluLinearOpMode {
                             new HooksHighBarReadyCommand()
                     ).schedule();
                 })
+                .loop(() -> ptoDt.teleOpDrive(gamepad1))
 
                 .state(State.HANG_READY_HIGH_BAR)
                 .transition(() -> stickyG1.dpad_up, State.HOOKS_ON_HIGH_BAR, () -> {
@@ -84,7 +86,7 @@ public class HangFullTest extends BluLinearOpMode {
                             new BoxtubeRetractFromTopBarCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG1.b, State.RETRACT, () -> {
+                .transition(() -> stickyG1.a, State.RETRACT, () -> {
                     new BoxtubeRetractFromTopBarCommand().schedule();
                 })
                 .build();
@@ -95,9 +97,10 @@ public class HangFullTest extends BluLinearOpMode {
 
     @Override
     public void periodic() {
-        if(stickyG1.dpad_down) slideHangServos.toggle();
-        hangMotor.setManualPower(-gamepad1.left_stick_y);
-
         sm.update();
+
+        if(stickyG1.right_stick_button) {
+            ptoDt.setHeading(Math.PI/2);
+        }
     }
 }

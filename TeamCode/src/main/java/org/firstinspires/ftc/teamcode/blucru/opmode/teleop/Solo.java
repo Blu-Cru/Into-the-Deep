@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCo
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretCenterCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
@@ -29,6 +30,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.Specim
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatSpitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Claw;
 import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -84,11 +86,11 @@ public class Solo extends BluLinearOpMode {
                             new TurretCenterCommand(),
                             new PreIntakeCommand(),
                             new WaitCommand(320),
+                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new ExtensionCommand(15),
                             new WaitCommand(250),
                             new ClawOpenCommand()
                     ).schedule();
-                    orientation = spinWrist.setGlobalAngle(SampleOrientation.VERTICAL);
                 })
                 .transition(() -> stickyG1.y && extension.getDistance() < 2.0, State.SCORING_BASKET, () -> {
                     new SampleBackHighCommand().schedule();
@@ -110,7 +112,6 @@ public class Solo extends BluLinearOpMode {
 
                 .state(State.PREINTAKE)
                 .onEnter(() -> {
-                    spinWrist.setTurretGlobalAngle(orientation.angle());
                     dt.setDrivePower(0.45);
                 })
                 .transition(() -> stickyG1.a, State.HOME, () -> {
@@ -168,7 +169,7 @@ public class Solo extends BluLinearOpMode {
                 .state(State.INTAKING_SPEC)
                 .onEnter(() -> dt.setDrivePower(0.7))
                 .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
-                .transition(() -> (stickyG1.left_bumper || cactus.validSample()) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
+                .transition(() -> (stickyG1.left_bumper || cactus.justValidSample()) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),
                             new WaitCommand(140),
@@ -196,7 +197,10 @@ public class Solo extends BluLinearOpMode {
                     if(grabByClip) {
                         new SpecimenIntakeBackClipCommand().schedule();
                     } else {
-                        new SpecimenIntakeBackFlatCommand().schedule();
+                        new SequentialCommandGroup(
+                                new ClawOpenCommand(),
+                                new SpecimenIntakeBackFlatCommand()
+                        ).schedule();
                     }
                 })
                 .transition(() -> cactus.validSample() || gamepad1.left_bumper, State.SCORING_SPEC, () -> {
