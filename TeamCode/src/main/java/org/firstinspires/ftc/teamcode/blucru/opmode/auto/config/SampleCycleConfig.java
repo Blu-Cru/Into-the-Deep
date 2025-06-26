@@ -132,7 +132,7 @@ public class SampleCycleConfig extends AutoConfig {
 
                     Log.i("SampleCycleConfig", "got block pose at " + blockPose);
                     Log.i("SampleCycleConfig", "dt pose at " + Robot.getInstance().dt.pose);
-                    currentPath = new SampleIntakeAtPointPath(Robot.getInstance().dt.pose.vec(), blockPose).start();
+                    currentPath = new SampleIntakeAtPointPath(Robot.getInstance().dt.pose, blockPose).start();
                 })
                 .transition(() -> runtime.seconds() > 29.6, State.DONE, () -> {
                     new FullRetractCommand().schedule();

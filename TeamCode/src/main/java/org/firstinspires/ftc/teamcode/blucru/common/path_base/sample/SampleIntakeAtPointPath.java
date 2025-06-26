@@ -3,26 +3,29 @@ package org.firstinspires.ftc.teamcode.blucru.common.path_base.sample;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.util.Angle;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeKinematics;
 
 public class SampleIntakeAtPointPath extends PIDPathBuilder {
-    public SampleIntakeAtPointPath(Vector2d rawDrivePoint, Pose2d rawBlockPose) {
+    public SampleIntakeAtPointPath(Pose2d drivePoint, Pose2d rawBlockPose) {
         super();
 //
 //        rawBlockPose = Globals.mapPose(rawBlockPose);
 
-        double wristHeading = -Angle.normDelta(rawBlockPose.getHeading() - rawBlockPose.vec().minus(rawDrivePoint).angle());
+        double[] poseToInverseKinematics = BoxtubeKinematics.getExtensionTurretPose(rawBlockPose.vec().minus(drivePoint.vec()).rotated(-drivePoint.getHeading()));
 
-        double rawWristFinal;
-        if(wristHeading > 0.0) rawWristFinal = wristHeading - Math.PI;
-        else rawWristFinal = wristHeading;
-
-        double x = Range.clip(rawDrivePoint.minus(rawBlockPose.vec()).norm() + Math.sin(rawWristFinal) * BoxtubeKinematics.WRIST_y, 0, 26);
+        double spinWristAngle = rawBlockPose.getHeading() - drivePoint.getHeading();
 
 //        Log.i("SampleIntakeAtPointPath", "Block pose:" + rawBlockPose);
 //        Log.i("SampleIntakeAtPointPath", "Drive point:" + rawDrivePoint);
@@ -33,25 +36,24 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
 //        Log.i("SampleIntakeAtPointPath", "x: " + x);
 
         this.setPower(0.7)
-                .addTurnToPoint(rawDrivePoint, rawBlockPose.vec(), 4)
+                .addMappedPoint(drivePoint.getX(), drivePoint.getY(), drivePoint.getHeading(), 10)
                 .callback(() -> {
-                    new BoxtubeSplineCommand(
-                            new Pose2d(x, 6, -Math.PI/2),
-                            rawWristFinal,
-                            0.6
+                    new SequentialCommandGroup(
+                            new PreIntakeCommand(),
+                            new WaitCommand(170),
+                            new ExtensionCommand(poseToInverseKinematics[0]),
+                            new SpinWristAngleCommand(spinWristAngle),
+                            new WaitCommand(80),
+                            new TurretAngleCommand(poseToInverseKinematics[1])
                     ).schedule();
                 })
-                .waitMillis(700)
-                .addTurnToPoint(rawDrivePoint, rawBlockPose.vec())
+
+                .waitMillis(600)
+                .addMappedPoint(drivePoint.getX(), drivePoint.getY(), drivePoint.getHeading())
                 .callback(() -> {
-                    new ClawOpenCommand().schedule();
-                    new BoxtubeSplineCommand(
-                            new Pose2d(x, 2, -Math.PI/2),
-                            rawWristFinal,
-                            0.28
-                    ).schedule();
+                    new GrabCommand().schedule();
                 })
-                .waitMillis(750);
+                .waitMillis(300);
 
     }
 }

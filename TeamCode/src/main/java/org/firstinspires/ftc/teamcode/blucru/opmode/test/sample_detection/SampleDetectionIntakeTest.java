@@ -10,7 +10,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.RetractFromVerticalIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.EndEffectorRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.path.Path;;
+import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeAtPointPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
@@ -65,7 +65,7 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
                 .transition(() -> System.currentTimeMillis() - detectTimeMillis > 500
                     && cvMaster.sampleDetector.hasValidDetection(), State.RUNNING_PATH, () -> {
                     Pose2d blockPose = cvMaster.sampleDetector.getGlobalPose(dt.pose);
-                    currentPath = new SampleIntakeAtPointPath(dt.pose.vec(), blockPose).start();
+                    currentPath = new SampleIntakeAtPointPath(dt.pose, blockPose).start();
                 })
                 .transition(() -> stickyG1.a, State.RETRACT, () -> {
                     new FullRetractCommand().schedule();
