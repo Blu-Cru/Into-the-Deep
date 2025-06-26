@@ -35,8 +35,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
             {812, 947}, {1287, 941}
     };
     static double DIST_BETWEEN_POINTS = 5.6;
-    static double[] REF_BOTTOM_LEFT_PIXELS = {800.0, 800.0},
-        REF_TOP_LEFT_INCHES = {-5.6, 13};
+    static double[] REF_TOP_LEFT_PIXELS = {800.0/3, 800.0/3},
+        REF_TOP_LEFT_INCHES = {-5.6, 18.6};
     public static double PIXELS_PER_INCH = 20.0,
         MIN_SAT_MASK,
         RED_HUE_LOW = 100.0, RED_HUE_HIGH = 150.0,
@@ -48,9 +48,11 @@ public class SampleDetectionProcessor implements VisionProcessor {
         // distortion
         K1 = -0.448017, K2 = 0.245668, K3 = 0.0,
         P1 = -0.000901464, P2 = 0.000996399,
-        MAX_DETECTION_DISTANCE = 15.0, MIN_DETECTION_X = 13.0;
-    static Vector2d OPTIMAL_POINT = new Vector2d(16.0, 2.0);
-
+        MAX_DETECTION_DISTANCE = 12, MIN_DETECTION_X = 13.0;
+    static Vector2d OPTIMAL_POINT = new Vector2d(19, 6.0);
+    public static double RATIO_MIN = 1.7, RATIO_MAX = 2.6;
+    public static double AREA_MIN = 1000, AREA_MAX = 1650;
+    public static double MIN_SAT = 70;
     int numDetections;
     Mat K, DIST_COEFFS,
         map1, map2,
@@ -59,6 +61,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
     double processingTimeMillis = 0, bestDistance;
     public Pose2d bestPose;
 
+    List<Pose2d> sortedPoses;
     public SampleDetectionProcessor() {
         K = new Mat(3, 3, CvType.CV_64F);
         K.put(0, 0, fx, 0, cx,
@@ -69,6 +72,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         DIST_COEFFS.put(0, 0, K1, K2, P1, P2, K3);
 
         bestPose = new Pose2d();
+        sortedPoses = new ArrayList<>();
     }
 
     @Override
@@ -91,8 +95,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
                         new Point(HOMOG_IMAGE_POINTS[2][0], HOMOG_IMAGE_POINTS[2][1]), new Point(HOMOG_IMAGE_POINTS[3][0], HOMOG_IMAGE_POINTS[3][1])
                 ),
                 new MatOfPoint2f(
-                        new Point(REF_BOTTOM_LEFT_PIXELS[0], REF_BOTTOM_LEFT_PIXELS[1]), new Point(REF_BOTTOM_LEFT_PIXELS[0] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS, REF_BOTTOM_LEFT_PIXELS[1]),
-                        new Point(REF_BOTTOM_LEFT_PIXELS[0], REF_BOTTOM_LEFT_PIXELS[1] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS), new Point(REF_BOTTOM_LEFT_PIXELS[0] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS, REF_BOTTOM_LEFT_PIXELS[1] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS)
+                        new Point(REF_TOP_LEFT_PIXELS[0], REF_TOP_LEFT_PIXELS[1]), new Point(REF_TOP_LEFT_PIXELS[0] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS, REF_TOP_LEFT_PIXELS[1]),
+                        new Point(REF_TOP_LEFT_PIXELS[0], REF_TOP_LEFT_PIXELS[1] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS), new Point(REF_TOP_LEFT_PIXELS[0] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS, REF_TOP_LEFT_PIXELS[1] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS)
                 )
         );
 
@@ -101,6 +105,9 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
     @Override
     public Mat processFrame(Mat frame, long captureTimeNanos) {
+        List<Double> dists = new ArrayList<>();
+        List<Pose2d> poses = new ArrayList<>();
+
         int tempNumDetections = 0;
 
         double startNanoTime = System.nanoTime();
@@ -155,7 +162,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             MatOfPoint cnt = contours.get(i);
 
             double area = Imgproc.contourArea(cnt);
-            if(area < 750.0 || area > 1650.0) {
+            if(area < AREA_MIN || area > AREA_MAX) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with area:" + area);
                 continue;
             }
@@ -164,7 +171,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             if(rect.size.width == 0 || rect.size.height == 0) continue;
             double ratio = Math.max(rect.size.width, rect.size.height) / Math.min(rect.size.width, rect.size.height);
-            if(ratio < 1.6 || ratio > 2.8) {
+            if(ratio < RATIO_MIN || ratio > RATIO_MAX) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with ratio:" + ratio);
                 continue;
             }
@@ -177,9 +184,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             Imgproc.fillConvexPoly(rotatedRectMask, matOfRectPoints, new Scalar(255));
 
             meanSat = Core.mean(satChannel, rotatedRectMask);
-
-            double minSat = 70;
-            if(meanSat.val[0] < minSat) {
+            if(meanSat.val[0] < MIN_SAT) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with sat: " + meanSat.val[0]);
                 continue;
             }
@@ -217,21 +222,21 @@ public class SampleDetectionProcessor implements VisionProcessor {
             if (rect.size.width < rect.size.height) normalizedAngle = - rect.angle;
             else normalizedAngle = -rect.angle - 90.0;
 
-            if(distance < minDistance) {
-                tempBestPose = new Pose2d(point, Angle.norm(Math.toRadians(normalizedAngle)));
-                minDistance = distance;
-            }
+            Pose2d pose = new Pose2d(point, Angle.norm(Math.toRadians(normalizedAngle)));
+
+            poses.add(pose);
+            dists.add(distance);
 
             // print saturation
 //            Imgproc.putText(detectionOverlay, "Sat: " + meanSat, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print hue
 //            Imgproc.putText(detectionOverlay, "Hue: " + meanHue, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print area
-            Imgproc.putText(detectionOverlay, "Area: " + area, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
-            // print ratio
+//            Imgproc.putText(detectionOverlay, "Area: " + area, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+//             print ratio
 //            Imgproc.putText(detectionOverlay, "Ratio: " + ratio, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print center
-//            Imgproc.putText(detectionOverlay, "(" + (int)point.getX() + ", " + (int)point.getY() + ")", rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+            Imgproc.putText(detectionOverlay, "(" + Math.round(point.getX()*100)/100.0 + ", " + Math.round(point.getY() *100) / 100.0+ ")", rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
 
             validRects.add(matOfRectPoints);
 
@@ -243,8 +248,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Imgproc.drawContours(detectionOverlay, validRects, -1, new Scalar(0, 255, 0), 2);
 
         this.numDetections = tempNumDetections;
-        this.bestDistance = minDistance;
-        this.bestPose = tempBestPose;
+
+        sortedPoses = sort(dists, poses);
 
         Mat output = new Mat();
         Imgproc.resize(detectionOverlay, output, frame.size());
@@ -267,7 +272,6 @@ public class SampleDetectionProcessor implements VisionProcessor {
         dilated.release();
         hierarchy.release();
         detectionOverlay.release();
-
 
         processingTimeMillis = (System.nanoTime() - startNanoTime) / 1e6;
         return null;
@@ -297,8 +301,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
     }
 
     private Vector2d getRobotPoint(Point centerPixels) {
-        double refOffsetX = centerPixels.x- REF_BOTTOM_LEFT_PIXELS[0];
-        double refOffsetY = -(centerPixels.y- REF_BOTTOM_LEFT_PIXELS[1]);
+        double refOffsetX = centerPixels.x- REF_TOP_LEFT_PIXELS[0];
+        double refOffsetY = -(centerPixels.y- REF_TOP_LEFT_PIXELS[1]);
 
         double inchOffsetX = REF_TOP_LEFT_INCHES[0]+refOffsetX/PIXELS_PER_INCH;
         double inchOffsetY = REF_TOP_LEFT_INCHES[1]+refOffsetY/PIXELS_PER_INCH;
@@ -392,5 +396,24 @@ public class SampleDetectionProcessor implements VisionProcessor {
         double heading = drivePose.getHeading() + bestPose.getHeading();
 
         return new Pose2d(vec, heading);
+    }
+
+    public static List<Pose2d> sort(List<Double> dist,List<Pose2d> poses){
+        List<Pose2d> sortedPoses = new ArrayList<Pose2d>();
+        int numPoses = dist.size();
+        for (int i = 0; i < numPoses; i++) {
+            int minDistIndex = 0;
+            for (int k = 1; k < dist.size(); k++){
+                if (dist.get(k) < dist.get(minDistIndex))
+                    minDistIndex = k;
+            }
+
+            sortedPoses.add(poses.get(minDistIndex));
+
+            dist.remove(minDistIndex);
+            poses.remove(minDistIndex);
+        }
+
+        return sortedPoses;
     }
 }

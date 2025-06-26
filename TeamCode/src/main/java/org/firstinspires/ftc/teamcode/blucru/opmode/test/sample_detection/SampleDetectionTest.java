@@ -24,6 +24,8 @@ public class SampleDetectionTest extends BluLinearOpMode {
         enableFTCDashboard();
 
         cvMaster.startSampleStreaming();
+        FtcDashboard.getInstance().startCameraStream((CameraStreamSource) cvMaster.samplePortal, 30);
+
 
         sm = new StateMachineBuilder()
                 .state(State.IDLE)
