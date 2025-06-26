@@ -155,7 +155,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             MatOfPoint cnt = contours.get(i);
 
             double area = Imgproc.contourArea(cnt);
-            if(area < 2000.0 || area > 3700.0) {
+            if(area < 900.0 || area > 2400.0) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with area:" + area);
                 continue;
             }
@@ -164,7 +164,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             if(rect.size.width == 0 || rect.size.height == 0) continue;
             double ratio = Math.max(rect.size.width, rect.size.height) / Math.min(rect.size.width, rect.size.height);
-            if(ratio < 1.9 || ratio > 2.6) {
+            if(ratio < 1.6 || ratio > 2.8) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with ratio:" + ratio);
                 continue;
             }
@@ -178,7 +178,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             meanSat = Core.mean(satChannel, rotatedRectMask);
 
-            double minSat = 30.0;
+            double minSat = 70;
             if(meanSat.val[0] < minSat) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with sat: " + meanSat.val[0]);
                 continue;
