@@ -48,7 +48,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         // distortion
         K1 = -0.448017, K2 = 0.245668, K3 = 0.0,
         P1 = -0.000901464, P2 = 0.000996399,
-        MAX_DETECTION_DISTANCE = 15.0, MIN_DETECTION_X = 10.0;
+        MAX_DETECTION_DISTANCE = 15.0, MIN_DETECTION_X = 13.0;
     static Vector2d OPTIMAL_POINT = new Vector2d(16.0, 2.0);
 
     int numDetections;
@@ -155,7 +155,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
             MatOfPoint cnt = contours.get(i);
 
             double area = Imgproc.contourArea(cnt);
-            if(area < 900.0 || area > 2400.0) {
+            if(area < 750.0 || area > 1650.0) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with area:" + area);
                 continue;
             }
