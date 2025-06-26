@@ -7,15 +7,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.CollectLeftBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.CollectRightBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenCycleIntakeFailsafePath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakeClipPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenParkIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenPreloadDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpitPath;
@@ -85,14 +83,14 @@ public class FiveSpecimenConfig extends AutoConfig {
                     currentPath = new SpecimenDepositPath(-1).start();
                 })
                 .transition(() -> currentPath.isDone(), State.INTAKING_CYCLE, () -> {
-                    currentPath = new SpecimenIntakeClipPath().build().start();
+                    currentPath = new SpecimenIntakePath().build().start();
                 })
 
                 .state(State.DEPOSIT_CYCLE)
                 .transition(() -> currentPath.isDone() && scoreCount < 4 && runtime.seconds() < 25, State.INTAKING_CYCLE, () -> {
                     thisCycleIntakeFailCount = 0;
                     scoreCount++;
-                    currentPath = new SpecimenIntakeClipPath().build().start();
+                    currentPath = new SpecimenIntakePath().build().start();
                 })
                 .transition(() -> currentPath.isDone() && !(scoreCount < 4 && runtime.seconds() < 25), State.PARK_INTAKING, () -> {
                     Log.i("Five Specimen Config", "parking, time = " + runtime.seconds());

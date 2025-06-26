@@ -17,7 +17,7 @@ public class SpecimenFrontFlatCommand extends SequentialCommandGroup {
                 new WaitCommand(150),
                 new UpDownWristAngleCommand(-Math.PI/2),
                 new SpinWristAngleCommand(Math.PI),
-                new BoxtubeCommand(0.91, 13.0)
+                new BoxtubeCommand(0.91, 14.0)
         );
     }
 }

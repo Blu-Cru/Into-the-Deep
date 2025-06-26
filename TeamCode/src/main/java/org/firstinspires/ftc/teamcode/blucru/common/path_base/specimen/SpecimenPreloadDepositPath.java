@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.ar
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.BoxtubeRetractFromTopBarCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipUnderneathCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenPreloadDepositPath extends PIDPathBuilder {
@@ -24,7 +25,7 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
 //                            new PivotCommand(0.67),
 //                            new ExtensionCommand(10.5)
 //                    ).schedule();
-                    new SpecimenFrontClipUnderneathCommand(0).schedule();
+                    new SpecimenFrontFlatCommand().schedule();
                 })
                 .addMappedPoint(7, -59, 90)
 //                .waitMillis(100)
@@ -34,6 +35,7 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
                             new ClawOpenCommand(),
                             new WaitCommand(50),
                             new ArmRetractCommand(),
+                            new WaitCommand(200),
                             new BoxtubeRetractCommand()
                     ).schedule();
                 });

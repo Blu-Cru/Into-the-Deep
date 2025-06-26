@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.spline.
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenCycleIntakeFailsafePath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakeClipPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
 @TeleOp(group = "test")
@@ -63,7 +63,7 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
                 .addMappedPoint(7, -40, 270, 5)
                 .build();
 
-        currentPath = new SpecimenIntakeClipPath().start();
+        currentPath = new SpecimenIntakePath().start();
 
         sm = new StateMachineBuilder()
                 .state(State.IDLE)
@@ -77,7 +77,7 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG1.b && cvMaster.numDetections > 0, State.CYCLE_INTAKE, () -> {
                     dt.updateAprilTags(cvMaster.tagDetector);
-                    currentPath = new SpecimenIntakeClipPath().start();
+                    currentPath = new SpecimenIntakePath().start();
                 })
 
                 .state(State.CYCLE_INTAKE)
@@ -117,7 +117,7 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
 
                 .state(State.CYCLE_SCORING)
                 .transitionTimed(0.25, State.CYCLE_INTAKE, () -> {
-                    currentPath = new SpecimenIntakeClipPath().start();
+                    currentPath = new SpecimenIntakePath().start();
                 })
 
                 .state(State.CYCLE_FAILSAFE)
@@ -125,7 +125,7 @@ public class TeleDrivePIDTest extends BluLinearOpMode {
 //                    currentPath = cycleDepoPath.start();
 //                })
                 .transition(() -> currentPath.isDone(), State.CYCLE_INTAKE, () -> {
-                    currentPath = new SpecimenIntakeClipPath().start();
+                    currentPath = new SpecimenIntakePath().start();
                 })
                 .loop(() -> currentPath.run())
 

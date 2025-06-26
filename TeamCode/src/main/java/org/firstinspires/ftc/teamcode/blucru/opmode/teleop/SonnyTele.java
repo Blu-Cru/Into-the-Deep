@@ -39,7 +39,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.cl
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenCycleIntakeFailsafePath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakeClipPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.tele.TeleSpecimenDepoPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
@@ -142,7 +142,7 @@ public class SonnyTele extends BluLinearOpMode {
                 // SPECIMEN
                 .transition(() -> stickyG1.b && cvMaster.seesSpecimenTag(), State.AUTO_SPEC_INTAKE, () -> {
                     dt.updateAprilTags();
-                    currentPath = new SpecimenIntakeClipPath().start();
+                    currentPath = new SpecimenIntakePath().start();
                 })
 
                 // SPECIMEN
@@ -443,7 +443,7 @@ public class SonnyTele extends BluLinearOpMode {
 
                 .state(State.AUTO_SPEC_SCORING)
                 .transitionTimed(0.2, State.AUTO_SPEC_INTAKE, () -> {
-                    currentPath = new SpecimenIntakeClipPath().start();
+                    currentPath = new SpecimenIntakePath().start();
                 })
 
                 .state(State.AUTO_SPEC_INTAKE_FAIL)
@@ -454,7 +454,7 @@ public class SonnyTele extends BluLinearOpMode {
                     currentPath = new TeleSpecimenDepoPath().start();
                 })
                 .transition(() -> currentPath.isDone() || stickyG1.b, State.AUTO_SPEC_INTAKE, () -> {
-                    currentPath = new SpecimenIntakeClipPath().start();
+                    currentPath = new SpecimenIntakePath().start();
                 })
 
                 .state(State.HANG_RELEASE) // 1st stage released, hook is up, not touching bar

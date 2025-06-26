@@ -19,8 +19,8 @@ public class SampleHighLiftPath extends PIDPathBuilder {
                     new SequentialCommandGroup(
                             new BoxtubeCommand(Math.PI/2, 0),
                             new EndEffectorRetractCommand(),
-                            new ArmCommand(0.5),
-                            new WaitCommand(500),
+                            new ArmCommand(0.0),
+                            new WaitCommand(700),
                             new SampleBackHighCommand()
                     ).schedule();
                 })

@@ -82,6 +82,7 @@ public class Solo extends BluLinearOpMode {
                     gamepad1.rumble(350);
                 })
                 .transition(() -> (stickyG1.left_bumper) && pivot.getAngle() < 0.4, State.PREINTAKE, () -> {
+                    orientation = SampleOrientation.VERTICAL;
                     new SequentialCommandGroup(
                             new TurretCenterCommand(),
                             new PreIntakeCommand(),
@@ -143,12 +144,14 @@ public class Solo extends BluLinearOpMode {
                 })
                 .transition(() -> cactus.empty(), State.PREINTAKE, () -> {
                     new SequentialCommandGroup(
+                            new SpinWristGlobalAngleCommand(orientation),
                             new PreIntakeCommand(),
                             new ClawOpenCommand()
                     ).schedule();
                 })
                 .transitionTimed(0.15, State.PREINTAKE, () -> {
                     new SequentialCommandGroup(
+                            new SpinWristGlobalAngleCommand(orientation),
                             new PreIntakeCommand(),
                             new ClawOpenCommand()
                     ).schedule();
