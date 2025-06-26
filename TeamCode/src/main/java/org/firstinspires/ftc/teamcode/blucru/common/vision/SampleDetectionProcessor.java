@@ -128,10 +128,10 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Core.bitwise_and(wbCorrected, wbCorrected, satMasked, saturationThresh);
 
         Mat satEdges = new Mat();
-        Imgproc.Canny(satMasked, satEdges, 100, 200);
+        Imgproc.Canny(satMasked, satEdges, 50, 200);
 
         Mat edges = new Mat();
-        Imgproc.Canny(wbCorrected, edges, 50, 130);
+        Imgproc.Canny(wbCorrected, edges, 0, 150);
 
         Mat combinedEdges = new Mat();
         Core.bitwise_or(edges, satEdges, combinedEdges);
