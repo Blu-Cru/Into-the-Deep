@@ -50,6 +50,7 @@ import java.util.Arrays;
         )
 
 public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> {
+    private static final double INCH_PER_MM = 0.0394;
 
     private int deviceStatus   = 0;
     private int loopTime       = 0;
@@ -500,15 +501,20 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
      * @return a Pose2D containing the estimated position of the robot
      */
     public Pose2d getPosition(){
-        Pose2D ftcPose = new Pose2D(DistanceUnit.MM,
-                xPosition,
-                yPosition,
-                AngleUnit.RADIANS,
-                hOrientation);
-
-        return new Pose2d(ftcPose.getX(DistanceUnit.INCH),
-                ftcPose.getY(DistanceUnit.INCH),
-                ftcPose.getHeading(AngleUnit.RADIANS));
+        return new Pose2d(
+                xPosition * INCH_PER_MM,
+                yPosition * INCH_PER_MM,
+                hOrientation
+        );
+//        Pose2D ftcPose = new Pose2D(DistanceUnit.MM,
+//                xPosition,
+//                yPosition,
+//                AngleUnit.RADIANS,
+//                hOrientation);
+//
+//        return new Pose2d(ftcPose.getX(DistanceUnit.INCH),
+//                ftcPose.getY(DistanceUnit.INCH),
+//                ftcPose.getHeading(AngleUnit.RADIANS));
     }
 
 
@@ -517,16 +523,17 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
      * @return a Pose2D containing the estimated velocity of the robot, velocity is unit per second
      */
     public Pose2d getVelocity(){
-        Pose2D ftcPose = new Pose2D(DistanceUnit.MM,
-                xVelocity,
-                yVelocity,
-                AngleUnit.RADIANS,
-                hVelocity);
+//        Pose2D ftcPose = new Pose2D(DistanceUnit.MM,
+//                xVelocity,
+//                yVelocity,
+//                AngleUnit.RADIANS,
+//                hVelocity);
 
         return new Pose2d(
-                ftcPose.getX(DistanceUnit.INCH),
-                ftcPose.getY(DistanceUnit.INCH),
-                ftcPose.getHeading(AngleUnit.RADIANS));
+                xVelocity * INCH_PER_MM,
+                yVelocity * INCH_PER_MM,
+                hVelocity
+        );
     }
 }
 

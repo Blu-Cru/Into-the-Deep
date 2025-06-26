@@ -20,12 +20,13 @@ public class RetractFromBasketCommand extends SequentialCommandGroup {
                 new ArmGlobalAngleCommand(1.5),
                 new WaitCommand(300),
                 new BoxtubeRetractCommand(),
-                new ClawLooseCommand(),
-                new SpinWristCenterCommand(),
-                new TurretCenterCommand(),
-                new UpDownWristRetractCommand(),
-                new WaitCommand(170),
-                new ArmRetractCommand()
+                new EndEffectorRetractCommand()
+//                new ClawLooseCommand(),
+//                new SpinWristCenterCommand(),
+//                new TurretCenterCommand(),
+//                new UpDownWristRetractCommand(),
+//                new WaitCommand(170),
+//                new ArmRetractCommand()
         );
     }
 }

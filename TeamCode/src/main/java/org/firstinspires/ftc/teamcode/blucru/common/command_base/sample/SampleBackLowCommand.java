@@ -13,8 +13,8 @@ public class SampleBackLowCommand extends SequentialCommandGroup {
     public SampleBackLowCommand() {
         super(
                 new ArmCommand(0.6),
-                new BoxtubeCommand(Math.PI/2, 5.0),
-                new UpDownWristAngleCommand(1.5),
+                new BoxtubeCommand(Math.PI/2, 7.0),
+                new UpDownWristAngleCommand(0.8),
                 new SpinWristAngleCommand(Math.PI),
                 new TurretCenterCommand()
         );

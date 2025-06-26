@@ -30,6 +30,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.Specim
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatSpitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Claw;
 import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
@@ -69,6 +70,7 @@ public class Solo extends BluLinearOpMode {
         addCactus();
         addPusher();
         addPTOServos();
+        addCVMaster();
 
         pivot.useExtension(extension.getMotor());
         extension.usePivot(pivot.getMotor());
@@ -117,7 +119,7 @@ public class Solo extends BluLinearOpMode {
 
                 .state(State.PREINTAKE)
                 .onEnter(() -> {
-                    dt.setDrivePower(0.45);
+                    dt.setDrivePower(0.30);
                 })
                 .transition(() -> stickyG1.a, State.HOME, () -> {
                     new FullRetractCommand().schedule();
@@ -142,7 +144,10 @@ public class Solo extends BluLinearOpMode {
 
                 .state(State.GRABBED_GROUND)
                 .transitionTimed(0.63, State.SENSING_GROUND)
+                .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .state(State.SENSING_GROUND)
+                .onEnter(() -> dt.setDrivePower(0.6))
+                .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .transition(() -> cactus.validSample(), State.HOME, () -> {
                     new FullRetractCommand().schedule();
                 })
@@ -206,8 +211,10 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .state(State.GRABBED_SPEC)
+                .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .transitionTimed(0.3, State.SENSING_SPEC)
                 .state(State.SENSING_SPEC)
+                .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .transitionTimed(0.1, State.INTAKING_SPEC, () -> {
                     if(grabByClip) {
                         new SpecimenIntakeBackClipCommand().schedule();
@@ -271,6 +278,16 @@ public class Solo extends BluLinearOpMode {
 
         sm.setState(State.MANUAL_RESET);
         sm.start();
+    }
+
+    @Override
+    public void onStart() {
+        pivot.pidTo(0);
+        extension.pidTo(0);
+
+        dt.setPoseEstimate(DriveBase.startPose);
+
+        cvMaster.detectTag();
     }
 
     @Override

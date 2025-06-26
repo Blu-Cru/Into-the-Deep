@@ -7,7 +7,7 @@ public class LeftClapServo extends ClapServo {
 
     @Override
     double getCenterPosition() {
-        return 0.52;
+        return 0.51;
     }
 
     @Override
