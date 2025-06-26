@@ -31,16 +31,17 @@ import java.util.List;
 @Config
 public class SampleDetectionProcessor implements VisionProcessor {
     static double[][] HOMOG_IMAGE_POINTS = {
-            {945, 598}, {1168, 600},
-            {931, 774}, {1203, 782}
+            {853, 612}, {1201, 612},
+            {812, 947}, {1287, 941}
     };
-    static double[] REF_TOP_LEFT_PIXELS = {300.0, 150.0},
-        REF_TOP_LEFT_INCHES = {-5.0, 15.2};
+    static double DIST_BETWEEN_POINTS = 5.6;
+    static double[] REF_BOTTOM_LEFT_PIXELS = {800.0, 800.0},
+        REF_TOP_LEFT_INCHES = {-5.6, 13};
     public static double PIXELS_PER_INCH = 20.0,
         MIN_SAT_MASK,
-        RED_HUE_LOW = 100.0, RED_HUE_HIGH = 140.0,
-        YELLOW_HUE_LOW = 12.0, YELLOW_HUE_HIGH = 55.0,
-        BLUE_HUE_LOW = 0.0, BLUE_HUE_HIGH = 35.0,
+        RED_HUE_LOW = 48, RED_HUE_HIGH = 100.0,
+        YELLOW_HUE_LOW = 12.0, YELLOW_HUE_HIGH = 48,
+        BLUE_HUE_LOW = 110, BLUE_HUE_HIGH = 120,
 
         // calib
         fx = 1279.33, fy = 1279.33, cx = 958.363, cy = 492.062,
@@ -90,8 +91,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
                         new Point(HOMOG_IMAGE_POINTS[2][0], HOMOG_IMAGE_POINTS[2][1]), new Point(HOMOG_IMAGE_POINTS[3][0], HOMOG_IMAGE_POINTS[3][1])
                 ),
                 new MatOfPoint2f(
-                        new Point(REF_TOP_LEFT_PIXELS[0], REF_TOP_LEFT_PIXELS[1]), new Point(REF_TOP_LEFT_PIXELS[0] + PIXELS_PER_INCH * 5.0, REF_TOP_LEFT_PIXELS[1]),
-                        new Point(REF_TOP_LEFT_PIXELS[0], REF_TOP_LEFT_PIXELS[1] + PIXELS_PER_INCH * 5.0), new Point(REF_TOP_LEFT_PIXELS[0] + PIXELS_PER_INCH * 5.0, REF_TOP_LEFT_PIXELS[1] + PIXELS_PER_INCH * 5.0)
+                        new Point(REF_BOTTOM_LEFT_PIXELS[0], REF_BOTTOM_LEFT_PIXELS[1]), new Point(REF_BOTTOM_LEFT_PIXELS[0] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS, REF_BOTTOM_LEFT_PIXELS[1]),
+                        new Point(REF_BOTTOM_LEFT_PIXELS[0], REF_BOTTOM_LEFT_PIXELS[1] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS), new Point(REF_BOTTOM_LEFT_PIXELS[0] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS, REF_BOTTOM_LEFT_PIXELS[1] + PIXELS_PER_INCH * DIST_BETWEEN_POINTS)
                 )
         );
 
@@ -296,8 +297,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
     }
 
     private Vector2d getRobotPoint(Point centerPixels) {
-        double refOffsetX = centerPixels.x-REF_TOP_LEFT_PIXELS[0];
-        double refOffsetY = -(centerPixels.y-REF_TOP_LEFT_PIXELS[1]);
+        double refOffsetX = centerPixels.x- REF_BOTTOM_LEFT_PIXELS[0];
+        double refOffsetY = -(centerPixels.y- REF_BOTTOM_LEFT_PIXELS[1]);
 
         double inchOffsetX = REF_TOP_LEFT_INCHES[0]+refOffsetX/PIXELS_PER_INCH;
         double inchOffsetY = REF_TOP_LEFT_INCHES[1]+refOffsetY/PIXELS_PER_INCH;
