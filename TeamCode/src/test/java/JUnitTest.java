@@ -1,7 +1,14 @@
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
 import org.ejml.data.DMatrix3;
 import org.ejml.data.DMatrix3x3;
 import org.ejml.dense.fixed.CommonOps_DDF3;
+import org.firstinspires.ftc.teamcode.blucru.common.vision.SampleDetectionProcessor;
+import org.jetbrains.annotations.TestOnly;
 import org.junit.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JUnitTest {
     @Test
@@ -36,5 +43,28 @@ public class JUnitTest {
     @Test
     public void testCar() {
         Assert.assertEquals(1, 1);
+    }
+
+    @Test
+    public void testSortingPoses(){
+        List<Pose2d> poses = new ArrayList<Pose2d>(List.of(
+                new Pose2d(0,0,0),
+                new Pose2d(0,2,0),
+                new Pose2d(1,0,0)
+        ));
+
+        List<Double> dists = new ArrayList<Double>(List.of(0.0,2.0,1.0));
+
+        List<Pose2d> sortedPoses = SampleDetectionProcessor.sort(dists, poses);
+
+        List<Pose2d> correctResult = new ArrayList<Pose2d>(List.of(
+                new Pose2d(0,0,0),
+                new Pose2d(1,0,0),
+                new Pose2d(0,2,0)
+        ));
+
+        System.out.println(sortedPoses);
+
+        Assert.assertTrue(sortedPoses.equals(correctResult));
     }
 }
