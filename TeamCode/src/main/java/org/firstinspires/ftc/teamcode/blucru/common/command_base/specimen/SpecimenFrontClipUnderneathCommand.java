@@ -28,7 +28,7 @@ public class SpecimenFrontClipUnderneathCommand extends SequentialCommandGroup {
                 new WaitCommand(waitMillis),
                 new UpDownWristAngleCommand(0.05),
                 new SpinWristAngleCommand(Math.PI),
-                new BoxtubeCommand(0.82, 10.5)
+                new BoxtubeCommand(0.84, 10.5)
         );
     }
 

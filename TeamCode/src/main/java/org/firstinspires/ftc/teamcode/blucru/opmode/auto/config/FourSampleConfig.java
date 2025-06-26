@@ -19,8 +19,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
 
 public class FourSampleConfig extends AutoConfig {
-    Path preloadLiftingPath, cycleLiftingPath, scorePath,
-        rightFailsafePath, centerFailsafePath, leftFailsafePath;
+    Path rightFailsafePath, centerFailsafePath, leftFailsafePath;
 
     enum State{
         LIFTING,
@@ -56,10 +55,10 @@ public class FourSampleConfig extends AutoConfig {
         sm = new StateMachineBuilder()
                 .state(State.LIFTING)
                 .onEnter(() -> logTransition(State.LIFTING))
-                .transition(() -> Robot.getInstance().extension.getPIDError() < 5 && currentPath.isDone(),
+                .transition(() -> Robot.getInstance().extension.getPIDError() < 5 && Robot.getInstance().extension.getDistance() > 10.0 && currentPath.isDone(),
                         State.DEPOSITING,
                         () -> {
-                            currentPath = scorePath.start();
+                            currentPath = new SampleHighDepositPath().build().start();
                         })
                 .state(State.DEPOSITING)
                 .onEnter(() -> logTransition(State.DEPOSITING))
@@ -87,7 +86,7 @@ public class FourSampleConfig extends AutoConfig {
                             new ClawGrabCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
-                            currentPath = cycleLiftingPath.start();
+                            currentPath = new SampleHighLiftPath().start();
                         })
                 .state(State.CENTER_INTAKE)
                 .onEnter(() -> logTransition(State.CENTER_INTAKE))
@@ -96,7 +95,7 @@ public class FourSampleConfig extends AutoConfig {
                             new ClawGrabCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
-                            currentPath = cycleLiftingPath.start();
+                            currentPath = new SampleHighLiftPath().start();
                         })
                 .state(State.LEFT_INTAKE)
                 .onEnter(() -> logTransition(State.LEFT_INTAKE))
@@ -105,7 +104,7 @@ public class FourSampleConfig extends AutoConfig {
                             new ClawGrabCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
-                            currentPath = cycleLiftingPath.start();
+                            currentPath = new SampleHighLiftPath().start();
                         })
                 .state(State.PARKING)
                 .onEnter(() -> logTransition(State.PARKING))
@@ -116,11 +115,6 @@ public class FourSampleConfig extends AutoConfig {
 
     @Override
     public void build() {
-        preloadLiftingPath = new SampleHighLiftPath().build();
-        cycleLiftingPath = new SampleHighLiftPath().build();
-
-        scorePath = new SampleHighDepositPath().build();
-
         pathsAfterDeposit[0] = new SampleIntakeRightPath().build();
         pathsAfterDeposit[1] = new SampleIntakeCenterPath().build();
         pathsAfterDeposit[2] = new SampleIntakeLeftPath().build();
@@ -131,7 +125,7 @@ public class FourSampleConfig extends AutoConfig {
     public void start() {
         scoreCount = 0;
 
-        currentPath = preloadLiftingPath.start();
+        currentPath = new SampleHighLiftPath().start();
 
         sm.start();
         sm.setState(State.LIFTING);

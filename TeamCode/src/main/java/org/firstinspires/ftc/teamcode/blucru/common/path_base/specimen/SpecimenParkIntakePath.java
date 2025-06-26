@@ -30,7 +30,7 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
                 .callback(() ->
                         new SequentialCommandGroup(
                                 new PreIntakeCommand(),
-                                new WaitCommand(150),
+                                new WaitCommand(200),
                                 new ExtensionCommand(13),
                                 new TurretMotionProfileCommand(-0.6),
                                 new WaitCommand(400),

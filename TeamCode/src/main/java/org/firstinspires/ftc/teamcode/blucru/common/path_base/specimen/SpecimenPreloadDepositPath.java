@@ -25,11 +25,11 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
 //                            new PivotCommand(0.67),
 //                            new ExtensionCommand(10.5)
 //                    ).schedule();
-                    new SpecimenFrontFlatCommand().schedule();
+                    new SpecimenFrontClipUnderneathCommand().schedule();
                 })
                 .addMappedPoint(7, -59, 90)
 //                .waitMillis(100)
-                .addMappedPoint(7, -45, 90)
+                .addMappedPoint(7, -44, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
@@ -38,6 +38,7 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
                             new WaitCommand(200),
                             new BoxtubeRetractCommand()
                     ).schedule();
-                });
+                })
+                .waitMillis(50);
     }
 }

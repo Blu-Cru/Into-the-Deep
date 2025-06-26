@@ -4,7 +4,9 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
@@ -18,16 +20,16 @@ public class SpecimenIntakePath extends PIDPathBuilder {
                 })
                 .addMappedPoint(32, -54, 110, tolerance)
                 .setPower(0.25)
-                .addMappedPoint(36, -63, 90)
+                .addMappedPoint(36, -61, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
-                            new ExtensionCommand(2.6),
                             new ClawGrabCommand(),
                             new WaitCommand(140),
-                            new ExtensionCommand(7.0)
+                            new PivotCommand(1.0),
+                            new UpDownWristAngleCommand(-2.0)
                     ).schedule();
                 })
-                .waitMillis(150);
+                .waitMillis(250);
     }
 
     public SpecimenIntakePath() {

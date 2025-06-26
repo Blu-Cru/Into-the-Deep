@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.blucru.common.path_base.sample;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionMotionProfileCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
@@ -19,18 +21,17 @@ public class SampleIntakeCenterPath extends PIDPathBuilder {
     public SampleIntakeCenterPath() {
         super();
         this.setPower(0.7)
-                .addMappedPoint(-54, -45, 90, 4)
+                .addMappedPoint(-54, -50, 90, 4)
                 .callback(() -> {
                     new SequentialCommandGroup(
-                            new WaitCommand(800),
-                            new PivotRetractCommand(),
+                            new BoxtubeRetractCommand(),
                             new WaitCommand(800),
                             new PreIntakeCommand(),
                             new WaitCommand(300),
                             new ExtensionCommand(8),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new ClawOpenCommand(),
-                            new TurretAngleCommand(0.0),
+                            new TurretAngleCommand(0.5),
                             new WaitCommand(800),
                             new GrabCommand(),
                             new WaitCommand(300)

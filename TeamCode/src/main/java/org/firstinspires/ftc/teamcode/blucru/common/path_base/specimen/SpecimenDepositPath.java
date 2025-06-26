@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipUnderneathCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenDepositPath extends PIDPathBuilder {
@@ -15,10 +16,12 @@ public class SpecimenDepositPath extends PIDPathBuilder {
                     .callback(() -> {
                         new SequentialCommandGroup(
                                 new WaitCommand(50),
-                                new SpecimenFrontClipUnderneathCommand()
+                                new SpecimenFrontFlatCommand()
                         ).schedule();
                     })
-                    .addMappedPoint(12, -43.5, 110)
+                    .addMappedPoint(14, -50, 110, 5)
+                    .addMappedPoint(10, -38, 110,2)
+                    .addMappedPoint(9, -38, 110)
                     .callback(() -> {
                         new ClawOpenCommand().schedule();
                     });
