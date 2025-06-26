@@ -32,8 +32,8 @@ public class BoxtubeKinematics {
         return new Vector2d(matrix.get(0, 2), matrix.get(1, 2));
     }
 
-    public static double[] getExtensionTurretPose (Point2d targetPoint) {
-        double aSinArg = targetPoint.y / ARM_LENGTH;
+    public static double[] getExtensionTurretPose (Vector2d targetPoint) {
+        double aSinArg = targetPoint.getY() / ARM_LENGTH;
         double turretAngle;
 
         if (aSinArg >= 1.0)
@@ -41,9 +41,9 @@ public class BoxtubeKinematics {
         else if (aSinArg <= -1.0)
             turretAngle = -Math.PI/2;
         else
-            turretAngle = Math.asin(targetPoint.y / ARM_LENGTH);
+            turretAngle = Math.asin(targetPoint.getY() / ARM_LENGTH);
 
-        double extensionDistance = targetPoint.x - BOXTUBE_RETRACT_OFFSET - Math.cos(turretAngle);
+        double extensionDistance = targetPoint.getX() - BOXTUBE_RETRACT_OFFSET - ARM_LENGTH * Math.cos(turretAngle);
 
         return new double[]{extensionDistance, turretAngle};
     }
