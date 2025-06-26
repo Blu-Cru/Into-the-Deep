@@ -39,9 +39,9 @@ public class SampleDetectionProcessor implements VisionProcessor {
         REF_TOP_LEFT_INCHES = {-5.6, 13};
     public static double PIXELS_PER_INCH = 20.0,
         MIN_SAT_MASK,
-        RED_HUE_LOW = 48, RED_HUE_HIGH = 100.0,
-        YELLOW_HUE_LOW = 12.0, YELLOW_HUE_HIGH = 48,
-        BLUE_HUE_LOW = 110, BLUE_HUE_HIGH = 120,
+        RED_HUE_LOW = 100.0, RED_HUE_HIGH = 150.0,
+        YELLOW_HUE_LOW = 12.0, YELLOW_HUE_HIGH = 55.0,
+        BLUE_HUE_LOW = 0.0, BLUE_HUE_HIGH = 35.0,
 
         // calib
         fx = 1279.33, fy = 1279.33, cx = 958.363, cy = 492.062,
