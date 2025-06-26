@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.tu
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
-import org.firstinspires.ftc.teamcode.blucru.common.util.Sample;
 import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 
 public class SampleIntakeLeftPath extends PIDPathBuilder {
@@ -23,16 +22,16 @@ public class SampleIntakeLeftPath extends PIDPathBuilder {
                 .addMappedPoint(-61, -45, 100, 4)
                 .callback(() -> {
                     new SequentialCommandGroup(
-                            new WaitCommand(150),
+                            new WaitCommand(800),
                             new PivotRetractCommand(),
-                            new WaitCommand(300),
-                            new ClawOpenCommand(),
-                            new TurretAngleCommand(0.3),
-                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
-                            new ExtensionMotionProfileCommand(8),
-                            new WaitCommand(700),
+                            new WaitCommand(800),
                             new PreIntakeCommand(),
-                            new WaitCommand(200),
+                            new WaitCommand(300),
+                            new ExtensionCommand(8),
+                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
+                            new ClawOpenCommand(),
+                            new TurretAngleCommand(1.0),
+                            new WaitCommand(800),
                             new GrabCommand(),
                             new WaitCommand(300)
                     ).schedule();

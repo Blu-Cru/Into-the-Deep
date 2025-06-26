@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabComm
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.sample.SampleBackHighCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.sample.SampleBackLowCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontClipUnderneathCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenFrontFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
@@ -92,6 +93,9 @@ public class Solo extends BluLinearOpMode {
                             new WaitCommand(250),
                             new ClawOpenCommand()
                     ).schedule();
+                })
+                .transition(() -> stickyG1.b && extension.getDistance() < 2.0, State.SCORING_BASKET, () -> {
+                    new SampleBackLowCommand().schedule();
                 })
                 .transition(() -> stickyG1.y && extension.getDistance() < 2.0, State.SCORING_BASKET, () -> {
                     new SampleBackHighCommand().schedule();
@@ -167,6 +171,14 @@ public class Solo extends BluLinearOpMode {
                             new WaitCommand(80),
                             new RetractFromBasketCommand()
                     ).schedule();
+                })
+                .loop(() -> {
+                    if(stickyG1.y) {
+                        new SampleBackHighCommand().schedule();
+                    }
+                    if(stickyG1.b) {
+                        new SampleBackLowCommand().schedule();
+                    }
                 })
 
                 .state(State.INTAKING_SPEC)

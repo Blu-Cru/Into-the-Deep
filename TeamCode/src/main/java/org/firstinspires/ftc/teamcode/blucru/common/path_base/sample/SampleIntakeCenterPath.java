@@ -22,16 +22,16 @@ public class SampleIntakeCenterPath extends PIDPathBuilder {
                 .addMappedPoint(-54, -45, 90, 4)
                 .callback(() -> {
                     new SequentialCommandGroup(
-                            new WaitCommand(150),
+                            new WaitCommand(800),
                             new PivotRetractCommand(),
-                            new WaitCommand(300),
-                            new ClawOpenCommand(),
-                            new TurretAngleCommand(0.15),
-                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
-                            new ExtensionMotionProfileCommand(8),
-                            new WaitCommand(700),
+                            new WaitCommand(800),
                             new PreIntakeCommand(),
-                            new WaitCommand(200),
+                            new WaitCommand(300),
+                            new ExtensionCommand(8),
+                            new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
+                            new ClawOpenCommand(),
+                            new TurretAngleCommand(0.0),
+                            new WaitCommand(800),
                             new GrabCommand(),
                             new WaitCommand(300)
                     ).schedule();
