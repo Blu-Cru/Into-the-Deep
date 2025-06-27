@@ -10,8 +10,10 @@ import com.acmerobotics.roadrunner.util.Angle;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Sample;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
@@ -60,7 +62,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
     double processingTimeMillis = 0;
 
-    List<Pose2d> sortedPoses;
+    public SampleDetectionsList detectionList;
+
     public SampleDetectionProcessor() {
         K = new Mat(3, 3, CvType.CV_64F);
         K.put(0, 0, fx, 0, cx,
@@ -69,8 +72,6 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
         DIST_COEFFS = new Mat(4, 1, CvType.CV_64F);
         DIST_COEFFS.put(0, 0, K1, K2, P1, P2, K3);
-
-        sortedPoses = new ArrayList<>();
     }
 
     @Override
@@ -103,8 +104,9 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
     @Override
     public Mat processFrame(Mat frame, long captureTimeNanos) {
-        List<Double> dists = new ArrayList<>();
-        List<Pose2d> poses = new ArrayList<>();
+        // calculate global pose, and add global pose to sorted poses
+        SampleDetectionsList tempList = new SampleDetectionsList();
+        Pose2d drivePose = Robot.getInstance().dt.pose;
 
         int tempNumDetections = 0;
 
@@ -157,6 +159,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Pose2d tempBestPose = new Pose2d();
 
         for(int i = 0; i < contours.size(); i++) {
+            Sample blockColor = Sample.YELLOW;
+
             MatOfPoint cnt = contours.get(i);
 
             double area = Imgproc.contourArea(cnt);
@@ -191,11 +195,13 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             if(Globals.alliance == Alliance.RED) {
                 if (BLUE_HUE_LOW < meanHue.val[0] && meanHue.val[0] < BLUE_HUE_HIGH){
+                    blockColor = Sample.BLUE;
                     Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + (int) meanHue.val[0]);
                     continue;
                 }
             } else {
                 if(meanHue.val[0] > RED_HUE_LOW && meanHue.val[0] < RED_HUE_HIGH) {
+                    blockColor = Sample.RED;
                     Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + meanHue.val[0]);
                     continue;
                 }
@@ -222,8 +228,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             Pose2d pose = new Pose2d(point, Angle.norm(Math.toRadians(normalizedAngle)));
 
-            poses.add(pose);
-            dists.add(distance);
+            tempList.add(new SampleDetection(getGlobalPose(pose, drivePose),blockColor,distance));
 
             // print saturation
 //            Imgproc.putText(detectionOverlay, "Sat: " + meanSat, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
@@ -245,9 +250,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
         Imgproc.drawContours(detectionOverlay, validRects, -1, new Scalar(0, 255, 0), 2);
 
+        detectionList = tempList;
         this.numDetections = tempNumDetections;
-
-        sortedPoses = sort(dists, poses);
 
         Mat output = new Mat();
         Imgproc.resize(detectionOverlay, output, frame.size());
@@ -379,38 +383,14 @@ public class SampleDetectionProcessor implements VisionProcessor {
     }
 
     public boolean hasValidDetection() {
-        return !sortedPoses.isEmpty();
+        return !detectionList.isEmpty();
     }
 
-    public Pose2d getGlobalPose(Pose2d drivePose) {
-        Pose2d bestPose = sortedPoses.get(0);
-        Vector2d vec = drivePose.vec().plus(bestPose.vec().rotated(drivePose.getHeading()));
+    public Pose2d getGlobalPose(Pose2d blockPose, Pose2d drivePose){
+        Vector2d vec = drivePose.vec().plus(blockPose.vec().rotated(drivePose.getHeading()));
 
-        double heading = drivePose.getHeading() + bestPose.getHeading();
+        double heading = drivePose.getHeading() + blockPose.getHeading();
 
         return new Pose2d(vec, heading);
-    }
-
-    public static List<Pose2d> sort(List<Double> dist,List<Pose2d> poses){
-        List<Pose2d> sortedPoses = new ArrayList<Pose2d>();
-        int numPoses = dist.size();
-        for (int i = 0; i < numPoses; i++) {
-            int minDistIndex = 0;
-            for (int k = 1; k < dist.size(); k++){
-                if (dist.get(k) < dist.get(minDistIndex))
-                    minDistIndex = k;
-            }
-
-            sortedPoses.add(poses.get(minDistIndex));
-
-            dist.remove(minDistIndex);
-            poses.remove(minDistIndex);
-        }
-
-        return sortedPoses;
-    }
-
-    public List<Pose2d> getSortedPoses() {
-        return sortedPoses;
     }
 }
