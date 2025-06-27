@@ -130,7 +130,7 @@ public class Solo extends BluLinearOpMode {
                 })
                 .transition(() -> stickyG1.b, State.AUTO_SPEC_INTAKE, () -> {
                     if (dt.updateAprilTags())
-                        gamepad1.rumble(130);
+                        gamepad1.rumble(250);
 
                     if (cactus.validSample())
                         currentPath = new SpitIntakeSpecPath().build().start();

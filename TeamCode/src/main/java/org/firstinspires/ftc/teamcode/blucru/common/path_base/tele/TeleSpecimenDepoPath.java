@@ -17,6 +17,6 @@ public class TeleSpecimenDepoPath extends PIDPathBuilder {
                 .callback(() -> {
                     new SpecimenFrontFlatCommand().schedule();
                 })
-                .addMappedPoint(10, -40, 120, 10);
+                .addMappedPoint(10, -41, 118, 10);
     }
 }
