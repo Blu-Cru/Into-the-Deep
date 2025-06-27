@@ -23,11 +23,11 @@ public class GetHooksCommand extends SequentialCommandGroup {
                 new ClawOpenCommand(),
                 new ClapCenterCommand(),
                 new WaitCommand(350),
-                new ArmCommand(2.4),
+                new ArmCommand(2.1),
                 new WaitCommand(500),
                 new ClawGrabCommand(),
                 new WaitCommand(400),
-                new ArmCommand(2.0),
+//                new ArmCommand(2.0),
                 new ExtensionCommand(4),
                 new WaitCommand(700),
                 new ClapRetractCommand()

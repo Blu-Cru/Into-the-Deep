@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.blucru.common.path_base.sample;
 
+import android.util.Log;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.util.Angle;
@@ -18,14 +20,19 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeKinematics;
 
 public class SampleIntakeAtPointPath extends PIDPathBuilder {
-    public SampleIntakeAtPointPath(Pose2d drivePoint, Pose2d rawBlockPose) {
+    public SampleIntakeAtPointPath(Pose2d rawDrivePoint, Pose2d rawBlockPose) {
         super();
-//
+        double x = rawDrivePoint.getX();
+        double y = rawDrivePoint.getY();
+        double h = rawDrivePoint.getHeading();
+        Pose2d drivePointCopy = new Pose2d(x, y, h);
+
+        Log.i("ROBOT POSE", "Drive Point: " + drivePointCopy.getX() + ", " + drivePointCopy.getY() + ", " + drivePointCopy.getHeading());
 //        rawBlockPose = Globals.mapPose(rawBlockPose);
 
-        double[] poseToInverseKinematics = BoxtubeKinematics.getExtensionTurretPose(rawBlockPose.vec().minus(drivePoint.vec()).rotated(-drivePoint.getHeading()));
+        double[] poseToInverseKinematics = BoxtubeKinematics.getExtensionTurretPose(rawBlockPose.vec().minus(drivePointCopy.vec()).rotated(-drivePointCopy.getHeading()));
 
-        double spinWristAngle = rawBlockPose.getHeading() - drivePoint.getHeading();
+        double spinWristAngle = rawBlockPose.getHeading() - rawDrivePoint.getHeading();
 
 //        Log.i("SampleIntakeAtPointPath", "Block pose:" + rawBlockPose);
 //        Log.i("SampleIntakeAtPointPath", "Drive point:" + rawDrivePoint);
@@ -35,12 +42,13 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
 //        Log.i("SampleIntakeAtPointPath", "Point to point mag: " + rawDrivePoint.minus(rawBlockPose.vec()).norm());
 //        Log.i("SampleIntakeAtPointPath", "x: " + x);
 
+        Log.i("ROBOT POSE", "Drive Point: " + drivePointCopy.getX() + ", " + drivePointCopy.getY() + ", " + drivePointCopy.getHeading());
         this.setPower(0.7)
-                .addMappedPoint(drivePoint.getX(), drivePoint.getY(), drivePoint.getHeading(), 10)
+                .addPoint(rawDrivePoint, 10)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new PreIntakeCommand(),
-                            new WaitCommand(170),
+                            new WaitCommand(300),
                             new ExtensionCommand(poseToInverseKinematics[0]),
                             new SpinWristAngleCommand(spinWristAngle),
                             new WaitCommand(80),
@@ -48,8 +56,8 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
                     ).schedule();
                 })
 
-                .waitMillis(600)
-                .addMappedPoint(drivePoint.getX(), drivePoint.getY(), drivePoint.getHeading())
+                .waitMillis(1200)
+                .addPoint(rawDrivePoint)
                 .callback(() -> {
                     new GrabCommand().schedule();
                 })

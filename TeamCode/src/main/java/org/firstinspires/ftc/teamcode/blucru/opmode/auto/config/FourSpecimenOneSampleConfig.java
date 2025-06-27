@@ -10,8 +10,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighLiftPath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighLiftPreloadsPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPreloadPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleLowDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleLowLiftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.CollectCenterBlockPath;
@@ -146,7 +146,7 @@ public class FourSpecimenOneSampleConfig extends AutoConfig {
                 .state(State.CROSSING_WITH_YELLOW)
                 .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.seesSampleTag() && runtime.seconds() < latestHighLiftTime, State.LIFTING_YELLOW_HIGH, () -> {
                     Robot.getInstance().dt.updateAprilTags();
-                    currentPath = new SampleHighLiftPath().start();
+                    currentPath = new SampleHighLiftPreloadsPath().start();
                 })
                 .transition(() -> currentPath.isDone() && Robot.getInstance().cvMaster.seesSampleTag() && runtime.seconds() > latestHighLiftTime && runtime.seconds() < latestLowLiftTime, State.LIFTING_YELLOW_LOW, () -> {
                     currentPath = new SampleLowLiftPath().start();
@@ -155,7 +155,7 @@ public class FourSpecimenOneSampleConfig extends AutoConfig {
 
                 .state(State.LIFTING_YELLOW_HIGH)
                 .transition(() -> currentPath.isDone() && Robot.getInstance().extension.getDistance() > 22, State.DEPOSIT_YELLOW, () -> {
-                    currentPath = new SampleHighDepositPath().start();
+                    currentPath = new SampleHighDepositPreloadPath().start();
                 })
 
                 .state(State.LIFTING_YELLOW_LOW)

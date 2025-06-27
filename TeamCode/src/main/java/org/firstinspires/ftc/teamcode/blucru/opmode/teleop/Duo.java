@@ -39,8 +39,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.cl
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighLiftPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPreloadPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighLiftPreloadsPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.tele.TeleSpecimenDepoPath;
@@ -143,7 +143,7 @@ public class Duo extends BluLinearOpMode {
                 // DRIVE PID
                 .transition(() -> stickyG1.y && cvMaster.seesSampleTag(), State.AUTO_SAMPLE_LIFTING, () -> {
                     dt.updateAprilTags();
-                    currentPath = new SampleHighLiftPath().build().start();
+                    currentPath = new SampleHighLiftPreloadsPath().build().start();
                 })
 
                 // SPECIMEN
@@ -358,7 +358,7 @@ public class Duo extends BluLinearOpMode {
                     new SampleBackHighCommand().schedule();
                 })
                 .transition(() -> currentPath.isDone() && extension.getDistance() > 20, State.AUTO_SAMPLE_SCORING, () -> {
-                    currentPath = new SampleHighDepositPath().start();
+                    currentPath = new SampleHighDepositPreloadPath().start();
                 })
                 .transition(() -> stickyG2.a || stickyG1.a, State.RETRACTED, () -> {
                     currentPath.cancel();

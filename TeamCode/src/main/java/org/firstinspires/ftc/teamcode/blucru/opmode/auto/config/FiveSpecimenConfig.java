@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenI
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenParkIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenPreloadDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpitPath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpitRightIntakeSpecPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpitIntakeSpecPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
@@ -61,7 +61,7 @@ public class FiveSpecimenConfig extends AutoConfig {
                     currentPath = new SpitPath().build().start();
                 })
                 .transition(() -> currentPath.isDone() && spitCount >= 2, State.INTAKING_CYCLE, () -> {
-                    currentPath = new SpitRightIntakeSpecPath().build().start();
+                    currentPath = new SpitIntakeSpecPath().build().start();
                 })
                 .state(State.SPITTING)
                 .transition(() -> currentPath.isDone(), State.COLLECTING_BLOCKS, () -> {

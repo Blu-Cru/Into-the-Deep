@@ -29,6 +29,11 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.Specim
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackClipCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenIntakeBackFlatSpitCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenCycleIntakeFailsafePath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakePath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpitIntakeSpecPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.tele.TeleSpecimenDepoPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
@@ -45,6 +50,10 @@ public class Solo extends BluLinearOpMode {
         SCORING_SPEC,
         SCORING_BASKET,
 
+        AUTO_SPEC_INTAKE,
+        AUTO_SPEC_INTAKE_FAILSAFE,
+        AUTO_SPEC_DRIVE_TO_CHAMBER,
+
         GRABBED_GROUND,
         SENSING_GROUND,
         GRABBED_SPEC,
@@ -56,6 +65,7 @@ public class Solo extends BluLinearOpMode {
     StateMachine sm;
     SampleOrientation orientation = SampleOrientation.VERTICAL;
     boolean grabByClip;
+    Path currentPath;
 
     @Override
     public void initialize() {
@@ -92,7 +102,7 @@ public class Solo extends BluLinearOpMode {
                             new WaitCommand(320),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new ExtensionCommand(15),
-                            new WaitCommand(250),
+                            new WaitCommand(230),
                             new ClawOpenCommand()
                     ).schedule();
                 })
@@ -112,6 +122,15 @@ public class Solo extends BluLinearOpMode {
                             new SpecimenIntakeBackFlatCommand().schedule();
                         }
                     }
+                })
+                .transition(() -> gamepad1.touchpad, State.AUTO_SPEC_INTAKE, () -> {
+                    if (dt.updateAprilTags())
+                        gamepad1.rumble(130);
+
+                    if (cactus.validSample())
+                        currentPath = new SpitIntakeSpecPath().build().start();
+                    else
+                        currentPath = new SpecimenIntakePath().build().start();
                 })
                 .loop(() -> {
                     if(stickyG1.right_bumper) new SpitCommand().schedule();
@@ -150,6 +169,7 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .transition(() -> cactus.validSample(), State.HOME, () -> {
                     new FullRetractCommand().schedule();
+                    gamepad1.rumble(80);
                 })
                 .transition(() -> cactus.empty(), State.PREINTAKE, () -> {
                     new SequentialCommandGroup(
@@ -190,6 +210,9 @@ public class Solo extends BluLinearOpMode {
                 .onEnter(() -> dt.setDrivePower(0.7))
                 .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .transition(() -> (stickyG1.left_bumper || cactus.justValidSample()) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
+                    if(cactus.justValidSample())
+                        gamepad1.rumble(80);
+
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),
                             new WaitCommand(140),
@@ -238,17 +261,18 @@ public class Solo extends BluLinearOpMode {
 
                 .state(State.SCORING_SPEC)
                 .onEnter(() -> dt.setDrivePower(0.8))
-                .transition(() -> stickyG1.left_bumper, State.INTAKING_SPEC, () -> {
-                    new SequentialCommandGroup(
-                            new ClawOpenCommand(),
-                            new ArmCommand(0.2),
-                            new WaitCommand(130),
-                            new ConditionalCommand(
-                                    new SpecimenIntakeBackClipCommand(),
-                                    new SpecimenIntakeBackFlatCommand(),
-                                    () -> grabByClip
-                            )
-                    ).schedule();
+                .transition(() -> stickyG1.left_bumper, State.AUTO_SPEC_INTAKE, () -> {
+                    currentPath = new SpecimenIntakePath().start();
+//                    new SequentialCommandGroup(
+//                            new ClawOpenCommand(),
+//                            new ArmCommand(0.2),
+//                            new WaitCommand(130),
+//                            new ConditionalCommand(
+//                                    new SpecimenIntakeBackClipCommand(),
+//                                    new SpecimenIntakeBackFlatCommand(),
+//                                    () -> grabByClip
+//                            )
+//                    ).schedule();
                 })
                 .transition(() -> stickyG1.a, State.HOME, () -> {
                     new SequentialCommandGroup(
@@ -257,6 +281,34 @@ public class Solo extends BluLinearOpMode {
                             new WaitCommand(130),
                             new FullRetractCommand()
                     ).schedule();
+                })
+
+                .state(State.AUTO_SPEC_INTAKE)
+                .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
+                .transition(() -> currentPath.isDone() && cactus.validSample(), State.AUTO_SPEC_DRIVE_TO_CHAMBER, () -> {
+                    currentPath = new TeleSpecimenDepoPath().build().start();
+                })
+                .transition(() -> currentPath.isDone() && !cactus.validSample(), State.AUTO_SPEC_INTAKE_FAILSAFE, () -> {
+                    currentPath = new SpecimenCycleIntakeFailsafePath().build().start();
+                })
+                .transition(() -> isDriving(), State.INTAKING_SPEC, () -> {
+                    new SpecimenIntakeBackFlatCommand().schedule();
+                })
+
+                .state(State.AUTO_SPEC_INTAKE_FAILSAFE)
+                .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
+                .transition(() -> isDriving(), State.INTAKING_SPEC, () -> {
+                    new SpecimenIntakeBackFlatCommand().schedule();
+                })
+                .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE, () -> {
+                    currentPath = new SpecimenIntakePath().build().start();
+                })
+
+                .state(State.AUTO_SPEC_DRIVE_TO_CHAMBER)
+                .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
+                .transition(() -> (isDriving() || currentPath.isDone()) && cactus.validSample(), State.SCORING_SPEC)
+                .transition(() -> currentPath.isDone() && !cactus.validSample(), State.AUTO_SPEC_INTAKE, () -> {
+                    currentPath = new SpecimenIntakePath().build().start();
                 })
 
                 .state(State.MANUAL_RESET)
@@ -296,6 +348,11 @@ public class Solo extends BluLinearOpMode {
             case MANUAL_RESET:
                 dt.drive(new Pose2d(0, 0, 0));
                 break;
+            case AUTO_SPEC_INTAKE:
+            case AUTO_SPEC_INTAKE_FAILSAFE:
+            case AUTO_SPEC_DRIVE_TO_CHAMBER:
+                currentPath.run();
+                break;
             default:
                 dt.teleOpDrive(gamepad1);
                 break;
@@ -312,5 +369,9 @@ public class Solo extends BluLinearOpMode {
     public void telemetry() {
         telemetry.addData("State", sm.getState());
         telemetry.addData("Spin wrist angle", orientation);
+    }
+
+    boolean isDriving() {
+        return Math.abs(gamepad1.left_stick_y) > 0.1 || Math.abs(gamepad1.left_stick_x) > 0.1 || Math.abs(gamepad1.right_stick_x) > 0.1;
     }
 }

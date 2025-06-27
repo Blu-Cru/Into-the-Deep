@@ -10,10 +10,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeCenterPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeLeftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeRightPath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighLiftPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighLiftPreloadsPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleParkPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SamplePartnerIntakePath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPreloadPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
@@ -109,8 +109,8 @@ public class FiveSampleConfig extends AutoConfig {
 
     @Override
     public void build() {
-        liftingPath = new SampleHighLiftPath().build();
-        scorePath = new SampleHighDepositPath().build();
+        liftingPath = new SampleHighLiftPreloadsPath().build();
+        scorePath = new SampleHighDepositPreloadPath().build();
 
         rightIntakePath = new SampleIntakeRightPath().build();
         centerIntakePath = new SampleIntakeCenterPath().build();

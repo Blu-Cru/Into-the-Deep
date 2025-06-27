@@ -36,7 +36,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.Specim
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.spline.BoxtubeSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.SpecimenDunkSplineCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPreloadPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.tele.TeleSpecimenDepoPath;
@@ -304,7 +304,7 @@ public class WorldsSolo extends BluLinearOpMode {
                             new SampleBackHighCommand().schedule();
                         })
                 .transition(() -> currentPath.isDone() && extension.getDistance() > 20, State.AUTO_SAMPLE_SCORING, () -> {
-                    currentPath = new SampleHighDepositPath().start();
+                    currentPath = new SampleHighDepositPreloadPath().start();
                 })
                 .transition(() -> stickyG1.a, State.RETRACTED, () -> {
                     currentPath.cancel();

@@ -18,8 +18,13 @@ public class SpecimenCycleIntakeFailsafePath extends PIDPathBuilder {
                     new SpecimenIntakeBackClipCommand().schedule();
                 });
 
+        // make sure the last cycle in auto doesn't wait
         if (scoreCount < 4) {
             this.waitMillis(150);
         }
+    }
+
+    public SpecimenCycleIntakeFailsafePath() {
+        this(0);
     }
 }

@@ -4,23 +4,31 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.spline.BoxtubeSplineCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.EndEffectorRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawLooseCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristCenterCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretCenterCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SampleSubIntakeFailPath extends PIDPathBuilder {
     public SampleSubIntakeFailPath() {
         super();
         this.callback(() -> {
-                    new BoxtubeSplineCommand(
-                            new Pose2d(8, 8, -0.65),
-                            -Math.PI/2,
-                            0.4
-                    ).schedule();
                     new SequentialCommandGroup(
-                            new WaitCommand(120),
-                            new WaitCommand(100),
-                            new ClawGrabCommand()
+                            new BoxtubeRetractCommand(),
+                            new ClawLooseCommand(),
+                            new ArmCommand(1.8),
+                            new SpinWristCenterCommand(),
+                            new TurretCenterCommand(),
+                            new UpDownWristAngleCommand(Math.PI/2)
                     ).schedule();
                 })
                 .addMappedPoint(-26, -12, 0)

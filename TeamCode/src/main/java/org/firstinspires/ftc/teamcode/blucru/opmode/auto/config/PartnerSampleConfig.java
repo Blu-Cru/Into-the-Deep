@@ -11,10 +11,10 @@ import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeCenterPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeLeftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeRightPath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighLiftPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighLiftPreloadsPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleParkPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SamplePartnerIntakePath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPreloadPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
@@ -115,7 +115,7 @@ public class PartnerSampleConfig extends AutoConfig {
                             new ClawGrabCommand().schedule();
                             new ArmRetractCommand().schedule();
                             new BoxtubeRetractCommand().schedule();
-                            currentPath = new SampleHighLiftPath().build().start();
+                            currentPath = new SampleHighLiftPreloadsPath().build().start();
                         })
                 .state(State.PARKING)
                 .onEnter(() -> logTransition(State.PARKING))
@@ -126,10 +126,10 @@ public class PartnerSampleConfig extends AutoConfig {
 
     @Override
     public void build() {
-        preloadLiftingPath = new SampleHighLiftPath().build();
-        cycleLiftingPath = new SampleHighLiftPath().build();
+        preloadLiftingPath = new SampleHighLiftPreloadsPath().build();
+        cycleLiftingPath = new SampleHighLiftPreloadsPath().build();
 
-        scorePath = new SampleHighDepositPath().build();
+        scorePath = new SampleHighDepositPreloadPath().build();
 
         pathsAfterDeposit[0] = new SampleIntakeRightPath().build();
         pathsAfterDeposit[1] = new SampleIntakeCenterPath().build();

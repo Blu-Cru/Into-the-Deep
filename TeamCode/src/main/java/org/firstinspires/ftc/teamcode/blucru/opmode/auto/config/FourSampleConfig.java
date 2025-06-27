@@ -4,23 +4,18 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeCenterPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeLeftPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeRightPath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighLiftPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighLiftPreloadsPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleParkPath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPreloadPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.auto.AutoConfig;
 
 public class FourSampleConfig extends AutoConfig {
-    Path rightFailsafePath, centerFailsafePath, leftFailsafePath;
-
     enum State{
         LIFTING,
         DEPOSITING,
@@ -34,78 +29,55 @@ public class FourSampleConfig extends AutoConfig {
         DONE
     }
 
-    public State[] statesAfterDeposit;
-    public Path[] pathsAfterDeposit;
-
     int scoreCount;
 
     public FourSampleConfig() {
         runtime = Globals.runtime;
-
-//        statesAfterDeposit = new State[4];
-//        statesAfterDeposit[0] = State.RIGHT_INTAKE;
-//        statesAfterDeposit[1] = State.CENTER_INTAKE;
-//        statesAfterDeposit[2] = State.LEFT_INTAKE;
-//        statesAfterDeposit[3] = State.PARKING;
-
-        pathsAfterDeposit = new Path[4];
 
         scoreCount = 0;
 
         sm = new StateMachineBuilder()
                 .state(State.LIFTING)
                 .onEnter(() -> logTransition(State.LIFTING))
-                .transition(() -> Robot.getInstance().extension.getPIDError() < 5 && Robot.getInstance().extension.getDistance() > 10.0 && currentPath.isDone(),
-                        State.DEPOSITING,
-                        () -> {
-                            currentPath = new SampleHighDepositPath().build().start();
-                        })
+                .transition(() -> Robot.getInstance().extension.getPIDError() < 5
+                                && Robot.getInstance().extension.getDistance() > 15.0
+                                && currentPath.isDone(),
+                        State.DEPOSITING, () -> {
+                    currentPath = new SampleHighDepositPreloadPath().start();
+                })
                 .state(State.DEPOSITING)
                 .onEnter(() -> logTransition(State.DEPOSITING))
-                .transition(() -> currentPath.isDone() && scoreCount == 0, State.RIGHT_INTAKE,
-                        () -> {
-                            currentPath = pathsAfterDeposit[scoreCount].start();
-                            scoreCount++;
-                        })
+                .transition(() -> currentPath.isDone() && scoreCount == 0, State.RIGHT_INTAKE, () -> {
+                    currentPath = new SampleIntakeRightPath().start();
+                    scoreCount++;
+                })
                 .transition(() -> currentPath.isDone() && scoreCount == 1, State.CENTER_INTAKE, () -> {
-                    currentPath = pathsAfterDeposit[scoreCount].start();
+                    currentPath = new SampleIntakeCenterPath().start();
                     scoreCount++;
                 })
                 .transition(() -> currentPath.isDone() && scoreCount == 2, State.LEFT_INTAKE, () -> {
-                    currentPath = pathsAfterDeposit[scoreCount].start();
+                    currentPath = new SampleIntakeLeftPath().start();
                     scoreCount++;
                 })
                 .transition(() -> currentPath.isDone() && scoreCount == 3, State.PARKING, () -> {
-                    currentPath = pathsAfterDeposit[scoreCount].start();
+                    currentPath = new SampleParkPath().start();
                     scoreCount++;
                 })
                 .state(State.RIGHT_INTAKE)
                 .onEnter(() -> logTransition(State.RIGHT_INTAKE))
-                .transition(() -> currentPath.isDone(), // || Robot.getInstance().intakeSwitch.pressed(),
-                        State.LIFTING, () -> {
-                            new ClawGrabCommand().schedule();
-                            new ArmRetractCommand().schedule();
-                            new BoxtubeRetractCommand().schedule();
-                            currentPath = new SampleHighLiftPath().start();
-                        })
+                .transition(() -> currentPath.isDone(), State.LIFTING, () -> {
+                    currentPath = new SampleHighLiftPreloadsPath().start();
+                })
                 .state(State.CENTER_INTAKE)
                 .onEnter(() -> logTransition(State.CENTER_INTAKE))
-                .transition(() -> currentPath.isDone(), // || Robot.getInstance().intakeSwitch.pressed(),
-                        State.LIFTING, () -> {
-                            new ClawGrabCommand().schedule();
-                            new ArmRetractCommand().schedule();
-                            new BoxtubeRetractCommand().schedule();
-                            currentPath = new SampleHighLiftPath().start();
-                        })
+                .transition(() -> currentPath.isDone(), State.LIFTING, () -> {
+                    currentPath = new SampleHighLiftPreloadsPath().start();
+                })
                 .state(State.LEFT_INTAKE)
                 .onEnter(() -> logTransition(State.LEFT_INTAKE))
-                .transition(() -> currentPath.isDone(), // || Robot.getInstance().intakeSwitch.pressed(),
-                        State.LIFTING, () -> {
-                            new ClawGrabCommand().schedule();
-                            new ArmRetractCommand().schedule();
-                            new BoxtubeRetractCommand().schedule();
-                            currentPath = new SampleHighLiftPath().start();
-                        })
+                .transition(() -> currentPath.isDone(), State.LIFTING, () -> {
+                    currentPath = new SampleHighLiftPreloadsPath().start();
+                })
                 .state(State.PARKING)
                 .onEnter(() -> logTransition(State.PARKING))
                 .transition(() -> currentPath.isDone(), State.DONE)
@@ -115,17 +87,13 @@ public class FourSampleConfig extends AutoConfig {
 
     @Override
     public void build() {
-        pathsAfterDeposit[0] = new SampleIntakeRightPath().build();
-        pathsAfterDeposit[1] = new SampleIntakeCenterPath().build();
-        pathsAfterDeposit[2] = new SampleIntakeLeftPath().build();
-        pathsAfterDeposit[3] = new SampleParkPath().build();
     }
 
     @Override
     public void start() {
         scoreCount = 0;
 
-        currentPath = new SampleHighLiftPath().start();
+        currentPath = new SampleHighLiftPreloadsPath().start();
 
         sm.start();
         sm.setState(State.LIFTING);

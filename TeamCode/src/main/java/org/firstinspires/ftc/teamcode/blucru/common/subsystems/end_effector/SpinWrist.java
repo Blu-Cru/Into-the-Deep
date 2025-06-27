@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     public static double
             // positive turns clockwise when intaking
-            CENTER_POS = 0.38;
+            CENTER_POS = 0.37;
     static final double
             // 1 tick = range/360 of a full rotation
             TICKS_PER_RAD = 0.28/(Math.PI/2),

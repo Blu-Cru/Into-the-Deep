@@ -13,14 +13,15 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up
 public class SpecimenIntakeBackFlatCommand extends SequentialCommandGroup {
     public SpecimenIntakeBackFlatCommand() {
         super(
+                new ClawOpenCommand(),
                 new ArmCommand(2.8),
                 new UpDownWristAngleCommand(-1.5),
                 new SpinWristAngleCommand(Math.PI),
                 new TurretCenterCommand(),
                 new WaitCommand(150),
-                new BoxtubeCommand(1.6, 0),
-                new WaitCommand(200),
-                new ClawOpenCommand()
+                new BoxtubeCommand(1.6, 0)
+//                new WaitCommand(200),
+//                new ClawOpenCommand()
         );
     }
 }

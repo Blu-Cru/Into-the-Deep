@@ -8,22 +8,27 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.ar
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristCenterCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretCenterCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristRetractCommand;
 
 public class SpecimenIntakeBackFlatSpitCommand extends SequentialCommandGroup {
     public SpecimenIntakeBackFlatSpitCommand () {
         super(
                 new ClawGrabCommand(),
+                new SpinWristCenterCommand(),
+                new TurretCenterCommand(),
+                new UpDownWristRetractCommand(),
                 new ArmCommand(2.7),
-                new BoxtubeCommand(1.2, 0),
+                new BoxtubeCommand(1.3, 0),
                 new SpinWristAngleCommand(0.8),
-                new UpDownWristAngleCommand(-0.3),
+                new UpDownWristAngleCommand(-0.8),
                 new WaitCommand(200),
-                new TurretMotionProfileCommand(0.8),
+                new TurretMotionProfileCommand(0.5),
                 new WaitCommand(170),
                 new ClawOpenCommand(),
-                new ArmCommand(2.4),
                 new WaitCommand(150),
                 new SpecimenIntakeBackFlatCommand()
         );

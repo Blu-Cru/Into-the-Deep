@@ -58,8 +58,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         map1, map2,
         homogM, dilationElement;
 
-    double processingTimeMillis = 0, bestDistance;
-    public Pose2d bestPose;
+    double processingTimeMillis = 0;
 
     List<Pose2d> sortedPoses;
     public SampleDetectionProcessor() {
@@ -71,7 +70,6 @@ public class SampleDetectionProcessor implements VisionProcessor {
         DIST_COEFFS = new Mat(4, 1, CvType.CV_64F);
         DIST_COEFFS.put(0, 0, K1, K2, P1, P2, K3);
 
-        bestPose = new Pose2d();
         sortedPoses = new ArrayList<>();
     }
 
@@ -328,7 +326,6 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Telemetry tele = Globals.tele;
         tele.addLine("Sample Detection Processor:");
         tele.addData("Num. of Sample Detections", numDetections);
-        tele.addData("Best Robot Pose", bestPose);
         tele.addData("Processing time (ms)", processingTimeMillis);
     }
 
@@ -382,15 +379,11 @@ public class SampleDetectionProcessor implements VisionProcessor {
     }
 
     public boolean hasValidDetection() {
-        return numDetections > 0 && bestDistance < MAX_DETECTION_DISTANCE;
-    }
-
-    public Pose2d getBestRobotPose() {
-        return this.bestPose;
+        return !sortedPoses.isEmpty();
     }
 
     public Pose2d getGlobalPose(Pose2d drivePose) {
-        Pose2d bestPose = getBestRobotPose();
+        Pose2d bestPose = sortedPoses.get(0);
         Vector2d vec = drivePose.vec().plus(bestPose.vec().rotated(drivePose.getHeading()));
 
         double heading = drivePose.getHeading() + bestPose.getHeading();
@@ -414,6 +407,10 @@ public class SampleDetectionProcessor implements VisionProcessor {
             poses.remove(minDistIndex);
         }
 
+        return sortedPoses;
+    }
+
+    public List<Pose2d> getSortedPoses() {
         return sortedPoses;
     }
 }
