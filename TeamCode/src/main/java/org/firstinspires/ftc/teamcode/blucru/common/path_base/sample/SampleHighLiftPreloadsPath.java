@@ -25,12 +25,12 @@ public class SampleHighLiftPreloadsPath extends PIDPathBuilder {
                             new SpinWristCenterCommand(),
                             new TurretCenterCommand(),
                             new UpDownWristRetractCommand(),
-                            new ArmCommand(0.0),
-                            new BoxtubeCommand(Math.PI/2, 4),
-                            new WaitCommand(600),
+                            new ArmCommand(-0.3),
+                            new BoxtubeCommand(Math.PI/2, 2.5),
+                            new WaitCommand(300),
                             new SampleBackHighAutoCommand()
                     ).schedule();
                 })
-                .addMappedPoint(-53, -53, 45);
+                .addMappedPoint(-55, -55, 45);
     }
 }
