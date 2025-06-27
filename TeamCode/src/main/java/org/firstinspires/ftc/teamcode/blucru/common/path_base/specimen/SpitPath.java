@@ -34,6 +34,6 @@ public class SpitPath extends PIDPathBuilder {
                             new ClawOpenCommand()
                     ).schedule();
                 })
-                .waitMillis(310);
+                .waitMillis(280);
     }
 }

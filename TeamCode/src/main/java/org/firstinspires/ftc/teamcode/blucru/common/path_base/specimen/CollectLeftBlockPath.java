@@ -29,7 +29,7 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
                             new TurretMotionProfileCommand(0.8)
                     ).schedule();
                 })
-                .addMappedPoint(29, -44.5, 30)
+                .addMappedPoint(29, -44.5, 40)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new WaitCommand(100),
