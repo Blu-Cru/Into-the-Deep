@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -18,6 +20,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.cl
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretCenterCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
@@ -35,14 +38,17 @@ import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenI
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpitIntakeSpecPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.tele.TeleSpecimenDepoPath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeKinematics;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Claw;
 import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
+@Config
 @TeleOp(group = "2")
 public class Solo extends BluLinearOpMode {
+    public static double INTAKE_POS_X = 30.0, INTAKE_POS_Y_DELTA = 4.0;
     enum State{
         HOME,
         PREINTAKE,
@@ -95,13 +101,15 @@ public class Solo extends BluLinearOpMode {
                     gamepad1.rumble(350);
                 })
                 .transition(() -> (stickyG1.left_bumper) && pivot.getAngle() < 0.4, State.PREINTAKE, () -> {
+                    double[] joints = BoxtubeKinematics.getExtensionTurretPose(new Vector2d(INTAKE_POS_X, 0));
+
                     orientation = SampleOrientation.VERTICAL;
                     new SequentialCommandGroup(
                             new TurretCenterCommand(),
                             new PreIntakeCommand(),
                             new WaitCommand(320),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
-                            new ExtensionCommand(15),
+                            new ExtensionCommand(joints[0]),
                             new WaitCommand(230),
                             new ClawOpenCommand()
                     ).schedule();
@@ -145,12 +153,27 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .loop(() -> {
-                    if (stickyG1.left_trigger)
-                        turret.setMotionProfileAngle(1.0);
-                    if (stickyG1.right_trigger)
-                        turret.setMotionProfileAngle(-1.0);
-                    if (stickyG1.left_trigger_released || stickyG1.right_trigger_released)
-                        turret.center();
+                    if (stickyG1.left_trigger) {
+                        double[] joints = BoxtubeKinematics.getExtensionTurretPose(new Vector2d(INTAKE_POS_X, INTAKE_POS_Y_DELTA));
+                        new SequentialCommandGroup(
+                                new TurretMotionProfileCommand(joints[1]),
+                                new ExtensionCommand(joints[0])
+                        ).schedule();
+                    }
+                    if (stickyG1.right_trigger) {
+                        double[] joints = BoxtubeKinematics.getExtensionTurretPose(new Vector2d(INTAKE_POS_X, -INTAKE_POS_Y_DELTA));
+                        new SequentialCommandGroup(
+                                new TurretMotionProfileCommand(joints[1]),
+                                new ExtensionCommand(joints[0])
+                        ).schedule();
+                    }
+                    if (stickyG1.left_trigger_released || stickyG1.right_trigger_released) {
+                        double[] joints = BoxtubeKinematics.getExtensionTurretPose(new Vector2d(INTAKE_POS_X, 0));
+                        new SequentialCommandGroup(
+                                new TurretMotionProfileCommand(joints[1]),
+                                new ExtensionCommand(joints[0])
+                        ).schedule();
+                    }
 
                     if (stickyG1.right_bumper)
                         orientation = spinWrist.setGlobalAngle(orientation.next());

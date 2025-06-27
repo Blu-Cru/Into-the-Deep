@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleLowLi
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.CollectCenterBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.CollectLeftBlockPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.CollectRightBlockPath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.CrossWithYellowPath;
+import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.CrossDepositYellowSamplePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenDepositPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenCycleIntakeFailsafePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SpecimenIntakePath;
@@ -128,7 +128,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 .transition(() -> Robot.validSample() && Robot.getInstance().pivot.getAngle() < 0.35,
                         State.CROSSING_WITH_YELLOW, () -> {
                             new FullRetractCommand().schedule();
-                            currentPath = new CrossWithYellowPath().start();
+                            currentPath = new CrossDepositYellowSamplePath().start();
                         })
                 .transition(() -> currentPath.isDone(), State.INTAKE_YELLOW_FAILSAFE)
                 .state(State.INTAKE_YELLOW_FAILSAFE)
@@ -137,7 +137,7 @@ public class FiveSpecimenOneSampleConfig extends AutoConfig {
                 })
                 .transition(() -> Robot.validSample() && Robot.getInstance().pivot.getAngle() < 0.35, State.CROSSING_WITH_YELLOW, () -> {
                     new FullRetractCommand().schedule();
-                    currentPath = new CrossWithYellowPath().start();
+                    currentPath = new CrossDepositYellowSamplePath().start();
                 })
                 .transitionTimed(0.5, State.INTAKING_YELLOW)
 
