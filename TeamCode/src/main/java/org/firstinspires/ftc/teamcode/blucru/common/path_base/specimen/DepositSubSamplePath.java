@@ -20,7 +20,7 @@ public class DepositSubSamplePath extends PIDPathBuilder {
                     new FullRetractCommand().schedule();
                 })
                 .waitMillis(2000) //value rn is for safety, tune it
-                .addMappedPoint(20, -50, 45)
+                .addMappedPoint(20, -50, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ExtensionCommand(10),
