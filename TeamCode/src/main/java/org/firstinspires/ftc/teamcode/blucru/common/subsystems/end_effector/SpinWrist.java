@@ -63,6 +63,7 @@ public class SpinWrist extends BluServo implements BluSubsystem, Subsystem {
     }
 
     public void setAngle(double rad) {
+        // positive angle is clockwise when intaking
         state = State.SERVO;
         double angle = Range.clip(rad, MIN_ANGLE, MAX_ANGLE);
         setPosition(toTicks(normalizeAngle(angle)) + CENTER_POS);

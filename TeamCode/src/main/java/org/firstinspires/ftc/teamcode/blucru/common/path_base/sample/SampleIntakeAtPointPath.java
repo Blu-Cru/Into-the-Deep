@@ -22,51 +22,44 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntak
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematics.BoxtubeKinematics;
 
+import java.util.Arrays;
+
 public class SampleIntakeAtPointPath extends PIDPathBuilder {
     public SampleIntakeAtPointPath(Pose2d rawDrivePoint, Pose2d rawBlockPose) {
         super();
-        double x = rawDrivePoint.getX();
-        double y = rawDrivePoint.getY();
-        double h = rawDrivePoint.getHeading();
-        Pose2d drivePointCopy = new Pose2d(x, y, h);
-
-        Log.i("ROBOT POSE", "Drive Point: " + drivePointCopy.getX() + ", " + drivePointCopy.getY() + ", " + drivePointCopy.getHeading());
+        Log.i("ROBOT POSE", "Drive Point: " + rawDrivePoint.getX() + ", " + rawDrivePoint.getY() + ", " + rawDrivePoint.getHeading());
 //        rawBlockPose = Globals.mapPose(rawBlockPose);
 
-        double[] poseToInverseKinematics = BoxtubeKinematics.getExtensionTurretPose(rawBlockPose.vec().minus(drivePointCopy.vec()).rotated(-drivePointCopy.getHeading()));
+        double[] poseToInverseKinematics = BoxtubeKinematics.getExtensionTurretPose(rawBlockPose.vec().minus(rawDrivePoint.vec()).rotated(-rawDrivePoint.getHeading()));
 
         double spinWristAngle = rawBlockPose.getHeading() - rawDrivePoint.getHeading() - Math.PI/2;
 
-//        Log.i("SampleIntakeAtPointPath", "Block pose:" + rawBlockPose);
-//        Log.i("SampleIntakeAtPointPath", "Drive point:" + rawDrivePoint);
-//        Log.i("SampleIntakeAtPointPath", "Block heading:" + rawBlockPose.getHeading());
-//        Log.i("SampleIntakeAtPointPath", "Drive point to block heading:" + rawBlockPose.vec().minus(rawDrivePoint).angle());
-//        Log.i("SampleIntakeAtPointPath", "Wrist final: " + rawWristFinal);
-//        Log.i("SampleIntakeAtPointPath", "Point to point mag: " + rawDrivePoint.minus(rawBlockPose.vec()).norm());
-//        Log.i("SampleIntakeAtPointPath", "x: " + x);
+        Log.i("SampleIntakeAtPointPath", "Block pose:" + rawBlockPose);
+        Log.i("SampleIntakeAtPointPath", "Drive point:" + rawDrivePoint);
+        Log.i("SampleIntakeAtPointPath", "Joint poses:" + Arrays.toString(poseToInverseKinematics));
+        Log.i("SampleIntakeAtPointPath", "Wrist final: " + spinWristAngle);
 
-        Log.i("ROBOT POSE", "Drive Point: " + drivePointCopy.getX() + ", " + drivePointCopy.getY() + ", " + drivePointCopy.getHeading());
         this.setPower(0.7)
                 .addPoint(rawDrivePoint, 10)
-                .callback(() -> {
-                    new SequentialCommandGroup(
-                            new ArmCommand(0.4),
-                            new UpDownWristAngleCommand(-Math.PI/2 + 0.05),
-                            new WaitCommand(300),
-                            new ClawOpenCommand(),
-                            new ExtensionCommand(poseToInverseKinematics[0]),
-                            new SpinWristGlobalAngleCommand(rawBlockPose.getHeading()),
-//                            new SpinWristAngleCommand(spinWristAngle),
-                            new WaitCommand(80),
-                            new TurretAngleCommand(poseToInverseKinematics[1])
-                    ).schedule();
-                })
+//                .callback(() -> {
+//                    new SequentialCommandGroup(
+//                            new ArmCommand(0.4),
+//                            new UpDownWristAngleCommand(-Math.PI/2 + 0.05),
+//                            new WaitCommand(300),
+//                            new ClawOpenCommand(),
+//                            new ExtensionCommand(poseToInverseKinematics[0]),
+//                            new SpinWristGlobalAngleCommand(rawBlockPose.getHeading()),
+////                            new SpinWristAngleCommand(spinWristAngle),
+//                            new WaitCommand(80),
+//                            new TurretAngleCommand(poseToInverseKinematics[1])
+//                    ).schedule();
+//                })
 
                 .waitMillis(900)
                 .addPoint(rawDrivePoint)
-                .callback(() -> {
-                    new GrabCommand().schedule();
-                })
+//                .callback(() -> {
+//                    new GrabCommand().schedule();
+//                })
                 .waitMillis(300);
 
     }
