@@ -67,21 +67,23 @@ public class SixSpecimenConfig extends AutoConfig {
                 .transition(() -> System.currentTimeMillis() - scanTimeMillis > 450
                                 && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(),
                         State.COLLECTING_SUB_SAMPLE, () -> {
-                            Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.detectionList.getBestSamplePose();
+                            Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.detectionList.getBestSpecPose();
 
-                            Log.i("SampleCycleConfig", "got block pose at " + blockPose);
-                            Log.i("SampleCycleConfig", "dt pose at " + Robot.getInstance().dt.pose);
+                            Log.i("SixSpecimenConfig", "got block pose at " + blockPose);
+                            Log.i("SixSpecimenConfig", "dt pose at " + Robot.getInstance().dt.pose);
                             currentPath = new SampleIntakeAtPointPath(Robot.getInstance().dt.pose, blockPose).start();
                             attemptedIntakeTriesInSub++;
                         })
                 .state(State.COLLECTING_SUB_SAMPLE)
                 .transition(() -> currentPath.isDone() && (Robot.validSample() || attemptedIntakeTriesInSub >= 2), State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER, () -> {
+                    logTransition(State.COLLECTING_SUB_SAMPLE);
                     Robot.getInstance().cvMaster.disableSampleDetector();
                     currentPath = new DepositSubSamplePath().build().start();
                 })
                 .transition(() -> currentPath.isDone() && !Robot.validSample() && attemptedIntakeTriesInSub < 2, State.SCANNING_SUB)
                 .state(State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER)
                 .transition(() -> currentPath.isDone(), State.COLLECTING_BLOCKS, () -> {
+                    logTransition(State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER);
                     currentPath = new CollectLeftBlockPath().build().start();
                 })
                 .state(FiveSpecimenConfig.State.COLLECTING_BLOCKS)
