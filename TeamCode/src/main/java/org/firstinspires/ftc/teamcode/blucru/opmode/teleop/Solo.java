@@ -106,9 +106,6 @@ public class Solo extends BluLinearOpMode {
                             new ClawOpenCommand()
                     ).schedule();
                 })
-                .transition(() -> stickyG1.b && extension.getDistance() < 2.0, State.SCORING_BASKET, () -> {
-                    new SampleBackLowCommand().schedule();
-                })
                 .transition(() -> stickyG1.y && extension.getDistance() < 2.0, State.SCORING_BASKET, () -> {
                     new SampleBackHighCommand().schedule();
                 })
@@ -123,7 +120,7 @@ public class Solo extends BluLinearOpMode {
                         }
                     }
                 })
-                .transition(() -> gamepad1.touchpad, State.AUTO_SPEC_INTAKE, () -> {
+                .transition(() -> stickyG1.b, State.AUTO_SPEC_INTAKE, () -> {
                     if (dt.updateAprilTags())
                         gamepad1.rumble(130);
 
@@ -209,6 +206,9 @@ public class Solo extends BluLinearOpMode {
                 .state(State.INTAKING_SPEC)
                 .onEnter(() -> dt.setDrivePower(0.7))
                 .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
+                .transition(() -> stickyG1.b, State.AUTO_SPEC_INTAKE, () -> {
+                    currentPath = new SpecimenIntakePath().start();
+                })
                 .transition(() -> (stickyG1.left_bumper || cactus.justValidSample()) && pivot.getAngle() > 1.3, State.GRABBED_SPEC, () -> {
                     if(cactus.justValidSample())
                         gamepad1.rumble(80);
@@ -291,13 +291,14 @@ public class Solo extends BluLinearOpMode {
                 .transition(() -> currentPath.isDone() && !cactus.validSample(), State.AUTO_SPEC_INTAKE_FAILSAFE, () -> {
                     currentPath = new SpecimenCycleIntakeFailsafePath().build().start();
                 })
-                .transition(() -> isDriving(), State.INTAKING_SPEC, () -> {
+                .transition(() -> stickyG1.right_bumper, State.INTAKING_SPEC, () -> {
+                    gamepad1.rumble(150);
                     new SpecimenIntakeBackFlatCommand().schedule();
                 })
 
                 .state(State.AUTO_SPEC_INTAKE_FAILSAFE)
                 .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
-                .transition(() -> isDriving(), State.INTAKING_SPEC, () -> {
+                .transition(() -> stickyG1.b, State.INTAKING_SPEC, () -> {
                     new SpecimenIntakeBackFlatCommand().schedule();
                 })
                 .transition(() -> currentPath.isDone(), State.AUTO_SPEC_INTAKE, () -> {
@@ -306,7 +307,7 @@ public class Solo extends BluLinearOpMode {
 
                 .state(State.AUTO_SPEC_DRIVE_TO_CHAMBER)
                 .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
-                .transition(() -> (isDriving() || currentPath.isDone()) && cactus.validSample(), State.SCORING_SPEC)
+                .transition(() -> isDriving() || (currentPath.isDone() && cactus.validSample()), State.SCORING_SPEC)
                 .transition(() -> currentPath.isDone() && !cactus.validSample(), State.AUTO_SPEC_INTAKE, () -> {
                     currentPath = new SpecimenIntakePath().build().start();
                 })
