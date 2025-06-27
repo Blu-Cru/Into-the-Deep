@@ -11,9 +11,12 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.spline.BoxtubeSplineCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
@@ -32,7 +35,7 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
 
         double[] poseToInverseKinematics = BoxtubeKinematics.getExtensionTurretPose(rawBlockPose.vec().minus(drivePointCopy.vec()).rotated(-drivePointCopy.getHeading()));
 
-        double spinWristAngle = rawBlockPose.getHeading() - rawDrivePoint.getHeading();
+        double spinWristAngle = rawBlockPose.getHeading() - rawDrivePoint.getHeading() - Math.PI/2;
 
 //        Log.i("SampleIntakeAtPointPath", "Block pose:" + rawBlockPose);
 //        Log.i("SampleIntakeAtPointPath", "Drive point:" + rawDrivePoint);
@@ -47,16 +50,19 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
                 .addPoint(rawDrivePoint, 10)
                 .callback(() -> {
                     new SequentialCommandGroup(
-                            new PreIntakeCommand(),
+                            new ArmCommand(0.4),
+                            new UpDownWristAngleCommand(-Math.PI/2 + 0.05),
                             new WaitCommand(300),
+                            new ClawOpenCommand(),
                             new ExtensionCommand(poseToInverseKinematics[0]),
-                            new SpinWristAngleCommand(spinWristAngle),
+                            new SpinWristGlobalAngleCommand(rawBlockPose.getHeading()),
+//                            new SpinWristAngleCommand(spinWristAngle),
                             new WaitCommand(80),
                             new TurretAngleCommand(poseToInverseKinematics[1])
                     ).schedule();
                 })
 
-                .waitMillis(1200)
+                .waitMillis(900)
                 .addPoint(rawDrivePoint)
                 .callback(() -> {
                     new GrabCommand().schedule();

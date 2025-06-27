@@ -36,7 +36,7 @@ public class SpitIntakeSpecPath extends PIDPathBuilder {
 //                })
                 .waitMillis(500)
                 .setPower(0.25)
-                .addMappedPoint(36, -61, 90, 2)
+                .addMappedPoint(35, -61, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),

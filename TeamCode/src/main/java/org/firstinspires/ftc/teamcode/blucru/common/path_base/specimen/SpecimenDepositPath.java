@@ -19,9 +19,9 @@ public class SpecimenDepositPath extends PIDPathBuilder {
                                 new SpecimenFrontFlatCommand()
                         ).schedule();
                     })
-                    .addMappedPoint(14, -50, 110, 5)
+                    .addMappedPoint(14, -50, 110, 6)
                     .addMappedPoint(10, -38, 110,2)
-                    .addMappedPoint(9, -38, 110)
+                    .addMappedPoint(6, -38, 110)
                     .callback(() -> {
                         new ClawOpenCommand().schedule();
                     });
