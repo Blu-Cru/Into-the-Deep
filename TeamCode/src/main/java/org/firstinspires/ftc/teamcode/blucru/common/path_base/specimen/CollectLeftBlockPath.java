@@ -18,15 +18,15 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
     public CollectLeftBlockPath() {
         super();
         this.setPower(0.9)
-                .addMappedPoint(29, -44.5, 40,18)
+                .addMappedPoint(29, -46.5, 40,18)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new PivotRetractCommand(),
                             new PreIntakeCommand(),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
-                            new ExtensionCommand(11),
+                            new ExtensionCommand(10.5),
                             new WaitCommand(100),
-                            new TurretMotionProfileCommand(0.8)
+                            new TurretMotionProfileCommand(0.35)
                     ).schedule();
                 })
                 .addMappedPoint(29, -44.5, 40)

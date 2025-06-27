@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmBottomHardStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawLooseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristCenterCommand;
@@ -25,12 +26,12 @@ public class SampleHighLiftPreloadsPath extends PIDPathBuilder {
                             new SpinWristCenterCommand(),
                             new TurretCenterCommand(),
                             new UpDownWristRetractCommand(),
-                            new ArmCommand(-0.3),
-                            new BoxtubeCommand(Math.PI/2, 2.5),
-                            new WaitCommand(300),
+                            new ArmBottomHardStopCommand(),
+                            new BoxtubeCommand(Math.PI/2, 1.5),
+                            new WaitCommand(50),
                             new SampleBackHighAutoCommand()
                     ).schedule();
                 })
-                .addMappedPoint(-55, -55, 45);
+                .addMappedPoint(-58, -58, 45);
     }
 }

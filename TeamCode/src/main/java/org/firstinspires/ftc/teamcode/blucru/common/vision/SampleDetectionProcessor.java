@@ -38,7 +38,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
     };
     static double DIST_BETWEEN_POINTS = 5.6;
     static double[] REF_TOP_LEFT_PIXELS = {800.0/3, 800.0/3},
-        REF_TOP_LEFT_INCHES = {-5.6, 18.6};
+        REF_TOP_LEFT_INCHES = {-5.6, 18.2};
     public static double PIXELS_PER_INCH = 20.0,
         MIN_SAT_MASK,
         RED_HUE_LOW = 100.0, RED_HUE_HIGH = 150.0,
@@ -55,7 +55,6 @@ public class SampleDetectionProcessor implements VisionProcessor {
     public static double RATIO_MIN = 1.7, RATIO_MAX = 2.6;
     public static double AREA_MIN = 1000, AREA_MAX = 1650;
     public static double MIN_SAT = 70;
-    int numDetections;
     Mat K, DIST_COEFFS,
         map1, map2,
         homogM, dilationElement;
@@ -72,6 +71,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
         DIST_COEFFS = new Mat(4, 1, CvType.CV_64F);
         DIST_COEFFS.put(0, 0, K1, K2, P1, P2, K3);
+        detectionList = new SampleDetectionsList();
     }
 
     @Override
@@ -106,10 +106,12 @@ public class SampleDetectionProcessor implements VisionProcessor {
     public Mat processFrame(Mat frame, long captureTimeNanos) {
         // calculate global pose, and add global pose to sorted poses
         SampleDetectionsList tempList = new SampleDetectionsList();
-        Pose2d drivePose = Robot.getInstance().dt.pose;
-
-        int tempNumDetections = 0;
-
+        Pose2d drivePose;
+        try {
+            drivePose = Robot.getInstance().dt.pose;
+        } catch (Exception e) {
+            return null;
+        }
         double startNanoTime = System.nanoTime();
 
         Mat undistorted = undistort(frame);
@@ -159,7 +161,6 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Pose2d tempBestPose = new Pose2d();
 
         for(int i = 0; i < contours.size(); i++) {
-            Sample blockColor = Sample.YELLOW;
 
             MatOfPoint cnt = contours.get(i);
 
@@ -193,18 +194,14 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             meanHue = Core.mean(hueChannel, rotatedRectMask);
 
-            if(Globals.alliance == Alliance.RED) {
-                if (BLUE_HUE_LOW < meanHue.val[0] && meanHue.val[0] < BLUE_HUE_HIGH){
-                    blockColor = Sample.BLUE;
-                    Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + (int) meanHue.val[0]);
-                    continue;
-                }
-            } else {
-                if(meanHue.val[0] > RED_HUE_LOW && meanHue.val[0] < RED_HUE_HIGH) {
-                    blockColor = Sample.RED;
-                    Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + meanHue.val[0]);
-                    continue;
-                }
+            Sample blockColor = Sample.YELLOW;
+            if (BLUE_HUE_LOW < meanHue.val[0] && meanHue.val[0] < BLUE_HUE_HIGH){
+                blockColor = Sample.BLUE;
+//                Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + (int) meanHue.val[0]);
+            }
+            if(meanHue.val[0] > RED_HUE_LOW && meanHue.val[0] < RED_HUE_HIGH) {
+                blockColor = Sample.RED;
+//                Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + meanHue.val[0]);
             }
 
             Vector2d point = getRobotPoint(rect.center);
@@ -214,13 +211,10 @@ public class SampleDetectionProcessor implements VisionProcessor {
                 Log.d("SampleDetectionProcessor", "Contour discarded with distance: " + distance);
                 continue;
             }
-
             if(point.getX() < MIN_DETECTION_X) {
                 Log.d("SampleDetectionProcessor", "Contour discarded with x: " + point.getX());
                 continue;
             }
-
-            tempNumDetections ++;
 
             double normalizedAngle;
             if (rect.size.width < rect.size.height) normalizedAngle = - rect.angle;
@@ -250,8 +244,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
         Imgproc.drawContours(detectionOverlay, validRects, -1, new Scalar(0, 255, 0), 2);
 
+        // saves temp list into detectionList
         detectionList = tempList;
-        this.numDetections = tempNumDetections;
 
         Mat output = new Mat();
         Imgproc.resize(detectionOverlay, output, frame.size());
@@ -329,7 +323,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
     public void telemetry() {
         Telemetry tele = Globals.tele;
         tele.addLine("Sample Detection Processor:");
-        tele.addData("Num. of Sample Detections", numDetections);
+        tele.addData("Num. of Sample Detections", detectionList.size());
         tele.addData("Processing time (ms)", processingTimeMillis);
     }
 
@@ -349,36 +343,6 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
         Mat balanced = new Mat();
         Core.merge(channels, balanced);
-        return balanced;
-    }
-
-    public Mat applyGrayWorldWhiteBalance(Mat src) {
-        // Ensure the image is in 3-channel BGR format
-//        if (src.channels() != 3) {
-//            throw new IllegalArgumentException("Input image must have 3 channels (BGR)");
-//        }
-
-        // Compute the mean of each channel (B, G, R)
-        Scalar mean = Core.mean(src);
-
-        double meanB = mean.val[0];  // Blue channel mean
-        double meanG = mean.val[1];  // Green channel mean
-        double meanR = mean.val[2];  // Red channel mean
-
-        // Calculate scaling factors for each channel
-        double meanGray = (meanB + meanG + meanR) / 3.0;
-        double scaleB = meanGray / meanB;
-        double scaleG = meanGray / meanG;
-        double scaleR = meanGray / meanR;
-
-        // Apply scaling factors
-        Mat balanced = new Mat();
-        src.convertTo(balanced, CvType.CV_32F); // Convert to float for multiplication
-
-        Core.multiply(balanced, new Scalar(scaleB, scaleG, scaleR), balanced);
-
-        balanced.convertTo(balanced, CvType.CV_8U); // Convert back to 8-bit
-
         return balanced;
     }
 

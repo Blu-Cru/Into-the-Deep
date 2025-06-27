@@ -24,12 +24,12 @@ public class SampleHighDepositPreloadPath extends PIDPathBuilder {
     public SampleHighDepositPreloadPath(boolean retractAfterDone) {
         super();
         this.setPower(0.25)
-                .addMappedPoint(-55, -55, 45)
+                .addMappedPoint(-58, -58, 45)
                 .callback(() -> {
                     if(retractAfterDone) {
                         new SequentialCommandGroup(
                                 new ArmCommand(0.4),
-                                new WaitCommand(80),
+                                new WaitCommand(200),
                                 new ClawOpenCommand(),
                                 new WaitCommand(120),
                                 new RetractFromBasketCommand()
@@ -42,7 +42,7 @@ public class SampleHighDepositPreloadPath extends PIDPathBuilder {
                         ).schedule();
                     }
                 })
-                .waitMillis(500);
+                .waitMillis(600);
     }
 
     public SampleHighDepositPreloadPath() {

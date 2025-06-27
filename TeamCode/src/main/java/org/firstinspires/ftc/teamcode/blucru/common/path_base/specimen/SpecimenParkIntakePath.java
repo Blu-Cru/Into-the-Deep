@@ -9,10 +9,12 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.Extensi
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
+import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 
 public class SpecimenParkIntakePath extends PIDPathBuilder {
     public SpecimenParkIntakePath() {
@@ -25,18 +27,19 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
                             new FullRetractCommand()
                     ).schedule();
                 })
-//                .schedule(new BoxtubeRetractCommand())
-                .addMappedPoint(12, -60, 0, 15)
+                .addMappedPoint(12, -50, 90, 7)
+                .addMappedPoint(12, -60, 0, 10)
                 .callback(() ->
                         new SequentialCommandGroup(
                                 new PreIntakeCommand(),
-                                new WaitCommand(200),
+                                new WaitCommand(300),
                                 new ExtensionCommand(13),
                                 new TurretMotionProfileCommand(-0.6),
-                                new WaitCommand(400),
+                                new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
+                                new WaitCommand(600),
                                 new GrabCommand()
                         ).schedule()
                 )
-                .waitMillis(1000);
+                .waitMillis(1200);
     }
 }

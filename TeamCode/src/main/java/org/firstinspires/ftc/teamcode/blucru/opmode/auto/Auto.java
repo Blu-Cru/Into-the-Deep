@@ -54,7 +54,7 @@ public class Auto extends BluLinearOpMode {
                 telemetry.update();
 
                 new ClawGrabCommand().schedule();
-                new ArmCommand(Math.PI/2).schedule();
+                new ArmCommand(1.8).schedule();
                 new SpinWristAngleCommand(Math.PI).schedule();
                 ptoServos.disengage();
             })
@@ -98,8 +98,9 @@ public class Auto extends BluLinearOpMode {
         addPivot();
         addExtension();
         addCactus();
-        addPusher();
+//        addPusher();
         addPTOServos();
+        addClapServos();
         addCVMaster();
 
         extension.usePivot(pivot.getMotor());

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.vision;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Sample;
 
 import java.util.ArrayList;
@@ -23,7 +24,8 @@ public class SampleDetectionsList extends ArrayList<SampleDetection> {
         return false;
     }
 
-    public Pose2d getBestSamplePose(Alliance alliance){
+    public Pose2d getBestSamplePose(){
+        Alliance alliance = Globals.alliance;
 
         //convert alliance to color
         Sample allianceColor;
@@ -42,7 +44,8 @@ public class SampleDetectionsList extends ArrayList<SampleDetection> {
         return null;
     }
 
-    public Pose2d getBestSpecPose(Alliance alliance){
+    public Pose2d getBestSpecPose(){
+        Alliance alliance = Globals.alliance;
 
         //convert alliance to color
         Sample allianceColor;

@@ -84,7 +84,6 @@ public class Solo extends BluLinearOpMode {
         addPivot();
         addExtension();
         addCactus();
-        addPusher();
         addPTOServos();
         addCVMaster();
 

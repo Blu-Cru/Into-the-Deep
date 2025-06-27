@@ -29,7 +29,7 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
                 })
                 .addMappedPoint(7, -59, 90)
 //                .waitMillis(100)
-                .addMappedPoint(7, -44, 90)
+                .addMappedPoint(7, -43, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),

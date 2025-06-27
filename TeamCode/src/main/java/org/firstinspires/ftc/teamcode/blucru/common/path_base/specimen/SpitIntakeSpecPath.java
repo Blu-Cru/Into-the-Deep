@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.Specim
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpitIntakeSpecPath extends PIDPathBuilder {
-    public SpitIntakeSpecPath() {
+    public SpitIntakeSpecPath(double x) {
         super();
         this.setPower(0.9)
                 .callback(() -> {
@@ -36,7 +36,7 @@ public class SpitIntakeSpecPath extends PIDPathBuilder {
 //                })
                 .waitMillis(500)
                 .setPower(0.25)
-                .addMappedPoint(35, -61, 90)
+                .addMappedPoint(x, -61, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawGrabCommand(),
@@ -46,5 +46,9 @@ public class SpitIntakeSpecPath extends PIDPathBuilder {
                     ).schedule();
                 })
                 .waitMillis(250);
+    }
+
+    public SpitIntakeSpecPath() {
+        this(36);
     }
 }

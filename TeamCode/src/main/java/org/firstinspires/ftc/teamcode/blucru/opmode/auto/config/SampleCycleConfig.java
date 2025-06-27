@@ -112,9 +112,7 @@ public class SampleCycleConfig extends AutoConfig {
                 .transition(() -> System.currentTimeMillis() - scanTimeMillis > 450
                         && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(),
                         State.INTAKE_SUB, () -> {
-                    globalSamplePoses = Robot.getInstance().cvMaster.sampleDetector.getSortedPoses();
-                    Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.getGlobalPose(
-                            Robot.getInstance().dt.pose);
+                    Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.detectionList.getBestSamplePose();
                     globalSamplePoses.remove(0);
 
                     Log.i("SampleCycleConfig", "got block pose at " + blockPose);

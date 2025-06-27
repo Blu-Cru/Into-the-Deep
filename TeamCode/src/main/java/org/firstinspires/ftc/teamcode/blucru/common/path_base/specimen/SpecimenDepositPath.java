@@ -12,7 +12,7 @@ public class SpecimenDepositPath extends PIDPathBuilder {
     public SpecimenDepositPath(int scoreCount) {
         super();
 //        if(scoreCount == -1) {
-            this.setPower(0.5)
+            this.setPower(0.6)
                     .callback(() -> {
                         new SequentialCommandGroup(
                                 new WaitCommand(50),
@@ -20,7 +20,7 @@ public class SpecimenDepositPath extends PIDPathBuilder {
                         ).schedule();
                     })
                     .addMappedPoint(14, -50, 110, 7)
-                    .addMappedPoint(10, -38, 110,4)
+                    .addMappedPoint(10, -38, 110,5.5)
                     .addMappedPoint(6, -38, 110)
                     .callback(() -> {
                         new ClawOpenCommand().schedule();

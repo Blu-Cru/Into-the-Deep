@@ -26,18 +26,17 @@ public class SampleIntakeRightPath extends PIDPathBuilder {
                 .callback( () -> {
                     new SequentialCommandGroup(
                             new BoxtubeRetractCommand(),
-                            new WaitCommand(500),
+                            new WaitCommand(200),
                             new PreIntakeCommand(),
                             new WaitCommand(300),
                             new ExtensionCommand(9),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new ClawOpenCommand(),
-                            new TurretAngleCommand(-0.5),
-                            new WaitCommand(500),
-                            new GrabCommand(),
-                            new WaitCommand(300)
+                            new TurretAngleCommand(-0.55),
+                            new WaitCommand(400),
+                            new GrabCommand()
                     ).schedule();
                 })
-                .waitMillis(3500);
+                .waitMillis(1500);
     }
 }

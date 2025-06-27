@@ -63,8 +63,7 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
                 .state(State.DETECTING)
                 .transition(() -> System.currentTimeMillis() - detectTimeMillis > 500
                     && cvMaster.sampleDetector.hasValidDetection(), State.RUNNING_PATH, () -> {
-                    Pose2d blockPose = cvMaster.sampleDetector.getGlobalPose(dt.pose);
-                    currentPath = new SampleIntakeAtPointPath(dt.pose, blockPose).start();
+                    currentPath = new SampleIntakeAtPointPath(dt.pose, cvMaster.sampleDetector.detectionList.getBestSamplePose()).start();
                 })
                 .transition(() -> stickyG1.a, State.RETRACT, () -> {
                     new FullRetractCommand().schedule();

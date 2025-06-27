@@ -32,34 +32,34 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
 
         double[] poseToInverseKinematics = BoxtubeKinematics.getExtensionTurretPose(rawBlockPose.vec().minus(rawDrivePoint.vec()).rotated(-rawDrivePoint.getHeading()));
 
-        double spinWristAngle = rawBlockPose.getHeading() - rawDrivePoint.getHeading() - Math.PI/2;
+//        double spinWristAngle = rawBlockPose.getHeading() - rawDrivePoint.getHeading() - Math.PI/2;
 
         Log.i("SampleIntakeAtPointPath", "Block pose:" + rawBlockPose);
         Log.i("SampleIntakeAtPointPath", "Drive point:" + rawDrivePoint);
         Log.i("SampleIntakeAtPointPath", "Joint poses:" + Arrays.toString(poseToInverseKinematics));
-        Log.i("SampleIntakeAtPointPath", "Wrist final: " + spinWristAngle);
+//        Log.i("SampleIntakeAtPointPath", "Wrist final: " + spinWristAngle);
 
         this.setPower(0.7)
                 .addPoint(rawDrivePoint, 10)
-//                .callback(() -> {
-//                    new SequentialCommandGroup(
-//                            new ArmCommand(0.4),
-//                            new UpDownWristAngleCommand(-Math.PI/2 + 0.05),
-//                            new WaitCommand(300),
-//                            new ClawOpenCommand(),
-//                            new ExtensionCommand(poseToInverseKinematics[0]),
-//                            new SpinWristGlobalAngleCommand(rawBlockPose.getHeading()),
-////                            new SpinWristAngleCommand(spinWristAngle),
-//                            new WaitCommand(80),
-//                            new TurretAngleCommand(poseToInverseKinematics[1])
-//                    ).schedule();
-//                })
+                .callback(() -> {
+                    new SequentialCommandGroup(
+                            new ArmCommand(0.3),
+                            new UpDownWristAngleCommand(-Math.PI/2 + 0.05),
+                            new WaitCommand(300),
+                            new ClawOpenCommand(),
+                            new ExtensionCommand(poseToInverseKinematics[0]),
+                            new SpinWristGlobalAngleCommand(-rawBlockPose.getHeading()),
+//                            new SpinWristAngleCommand(spinWristAngle),
+                            new WaitCommand(80),
+                            new TurretAngleCommand(poseToInverseKinematics[1])
+                    ).schedule();
+                })
 
                 .waitMillis(900)
                 .addPoint(rawDrivePoint)
-//                .callback(() -> {
-//                    new GrabCommand().schedule();
-//                })
+                .callback(() -> {
+                    new GrabCommand().schedule();
+                })
                 .waitMillis(300);
 
     }
