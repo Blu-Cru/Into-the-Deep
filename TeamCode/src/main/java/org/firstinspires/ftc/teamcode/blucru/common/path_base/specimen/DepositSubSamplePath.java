@@ -30,7 +30,8 @@ public class DepositSubSamplePath extends PIDPathBuilder {
                     ).schedule();
                 })
                 .waitMillis(2000)
-                .callback(() -> new ClawOpenCommand().schedule());
+                .callback(() -> new ClawOpenCommand().schedule())
+                .waitMillis(200);
 
     }
 }
