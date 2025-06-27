@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.blucru.common.vision;
 import android.graphics.Canvas;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -41,7 +43,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         REF_TOP_LEFT_INCHES = {-5.6, 18.2};
     public static double PIXELS_PER_INCH = 20.0,
         MIN_SAT_MASK,
-        RED_HUE_LOW = 100.0, RED_HUE_HIGH = 150.0,
+        RED_HUE_LOW = 110.0, RED_HUE_HIGH = 150.0,
         YELLOW_HUE_LOW = 12.0, YELLOW_HUE_HIGH = 55.0,
         BLUE_HUE_LOW = 0.0, BLUE_HUE_HIGH = 35.0,
 
@@ -50,7 +52,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
         // distortion
         K1 = -0.448017, K2 = 0.245668, K3 = 0.0,
         P1 = -0.000901464, P2 = 0.000996399,
-        MAX_DETECTION_DISTANCE = 12, MIN_DETECTION_X = 13.0;
+        MAX_DETECTION_DISTANCE = 12, MIN_DETECTION_X = 13.0,
+        MAX_DETECTION_DELTA_Y = 6.0;
     static Vector2d OPTIMAL_POINT = new Vector2d(19, 6.0);
     public static double RATIO_MIN = 1.7, RATIO_MAX = 2.6;
     public static double AREA_MIN = 1000, AREA_MAX = 1650;
@@ -172,6 +175,25 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(cnt.toArray()));
 
+            Vector2d point = getRobotPoint(rect.center);
+
+            // discard sample out of range
+            if (Math.abs(point.getY()) > MAX_DETECTION_DELTA_Y) {
+                Log.d("SampleDetectionProcessor", "Rect discarded, Y out of range");
+                continue;
+            }
+
+            double distance = point.minus(OPTIMAL_POINT).norm();
+
+            if(distance > MAX_DETECTION_DISTANCE) {
+                Log.d("SampleDetectionProcessor", "Contour discarded with distance: " + distance);
+                continue;
+            }
+            if(point.getX() < MIN_DETECTION_X) {
+                Log.d("SampleDetectionProcessor", "Contour discarded with x: " + point.getX());
+                continue;
+            }
+
             if(rect.size.width == 0 || rect.size.height == 0) continue;
             double ratio = Math.max(rect.size.width, rect.size.height) / Math.min(rect.size.width, rect.size.height);
             if(ratio < RATIO_MIN || ratio > RATIO_MAX) {
@@ -194,27 +216,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             meanHue = Core.mean(hueChannel, rotatedRectMask);
 
-            Sample blockColor = Sample.YELLOW;
-            if (BLUE_HUE_LOW < meanHue.val[0] && meanHue.val[0] < BLUE_HUE_HIGH){
-                blockColor = Sample.BLUE;
-//                Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + (int) meanHue.val[0]);
-            }
-            if(meanHue.val[0] > RED_HUE_LOW && meanHue.val[0] < RED_HUE_HIGH) {
-                blockColor = Sample.RED;
-//                Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + meanHue.val[0]);
-            }
-
-            Vector2d point = getRobotPoint(rect.center);
-            double distance = point.minus(OPTIMAL_POINT).norm();
-
-            if(distance > MAX_DETECTION_DISTANCE) {
-                Log.d("SampleDetectionProcessor", "Contour discarded with distance: " + distance);
-                continue;
-            }
-            if(point.getX() < MIN_DETECTION_X) {
-                Log.d("SampleDetectionProcessor", "Contour discarded with x: " + point.getX());
-                continue;
-            }
+            Sample blockColor = getSample(meanHue);
 
             double normalizedAngle;
             if (rect.size.width < rect.size.height) normalizedAngle = - rect.angle;
@@ -222,18 +224,18 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
             Pose2d pose = new Pose2d(point, Angle.norm(Math.toRadians(normalizedAngle)));
 
-            tempList.add(new SampleDetection(getGlobalPose(pose, drivePose),blockColor,distance));
+            tempList.add(new SampleDetection(getGlobalPose(pose, drivePose), blockColor, distance, Angle.norm(Math.toRadians(normalizedAngle))));
 
             // print saturation
 //            Imgproc.putText(detectionOverlay, "Sat: " + meanSat, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print hue
-//            Imgproc.putText(detectionOverlay, "Hue: " + meanHue, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+            Imgproc.putText(detectionOverlay, "Hue: " + meanHue, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print area
 //            Imgproc.putText(detectionOverlay, "Area: " + area, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
 //             print ratio
 //            Imgproc.putText(detectionOverlay, "Ratio: " + ratio, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print center
-            Imgproc.putText(detectionOverlay, "(" + Math.round(point.getX()*100)/100.0 + ", " + Math.round(point.getY() *100) / 100.0+ ")", rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+//            Imgproc.putText(detectionOverlay, "(" + Math.round(point.getX()*100)/100.0 + ", " + Math.round(point.getY() *100) / 100.0+ ")", rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
 
             validRects.add(matOfRectPoints);
 
@@ -273,6 +275,19 @@ public class SampleDetectionProcessor implements VisionProcessor {
         return null;
     }
 
+    @NonNull
+    private static Sample getSample(Scalar meanHue) {
+        if (BLUE_HUE_LOW < meanHue.val[0] && meanHue.val[0] < BLUE_HUE_HIGH){
+            return Sample.BLUE;
+//                Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + (int) meanHue.val[0]);
+        }
+        if(meanHue.val[0] > RED_HUE_LOW && meanHue.val[0] < RED_HUE_HIGH) {
+            return Sample.RED;
+//                Log.d("SampleDetectionProcessor", "Contour discarded with hue: " + meanHue.val[0]);
+        }
+        return Sample.YELLOW;
+    }
+
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
     }
@@ -296,6 +311,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         return transformed;
     }
 
+    // get position of block
     private Vector2d getRobotPoint(Point centerPixels) {
         double refOffsetX = centerPixels.x- REF_TOP_LEFT_PIXELS[0];
         double refOffsetY = -(centerPixels.y- REF_TOP_LEFT_PIXELS[1]);
@@ -324,6 +340,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         Telemetry tele = Globals.tele;
         tele.addLine("Sample Detection Processor:");
         tele.addData("Num. of Sample Detections", detectionList.size());
+        detectionList.telemetry();
         tele.addData("Processing time (ms)", processingTimeMillis);
     }
 

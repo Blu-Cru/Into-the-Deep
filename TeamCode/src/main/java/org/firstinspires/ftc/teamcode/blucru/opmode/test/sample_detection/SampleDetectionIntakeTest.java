@@ -1,21 +1,13 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.test.sample_detection;
 
-import android.util.Log;
-
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.RetractFromVerticalIntakeCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeAtPointPath;
-import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -23,9 +15,11 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 public class SampleDetectionIntakeTest extends BluLinearOpMode {
     enum State{
         RETRACT,
-        DETECTING,
+        DETECTING_SAMPLE,
+        DETECTING_SPEC,
         RUNNING_PATH
     }
+
     StateMachine sm;
     double detectTimeMillis;
     Path currentPath;
@@ -48,6 +42,14 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
 
         sm = new StateMachineBuilder()
                 .state(State.RETRACT)
+                .transition(() -> stickyG1.b, State.DETECTING_SAMPLE, () -> {
+                    dt.pidTo(dt.pose);
+                    detectTimeMillis = System.currentTimeMillis();
+                })
+                .transition(() -> stickyG1.y, State.DETECTING_SPEC, () -> {
+                    dt.pidTo(dt.pose);
+                    detectTimeMillis = System.currentTimeMillis();
+                })
                 .loop(() -> {
                     dt.teleOpDrive(gamepad1);
                     if(stickyG1.right_stick_button) dt.setHeading(Math.PI/2);
@@ -55,14 +57,15 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
                     if(stickyG1.right_bumper) {
                         new SpitCommand().schedule();
                     }
+
+                    if(stickyG1.x) {
+                        Globals.flipAlliance();
+                    }
                 })
-                .transition(() -> stickyG1.b, State.DETECTING, () -> {
-                    dt.pidTo(dt.pose);
-                    detectTimeMillis = System.currentTimeMillis();
-                })
-                .state(State.DETECTING)
+
+                .state(State.DETECTING_SAMPLE)
                 .transition(() -> System.currentTimeMillis() - detectTimeMillis > 500
-                    && cvMaster.sampleDetector.hasValidDetection(), State.RUNNING_PATH, () -> {
+                    && cvMaster.sampleDetector.detectionList.hasSample(), State.RUNNING_PATH, () -> {
                     currentPath = new SampleIntakeAtPointPath(dt.pose, cvMaster.sampleDetector.detectionList.getBestSamplePose()).start();
                 })
                 .transition(() -> stickyG1.a, State.RETRACT, () -> {
@@ -71,6 +74,19 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
                 .transitionTimed(0.8, State.RETRACT, () -> {
                     new FullRetractCommand().schedule();
                 })
+
+                .state(State.DETECTING_SPEC)
+                .transition(() -> System.currentTimeMillis() - detectTimeMillis > 500
+                        && cvMaster.sampleDetector.detectionList.hasSpec(), State.RUNNING_PATH, () -> {
+                    currentPath = new SampleIntakeAtPointPath(dt.pose, cvMaster.sampleDetector.detectionList.getBestSpecPose()).start();
+                })
+                .transition(() -> stickyG1.a, State.RETRACT, () -> {
+                    new FullRetractCommand().schedule();
+                })
+                .transitionTimed(0.8, State.RETRACT, () -> {
+                    new FullRetractCommand().schedule();
+                })
+
                 .state(State.RUNNING_PATH)
                 .transition(() -> currentPath.isDone() || stickyG1.a, State.RETRACT, () -> {
                     new FullRetractCommand().schedule();
@@ -92,10 +108,6 @@ public class SampleDetectionIntakeTest extends BluLinearOpMode {
     @Override
     public void periodic() {
         sm.update();
-
-        if(stickyG1.y) {
-            Globals.flipAlliance();
-        }
     }
 
     @Override
