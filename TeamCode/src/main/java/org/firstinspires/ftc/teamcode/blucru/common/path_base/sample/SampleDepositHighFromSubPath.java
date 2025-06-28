@@ -5,7 +5,10 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.RetractFromBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.EndEffectorRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawLooseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristCenterCommand;
@@ -34,14 +37,17 @@ public class SampleDepositHighFromSubPath extends PIDPathBuilder {
                     new SampleBackHighCommand().schedule();
                 })
                 .setPower(0.35)
-                .addMappedPoint(-53, -53, 45)
+                .addMappedPoint(-55, -55, 45)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
                             new WaitCommand(150),
-                            new RetractFromBasketCommand()
+                            new ArmGlobalAngleCommand(1.5),
+                            new WaitCommand(150),
+                            new BoxtubeRetractCommand(),
+                            new EndEffectorRetractCommand()
                     ).schedule();
                 })
-                .waitMillis(500);
+                .waitMillis(300);
     }
 }

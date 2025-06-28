@@ -22,11 +22,10 @@ public class SampleIntakeRightPath extends PIDPathBuilder {
     public SampleIntakeRightPath() {
         super();
         this.setPower(0.7)
-                .addMappedPoint(-54, -50, 90, 4)
+                .addMappedPoint(-53.2, -50, 90, 4)
                 .callback( () -> {
                     new SequentialCommandGroup(
                             new BoxtubeRetractCommand(),
-                            new WaitCommand(200),
                             new PreIntakeCommand(),
                             new WaitCommand(300),
                             new ExtensionCommand(9),
@@ -37,6 +36,6 @@ public class SampleIntakeRightPath extends PIDPathBuilder {
                             new GrabCommand()
                     ).schedule();
                 })
-                .waitMillis(1500);
+                .waitMillis(1650);
     }
 }

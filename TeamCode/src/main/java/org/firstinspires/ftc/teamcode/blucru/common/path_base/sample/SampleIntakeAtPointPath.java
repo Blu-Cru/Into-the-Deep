@@ -60,7 +60,7 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
                 .callback(() -> {
                     new GrabCommand().schedule();
                 })
-                .waitMillis(300);
+                .waitMillis(550);
 
     }
 }

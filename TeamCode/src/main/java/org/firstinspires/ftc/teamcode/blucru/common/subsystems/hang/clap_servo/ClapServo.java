@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.subsystems.hang.clap_servo;
 import org.firstinspires.ftc.teamcode.blucru.common.hardware.servo.BluServo;
 
 public abstract class ClapServo extends BluServo {
-    public static double RETRACT_DELTA = 0.15;
+    public static double RETRACT_DELTA = 0.18;
 
     public ClapServo(String name) {super(name);}
 

@@ -3,10 +3,15 @@ package org.firstinspires.ftc.teamcode.blucru.opmode.auto.config;
 import android.util.Log;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleDriveToSubIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeAtPointPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeCenterPath;
@@ -16,7 +21,6 @@ import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighL
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleDepositHighFromSubPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleParkPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleHighDepositPreloadPath;
-import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleSubIntakeFailPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.SampleParkFromSubIntakePath;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
@@ -38,25 +42,22 @@ public class SampleCycleConfig extends AutoConfig {
         DRIVING_TO_SUB_CYCLE,
         SCANNING_SUB,
         INTAKE_SUB,
-        INTAKE_SUB_FAIL,
         PARKING,
         DONE
     }
 
     int scoreCount;
     double scanTimeMillis;
-    List<Pose2d> globalSamplePoses;
 
     public SampleCycleConfig() {
-        globalSamplePoses = new ArrayList<>();
         runtime = Globals.runtime;
         scoreCount = 0;
 
         sm = new StateMachineBuilder()
                 .state(State.LIFTING_PRELOADS)
                 .onEnter(() -> logTransition(State.LIFTING_PRELOADS))
-                .transition(() -> Robot.getInstance().extension.getPIDError() < 5
-                                && Robot.getInstance().extension.getDistance() > 15.0
+                .transition(() -> Robot.getInstance().extension.getPIDError() < 7.0
+                                && Robot.getInstance().extension.getDistance() > 13.0
                                 && currentPath.isDone(),
                         State.DEPOSITING,
                         () -> {
@@ -76,7 +77,7 @@ public class SampleCycleConfig extends AutoConfig {
                     currentPath = new SampleIntakeLeftPath().start();
                     scoreCount++;
                 })
-                .transition(() -> currentPath.isDone() && scoreCount >= 3 && runtime.seconds() < 26.0 && globalSamplePoses.isEmpty(), State.DRIVING_TO_SUB_CYCLE, () -> {
+                .transition(() -> currentPath.isDone() && scoreCount >= 3 && runtime.seconds() < 26.0, State.DRIVING_TO_SUB_CYCLE, () -> {
                     currentPath = new SampleDriveToSubIntakePath().start();
                     scoreCount++;
                 })
@@ -109,11 +110,9 @@ public class SampleCycleConfig extends AutoConfig {
                     logTransition(State.SCANNING_SUB);
                     scanTimeMillis = System.currentTimeMillis();
                 })
-                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 450
-                        && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(),
-                        State.INTAKE_SUB, () -> {
+                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 300 && Robot.getInstance().cvMaster.sampleDetector.detectionList.hasSample(), State.INTAKE_SUB, () -> {
                     Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.detectionList.getBestSamplePose();
-                    globalSamplePoses.remove(0);
+//                    globalSamplePoses.remove(0);
 
                     Log.i("SampleCycleConfig", "got block pose at " + blockPose);
                     Log.i("SampleCycleConfig", "dt pose at " + Robot.getInstance().dt.pose);
@@ -124,26 +123,23 @@ public class SampleCycleConfig extends AutoConfig {
                 })
                 .state(State.INTAKE_SUB)
                 .onEnter(() -> logTransition(State.INTAKE_SUB))
-                .transition(() -> currentPath.isDone() && Robot.validSample() && runtime.seconds() < 24.0, State.DEPOSITING, () -> {
+                .transition(() -> currentPath.isDone() && Robot.validSample() && runtime.seconds() < 26.5, State.DEPOSITING, () -> {
                     Robot.getInstance().cvMaster.disableSampleDetector();
                     currentPath = new SampleDepositHighFromSubPath().start();
                 })
-                .transition(() -> Robot.justValidSample() && runtime.seconds() > 24.0, State.PARKING, () -> {
+                .transition(() -> currentPath.isDone() && Robot.validSample() && runtime.seconds() > 26.5, State.PARKING, () -> {
                     new FullRetractCommand().schedule();
                     currentPath = new SampleParkFromSubIntakePath().start();
                 })
-                .transition(() -> currentPath.isDone() && runtime.seconds() < 27.0, State.INTAKE_SUB_FAIL, () -> {
-                    currentPath = new SampleSubIntakeFailPath().start();
+                .transition(() -> currentPath.isDone() && !Robot.validSample() && runtime.seconds() < 28.5, State.SCANNING_SUB, () -> {
+                    new SequentialCommandGroup(
+                            new PreIntakeCommand(),
+                            new WaitCommand(400),
+                            new BoxtubeRetractCommand()
+                    ).schedule();
                 })
-                .transition(()  -> currentPath.isDone() && runtime.seconds() > 27.0, State.DONE, () -> {
+                .transition(()  -> currentPath.isDone() && !Robot.validSample() && runtime.seconds() > 28.5, State.DONE, () -> {
                     new FullRetractCommand().schedule();
-                })
-                .state(State.INTAKE_SUB_FAIL)
-                .onEnter(() -> logTransition(State.INTAKE_SUB_FAIL))
-                .transition(() -> currentPath.isDone() && runtime.seconds() < 28.7 && !Robot.validSample(), State.SCANNING_SUB)
-                .transition(() -> Robot.validSample() && runtime.seconds() < 24.0, State.DEPOSITING, () -> {
-                    Robot.getInstance().cvMaster.disableSampleDetector();
-                    currentPath = new SampleDepositHighFromSubPath().start();
                 })
                 .state(State.PARKING)
                 .onEnter(() -> logTransition(State.PARKING))
@@ -164,7 +160,7 @@ public class SampleCycleConfig extends AutoConfig {
     public void start() {
         scoreCount = 0;
 
-        currentPath = new SampleHighLiftPreloadsPath().build();
+        currentPath = new SampleHighLiftPreloadsPath().start();
 
         sm.start();
         sm.setState(State.LIFTING_PRELOADS);

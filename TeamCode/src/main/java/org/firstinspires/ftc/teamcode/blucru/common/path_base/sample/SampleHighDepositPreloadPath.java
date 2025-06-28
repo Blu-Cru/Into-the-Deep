@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.path_base.sample;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.RetractFromBasketAutoCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.RetractFromBasketCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
@@ -32,7 +33,7 @@ public class SampleHighDepositPreloadPath extends PIDPathBuilder {
                                 new WaitCommand(200),
                                 new ClawOpenCommand(),
                                 new WaitCommand(120),
-                                new RetractFromBasketCommand()
+                                new RetractFromBasketAutoCommand()
                         ).schedule();
                     } else {
                         new SequentialCommandGroup(

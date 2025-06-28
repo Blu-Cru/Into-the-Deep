@@ -28,7 +28,7 @@ public class SlideHangServos implements Subsystem, BluSubsystem {
     public void init() {
         for (SlideHangServo servo : servos) {
             servo.init();
-            servo.disable();
+//            servo.disable();
         }
     }
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blucru.common.command_base.hang;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmBackHardStopCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
@@ -24,13 +25,15 @@ public class GetHooksCommand extends SequentialCommandGroup {
                 new ClapCenterCommand(),
                 new WaitCommand(350),
                 new ArmCommand(2.35),
-                new WaitCommand(500),
+                new WaitCommand(350),
                 new ClawGrabCommand(),
-                new WaitCommand(400),
-//                new ArmCommand(2.0),
-                new ExtensionCommand(4),
-                new WaitCommand(700),
-                new ClapRetractCommand()
+                new WaitCommand(350),
+                new ExtensionCommand(6),
+                new WaitCommand(350),
+                new ArmCommand(1.9),
+                new ClapRetractCommand(),
+                new WaitCommand(300),
+                new BoxtubeCommand(Math.PI/2, 0)
         );
     }
 }

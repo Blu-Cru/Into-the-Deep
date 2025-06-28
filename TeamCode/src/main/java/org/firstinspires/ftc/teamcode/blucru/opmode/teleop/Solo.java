@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 @Config
 @TeleOp(group = "2")
 public class Solo extends BluLinearOpMode {
-    public static double INTAKE_POS_X = 30.0, INTAKE_POS_Y_DELTA = 4.0;
+    public static double INTAKE_POS_X = 30.0, INTAKE_POS_Y_DELTA = 5.0;
     enum State{
         HOME,
         PREINTAKE,
@@ -155,6 +155,7 @@ public class Solo extends BluLinearOpMode {
                     if (stickyG1.left_trigger) {
                         double[] joints = BoxtubeKinematics.getExtensionTurretPose(new Vector2d(INTAKE_POS_X, INTAKE_POS_Y_DELTA));
                         new SequentialCommandGroup(
+                                new ClawOpenCommand(),
                                 new TurretMotionProfileCommand(joints[1]),
                                 new ExtensionCommand(joints[0])
                         ).schedule();
@@ -162,6 +163,7 @@ public class Solo extends BluLinearOpMode {
                     if (stickyG1.right_trigger) {
                         double[] joints = BoxtubeKinematics.getExtensionTurretPose(new Vector2d(INTAKE_POS_X, -INTAKE_POS_Y_DELTA));
                         new SequentialCommandGroup(
+                                new ClawOpenCommand(),
                                 new TurretMotionProfileCommand(joints[1]),
                                 new ExtensionCommand(joints[0])
                         ).schedule();
@@ -169,6 +171,7 @@ public class Solo extends BluLinearOpMode {
                     if (stickyG1.left_trigger_released || stickyG1.right_trigger_released) {
                         double[] joints = BoxtubeKinematics.getExtensionTurretPose(new Vector2d(INTAKE_POS_X, 0));
                         new SequentialCommandGroup(
+                                new ClawOpenCommand(),
                                 new TurretMotionProfileCommand(joints[1]),
                                 new ExtensionCommand(joints[0])
                         ).schedule();

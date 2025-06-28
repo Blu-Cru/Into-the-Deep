@@ -13,12 +13,6 @@ public class SampleDriveToSubIntakePath extends PIDPathBuilder {
         super();
         this.setPower(0.85)
                 .addMappedPoint(-42, -12, 20, 8)
-                .callback(() -> {
-                    new SequentialCommandGroup(
-                            new ArmCommand(0.3),
-                            new UpDownWristAngleCommand(Math.PI/2)
-                    ).schedule();
-                })
                 .addMappedPoint(-26, -12, 0);
     }
 }
