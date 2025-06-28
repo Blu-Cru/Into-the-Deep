@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 @Config
 public class Claw extends BluServo implements BluSubsystem, Subsystem {
     public static double
-            LOOSE_POS = 0.8, FIRM_POS = 0.86, OPEN_POS = 0.33;
+            LOOSE_POS = 0.84, FIRM_POS = 0.89, OPEN_POS = 0.6;
 
     public Claw() {
         super("claw");

@@ -13,7 +13,7 @@ public class SampleBackHighAutoCommand extends SequentialCommandGroup {
     public SampleBackHighAutoCommand () {
         super(
                 new ArmBottomHardStopCommand(),
-                new BoxtubeCommand(Math.PI/2, 23.5),
+                new BoxtubeCommand(Math.PI/2, 22.0),
                 new UpDownWristAngleCommand(1.3),
                 new SpinWristAngleCommand(Math.PI/2),
                 new TurretCenterCommand()

@@ -227,9 +227,9 @@ public class SampleDetectionProcessor implements VisionProcessor {
             tempList.add(new SampleDetection(getGlobalPose(pose, drivePose), blockColor, distance, Angle.norm(Math.toRadians(normalizedAngle))));
 
             // print saturation
-//            Imgproc.putText(detectionOverlay, "Sat: " + meanSat, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+            Imgproc.putText(detectionOverlay, "Sat: " + meanSat, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print hue
-            Imgproc.putText(detectionOverlay, "Hue: " + meanHue, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
+//            Imgproc.putText(detectionOverlay, "Hue: " + meanHue, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
             // print area
 //            Imgproc.putText(detectionOverlay, "Area: " + area, rect.center, Imgproc.FONT_HERSHEY_COMPLEX, 0.6, new Scalar(0, 255, 0), 2);
 //             print ratio

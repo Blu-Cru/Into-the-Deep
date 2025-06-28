@@ -20,7 +20,7 @@ public class Turret extends BluServo implements BluSubsystem, Subsystem {
 
     // positive is more clockwise looking down
     public static double
-            CENTER_POS = 0.74,
+            CENTER_POS = 0.735,
             MIN_ANGLE = -1.4, MAX_ANGLE = Math.PI,
             MAX_VEL = 3.0, MAX_ACCEL = 4.0,
 

@@ -8,6 +8,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
@@ -86,7 +87,9 @@ public class HangFullTest extends BluLinearOpMode {
                             new PTOHangCommand(),
                             new ArmRetractCommand(),
                             new WaitCommand(200),
-                            new BoxtubeRetractFromTopBarCommand()
+                            new BoxtubeRetractFromTopBarCommand(),
+                            new WaitCommand(1000),
+                            new PivotRetractCommand()
                     ).schedule();
                 })
                 .transition(() -> stickyG1.a, State.RETRACT, () -> {
@@ -101,6 +104,11 @@ public class HangFullTest extends BluLinearOpMode {
 
         sm.setState(State.RETRACT);
         sm.start();
+    }
+
+    @Override
+    public void onStart() {
+        slideHangServos.retract();
     }
 
     @Override
