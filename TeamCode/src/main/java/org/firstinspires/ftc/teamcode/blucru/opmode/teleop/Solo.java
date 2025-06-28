@@ -16,12 +16,22 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.Extensi
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretCenterCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.up_down_wrist.UpDownWristAngleCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.BoxtubeRetractFromTopBarCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.GetHooksCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.HooksHighBarReadyCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.HooksOnHighBarCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.PTOHangCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.pto.PTODisengageCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.pto.PTOEngageCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosHangComamnd;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.hang.servo.slides.HangServosReleaseCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.GrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.SpitCommand;
@@ -65,6 +75,11 @@ public class Solo extends BluLinearOpMode {
         GRABBED_SPEC,
         SENSING_SPEC,
 
+        //hang
+        HANG_READY_HIGH_BAR,
+        HOOKS_ON_HIGH_BAR,
+        PULLING_UP,
+
         MANUAL_RESET
     }
 
@@ -75,7 +90,7 @@ public class Solo extends BluLinearOpMode {
 
     @Override
     public void initialize() {
-        addDrivetrain();
+        addPTODrivetrain();
         addArm();
         addTurret();
         addUpDownWrist();
@@ -90,12 +105,12 @@ public class Solo extends BluLinearOpMode {
         pivot.useExtension(extension.getMotor());
         extension.usePivot(pivot.getMotor());
 
-        dt.setDrivePower(0.7);
+        ptoDt.setDrivePower(0.7);
         grabByClip = false;
 
         sm = new StateMachineBuilder()
                 .state(State.HOME)
-                .onEnter(() -> dt.setDrivePower(1.0))
+                .onEnter(() -> ptoDt.setDrivePower(1.0))
                 .transition(() -> stickyG1.share, State.MANUAL_RESET, () -> {
                     gamepad1.rumble(350);
                 })
@@ -128,7 +143,7 @@ public class Solo extends BluLinearOpMode {
                     }
                 })
                 .transition(() -> stickyG1.b, State.AUTO_SPEC_INTAKE, () -> {
-                    if (dt.updateAprilTags())
+                    if (ptoDt.updateAprilTags())
                         gamepad1.rumble(250);
 
                     if (cactus.validSample())
@@ -136,13 +151,22 @@ public class Solo extends BluLinearOpMode {
                     else
                         currentPath = new SpecimenIntakePath().build().start();
                 })
+                .transition(() -> stickyG1.dpad_up, State.HANG_READY_HIGH_BAR, () -> {
+                    slideHangServos.release();
+                    new SequentialCommandGroup(
+                            new HangServosReleaseCommand(),
+                            new GetHooksCommand(),
+                            new WaitCommand(300),
+                            new HooksHighBarReadyCommand()
+                    ).schedule();
+                })
                 .loop(() -> {
                     if(stickyG1.right_bumper) new SpitCommand().schedule();
                 })
 
                 .state(State.PREINTAKE)
                 .onEnter(() -> {
-                    dt.setDrivePower(0.30);
+                    ptoDt.setDrivePower(0.30);
                 })
                 .transition(() -> stickyG1.a, State.HOME, () -> {
                     new FullRetractCommand().schedule();
@@ -187,7 +211,7 @@ public class Solo extends BluLinearOpMode {
                 .transitionTimed(0.63, State.SENSING_GROUND)
                 .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .state(State.SENSING_GROUND)
-                .onEnter(() -> dt.setDrivePower(0.6))
+                .onEnter(() -> ptoDt.setDrivePower(0.6))
                 .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .transition(() -> cactus.validSample(), State.HOME, () -> {
                     new FullRetractCommand().schedule();
@@ -210,7 +234,7 @@ public class Solo extends BluLinearOpMode {
 
                 .state(State.SCORING_BASKET)
                 .onEnter(() -> {
-                    dt.setDrivePower(0.55);
+                    ptoDt.setDrivePower(0.55);
                 })
                 .transition(() -> stickyG1.a, State.HOME, () -> {
                     new SequentialCommandGroup(
@@ -229,7 +253,7 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .state(State.INTAKING_SPEC)
-                .onEnter(() -> dt.setDrivePower(0.7))
+                .onEnter(() -> ptoDt.setDrivePower(0.7))
                 .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
                 .transition(() -> stickyG1.b, State.AUTO_SPEC_INTAKE, () -> {
                     currentPath = new SpecimenIntakePath().start();
@@ -285,7 +309,7 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .state(State.SCORING_SPEC)
-                .onEnter(() -> dt.setDrivePower(0.8))
+                .onEnter(() -> ptoDt.setDrivePower(0.8))
                 .transition(() -> stickyG1.left_bumper, State.AUTO_SPEC_INTAKE, () -> {
                     currentPath = new SpecimenIntakePath().start();
 //                    new SequentialCommandGroup(
@@ -337,6 +361,39 @@ public class Solo extends BluLinearOpMode {
                     currentPath = new SpecimenIntakePath().build().start();
                 })
 
+                .state(State.HANG_READY_HIGH_BAR)
+                .transition(() -> stickyG1.dpad_up, State.HOOKS_ON_HIGH_BAR, () -> {
+                    slideHangServos.hang();
+                    new SequentialCommandGroup(
+                            new HangServosHangComamnd(),
+                            new PTOEngageCommand(),
+                            new WaitCommand(200),
+                            new HooksOnHighBarCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
+
+                .state(State.HOOKS_ON_HIGH_BAR)
+                .transition(() -> stickyG1.dpad_up, State.PULLING_UP, () -> {
+                    new SequentialCommandGroup(
+                            new ClawOpenCommand(),
+                            new WaitCommand(200),
+                            new PTOHangCommand(),
+                            new ArmRetractCommand(),
+                            new WaitCommand(200),
+                            new BoxtubeRetractFromTopBarCommand()
+                    ).schedule();
+                })
+                .transition(() -> stickyG1.a, State.HOME, () -> new FullRetractCommand().schedule())
+
+                .state(State.PULLING_UP)
+                .transition(() -> stickyG1.a, State.HOME, () -> {
+                    new SequentialCommandGroup(
+                            new PTODisengageCommand(),
+                            new FullRetractCommand()
+                    ).schedule();
+                })
+
                 .state(State.MANUAL_RESET)
                 .transition(() -> stickyG1.left_bumper, State.HOME, () -> {
                     gamepad1.rumble(150);
@@ -363,8 +420,9 @@ public class Solo extends BluLinearOpMode {
         pivot.pidTo(0);
         extension.pidTo(0);
 
-        dt.setPoseEstimate(DriveBase.startPose);
+        ptoDt.setPoseEstimate(DriveBase.startPose);
 
+        slideHangServos.retract();
         cvMaster.detectTag();
     }
 
@@ -372,20 +430,23 @@ public class Solo extends BluLinearOpMode {
     public void periodic() {
         switch (Enum.valueOf(State.class, sm.getStateString())) {
             case MANUAL_RESET:
-                dt.drive(new Pose2d(0, 0, 0));
+                ptoDt.drive(new Pose2d(0, 0, 0));
                 break;
             case AUTO_SPEC_INTAKE:
             case AUTO_SPEC_INTAKE_FAILSAFE:
             case AUTO_SPEC_DRIVE_TO_CHAMBER:
                 currentPath.run();
                 break;
+            case HOOKS_ON_HIGH_BAR:
+            case PULLING_UP:
+                break;
             default:
-                dt.teleOpDrive(gamepad1);
+                ptoDt.teleOpDrive(gamepad1);
                 break;
         }
 
         if(gamepad1.right_stick_button) {
-            dt.setHeading(Math.PI/2);
+            ptoDt.setHeading(Math.PI/2);
             gamepad1.rumble(150);
         }
         sm.update();
