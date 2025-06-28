@@ -23,7 +23,7 @@ public class SpitIntakeSpecPath extends PIDPathBuilder {
                             new BoxtubeCommand(1.3, 0)
                     ).schedule();
                 })
-                .addMappedPoint(36, -54, 90, 10)
+                .addMappedPoint(36, -55, 90, 12)
                 .callback(() -> {
                     new SpecimenIntakeBackFlatSpitCommand().schedule();
                 })
@@ -34,7 +34,7 @@ public class SpitIntakeSpecPath extends PIDPathBuilder {
 //                            new ClawOpenCommand()
 //                    ).schedule();
 //                })
-                .waitMillis(500)
+                .waitMillis(800)
                 .setPower(0.25)
                 .addMappedPoint(x, -61, 90)
                 .callback(() -> {

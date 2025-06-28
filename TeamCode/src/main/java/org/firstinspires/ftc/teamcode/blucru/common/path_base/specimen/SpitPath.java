@@ -30,10 +30,10 @@ public class SpitPath extends PIDPathBuilder {
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ExtensionCommand(7),
-                            new WaitCommand(250),
+                            new WaitCommand(230),
                             new ClawOpenCommand()
                     ).schedule();
                 })
-                .waitMillis(280);
+                .waitMillis(250);
     }
 }

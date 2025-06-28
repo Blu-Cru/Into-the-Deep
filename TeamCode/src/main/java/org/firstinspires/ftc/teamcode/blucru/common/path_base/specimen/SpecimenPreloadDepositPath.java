@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.specimen.Specim
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class SpecimenPreloadDepositPath extends PIDPathBuilder {
-    public SpecimenPreloadDepositPath() {
+    public SpecimenPreloadDepositPath(int waitTimeAfter, double x) {
         super();
         this.setPower(0.55)
                 .callback(() -> {
@@ -29,7 +29,7 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
                 })
                 .addMappedPoint(7, -59, 90)
 //                .waitMillis(100)
-                .addMappedPoint(7, -43, 90)
+                .addMappedPoint(x, -43, 90)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),
@@ -39,6 +39,10 @@ public class SpecimenPreloadDepositPath extends PIDPathBuilder {
                             new BoxtubeRetractCommand()
                     ).schedule();
                 })
-                .waitMillis(50);
+                .waitMillis(waitTimeAfter);
+    }
+
+    public SpecimenPreloadDepositPath () {
+        this(50, 7);
     }
 }

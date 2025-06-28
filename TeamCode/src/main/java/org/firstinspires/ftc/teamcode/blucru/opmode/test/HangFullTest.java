@@ -7,6 +7,7 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
@@ -53,6 +54,7 @@ public class HangFullTest extends BluLinearOpMode {
         sm = new StateMachineBuilder()
                 .state(State.RETRACT)
                 .transition(() -> stickyG1.dpad_up, State.HANG_READY_HIGH_BAR, () -> {
+                    slideHangServos.release();
                     new SequentialCommandGroup(
                             new HangServosReleaseCommand(),
                             new GetHooksCommand(),
@@ -64,6 +66,7 @@ public class HangFullTest extends BluLinearOpMode {
 
                 .state(State.HANG_READY_HIGH_BAR)
                 .transition(() -> stickyG1.dpad_up, State.HOOKS_ON_HIGH_BAR, () -> {
+                    slideHangServos.hang();
                     new SequentialCommandGroup(
                             new HangServosHangComamnd(),
                             new PTOEngageCommand(),
@@ -89,6 +92,11 @@ public class HangFullTest extends BluLinearOpMode {
                 .transition(() -> stickyG1.a, State.RETRACT, () -> {
                     new BoxtubeRetractFromTopBarCommand().schedule();
                 })
+
+                .state(State.PULLING_UP)
+                .transition(() -> stickyG1.a, State.RETRACT, () -> {
+                    new FullRetractCommand().schedule();
+                })
                 .build();
 
         sm.setState(State.RETRACT);
@@ -99,8 +107,20 @@ public class HangFullTest extends BluLinearOpMode {
     public void periodic() {
         sm.update();
 
+        switch(Enum.valueOf(State.class, sm.getStateString())) {
+            case RETRACT:
+            case HANG_READY_HIGH_BAR:
+                ptoDt.teleOpDrive(gamepad1);
+                break;
+        }
+
         if(stickyG1.right_stick_button) {
             ptoDt.setHeading(Math.PI/2);
         }
+    }
+
+    @Override
+    public void telemetry() {
+        telemetry.addData("State", sm.getState());
     }
 }

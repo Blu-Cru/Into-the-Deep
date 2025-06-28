@@ -26,7 +26,8 @@ public class SpecimenIntakeBackFlatSpitCommand extends SequentialCommandGroup {
                 new SpinWristAngleCommand(Math.PI),
                 new UpDownWristAngleCommand(-1.3),
                 new WaitCommand(200),
-                new TurretMotionProfileCommand(0.45),
+                new TurretMotionProfileCommand(0.6),
+                new ClawOpenCommand(),
                 new WaitCommand(170),
                 new SpecimenIntakeBackFlatCommand()
         );

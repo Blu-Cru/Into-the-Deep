@@ -27,10 +27,11 @@ public class SpecimenParkIntakePath extends PIDPathBuilder {
                             new FullRetractCommand()
                     ).schedule();
                 })
-                .addMappedPoint(12, -50, 90, 7)
-                .addMappedPoint(12, -60, 0, 10)
+                .addMappedPoint(12, -50, 90, 5)
+                .addMappedPoint(16, -60, 0, 10)
                 .callback(() ->
                         new SequentialCommandGroup(
+                                new ClawOpenCommand(),
                                 new PreIntakeCommand(),
                                 new WaitCommand(300),
                                 new ExtensionCommand(13),

@@ -9,29 +9,36 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.Extensi
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretMotionProfileCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.intake.PreIntakeCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.PIDPathBuilder;
 
 public class DepositSubSamplePath extends PIDPathBuilder {
 
     public DepositSubSamplePath(){
         super();
-        this.setPower(0.8)
-                .callback(() -> {
-                    new FullRetractCommand().schedule();
-                })
-                .waitMillis(2000) //value rn is for safety, tune it
-                .addMappedPoint(20, -50, 0)
+        this.setPower(1.0)
                 .callback(() -> {
                     new SequentialCommandGroup(
-                            new ExtensionCommand(10),
-                            new ArmCommand(0),
-                            new TurretMotionProfileCommand(-0.6),
-                            new WaitCommand(400)
+                            new PreIntakeCommand(),
+                            new BoxtubeCommand(0, 0)
                     ).schedule();
                 })
-                .waitMillis(2000)
-                .callback(() -> new ClawOpenCommand().schedule())
-                .waitMillis(200);
-
+                .addMappedPoint(16, -50, 90, 10)
+                .callback(() -> {
+                    new SequentialCommandGroup(
+                            new TurretMotionProfileCommand(-1.0),
+                            new WaitCommand(400),
+                            new BoxtubeCommand(0, 10),
+                            new PreIntakeCommand()
+                    ).schedule();
+                })
+                .addMappedPoint(20, -60, 10, 7)
+                .callback(() -> {
+                    new SequentialCommandGroup(
+                            new WaitCommand(250),
+                            new ClawOpenCommand()
+                    ).schedule();
+                })
+                .waitMillis(400);
     }
 }

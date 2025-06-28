@@ -14,7 +14,7 @@ public class BoxtubeRetractFromTopBarCommand extends SequentialCommandGroup {
                 new ExtensionRetractCommand(),
                 new ArmBackHardStopCommand(),
                 new WaitCommand(600),
-                new PivotCommand(0.8)
+                new PivotCommand(1.2)
         );
     }
 }

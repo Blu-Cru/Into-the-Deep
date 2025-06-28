@@ -31,6 +31,7 @@ public abstract class AutoConfig {
             else if (this == FIVE_SPECIMEN) return FIVE_SPECIMEN_ONE_SAMPLE;
             else if (this == FIVE_SPECIMEN_ONE_SAMPLE) return SAMPLE_CYCLE;
             else if (this == SAMPLE_CYCLE) return FOUR_SPECIMEN_ONE_SAMPLE;
+            else if (this == FOUR_SPECIMEN_ONE_SAMPLE) return SIX_SPECIMEN;
             else return FOUR_SAMPLE;
         }
     }

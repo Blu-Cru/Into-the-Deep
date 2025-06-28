@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.BoxtubeRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.path.Path;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.sample.SampleIntakeAtPointPath;
 import org.firstinspires.ftc.teamcode.blucru.common.path_base.specimen.CollectCenterBlockPath;
@@ -51,21 +52,22 @@ public class SixSpecimenConfig extends AutoConfig {
         runtime = Globals.runtime;
         scoreCount = 0;
 
-
         collectPaths = new Path[3];
         collectPaths[0] = new CollectLeftBlockPath().build();
         collectPaths[1] = new CollectCenterBlockPath().build();
         collectPaths[2] = new CollectRightBlockPath().build();
 
         sm = new StateMachineBuilder()
-                .state(FiveSpecimenConfig.State.LIFTING_PRELOAD)
+                .state(State.LIFTING_PRELOAD)
                 .transition(() -> currentPath.isDone(), State.SCANNING_SUB, () -> {
                     scoreCount++;
                     logTransition(State.SCANNING_SUB);
                     scanTimeMillis = System.currentTimeMillis();
                 })
-                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 450
-                                && Robot.getInstance().cvMaster.sampleDetector.hasValidDetection(),
+
+                .state(State.SCANNING_SUB)
+                .transition(() -> System.currentTimeMillis() - scanTimeMillis > 300
+                                && Robot.getInstance().cvMaster.sampleDetector.detectionList.hasSpec(),
                         State.COLLECTING_SUB_SAMPLE, () -> {
                             Pose2d blockPose = Robot.getInstance().cvMaster.sampleDetector.detectionList.getBestSpecPose();
 
@@ -74,19 +76,31 @@ public class SixSpecimenConfig extends AutoConfig {
                             currentPath = new SampleIntakeAtPointPath(Robot.getInstance().dt.pose, blockPose).start();
                             attemptedIntakeTriesInSub++;
                         })
+                .transitionTimed(1.0, State.COLLECTING_BLOCKS, () -> {
+                    Robot.getInstance().cvMaster.disableSampleDetector();
+                    currentPath = new CollectLeftBlockPath().start();
+                })
+
                 .state(State.COLLECTING_SUB_SAMPLE)
-                .transition(() -> currentPath.isDone() && (Robot.validSample() || attemptedIntakeTriesInSub >= 2), State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER, () -> {
-                    logTransition(State.COLLECTING_SUB_SAMPLE);
+                .transition(() -> currentPath.isDone() && Robot.validSample(), State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER, () -> {
+                    logTransition(State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER);
                     Robot.getInstance().cvMaster.disableSampleDetector();
                     currentPath = new DepositSubSamplePath().build().start();
                 })
-                .transition(() -> currentPath.isDone() && !Robot.validSample() && attemptedIntakeTriesInSub < 2, State.SCANNING_SUB)
-                .state(State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER)
-                .transition(() -> currentPath.isDone(), State.COLLECTING_BLOCKS, () -> {
-                    logTransition(State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER);
+                .transition(() -> currentPath.isDone() && !Robot.validSample() && attemptedIntakeTriesInSub < 2, State.SCANNING_SUB, () -> {
+                    new BoxtubeRetractCommand().schedule();
+                })
+                .transition(() -> currentPath.isDone() && !Robot.validSample() && attemptedIntakeTriesInSub >= 2, State.COLLECTING_BLOCKS, () -> {
+                    logTransition(State.COLLECTING_BLOCKS);
                     currentPath = new CollectLeftBlockPath().build().start();
                 })
-                .state(FiveSpecimenConfig.State.COLLECTING_BLOCKS)
+
+                .state(State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER)
+                .transition(() -> currentPath.isDone(), State.COLLECTING_BLOCKS, () -> {
+                    currentPath = new CollectLeftBlockPath().start();
+                })
+
+                .state(State.COLLECTING_BLOCKS)
                 .transition(() -> currentPath.isDone() && spitCount < 2, State.SPITTING, () -> {
                     spitCount++;
                     currentPath = new SpitPath().build().start();
@@ -94,11 +108,11 @@ public class SixSpecimenConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone() && spitCount >= 2, State.INTAKING_CYCLE, () -> {
                     currentPath = new SpitIntakeSpecPath(35).build().start();
                 })
-                .state(FiveSpecimenConfig.State.SPITTING)
+                .state(State.SPITTING)
                 .transition(() -> currentPath.isDone(), State.COLLECTING_BLOCKS, () -> {
                     currentPath = collectPaths[spitCount].start();
                 })
-                .state(FiveSpecimenConfig.State.INTAKING_CYCLE)
+                .state(State.INTAKING_CYCLE)
                 .transition(() -> (currentPath.isDone() && Robot.getInstance().extension.getDistance() < 8.0 &&
                                 (Robot.validSample() || thisCycleIntakeFailCount >= 1)),
                         State.DEPOSIT_CYCLE, () -> {
@@ -118,32 +132,34 @@ public class SixSpecimenConfig extends AutoConfig {
                 })
 
                 .state(State.DEPOSIT_CYCLE)
-                .transition(() -> currentPath.isDone() && scoreCount < 4 && runtime.seconds() < 25, State.INTAKING_CYCLE, () -> {
+                .transition(() -> currentPath.isDone() && scoreCount < 5 && runtime.seconds() < 25, State.INTAKING_CYCLE, () -> {
                     thisCycleIntakeFailCount = 0;
                     scoreCount++;
                     currentPath = new SpecimenIntakePath().build().start();
                 })
-                .transition(() -> currentPath.isDone() && !(scoreCount < 4 && runtime.seconds() < 25), State.PARK_INTAKING, () -> {
+                .transition(() -> currentPath.isDone() && !(scoreCount < 5 && runtime.seconds() < 25), State.PARK_INTAKING, () -> {
                     Log.i("Five Specimen Config", "parking, time = " + runtime.seconds());
                     currentPath = new SpecimenParkIntakePath().build().start();
                 })
                 .onExit(() -> thisCycleIntakeFailCount = 0)
 
-                .state(FiveSpecimenConfig.State.PARK_INTAKING)
-                .transition(() -> currentPath.isDone(), FiveSpecimenConfig.State.PARKED)
-                .state(FiveSpecimenConfig.State.PARKED)
+                .state(State.PARK_INTAKING)
+                .transition(() -> currentPath.isDone(), State.PARKED)
+                .state(State.PARKED)
                 .build();
     }
 
     @Override
     public void build() {
+        Robot.getInstance().cvMaster.stop();
 
+        Robot.getInstance().cvMaster.startSampleStreaming();
     }
 
     @Override
     public void start() {
         scoreCount = 0;
-        currentPath = new SpecimenPreloadDepositPath().build().start();
+        currentPath = new SpecimenPreloadDepositPath(300, 5).build().start();
         Robot.getInstance().cvMaster.enableSampleDetector();
         sm.setState(FiveSpecimenConfig.State.LIFTING_PRELOAD);
         sm.start();

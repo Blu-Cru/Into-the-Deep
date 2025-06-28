@@ -20,8 +20,8 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
             // negative inches is pulling the robot up more
             TICKS_PER_INCH = 8192.0 / 3.958,
 
-            vMAX = 6.0,
-            aMAX = 12.0; // constraints for velocity and acceleration (ticks/s and ticks/s^2)
+            vMAX = 8.0,
+            aMAX = 20.0; // constraints for velocity and acceleration (ticks/s and ticks/s^2)
 
     enum State {
         PTO_PID,
