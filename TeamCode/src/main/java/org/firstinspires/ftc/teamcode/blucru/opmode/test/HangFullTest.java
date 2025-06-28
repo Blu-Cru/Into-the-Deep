@@ -104,6 +104,11 @@ public class HangFullTest extends BluLinearOpMode {
     }
 
     @Override
+    public void onStart() {
+        slideHangServos.retract();
+    }
+
+    @Override
     public void periodic() {
         sm.update();
 
