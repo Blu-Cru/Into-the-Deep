@@ -28,7 +28,9 @@ public class SpecimenIntakeBackFlatSpitCommand extends SequentialCommandGroup {
                 new WaitCommand(200),
                 new TurretMotionProfileCommand(0.6),
                 new ClawOpenCommand(),
-                new WaitCommand(170),
+                new WaitCommand(150),
+                new TurretCenterCommand(),
+                new WaitCommand(30),
                 new SpecimenIntakeBackFlatCommand()
         );
     }

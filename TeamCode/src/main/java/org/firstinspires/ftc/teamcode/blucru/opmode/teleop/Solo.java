@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCo
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristCenterCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretCenterCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.turret.TurretMotionProfileCommand;
@@ -42,6 +43,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.boxtube.kinematic
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Arm;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.end_effector.Claw;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
+import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 import org.firstinspires.ftc.teamcode.blucru.common.util.SampleOrientation;
 import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 
@@ -104,6 +107,7 @@ public class Solo extends BluLinearOpMode {
 
                     orientation = SampleOrientation.VERTICAL;
                     new SequentialCommandGroup(
+                            new SpinWristCenterCommand(),
                             new TurretCenterCommand(),
                             new PreIntakeCommand(),
                             new WaitCommand(320),
@@ -285,7 +289,7 @@ public class Solo extends BluLinearOpMode {
                 })
 
                 .state(State.SCORING_SPEC)
-                .onEnter(() -> dt.setDrivePower(0.8))
+                .onEnter(() -> dt.setDrivePower(0.9))
                 .transition(() -> stickyG1.left_bumper, State.AUTO_SPEC_INTAKE, () -> {
                     currentPath = new SpecimenIntakePath().start();
 //                    new SequentialCommandGroup(
@@ -385,7 +389,10 @@ public class Solo extends BluLinearOpMode {
         }
 
         if(gamepad1.right_stick_button) {
-            dt.setHeading(Math.PI/2);
+            if(Globals.alliance == Alliance.BLUE)
+                dt.setHeading(3.0 * Math.PI/2);
+            else
+                dt.setHeading(Math.PI/2);
             gamepad1.rumble(150);
         }
         sm.update();

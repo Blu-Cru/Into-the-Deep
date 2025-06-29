@@ -12,7 +12,7 @@ public class SampleDriveToSubIntakePath extends PIDPathBuilder {
     public SampleDriveToSubIntakePath() {
         super();
         this.setPower(0.85)
-                .addMappedPoint(-42, -12, 20, 8)
+                .addMappedPoint(-42, -12, 45, 8)
                 .addMappedPoint(-26, -12, 0);
     }
 }

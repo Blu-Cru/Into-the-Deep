@@ -87,12 +87,12 @@ public class FiveSpecimenConfig extends AutoConfig {
                 })
 
                 .state(State.DEPOSIT_CYCLE)
-                .transition(() -> currentPath.isDone() && scoreCount < 4 && runtime.seconds() < 25, State.INTAKING_CYCLE, () -> {
+                .transition(() -> currentPath.isDone() && scoreCount < 4 && runtime.seconds() < 26, State.INTAKING_CYCLE, () -> {
                     thisCycleIntakeFailCount = 0;
                     scoreCount++;
                     currentPath = new SpecimenIntakePath().build().start();
                 })
-                .transition(() -> currentPath.isDone() && !(scoreCount < 4 && runtime.seconds() < 25), State.PARK_INTAKING, () -> {
+                .transition(() -> currentPath.isDone() && !(scoreCount < 4 && runtime.seconds() < 26), State.PARK_INTAKING, () -> {
                     Log.i("Five Specimen Config", "parking, time = " + runtime.seconds());
                     currentPath = new SpecimenParkIntakePath().build().start();
                 })

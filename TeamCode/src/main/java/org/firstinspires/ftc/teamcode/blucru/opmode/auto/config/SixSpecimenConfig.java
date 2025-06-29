@@ -78,6 +78,8 @@ public class SixSpecimenConfig extends AutoConfig {
                         })
                 .transitionTimed(1.0, State.COLLECTING_BLOCKS, () -> {
                     Robot.getInstance().cvMaster.disableSampleDetector();
+                    Robot.getInstance().cvMaster.stopSampleStreaming();
+                    new BoxtubeRetractCommand().schedule();
                     currentPath = new CollectLeftBlockPath().start();
                 })
 
@@ -85,6 +87,7 @@ public class SixSpecimenConfig extends AutoConfig {
                 .transition(() -> currentPath.isDone() && Robot.validSample(), State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER, () -> {
                     logTransition(State.DROPPING_SUB_SAMPLE_AT_HUMAN_PLAYER);
                     Robot.getInstance().cvMaster.disableSampleDetector();
+                    Robot.getInstance().cvMaster.stopSampleStreaming();
                     currentPath = new DepositSubSamplePath().build().start();
                 })
                 .transition(() -> currentPath.isDone() && !Robot.validSample() && attemptedIntakeTriesInSub < 2, State.SCANNING_SUB, () -> {
@@ -132,12 +135,12 @@ public class SixSpecimenConfig extends AutoConfig {
                 })
 
                 .state(State.DEPOSIT_CYCLE)
-                .transition(() -> currentPath.isDone() && scoreCount < 5 && runtime.seconds() < 25, State.INTAKING_CYCLE, () -> {
+                .transition(() -> currentPath.isDone() && scoreCount < 5 && runtime.seconds() < 26, State.INTAKING_CYCLE, () -> {
                     thisCycleIntakeFailCount = 0;
                     scoreCount++;
                     currentPath = new SpecimenIntakePath().build().start();
                 })
-                .transition(() -> currentPath.isDone() && !(scoreCount < 5 && runtime.seconds() < 25), State.PARK_INTAKING, () -> {
+                .transition(() -> currentPath.isDone() && !(scoreCount < 5 && runtime.seconds() < 26), State.PARK_INTAKING, () -> {
                     Log.i("Five Specimen Config", "parking, time = " + runtime.seconds());
                     currentPath = new SpecimenParkIntakePath().build().start();
                 })

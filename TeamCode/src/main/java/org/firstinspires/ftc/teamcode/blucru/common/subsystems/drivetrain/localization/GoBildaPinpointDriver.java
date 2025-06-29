@@ -385,18 +385,13 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
      * to determine your location. Then when you pull a new position from your secondary sensor,
      * send a setPosition command with the new position. The Pinpoint will then track your movement
      * relative to that new, more accurate position.
-     * @param pos a Pose2D describing the robot's new position.
+     * @param pose a Pose2D describing the robot's new position.
      */
-    public Pose2d setPosition(Pose2d pos){
-        Pose2D ftcPose = new Pose2D(DistanceUnit.INCH,
-            pos.getX(),
-            pos.getY(),
-            AngleUnit.RADIANS, pos.getHeading());
-
-        writeByteArray(Register.X_POSITION,(floatToByteArray((float) ftcPose.getX(DistanceUnit.MM), ByteOrder.LITTLE_ENDIAN)));
-        writeByteArray(Register.Y_POSITION,(floatToByteArray((float) ftcPose.getY(DistanceUnit.MM),ByteOrder.LITTLE_ENDIAN)));
-        writeByteArray(Register.H_ORIENTATION,(floatToByteArray((float) ftcPose.getHeading(AngleUnit.RADIANS),ByteOrder.LITTLE_ENDIAN)));
-        return pos;
+    public Pose2d setPosition(Pose2d pose){
+        writeByteArray(Register.X_POSITION,(floatToByteArray((float) (pose.getX() / INCH_PER_MM), ByteOrder.LITTLE_ENDIAN)));
+        writeByteArray(Register.Y_POSITION,(floatToByteArray((float) (pose.getY() / INCH_PER_MM),ByteOrder.LITTLE_ENDIAN)));
+        writeByteArray(Register.H_ORIENTATION,(floatToByteArray((float) pose.getHeading(),ByteOrder.LITTLE_ENDIAN)));
+        return pose;
     }
 
     /**
@@ -506,15 +501,6 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
                 yPosition * INCH_PER_MM,
                 hOrientation
         );
-//        Pose2D ftcPose = new Pose2D(DistanceUnit.MM,
-//                xPosition,
-//                yPosition,
-//                AngleUnit.RADIANS,
-//                hOrientation);
-//
-//        return new Pose2d(ftcPose.getX(DistanceUnit.INCH),
-//                ftcPose.getY(DistanceUnit.INCH),
-//                ftcPose.getHeading(AngleUnit.RADIANS));
     }
 
 
@@ -523,12 +509,6 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
      * @return a Pose2D containing the estimated velocity of the robot, velocity is unit per second
      */
     public Pose2d getVelocity(){
-//        Pose2D ftcPose = new Pose2D(DistanceUnit.MM,
-//                xVelocity,
-//                yVelocity,
-//                AngleUnit.RADIANS,
-//                hVelocity);
-
         return new Pose2d(
                 xVelocity * INCH_PER_MM,
                 yVelocity * INCH_PER_MM,

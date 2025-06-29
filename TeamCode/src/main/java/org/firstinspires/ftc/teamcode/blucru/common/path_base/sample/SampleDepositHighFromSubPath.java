@@ -37,7 +37,7 @@ public class SampleDepositHighFromSubPath extends PIDPathBuilder {
                     new SampleBackHighCommand().schedule();
                 })
                 .setPower(0.35)
-                .addMappedPoint(-55, -55, 45)
+                .addMappedPoint(-55.5, -55.5, 45)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new ClawOpenCommand(),

@@ -31,10 +31,10 @@ public class SampleIntakeLeftPath extends PIDPathBuilder {
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new ClawOpenCommand(),
                             new TurretAngleCommand(0.9),
-                            new WaitCommand(400),
+                            new WaitCommand(300),
                             new GrabCommand()
                     ).schedule();
                 })
-                .waitMillis(1650);
+                .waitMillis(1550);
     }
 }

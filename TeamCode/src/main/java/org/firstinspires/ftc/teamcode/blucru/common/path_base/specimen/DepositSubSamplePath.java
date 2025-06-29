@@ -32,7 +32,7 @@ public class DepositSubSamplePath extends PIDPathBuilder {
                             new PreIntakeCommand()
                     ).schedule();
                 })
-                .addMappedPoint(20, -60, 10, 7)
+                .addMappedPoint(20, -60, 5, 7)
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new WaitCommand(250),

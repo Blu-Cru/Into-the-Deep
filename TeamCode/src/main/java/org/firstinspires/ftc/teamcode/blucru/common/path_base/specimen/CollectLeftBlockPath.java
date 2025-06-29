@@ -25,6 +25,7 @@ public class CollectLeftBlockPath extends PIDPathBuilder {
                             new PreIntakeCommand(),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new ExtensionCommand(10.5),
+                            new ClawOpenCommand(),
                             new WaitCommand(100),
                             new TurretMotionProfileCommand(0.35)
                     ).schedule();
