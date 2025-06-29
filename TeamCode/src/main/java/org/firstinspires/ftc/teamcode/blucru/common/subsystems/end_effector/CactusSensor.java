@@ -60,7 +60,7 @@ public class CactusSensor implements BluSubsystem {
         else return state == Sample.BLUE;
     }
 
-    private boolean validSample() {
+    public boolean validSample() {
         Sample state = getState();
 
         if(state == Sample.YELLOW) return true;
@@ -69,7 +69,11 @@ public class CactusSensor implements BluSubsystem {
         else return state == Sample.BLUE;
     }
 
-    public boolean isEmpty() {
+    public boolean justValidSample () {
+        return justValidSample;
+    }
+
+    public boolean empty() {
         return getState() == Sample.EMPTY;
     }
 

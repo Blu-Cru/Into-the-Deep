@@ -45,7 +45,7 @@ public abstract class BluLinearOpMode extends LinearOpMode {
     public SlideHangServos slideHangServos;
     public HangMotor hangMotor;
     public CVMaster cvMaster;
-    public DualCactusSensor cactus;
+    public CactusSensor cactus;
     public PTOServos ptoServos;
     public ClapServos clapServos;
     public OrthogonalDistanceSensors orthogonalDistanceSensors;

@@ -50,7 +50,7 @@ public class Robot {
     public Pusher pusher;
     public SlideHangServos slideHangServos;
     public HangMotor hangMotor;
-    public DualCactusSensor cactus;
+    public CactusSensor cactus;
     public PTOServos ptoServos;
     public ClapServos clapServos;
     public OrthogonalDistanceSensors orthogonalDistanceSensors;
@@ -117,7 +117,6 @@ public class Robot {
     public static boolean validSample() {
         return getInstance().cactus.validSample();
     }
-
 
     public static boolean justValidSample() {
         return getInstance().cactus.justValidSample();
@@ -245,8 +244,8 @@ public class Robot {
         return hangMotor;
     }
 
-    public DualCactusSensor addCactus() {
-        cactus = new DualCactusSensor();
+    public CactusSensor addCactus() {
+        cactus = new CactusSensor("sample cactus0", "sample cactus1");
         subsystems.add(cactus);
         return cactus;
     }
