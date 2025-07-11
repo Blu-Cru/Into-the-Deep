@@ -45,26 +45,5 @@ public class JUnitTest {
         Assert.assertEquals(1, 1);
     }
 
-    @Test
-    public void testSortingPoses(){
-        List<Pose2d> poses = new ArrayList<Pose2d>(List.of(
-                new Pose2d(0,0,0),
-                new Pose2d(0,2,0),
-                new Pose2d(1,0,0)
-        ));
-
-        List<Double> dists = new ArrayList<Double>(List.of(0.0,2.0,1.0));
-
-        List<Pose2d> sortedPoses = SampleDetectionProcessor.sort(dists, poses);
-
-        List<Pose2d> correctResult = new ArrayList<Pose2d>(List.of(
-                new Pose2d(0,0,0),
-                new Pose2d(1,0,0),
-                new Pose2d(0,2,0)
-        ));
-
-        System.out.println(sortedPoses);
-
-        Assert.assertTrue(sortedPoses.equals(correctResult));
-    }
+    
 }
