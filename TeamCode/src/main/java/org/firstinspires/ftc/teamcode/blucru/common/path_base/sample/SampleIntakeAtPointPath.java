@@ -55,12 +55,12 @@ public class SampleIntakeAtPointPath extends PIDPathBuilder {
                     ).schedule();
                 })
 
-                .waitMillis(900)
+                .waitMillis(800)
                 .addPoint(rawDrivePoint)
                 .callback(() -> {
                     new GrabCommand().schedule();
                 })
-                .waitMillis(660);
+                .waitMillis(700);
 
     }
 }

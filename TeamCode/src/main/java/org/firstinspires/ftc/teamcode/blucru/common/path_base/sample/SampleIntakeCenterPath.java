@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.Extensi
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionMotionProfileCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.ExtensionRetractCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotRetractCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
+import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawOpenCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristGlobalAngleCommand;
@@ -25,16 +27,18 @@ public class SampleIntakeCenterPath extends PIDPathBuilder {
                 .callback(() -> {
                     new SequentialCommandGroup(
                             new BoxtubeRetractCommand(),
+                            new ArmCommand(Math.PI/2),
+                            new WaitCommand(150),
                             new PreIntakeCommand(),
-                            new WaitCommand(300),
+                            new WaitCommand(200),
                             new ExtensionCommand(10),
                             new SpinWristGlobalAngleCommand(SampleOrientation.VERTICAL),
                             new ClawOpenCommand(),
-                            new TurretAngleCommand(1.2),
+                            new TurretAngleCommand(1.1),
                             new WaitCommand(300),
                             new GrabCommand()
                     ).schedule();
                 })
-                .waitMillis(1550);
+                .waitMillis(1600);
     }
 }

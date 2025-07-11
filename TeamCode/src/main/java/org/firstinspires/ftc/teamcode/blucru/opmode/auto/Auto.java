@@ -100,7 +100,7 @@ public class Auto extends BluLinearOpMode {
         addCactus();
 //        addPusher();
         addPTOServos();
-        addClapServos();
+//        addClapServos();
         addCVMaster();
 
         extension.usePivot(pivot.getMotor());
