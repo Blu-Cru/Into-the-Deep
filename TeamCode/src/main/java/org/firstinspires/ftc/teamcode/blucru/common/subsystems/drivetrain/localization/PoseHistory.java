@@ -7,6 +7,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import java.util.LinkedList;
 
 // this class stores a history of poses and their timestamps for dead reckoning
+// useful for computer vision, normally camera frames are processed from the past.
+// atags and visionportal pipelines have methods to get time of frame
 public class PoseHistory {
     static double STORAGE_NANOSECONDS = 1.0 * Math.pow(10.0, 9.0); // 1 second
 

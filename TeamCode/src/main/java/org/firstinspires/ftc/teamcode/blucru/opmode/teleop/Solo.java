@@ -52,16 +52,27 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.BluLinearOpMode;
 @TeleOp(group = "2")
 public class Solo extends BluLinearOpMode {
     public static double INTAKE_POS_X = 30.0, INTAKE_POS_Y_DELTA = 5.0;
+
+    /*
+     TODO: big realization after mti:
+        apriltags arent good for starting auto driving
+        its better to drive to the position and press a button to relocalize
+        then you can start a path and it will relocalize relative to the driver position
+
+        only thing is if you need two precise locations like intake and deposit,
+        then apriltags may be better because its global
+     */
     enum State{
+        // TODO: create initialization state, where robot powers back everything and resets encoders
         HOME,
-        PREINTAKE,
-        INTAKING_SPEC,
-        SCORING_SPEC,
+        PREINTAKE, // claw is right above samples
+        INTAKING_SPEC, // claw on wall, ready to grab spec
+        SCORING_SPEC, // spec is up, driving into chamber
         SCORING_BASKET,
 
-        AUTO_SPEC_INTAKE,
-        AUTO_SPEC_INTAKE_FAILSAFE,
-        AUTO_SPEC_DRIVE_TO_CHAMBER,
+        AUTO_SPEC_INTAKE, // running path to intake spec
+        AUTO_SPEC_INTAKE_FAILSAFE, // running failsafe path
+        AUTO_SPEC_DRIVE_TO_CHAMBER, // driving to near the chamber, giving back manual control after path done
 
         GRABBED_GROUND,
         SENSING_GROUND,

@@ -16,8 +16,12 @@ import org.firstinspires.ftc.teamcode.blucru.opmode.auto.config.SixSpecimenConfi
 
 // abstract class for auto config
 public abstract class AutoConfig {
-    static AutoType autoType = AutoType.FOUR_SAMPLE;
+    static AutoType currentAutoType = AutoType.FOUR_SAMPLE;
 
+    /*
+    TODO: create new class for autotype, create a better flip method
+        Also move auto config to common
+     */
     enum AutoType{
         FOUR_SAMPLE,
         FIVE_SPECIMEN,
@@ -41,6 +45,7 @@ public abstract class AutoConfig {
     public ElapsedTime runtime;
 
     // abstract methods to be implemented by the auto config
+    // TODO: create initialize here
     public abstract void build();
     public abstract void start();
     public abstract void telemetry();
@@ -56,8 +61,9 @@ public abstract class AutoConfig {
     }
 
     // this method returns the correct auto config based on the current side and auto type
+    // TODO: organize this better
     public static AutoConfig config() {
-        switch (autoType) {
+        switch (currentAutoType) {
             case FOUR_SAMPLE: return new FourSampleConfig();
             case FIVE_SPECIMEN: return new FiveSpecimenConfig();
             case FIVE_SPECIMEN_ONE_SAMPLE: return new FiveSpecimenOneSampleConfig();
@@ -69,7 +75,7 @@ public abstract class AutoConfig {
     }
 
     public static void flipAutoType() {
-        autoType = autoType.flip();
+        currentAutoType = currentAutoType.flip();
     }
 
     public void logTransition(Enum state) {

@@ -38,8 +38,6 @@ public class PTODrivetrain extends Drivetrain implements BluSubsystem, Subsystem
     public PTODrivetrain() {
         super();
 
-        // left is control 0?
-        // right is expansion 3
         leftEncoder = new BluEncoder("extension2");
         rightEncoder = new BluEncoder("br", DcMotorSimple.Direction.REVERSE);
 

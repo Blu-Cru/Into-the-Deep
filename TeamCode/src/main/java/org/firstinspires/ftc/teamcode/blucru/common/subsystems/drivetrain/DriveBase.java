@@ -92,6 +92,7 @@ public class DriveBase implements BluSubsystem {
         drive(new Pose2d(translation, rotation));
     }
 
+    // TODO: look into the power normalization, pid isnt driving striahgt
     public void driveFieldCentric(Pose2d fieldDrivePose) {
         Pose2d robotDrivePose = new Pose2d(fieldDrivePose.vec().rotated(-localizer.getHeading()), fieldDrivePose.getHeading());
         drive(robotDrivePose);

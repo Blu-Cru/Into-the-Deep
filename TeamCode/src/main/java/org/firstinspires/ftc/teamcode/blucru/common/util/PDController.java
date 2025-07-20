@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class PDController extends PIDController {
+    // PD controller for non-zero target velocity
     Vector2d k;
     public PDController(double kP, double kI, double kD) {
         super(kP, kI, kD);

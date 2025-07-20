@@ -14,6 +14,13 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.Alliance;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class Drivetrain extends DriveBase implements Subsystem {
+    /*
+        TODO: move away from roadrunner:
+            - custom pose2d
+            - custom vector2d
+            - custom localizer
+            - delete roadrunner package
+     */
     enum State {
         IDLE,
         PID,

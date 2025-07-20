@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SampleCycleConfig extends AutoConfig {
+    // TODO: make sure in the future there are no commands in these auto configs
     enum State{
         LIFTING_PRELOADS,
         DEPOSITING,

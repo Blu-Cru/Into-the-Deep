@@ -7,7 +7,9 @@ import org.firstinspires.ftc.teamcode.blucru.common.hardware.motor.BluMotorWithE
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class ExtensionMotors extends BluMotorWithEncoder {
-    // TODO: calculate value
+    // combines two extension motors to act as one
+    // inherits from the motor with the encoder, adds on the other motor when setting power
+    // also does math to calculate position in inches
     static final double AXIS_RAD_PER_INCH = 1.0 / 0.82677;
     static final double TICKS_PER_INCH = 27.932; // 145.1 on the motor
 
@@ -24,6 +26,8 @@ public class ExtensionMotors extends BluMotorWithEncoder {
         if(pivot == null) {
             return getCurrentPosition() / TICKS_PER_INCH;
         } else {
+            // coaxial compensation, because extension spool is on same axle as pivot,
+            // position and encoder position slightly change when pivot position changes
             return (getCurrentPosition() / TICKS_PER_INCH) + (pivot.getAngle() / AXIS_RAD_PER_INCH);
         }
     }

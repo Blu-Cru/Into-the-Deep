@@ -14,11 +14,12 @@ import org.firstinspires.ftc.teamcode.blucru.common.util.MotionProfile;
 import org.firstinspires.ftc.teamcode.blucru.common.util.PDController;
 
 @Config
+// TODO: combine BluSubsystem and FTClib Subsystem into one interface
 public class Extension implements BluSubsystem, Subsystem {
     public static double
             kP = 0.24, kI = 0.0, kD = 0.01,
             kFAngle = 0.2, tolerance = 0.0, kPStatic = 0.005,
-            MIN_INCHES = 0.0, MAX_INCHES = 27.5, MAX_HORIZ_EXTENSION = 17.0, // pid distance to change based on input
+            MIN_INCHES = 0.0, MAX_INCHES = 27.5, MAX_HORIZ_EXTENSION = 17.0,
             MAX_EXTEND_POWER = 1.0, MAX_RETRACT_POWER = -1.0;
 
     enum State {

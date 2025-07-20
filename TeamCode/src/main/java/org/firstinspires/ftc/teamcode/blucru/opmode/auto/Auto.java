@@ -1,15 +1,11 @@
 package org.firstinspires.ftc.teamcode.blucru.opmode.auto;
 
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.FullRetractCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.boxtube.PivotCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmCommand;
-import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.arm.ArmGlobalAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.claw.ClawGrabCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.command_base.end_effector.spin_wrist.SpinWristAngleCommand;
 import org.firstinspires.ftc.teamcode.blucru.common.subsystems.drivetrain.DriveBase;
@@ -40,19 +36,29 @@ public class Auto extends BluLinearOpMode {
             })
             .transition(() -> stickyG1.right_stick_button || stickyG2.right_stick_button,
                     State.INITIALIZED, () -> {
+                // just picked auto type
                 gamepad1.rumble(200);
                 gamepad2.rumble(200);
-//                cvMaster.detectTag();
                 telemetry.update();
 
                 telemetry.addLine("Building Paths . . .");
                 telemetry.update();
+
+                // create autoconfig
                 config = AutoConfig.config();
-                config.build();
+                        assert config != null;
+                        config.build();
 
                 telemetry.addLine("Config Built!!!! good job you deserve a pat on the back");
                 telemetry.update();
 
+                /*
+                    TODO: make an intialize method in
+                    each auto config to initialize differently,
+                    abstract away from auto opmode
+                */
+
+//                cvMaster.detectTag();
                 new ClawGrabCommand().schedule();
                 new ArmCommand(1.8).schedule();
                 new SpinWristAngleCommand(Math.PI).schedule();
@@ -141,6 +147,6 @@ public class Auto extends BluLinearOpMode {
 
     public void configTelemetry() {
         telemetry.addData("b to switch Alliance", Globals.alliance);
-        telemetry.addData("a to switch Auto Type", AutoConfig.autoType);
+        telemetry.addData("a to switch Auto Type", AutoConfig.currentAutoType);
     }
 }

@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.blucru.common.util;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Config
 public class MotionProfile {
+    // jank file for motion profiles
     double vMax, aMax, xTarget, xI;
     double vI, flip;
     boolean decel;

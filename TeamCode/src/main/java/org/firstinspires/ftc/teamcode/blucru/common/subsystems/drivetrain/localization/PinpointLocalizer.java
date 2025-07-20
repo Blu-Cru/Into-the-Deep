@@ -35,6 +35,8 @@ public class PinpointLocalizer implements Localizer {
     @Override
     public Pose2d getPoseEstimate() {
         Pose2d pose = pinpoint.getPosition();
+        
+        // null protection
         if (Double.isNaN(pose.getX()) || Double.isNaN(pose.getY()) || Double.isNaN(pose.getHeading())) {
             return new Pose2d();
         }
