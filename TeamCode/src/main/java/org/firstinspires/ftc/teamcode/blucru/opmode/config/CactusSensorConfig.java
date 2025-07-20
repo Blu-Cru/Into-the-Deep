@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 
 
 @TeleOp(group = "z")
+// search up brushland labs color range finder for docs
 public class CactusSensorConfig extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

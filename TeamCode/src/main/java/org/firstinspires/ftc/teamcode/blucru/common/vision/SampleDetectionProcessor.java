@@ -34,6 +34,7 @@ import java.util.List;
 
 @Config
 public class SampleDetectionProcessor implements VisionProcessor {
+    // this organization is ass, fix.
     static double[][] HOMOG_IMAGE_POINTS = {
             {853, 612}, {1201, 612},
             {812, 947}, {1287, 941}
@@ -67,6 +68,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
     public SampleDetectionsList detectionList;
 
     public SampleDetectionProcessor() {
+        // intialize camera matrix
         K = new Mat(3, 3, CvType.CV_64F);
         K.put(0, 0, fx, 0, cx,
                 0, fy, cy,
@@ -80,6 +82,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
         Size size = new Size(width, height);
+        // do calculations for undistortion
         Mat newCameraMatrix = Calib3d.getOptimalNewCameraMatrix(
                 K,
                 DIST_COEFFS,
@@ -91,6 +94,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
         map2 = new Mat();
         Calib3d.initUndistortRectifyMap(K, DIST_COEFFS, new Mat(), newCameraMatrix, size, CvType.CV_16SC2, map1, map2);
 
+        // calculate homography matrix
         homogM = Imgproc.getPerspectiveTransform(
                 new MatOfPoint2f(
                         new Point(HOMOG_IMAGE_POINTS[0][0], HOMOG_IMAGE_POINTS[0][1]), new Point(HOMOG_IMAGE_POINTS[1][0], HOMOG_IMAGE_POINTS[1][1]),
@@ -106,8 +110,11 @@ public class SampleDetectionProcessor implements VisionProcessor {
     }
 
     @Override
+    // pipeline for each frame
+    // TODO: some of these operations can be taken
+    //  out of the methods to make more readable
     public Mat processFrame(Mat frame, long captureTimeNanos) {
-        // calculate global pose, and add global pose to sorted poses
+        // create new list, make sure not to override old list
         SampleDetectionsList tempList = new SampleDetectionsList();
         Pose2d drivePose;
         try {
@@ -117,19 +124,23 @@ public class SampleDetectionProcessor implements VisionProcessor {
         }
         double startNanoTime = System.nanoTime();
 
+        // correct barrel/pinhole distortion
         Mat undistorted = undistort(frame);
 
+        // homography for top-down view
         Mat transformed = doHomographyTransform(undistorted);
 
+        // correct white balance to fix color, hues
         Mat wbCorrected = applyGrayWorldAWB(transformed);
 
+        // convert to hsv
         Mat hsv = new Mat();
         Imgproc.cvtColor(wbCorrected, hsv, Imgproc.COLOR_BGR2HSV);
 
+        // split into h, s, v channels for better performance
         List<Mat> channels = new ArrayList<>(3);
         Core.split(hsv, channels);
 
-// Now you can access individual channels
         Mat hueChannel = channels.get(0);
         Mat satChannel = channels.get(1);
 
@@ -306,6 +317,7 @@ public class SampleDetectionProcessor implements VisionProcessor {
 
     public Mat doHomographyTransform(Mat src) {
         Mat transformed = new Mat();
+        // this also sizes down the image for faster processing
         Imgproc.warpPerspective(src, transformed, homogM, new Size(640, 360));
 
         return transformed;
@@ -345,6 +357,8 @@ public class SampleDetectionProcessor implements VisionProcessor {
     }
 
     public Mat applyGrayWorldAWB(Mat src) {
+        // TODO: possible improvement is calculating the white balance on the gray tiles,
+        //  then use the same white balance in all frames. maybe use a static variable and do calculations on auto init?
         List<Mat> channels = new ArrayList<>();
         Core.split(src, channels);
 

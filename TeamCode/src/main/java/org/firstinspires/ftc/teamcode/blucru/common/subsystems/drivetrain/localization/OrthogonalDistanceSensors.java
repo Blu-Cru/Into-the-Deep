@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.blucru.common.subsystems.BluSubsystem;
 import org.firstinspires.ftc.teamcode.blucru.common.util.Globals;
 
 public class OrthogonalDistanceSensors implements BluSubsystem, Subsystem {
+    // try ultrasonics next time
     Rev2mDistanceSensor leftSensor, rightSensor;
     public boolean reading;
     double leftDistance, rightDistance;
